@@ -1,1 +1,62 @@
 // Here you can add other styles
+
+// ==========================
+//  GENERAL
+// ==========================
+.no-background {
+	background: none !important;
+}
+
+// ==========================
+//  FORM
+// ==========================
+
+// Switch
+.c-switch-slider {
+	border-color: #636f83
+}
+
+.c-switch-slider::before {
+	border-color: #636f83
+}
+
+.c-switch-label 
+.c-switch-slider::after {
+	color: #636f83
+}
+
+// ==========================
+//  ALERT
+// ==========================
+.alert-fixed {
+	position: fixed;
+	top: 7.5em;
+	left: 0;
+	width: 75%;
+	margin-left: 12.5%;
+	z-index: 9999;
+	text-align: center;
+}
+
+// ==========================
+//  MODAL
+// ==========================
+.modal-level-2 > .modal-backdrop {
+	z-index: 1060;
+}
+.modal-level-2 > .modal {
+	z-index: 1070;
+}
+.modal-footer > .btn-nav {
+	position: absolute;
+	margin: 0.75rem;
+}
+.modal-footer > .btn-nav.prev {
+	left: 0
+}
+.modal-footer > .btn-nav.next {
+	right: 0
+}
+.modal-content .btn-action {
+	margin: 0 auto;
+}
