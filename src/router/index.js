@@ -34,11 +34,6 @@ function configRoutes () {
 					component: Homepage
 				},
 				{
-					path: 'sbp',
-					name: 'SBP',
-					component: PageSbp
-				},
-				{
 					path: 'segel',
 					name: 'Segel',
 					component: PageSegel
