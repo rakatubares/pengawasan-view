@@ -95,8 +95,8 @@ import axios from "axios"
 const API = process.env.VUE_APP_BASEAPI + '/sbp'
 
 const data_default = {
-	no_sbp_lengkap: null,
-	tgl_sbp: null,
+	no_dok_lengkap: null,
+	tgl_dok: null,
 	no_sprint: null,
 	tgl_sprint: null,
 	uraian_penindakan: null,
@@ -118,8 +118,8 @@ export default {
 	},
 	computed: {
 		API_SBP_ID() { return API + '/' + this.id },
-		disp_no_sbp() { return this.data.no_sbp_lengkap || '-' },
-		disp_tgl_sbp() { return this.data.tgl_sbp || '-' },
+		disp_no_sbp() { return this.data.no_dok_lengkap || '-' },
+		disp_tgl_sbp() { return this.data.tgl_dok || '-' },
 		disp_sprint() { return ((this.data.no_sprint || '') + ' tanggal ' + (this.data.tgl_sprint || '')) },
 		disp_lokasi() { return this.data.lokasi_penindakan || '-' },
 		disp_uraian() { return this.data.uraian_penindakan || '-' },
@@ -144,7 +144,6 @@ export default {
 						this.data = JSON.parse(JSON.stringify(response.data.data ))
 					}
 				)
-				.catch((error) => {console.error(error)})
 		}
 	},
 	mounted() {
