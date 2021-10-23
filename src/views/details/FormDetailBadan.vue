@@ -113,17 +113,11 @@ export default {
 			type: String,
 			default: 'input'
 		},
-		id: {
-			type: Number,
-			default: null
-		},
-		sbp_id: {
-			type: Number,
-			default: null
-		},
+		id: Number,
+		doc_id: Number,
 	},
 	computed: {
-		API_BADAN() { return API + '/' + this.sbp_id + '/badan' },
+		API_BADAN() { return API + '/' + this.doc_id + '/badan' },
 	},
 	data() {
 		return {
@@ -140,7 +134,6 @@ export default {
 							this.data = response.data.data
 						}
 					)
-					.catch((error) => console.log(error))
 			}
 		},
 		saveData() {
@@ -153,7 +146,6 @@ export default {
 						this.$emit('input-data')
 					}
 				)
-				.catch((error) => {console.error(error)})
 		},
 		alert(text) {
 			this.$refs.alert.show_alert(text)

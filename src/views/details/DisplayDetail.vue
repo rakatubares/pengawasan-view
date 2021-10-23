@@ -188,7 +188,6 @@ export default {
 								this.display_details[key]['visibility'] = false
 							}
 						}
-						console.log('display detail - get details', JSON.parse(JSON.stringify(this.display_details)))
 					}
 				)
 		}

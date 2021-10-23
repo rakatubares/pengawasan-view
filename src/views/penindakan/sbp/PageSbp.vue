@@ -35,24 +35,20 @@
 			:tabs_list.sync="modal_props.tabs.list"
 			:current_tab.sync="modal_props.tabs.current"
 			@close-modal="closeModalInput"
-			@update:current_tab="checkTab"
 		>
 			<template #tab-header>
 				<CTab :title="modal_props.tabs.list[0]['title']">
 					<MyFormSbp
-						ref="sbp_form"
-						v-if="modal_props.sbp_form"
-						:id.sync="modal_props.sbp_id"
+						ref="form_sbp"
+						v-if="modal_props.header_form"
+						:id.sync="modal_props.doc_id"
 						:state.sync="modal_props.state"
-						@save-data="
-							displayTab(1)
-							displayTab(2)
-						"
+						@save-data="saveData"
 					>
 					</MyFormSbp>
 					<MyDisplaySbp
-						v-if="modal_props.sbp_display"
-						:id.sync="modal_props.sbp_id"
+						v-if="modal_props.header_display"
+						:id.sync="modal_props.doc_id"
 					>
 					</MyDisplaySbp>
 				</CTab>
@@ -65,7 +61,9 @@
 				>
 					<MyDisplayDetail 
 						:state="modal_props.state"
-						:sbp_id.sync="modal_props.sbp_id"
+						:doc_type="doc_type"
+						:doc_id.sync="modal_props.doc_id"
+						@edit-data="refreshPdf"
 					>
 					</MyDisplayDetail>
 				</CTab>
@@ -78,7 +76,7 @@
 				>
 					<MyPdfSbp
 						ref="pdf_sbp"
-						:id.sync="modal_props.sbp_id"
+						:id.sync="modal_props.doc_id"
 						@publish-sbp="publishSbp"
 					></MyPdfSbp>
 				</CTab>
@@ -145,23 +143,22 @@ export default {
 		return {
 			console,
 			fields: [
-				{ key: 'no_sbp_lengkap', label: 'No SBP' },
-				{ key: 'tgl_sbp', label: 'Tgl SBP' },
+				{ key: 'no_dok_lengkap', label: 'No SBP' },
+				{ key: 'tgl_dok', label: 'Tgl SBP' },
 				{ key: 'nama_pemilik', label: 'Pemilik' },
 				{ key: 'pejabat1', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
 			],
 			list_sbp: [],
-			sbp_state: 'insert',
-			sbp_id: null,
+			doc_type: 'sbp',
 			modal_props: {
 				show: false,
 				state: 'insert',
 				tabs: JSON.parse(JSON.stringify(tabs_default)),
-				sbp_id: null,
-				sbp_form: false,
-				sbp_display: false
+				doc_id: null,
+				header_form: false,
+				header_display: false
 			},
 			modal_delete_props: {
 				show: false,
@@ -174,53 +171,59 @@ export default {
 		getDataSbp() {
 			axios
 				.get(API + '/sbp')
-				.then((response) => {
-					this.list_sbp = response.data.data
-				})
-				.catch((error) => (console.error(error)))
+				.then(
+					(response) => {
+						this.list_sbp = response.data.data
+					}
+				)
 		},
 		createNewSbp() {
 			this.modal_props.state = 'insert'
 			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-			this.modal_props.sbp_id = null
-			this.modal_props.sbp_form = true
-			this.modal_props.sbp_display = false
+			this.modal_props.doc_id = null
+			this.modal_props.header_form = true
+			this.modal_props.header_display = false
 			this.modal_props.show = true
-		},
-		displayTab(tab_index) {
-			this.modal_props.tabs.list[tab_index]['visibility'] = true
-			this.$refs.modal_tabs.getNavs(0)
 		},
 		showSbp(id) {
 			this.modal_props.state = 'display'
 			this.modal_props.tabs.list[1]['visibility'] = true
 			this.modal_props.tabs.list[2]['visibility'] = true
-			this.modal_props.sbp_id = id
-			this.modal_props.sbp_form = false
-			this.modal_props.sbp_display = true
+			this.modal_props.doc_id = id
+			this.modal_props.header_form = false
+			this.modal_props.header_display = true
 			this.modal_props.show = true
 		},
 		editSbp(id) {
 			this.modal_props.state = 'edit'
 			this.modal_props.tabs.list[1]['visibility'] = true
 			this.modal_props.tabs.list[2]['visibility'] = true
-			this.modal_props.sbp_id = id
-			this.modal_props.sbp_form = true
-			this.modal_props.sbp_display = false
+			this.modal_props.doc_id = id
+			this.modal_props.header_form = true
+			this.modal_props.header_display = false
 			this.modal_props.show = true
 		},
 		closeModalInput() {
 			this.getDataSbp()
 			this.modal_props.show = false
 			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-			this.modal_props.sbp_id = null
-			this.modal_props.sbp_form = false
-			this.modal_props.sbp_display = false
+			this.modal_props.doc_id = null
+			this.modal_props.header_form = false
+			this.modal_props.header_display = false
+		},
+		saveData(state) {
+			if (state == 'insert') {
+				this.displayTab(1)
+				this.displayTab(2)
+				this.$refs.modal_tabs.getNavs(0)
+			} else {
+				this.refreshPdf()
+			}
 		},
 		deleteSbp(item) {
 			let API_SBP_ID = API + '/sbp/' + item.id
 			let text = "Apakah Anda yakin untuk menghapus data " 
-				+ item.no_sbp_lengkap.bold() 
+				+ item.no_dok_lengkap.bold() 
 				+ " a.n. " 
 				+ item.nama_pemilik.bold() 
 				+ "?"
@@ -237,11 +240,17 @@ export default {
 		publishSbp(id) {
 			this.showSbp(id)
 		},
-		checkTab(tab_index) {
-			if (tab_index == 2) {
-				this.$refs.pdf_sbp.showPdf()
-			}
+		displayTab(tab_index) {
+			this.modal_props.tabs.list[tab_index]['visibility'] = true
+		},
+		refreshPdf() {
+			this.$refs.pdf_sbp.showPdf()
 		}
+		// checkTab(tab_index) {
+		// 	if (tab_index == 2) {
+		// 		this.$refs.pdf_sbp.showPdf()
+		// 	}
+		// }
 	},
 	created() {
 		this.getDataSbp()

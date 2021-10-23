@@ -24,32 +24,6 @@
 			</CCol>
 		</CRow>
 
-		<!-- <vue-html2pdf
-				:show-layout="false"
-				:float-layout="true"
-				:enable-download="false"
-				:preview-modal="true"
-				:paginate-elements-by-height="1400"
-				:pdf-quality="2"
-				:manual-pagination="false"
-				pdf-format="a4"
-				pdf-orientation="portrait"
- 
-				ref="html2Pdf"
-		>
-			<section slot="pdf-content">
-				<CRow>
-					<CCol col="2">LOGO</CCol>
-					<CCol col="8">
-						<CRow>
-							<CCol style="font-size: 20px" class="text-center">KEMENTERIAN KEUANGAN REPUBLIK INDONESIA</CCol>
-						</CRow>
-						<CRow class="text-center">DIREKTORAT JENDERAL BEA DAN CUKAI</CRow>
-					</CCol>
-				</CRow>
-			</section>
-		</vue-html2pdf> -->
-
 		<!-- Alert -->
 		<MyAlert ref="alert"></MyAlert>
 	</div>
@@ -59,24 +33,28 @@
 import axios from "axios"
 import jsPDF from "jspdf"
 import 'jspdf-autotable'
-import VueHtml2pdf from 'vue-html2pdf'
 
 import MyAlert from '../../components/AlertSubmit.vue'
 import converters from '../../../helpers/converter.js'
+import pdf from '../../../helpers/pdf.js'
 
 const API = process.env.VUE_APP_BASEAPI + '/sbp'
 
-const pdf = {
+const pdf_props = {
 	font: {
 		size: 10,
 		height: 4
+	},
+	title_line: {
+		start: 80,
+		end: 130
 	},
 	ind: {
 		num: 15,
 		alp: 21,
 		dtl: 26,
-		dtl_cln: 85,
-		dtl_txt: 88,
+		cln: 85,
+		txt: 88,
 		num_cln: 55,
 		num_txt: 58,
 		ttd: 125,
@@ -87,8 +65,7 @@ const pdf = {
 export default {
 	name: "PdfSbp",
 	components: {
-		MyAlert,
-		VueHtml2pdf
+		MyAlert
 	},
 	props: {
 		id: Number
@@ -126,7 +103,6 @@ export default {
 	},
 	data() {
 		return {
-			console,
 			show_pdf: false,
 			src_pdf: null,
 			status_pdf: null,
@@ -142,7 +118,6 @@ export default {
 				.put(this.API_SBP_PUBLISH)
 				.then(
 					(response) => { 
-						console.log(response)
 						this.alert('SBP berhasil diterbitkan', 'success', 2)
 						this.showPdf()
 						this.$emit('publish-sbp', this.id)
@@ -160,48 +135,15 @@ export default {
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
 		},
-		generateReport () {
-			this.$refs.html2Pdf.generatePdf()
-		},
-		prepareItemData(data) {
-			let preparedData = []
-			for (let index = 0; index < data.length; index++) {
-				let entry = {
-					no: (index+1).toString(),
-					uraian: data[index]['uraian_barang'],
-					jumlah: data[index]['jumlah_barang'] + ' ' + data[index]['satuan_barang']
-				}
-
-				preparedData.push(entry)
-			}
-
-			return preparedData
-		},
-		addWatermark(doc) {
-			var totalPages = doc.internal.getNumberOfPages();
-
-			for (let i = 1; i <= totalPages; i++) {
-				doc.setPage(i);
-				doc.saveGraphicsState()
-				doc.setGState(new doc.GState({opacity: 0.2}))
-				doc.setFont('Helvetica', 'bold')
-				doc.setTextColor('E02401')
-				doc.setFontSize('200')
-				doc.text('DRAFT', 75, 270, { angle: 60 })
-				doc.restoreGraphicsState()
-			}
-
-			return doc
-		},
 		async showPdf() {
 			this.data.header = await this.getDataHeader()
-			if (this.data.header.penindakan_sarkut == 1) {
+			if (this.data.header.detail_sarkut == 1) {
 				this.data.sarkut = await this.getDataSarkut()
 			} else {
 				this.data.sarkut = null
 			}
 
-			if (this.data.header.penindakan_barang == 1) {
+			if (this.data.header.detail_barang == 1) {
 				this.data.barang = await this.getDataBarang()
 				this.data.item_barang = await this.getDataItemBarang()
 			} else {
@@ -209,13 +151,13 @@ export default {
 				this.data.item_barang = null
 			}
 
-			if (this.data.header.penindakan_bangunan == 1) {
+			if (this.data.header.detail_bangunan == 1) {
 				this.data.bangunan = await this.getDataBangunan()
 			} else {
 				this.data.bangunan = null
 			}
 
-			if (this.data.header.penindakan_badan == 1) {
+			if (this.data.header.detail_badan == 1) {
 				this.data.badan = await this.getDataBadan()
 			} else {
 				this.data.badan = null
@@ -247,289 +189,173 @@ export default {
 			return response.data.data
 		},
 		async getDataItemBarang() {
-			const response =  await axios.get(this.API_SBP_ID + '/barang/detail')
+			const response =  await axios.get(this.API_SBP_ID + '/barang/item')
 			return response.data.data
 		},
 		createPDF() {
+			let ln
+			let tgl_dok = converters.date(this.data.header.tgl_dok, 'DD-MM-YYYY')
+			let tgl_sprint = converters.date(this.data.header.tgl_sprint, 'DD-MM-YYYY')
+			let full_tgl_dok = tgl_dok != null ? converters.fullDate(tgl_dok) : ''
+			let full_tgl_sprint = converters.fullDate(tgl_sprint)
+
 			var doc = new jsPDF('p', 'mm', [297, 210]);
 
-			doc.setProperties({
-				title: 'Surat Bukti Penindakan',
-			});
-
 			////// KOP SURAT //////
+			doc = pdf.header(doc)
 
-			// Logo
-			var image = new Image()
-			image.src = "form/logo-kemenkeu.png"
-			doc.addImage(image, 'png', 15, 7.5, (233/8), (216/8));
-
-			// Identitas Kantor
-			doc.setFont('Helvetica', 'bold')
-			doc.setFontSize('13')
-			doc.text("KEMENTERIAN KEUANGAN REPUBLIK INDONESIA", 125, 10, "center");
-			doc.setFontSize('11')
-			doc.text("DIREKTORAT JENDERAL BEA DAN CUKAI", 125, 15, "center");
-			doc.setFontSize('13')
-			doc.text(["KANTOR PELAYANAN UTAMA BEA DAN CUKAI TIPE C", "SOEKARNO-HATTA"], 125, 20, "center")
-			doc.setFont('Helvetica', 'normal')
-			doc.setFontSize('7')
-			doc.text(
-				[
-					'AREA KARGO BANDARA SOEKARNO-HATTA, TANGERANG, BANTEN KODE POS 15126; CALL CENTER: 1500225 (BRAVO BC)',
-					'EMAIL: BCKPUSOETTA@CUSTOMS.GO.ID; WEBSITE: WWW.BCSOEKARNOHATTA.BEACUKAI.GO.ID;',
-					'FACEBOOK: BEA CUKAI SOEKARNO HATTA; LAYANAN INFORMASI: PLI_SH@CUSTOMS.GO.ID; INSTAGRAM: @BCSOETTA;',
-					'TWITTER: @BCSOETTA; PENGADUAN MASYARAKAT: WWW.BEACUKAI.GO.ID/PENGADUAN.HTML'
-				], 
-				125, 30, "center"
+			////// NOMOR SURAT //////
+			let doc_title = 'SURAT BUKTI PENINDAKAN'
+			let doc_no = 'Nomor: ' + this.data.header.no_dok_lengkap
+			let res_nomor = pdf.nomor(
+				doc, 
+				pdf_props.font.size, 
+				pdf_props.font.height, 
+				pdf_props.title_line.start,
+				pdf_props.title_line.end,
+				doc_title, 
+				doc_no
 			)
+			doc = res_nomor[0]
+			ln = res_nomor[1]
 
-			// Underline
-			doc.line(10,41,200,41)
+			////// URAIAN //////
+			let txt_sprint = 'Dasar penindakan, Surat Perintah Nomor : ' 
+				+ this.data.header.no_sprint 
+				+ ' tanggal ' + full_tgl_sprint + '.'
+			doc.text('1.', pdf_props.ind.num, ln)
+			doc.text(txt_sprint, 21, ln)
+			ln += pdf_props.font.height
 
-			////// ISI //////
+			let txt_perintah = 'Perintah yang dilaksanakan : '
+				+ 'Penghentian, pemeriksaan, penegahan, penyegelan, '
+				+ 'penghentian pembongkaran dan/atau penegahan di bidang HKI*.'
+			doc.text('2.', pdf_props.ind.num, ln)
+			doc.text(txt_perintah, 21, ln, {maxWidth: 180})
+			ln += pdf_props.font.height*2
 
-			// No dokumen
-			doc.setFont('Helvetica', 'bold')
-			doc.setFontSize(pdf.font.size)
-			let ln = 50
-			doc.text('SURAT BUKTI PENINDAKAN', 105, ln, 'center')
-			doc.line(80,ln+0.5,130,ln+0.5)
-			doc.setFont('Helvetica', 'normal')
-			ln += pdf.font.height
-			doc.text(this.pdf_txt.no_sbp, 105, ln, 'center')
-			ln += pdf.font.height*2
+			doc.text('3.', pdf_props.ind.num, ln)
+			doc.text('Obyek Penindakan:', pdf_props.ind.alp, ln)
+			ln += pdf_props.font.height
 
-			// Uraian penindakan
-			doc.text('1.', pdf.ind.num, ln)
-			doc.text(this.pdf_txt.no_sprint, 21, ln)
-			ln += pdf.font.height
+			////// DETAIL //////
+			let indents = {
+				alp: pdf_props.ind.alp, 
+				lbl: pdf_props.ind.dtl,
+				cln: pdf_props.ind.cln,
+				txt: pdf_props.ind.txt,
+			}
 
-			doc.text('2.', pdf.ind.num, ln)
-			doc.text(this.pdf_txt.perintah, 21, ln, {maxWidth: 180})
-			ln += pdf.font.height*2
+			// Sarkut
+			let res_sarkut = pdf.detail_sarkut(doc, this.data.sarkut, ln, pdf_props.font.height, indents)
+			doc = res_sarkut[0]
+			ln = res_sarkut[1]
 
-			doc.text('3.', pdf.ind.num, ln)
-			doc.text('Obyek Penindakan:', pdf.ind.alp, ln)
-			ln += pdf.font.height
+			// Barang
+			let res_barang = pdf.detail_barang(doc, this.data.barang, this.data.item_barang, ln, pdf_props.font.height, indents)
+			doc = res_barang[0]
+			ln = res_barang[1]
 
-				//// Obyek penindakan ////
-				
-				// Penindakan sarkut
-				doc.setFont('Helvetica', 'bold')
-				doc.text('a.', pdf.ind.alp, ln)
-				doc.text('Sarana pengangkut* :', pdf.ind.dtl, ln)
-				ln += pdf.font.height
+			// Bangunan
+			let res_bangunan = pdf.detail_bangunan(doc, this.data.bangunan, ln, pdf_props.font.height, indents)
+			doc = res_bangunan[0]
+			ln = res_bangunan[1]
 
-				doc.setFont('Helvetica', 'normal')
-				doc.text('Nama dan Jenis Sarkut', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.sarkut.nama, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
+			// Badan
+			let res_badan = pdf.detail_badan(doc, this.data.badan, ln, pdf_props.font.height, indents)
+			doc = res_badan[0]
+			ln = res_badan[1]
 
-				doc.text('No. Voy / Penerbangan / Trayek*', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.sarkut.flight, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
+			doc.text('4.', pdf_props.ind.num, ln)
+			doc.text('Lokasi Penindakan', pdf_props.ind.alp, ln)
+			doc.text(':', pdf_props.ind.num_cln, ln)
+			doc.text(this.data.header.lokasi_penindakan, pdf_props.ind.num_txt, ln)
+			ln += pdf_props.font.height
 
-				doc.text('Ukuran / Kapasitas Muatan', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.sarkut.kapasitas, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
+			let txt_uraian = converters.array_text(this.data.header.uraian_penindakan, 95)
+			doc.text('5.', pdf_props.ind.num, ln)
+			doc.text('Uraian Penindakan', pdf_props.ind.alp, ln)
+			doc.text(':', pdf_props.ind.num_cln, ln)
+			doc.text(txt_uraian, pdf_props.ind.num_txt, ln)
+			ln += pdf_props.font.height*(((this.pdf_txt.uraian).length) ? ((this.pdf_txt.uraian).length) > 0 : 1)
 
-				doc.text('Nahkoda / Pilot / Pengemudi*', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.sarkut.pilot, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
+			let txt_alasan = converters.string(this.data.header.alasan_penindakan)
+			doc.text('6.', pdf_props.ind.num, ln)
+			doc.text('Alasan Penindakan', pdf_props.ind.alp, ln)
+			doc.text(':', pdf_props.ind.num_cln, ln)
+			doc.text(txt_alasan, pdf_props.ind.num_txt, ln)
+			ln += pdf_props.font.height
 
-				doc.text('Bendera*', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.sarkut.bendera, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
+			doc.text('7.', pdf_props.ind.num, ln)
+			doc.text('Jenis Pelanggaran', pdf_props.ind.alp, ln)
+			doc.text(':', pdf_props.ind.num_cln, ln)
+			doc.text(this.data.header.jenis_pelanggaran, pdf_props.ind.num_txt, ln)
+			ln += pdf_props.font.height
 
-				doc.text('Nomor Register / Polisi', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.sarkut.no_reg, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-				// Penindakan barang
-				doc.setFont('Helvetica', 'bold')
-				doc.text('b.', pdf.ind.alp, ln)
-				doc.text('Barang* :', pdf.ind.dtl, ln)
-				ln += pdf.font.height
-
-				doc.setFont('Helvetica', 'normal')
-				doc.text(['Jumlah / Jenis / Ukuran Nomor', 'Peti Kemas / Kemasan'], pdf.ind.dtl, ln)
-				ln += pdf.font.height
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.barang.kemasan, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-				doc.text('Jumlah / Jenis Barang', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				let barang = (this.data.item_barang != null)
-					? (this.data.item_barang.length > 0) 
-						? (this.data.item_barang.length == 1)
-							? this.data.item_barang[0]['jumlah_barang'] + ' '
-								+ this.data.item_barang[0]['satuan_barang'] + ' '
-								+ this.data.item_barang[0]['uraian_barang']
-							: 'LIHAT LAMPIRAN'
-						: ''
-					: ''
-				doc.text(barang, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-				doc.text('Jenis / Nomor dan Tgl Dokumen', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.barang.dokumen, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-				doc.text('Pemilik / Importir / Eksportir / Kuasa*', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.barang.pemilik, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-				// Penindakan bangunan
-				doc.setFont('Helvetica', 'bold')
-				doc.text('c.', pdf.ind.alp, ln)
-				doc.text('Bangunan atau tempat* :', pdf.ind.dtl, ln)
-				ln += pdf.font.height
-
-				doc.setFont('Helvetica', 'normal')
-				doc.text('Alamat', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.bangunan.alamat, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-				doc.text('No Reg Bangunan / NPPBKC / dll.', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.bangunan.no_reg, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-				doc.text('Nama Pemilik / Yang Menguasai*', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.bangunan.pemilik, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-				// Penindakan badan
-				doc.setFont('Helvetica', 'bold')
-				doc.text('d.', pdf.ind.alp, ln)
-				doc.text('Badan* :', pdf.ind.dtl, ln)
-				ln += pdf.font.height
-
-				doc.setFont('Helvetica', 'normal')
-				doc.text('Nama', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.badan.nama, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-				doc.text('Tanggal Lahir', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.badan.tgl_lahir, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-				doc.text('Kewarganegaraan', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.badan.warga_negara, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-				doc.text('Alamat', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.badan.alamat, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-				doc.text('Nomor Identitas', pdf.ind.dtl, ln)
-				doc.text(':', pdf.ind.dtl_cln, ln)
-				doc.text(this.pdf_txt.badan.identitas, pdf.ind.dtl_txt, ln)
-				ln += pdf.font.height
-
-			doc.text('4.', pdf.ind.num, ln)
-			doc.text('Lokasi Penindakan', pdf.ind.alp, ln)
-			doc.text(':', pdf.ind.num_cln, ln)
-			doc.text(this.pdf_txt.lokasi, pdf.ind.num_txt, ln)
-			ln += pdf.font.height
-
-			doc.text('5.', pdf.ind.num, ln)
-			doc.text('Uraian Penindakan', pdf.ind.alp, ln)
-			doc.text(':', pdf.ind.num_cln, ln)
-			doc.text(this.pdf_txt.uraian, pdf.ind.num_txt, ln)
-			ln += pdf.font.height*(((this.pdf_txt.uraian).length) ? ((this.pdf_txt.uraian).length) > 0 : 1)
-
-			doc.text('6.', pdf.ind.num, ln)
-			doc.text('Alasan Penindakan', pdf.ind.alp, ln)
-			doc.text(':', pdf.ind.num_cln, ln)
-			doc.text(this.pdf_txt.alasan, pdf.ind.num_txt, ln)
-			ln += pdf.font.height
-
-			doc.text('7.', pdf.ind.num, ln)
-			doc.text('Jenis Pelanggaran', pdf.ind.alp, ln)
-			doc.text(':', pdf.ind.num_cln, ln)
-			doc.text(this.pdf_txt.jenis, pdf.ind.num_txt, ln)
-			ln += pdf.font.height
-
-			doc.text('8.', pdf.ind.num, ln)
+			doc.text('8.', pdf_props.ind.num, ln)
 			let tindakan = 'Tindakan yang diambil : pemeriksaan dihentikan / diijinkan meneruskan perjalanan / '
-			tindakan += 'penegahan / penyegelan / dibawa ke Kantor Bea dan Cukai terdekat / '
-			tindakan += 'dibawa ke Kantor Bea dan Cukai tempat kedudukan penjabat penerbit Surat Perintah / diserahkan kepada PPNS Bea dan Cukai*.'
-			doc.text(tindakan, pdf.ind.alp, ln,{maxWidth: 180})
-			ln += pdf.font.height*3
+				+ 'penegahan / penyegelan / dibawa ke Kantor Bea dan Cukai terdekat / '
+				+ 'dibawa ke Kantor Bea dan Cukai tempat kedudukan penjabat penerbit Surat Perintah / diserahkan kepada PPNS Bea dan Cukai*.'
+			doc.text(tindakan, pdf_props.ind.alp, ln,{maxWidth: 180})
+			ln += pdf_props.font.height*3
 
-			doc.text('9.', pdf.ind.num, ln)
-			doc.text('Waktu Penindakan', pdf.ind.alp, ln)
-			ln += pdf.font.height
-			doc.text('Dimulai tanggal', pdf.ind.alp, ln)
-			doc.text(':', pdf.ind.num_cln, ln)
-			doc.text(this.pdf_txt.wkt_mulai_penindakan, pdf.ind.num_txt, ln)
-			ln += pdf.font.height
-			doc.text('Berakhir', pdf.ind.alp, ln)
-			doc.text(':', pdf.ind.num_cln, ln)
-			doc.text(this.pdf_txt.wkt_selesai_penindakan, pdf.ind.num_txt, ln)
-			ln += pdf.font.height
+			let txt_mulai_penindakan = this.data.header.wkt_mulai_penindakan.replace(" ", " jam ")
+			let txt_selesai_penindakan = this.data.header.wkt_selesai_penindakan.replace(" ", " jam ")
+			doc.text('9.', pdf_props.ind.num, ln)
+			doc.text('Waktu Penindakan', pdf_props.ind.alp, ln)
+			ln += pdf_props.font.height
+			doc.text('Dimulai tanggal', pdf_props.ind.alp, ln)
+			doc.text(':', pdf_props.ind.num_cln, ln)
+			doc.text(txt_mulai_penindakan, pdf_props.ind.num_txt, ln)
+			ln += pdf_props.font.height
+			doc.text('Berakhir', pdf_props.ind.alp, ln)
+			doc.text(':', pdf_props.ind.num_cln, ln)
+			doc.text(txt_selesai_penindakan, pdf_props.ind.num_txt, ln)
+			ln += pdf_props.font.height
 
-			doc.text('10.', pdf.ind.num, ln)
-			doc.text('Hal yang terjadi', pdf.ind.alp, ln)
-			doc.text(':', pdf.ind.num_cln, ln)
-			doc.text(this.pdf_txt.hal_terjadi, pdf.ind.num_txt, ln)
+			let txt_hal_terjadi = converters.string(this.data.header.hal_terjadi)
+			doc.text('10.', pdf_props.ind.num, ln)
+			doc.text('Hal yang terjadi', pdf_props.ind.alp, ln)
+			doc.text(':', pdf_props.ind.num_cln, ln)
+			doc.text(txt_hal_terjadi, pdf_props.ind.num_txt, ln)
 
 			////// TTD //////
-
-			let ln_tgl = ln + pdf.font.height*1.5
-			let ln_jabatan_1 = ln_tgl + pdf.font.height
-			let ln_nama_1 = ln_jabatan_1 + pdf.font.height*4
-			let ln_nip_1 = ln_nama_1 + pdf.font.height
-			let ln_nama_2 = ln_nip_1 + pdf.font.height*4
-			let ln_nip_2 = ln_nama_2 + pdf.font.height
+			let ln_tgl = ln + pdf_props.font.height*1.5
+			let ln_jabatan_1 = ln_tgl + pdf_props.font.height
+			let ln_nama_1 = ln_jabatan_1 + pdf_props.font.height*4
+			let ln_nip_1 = ln_nama_1 + pdf_props.font.height
+			let ln_nama_2 = ln_nip_1 + pdf_props.font.height*4
+			let ln_nip_2 = ln_nama_2 + pdf_props.font.height
 
 			// Pemilik/kuasa
-			doc.text('Pengangkut / Pemilik / Kuasanya / Saksi*', pdf.ind.alp, ln_jabatan_1)
-			doc.text(this.data.header.nama_pemilik, pdf.ind.alp, ln_nama_1)
+			doc.text('Pengangkut / Pemilik / Kuasanya / Saksi*', pdf_props.ind.alp, ln_jabatan_1)
+			doc.text(this.data.header.nama_pemilik, pdf_props.ind.alp, ln_nama_1)
 
 			// Pejabat
-			doc.text('Tangerang, ' + this.pdf_txt.tgl_sbp, pdf.ind.ttd, ln_tgl)
-			doc.text('Pejabat yang melakukan penindakan,', pdf.ind.ttd, ln_jabatan_1)
-			doc.text('..............', pdf.ind.ttd, ln_nama_1)
-			doc.text('NIP ......', pdf.ind.ttd, ln_nip_1)
+			doc.text('Tangerang, ' + full_tgl_dok, pdf_props.ind.ttd, ln_tgl)
+			doc.text('Pejabat yang melakukan penindakan,', pdf_props.ind.ttd, ln_jabatan_1)
+			doc.text('..............', pdf_props.ind.ttd, ln_nama_1)
+			doc.text('NIP ......', pdf_props.ind.ttd, ln_nip_1)
 
-			doc.text('..............', pdf.ind.ttd, ln_nama_2)
-			doc.text('NIP ......', pdf.ind.ttd, ln_nip_2)
+			doc.text('..............', pdf_props.ind.ttd, ln_nama_2)
+			doc.text('NIP ......', pdf_props.ind.ttd, ln_nip_2)
 
 			////// KETERANGAN //////
-
-			let ln_coret = ln_nip_2 + pdf.font.height
-			let ln_ket = ln_coret + pdf.font.height*2
+			let ln_coret = ln_nip_2 + pdf_props.font.height
+			let ln_ket = ln_coret + pdf_props.font.height*2
 
 			doc.setFont('Helvetica', 'italic')
 			doc.setFontSize('7')
-			doc.text('*Coret yang tidak perlu', pdf.ind.num, ln_coret)
+			doc.text('*Coret yang tidak perlu', pdf_props.ind.num, ln_coret)
 
-			doc.setFontSize(pdf.font.size-1)
+			doc.setFontSize(pdf_props.font.size-1)
 			let ket = 'Yang dimaksud dengan "barang yang dikuasai negara" adalah '
 			ket += 'barang yang untuk sementara waktu penguasaannya berada pada negara '
 			ket += 'sampai dapat ditentukan status barang yang sebenarnya. '
 			ket += 'Perubahaan status ini dimaksudkan agar pejabat bea dan cukai '
 			ket += 'dapat memproses barang tersebut secara administrasi sampai dapat dibuktikan '
 			ket += 'bahwa telah terjadi kesalahan atau sama sekali tidak terjadi kesalahan.'
-			doc.text(ket, pdf.ind.num, ln_ket, {maxWidth: 185})
+			doc.text(ket, pdf_props.ind.num, ln_ket, {maxWidth: 185})
 
 			////// LAMPIRAN //////
 			if (this.data.item_barang != null) {
@@ -538,59 +364,29 @@ export default {
 					ln = 10
 					doc.addPage()
 
-					////// NOMOR LAMPIRAN //////
-					doc.setFontSize(pdf.font.size)
-					doc.text('LAMPIRAN', pdf.ind.lamp, ln)
-					ln += pdf.font.height
-					doc.setFontSize(pdf.font.size - 2)
-					doc.text('Surat Bukti Penindakan', pdf.ind.lamp, ln)
-					ln += pdf.font.height
-					doc.text(this.pdf_txt.no_sbp, pdf.ind.lamp, ln)
-					ln += pdf.font.height
-					doc.text('Tanggal : ' + this.pdf_txt.no_sbp, pdf.ind.lamp, ln)
-					ln += pdf.font.height*3
+					// Header
+					let res_att_head = pdf.header_lampiran(
+						doc, 
+						doc_title, 
+						this.data.header.no_dok_lengkap,
+						full_tgl_dok,
+						pdf_props.font.size,
+						pdf_props.font.height,
+						ln,
+						pdf_props.ind.lamp
+					)
+					doc = res_att_head[0]
+					ln = res_att_head[1]
 
-					////// TABEL //////
-					const tabelData = this.prepareItemData(this.data.item_barang)
-					const tabelHead = [
-						{header: 'No', dataKey: 'no'},
-						{header: 'Uraian Barang', dataKey: 'uraian'},
-						{header: 'Jumlah', dataKey: 'jumlah'},
-					]
-
-					doc.autoTable({
-						columns: tabelHead,
-						body: tabelData,
-						margin: {top: ln},
-						theme: 'grid',
-						styles: {
-							fontSize: pdf.font.size,
-							textColor: 20,
-							fillColor: null,
-							lineWidth: 0.25,
-							lineColor: 1,
-						},
-						headStyles: {
-							halign: 'center'
-						},
-						columnStyles: {
-							0: {
-								cellWidth: 10,
-								halign: 'center'
-							},
-							1: {minCellWidth: 50},
-							2: {
-								minCellWidth: 20,
-								halign: 'center'
-							},
-						},
-					})
+					// Tabel barang
+					const tabelData = converters.item_barang(this.data.item_barang)
+					doc = pdf.tabel_barang(doc, tabelData, ln, pdf_props.font.size)
 				}
 			}
 
 			////// WATERMARK //////
 			if ([100,101].includes(this.data.header.status.kode_status)) {
-				doc = this.addWatermark(doc)	
+				doc = pdf.watermark(doc)	
 			}
 
 			return doc.output('datauristring');  
@@ -603,13 +399,5 @@ export default {
 </script>
 
 <style>
-.pdf-preview {
-	min-width: 0 !important;
-	width: 100% !important;
-	position: inherit !important;
-	transform: none !important;
-}
-.pdf-preview > button {
-	display: none !important;
-}
+
 </style>

@@ -243,7 +243,7 @@ const custom_validations_default = {
 const jenis_pelanggaran = ['Kepabeanan', 'Cukai']
 
 export default {
-	name: 'SbpForm',
+	name: 'FormSbp',
 	components: {
 		DatePicker,
 		MyAlert
@@ -253,30 +253,19 @@ export default {
 			type: String,
 			default: 'insert'
 		},
-		editted: Boolean,
-		id: {
-			type: Number,
-			default: null
-		}
+		id: Number
 	},
 	computed: {
 		API_SBP_ID() { return API + '/' + this.id }
 	},
 	data() {
 		return {
-			console,
 			data: { ...data_default },
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 			jenis_pelanggaran_options: [ ...jenis_pelanggaran ],
 		}
 	},
 	methods: {
-		reset() {
-			this.$emit('update:state', 'insert')
-			this.$emit('update:id', null)
-			this.data = { ...data_default }
-			this.validasi = JSON.parse(JSON.stringify(custom_validations_default))
-		},
 		getData(validate_first = false) {
 			if (this.state == 'edit') {
 				axios
@@ -300,7 +289,6 @@ export default {
 							}
 						}
 					)
-					.catch((error) => console.error(error))
 			}
 		},
 		saveData() {
@@ -315,14 +303,13 @@ export default {
 				data: this.data,
 			})
 				.then((response) => {
+					this.$emit('save-data', this.state)
 					this.$emit('update:state', 'edit')
 					if (submit_method == 'post') {
 						this.$emit('update:id', response.data.id)
-						this.$emit('save-data')
 					}
 					this.alert('Data header berhasil disimpan')
 				})
-				.catch((error) => (console.error(error)))
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
