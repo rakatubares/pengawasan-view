@@ -205,9 +205,9 @@ import axios from "axios"
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
-import converters from '../../helpers/converter.js'
-import MyAlert from '../components/AlertSubmit.vue'
-import validators from '../../helpers/validator.js'
+import MyAlert from '../../components/AlertSubmit.vue'
+import converters from '../../../helpers/converter.js'
+import validators from '../../../helpers/validator.js'
 
 const API = process.env.VUE_APP_BASEAPI + '/sbp'
 
