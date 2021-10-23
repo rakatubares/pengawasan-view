@@ -20,8 +20,8 @@ export default [
 			},
 			{
 				_name: 'CSidebarNavItem',
-				name: 'SBP2',
-				to: '/sbp2',
+				name: 'Segel',
+				to: '/segel',
 				icon: 'cil-file'
 			}
 		]

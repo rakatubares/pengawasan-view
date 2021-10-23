@@ -2,18 +2,16 @@
 	<CModal
 		:title="title"
 		:size="size"
-		:show="show"
-		@update:show="
-			$emit('update:show', $event)
-			getNavs()
-		"
+		:show.sync="show"
+		@update:show="show == false && closeModal()"
 	>
 		<CTabs 
-			:activeTab.sync="active_tab"
+			:activeTab="current_tab"
 			@update:activeTab="changeTab($event)"
 		>
 			<slot name="tab-header"></slot>
 			<slot name="tab-detail"></slot>
+			<slot name="tab-form"></slot>
 		</CTabs>
 
 		<template #footer>
@@ -65,7 +63,6 @@ export default {
 	name: 'ModalTabs',
 	props: {
 		title: String,
-		show: Boolean,
 		size: {
 			type: String,
 			default: "xl"
@@ -89,20 +86,24 @@ export default {
 	data() {
 		return {
 			console,
+			show: false,
 			navs: JSON.parse(JSON.stringify(navs_default)),
-			active_tab: this.current_tab
 		}
 	},
 	methods: {
+		showModal() {
+			this.show = true
+		},
 		closeModal() {
-			this.$emit('update:show', false)
+			this.show = false
+			this.$emit('close-modal')
 			this.$emit('update:current_tab', 0)
 		},
-		getNavs() {
-			let prev_title = (this.active_tab == 0) ? "" : this.tabs_list[this.active_tab-1]['title']
-			let next_title = (this.active_tab == this.tabs_list.length-1) ? "" : this.tabs_list[this.active_tab+1]['title']
-			let prev_disabled = (this.active_tab == 0) ? true : !this.tabs_list[this.active_tab-1]['visibility']
-			let next_disabled = (this.active_tab == this.tabs_list.length-1) ? true : !this.tabs_list[this.active_tab+1]['visibility']
+		getNavs(tab) {
+			let prev_title = (tab == 0) ? "" : this.tabs_list[tab-1]['title']
+			let next_title = (tab == this.tabs_list.length-1) ? "" : this.tabs_list[tab+1]['title']
+			let prev_disabled = (tab == 0) ? true : !this.tabs_list[tab-1]['visibility']
+			let next_disabled = (tab == this.tabs_list.length-1) ? true : !this.tabs_list[tab+1]['visibility']
 
 			this.navs = {
 				prev: {
@@ -116,20 +117,21 @@ export default {
 			}
 		},
 		changeTab(tab) {
-			this.active_tab = tab
-			this.getNavs()
+			this.$emit('update:current_tab', tab)
+			this.getNavs(tab)
 		},
 		prevTab() {
-			this.active_tab -= 1
-			this.getNavs()
+			this.$emit('update:current_tab', this.current_tab - 1)
+			this.getNavs(this.current_tab - 1)
 		},
 		nextTab() {
-			this.active_tab += 1
-			this.getNavs()
+			this.$emit('update:current_tab', this.current_tab + 1)
+			this.getNavs(this.current_tab + 1)
 		}
 	},
 	mounted() {
-		this.getNavs()
+		this.showModal()
+		this.getNavs(0)
 	}
 }
 </script>
