@@ -11,8 +11,6 @@ const Homepage = () => import('@/views/Homepage')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 
-const Test = () => import('@/views/Test')
-
 Vue.use(Router)
 
 export default new Router({
