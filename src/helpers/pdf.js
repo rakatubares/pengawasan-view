@@ -162,6 +162,43 @@ pdf.detail_bangunan = (doc, data_bangunan, ln, font_height, indents) => {
 	return [doc, ln]
 }
 
+pdf.detail_badan = (doc, data_badan, ln, font_height, indents) => {
+	let data = converters.badan(data_badan)
+
+	doc.setFont('Helvetica', 'bold')
+	doc.text('d.', indents.alp, ln)
+	doc.text('Badan* :', indents.lbl, ln)
+	ln += font_height
+
+	doc.setFont('Helvetica', 'normal')
+	doc.text('Nama', indents.lbl, ln)
+	doc.text(':', indents.cln, ln)
+	doc.text(data.nama, indents.txt, ln)
+	ln += font_height
+
+	doc.text('Tanggal Lahir', indents.lbl, ln)
+	doc.text(':', indents.cln, ln)
+	doc.text(data.tgl_lahir, indents.txt, ln)
+	ln += font_height
+
+	doc.text('Kewarganegaraan', indents.lbl, ln)
+	doc.text(':', indents.cln, ln)
+	doc.text(data.warga_negara, indents.txt, ln)
+	ln += font_height
+
+	doc.text('Alamat', indents.lbl, ln)
+	doc.text(':', indents.cln, ln)
+	doc.text(data.alamat, indents.txt, ln)
+	ln += font_height
+
+	doc.text('Nomor Identitas', indents.lbl, ln)
+	doc.text(':', indents.cln, ln)
+	doc.text(data.identitas, indents.txt, ln)
+	ln += font_height
+
+	return [doc, ln]
+}
+
 pdf.header_lampiran = (doc, tipe_dok, no_dok, tgl_dok, font_size, font_height, ln, indent) => {
 	doc.setFontSize(font_size)
 	doc.text('LAMPIRAN', indent, ln)
