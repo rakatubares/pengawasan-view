@@ -7,9 +7,9 @@ const TheContainer = () => import('@/containers/TheContainer')
 // Views
 const Homepage = () => import('@/views/Homepage')
 
-// Views - Sbp
-const SbpInput = () => import('@/views/penindakan/SbpInput')
-const SbpInput2 = () => import('@/views/penindakan/SbpInput2')
+// Views - Penindakan
+const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
+const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 
 const Test = () => import('@/views/Test')
 
@@ -38,18 +38,13 @@ function configRoutes () {
 				{
 					path: 'sbp',
 					name: 'SBP',
-					component: SbpInput
+					component: PageSbp
 				},
 				{
-					path: 'sbp2',
-					name: 'SBP2',
-					component: SbpInput2
+					path: 'segel',
+					name: 'Segel',
+					component: PageSegel
 				},
-				{
-					path: 'test',
-					name: 'TEST',
-					component: Test
-				}
 			]
 		},
 	]

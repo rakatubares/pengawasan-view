@@ -150,13 +150,13 @@ export default {
 				.then(
 					(response) => {
 						this.alert('Penindakan badan berhasil disimpan')
-						this.$emit('input-data', response.data)
+						this.$emit('input-data')
 					}
 				)
 				.catch((error) => {console.error(error)})
 		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
+		alert(text) {
+			this.$refs.alert.show_alert(text)
 		},
 		validatorRequired(val) { return validators.required(val) },
 	},

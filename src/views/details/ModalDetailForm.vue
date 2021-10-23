@@ -26,40 +26,44 @@
 			<MyFormSarkut
 				v-if="active_detail == 'sarkut'"
 				:state.sync="state"
-				:sbp_id="sbp_id"
+				:doc_type="doc_type"
+				:doc_id="doc_id"
 				@input-data="
 					$emit('update:state', 'edit')
-					displayDetail('sarkut', $event)
+					displayDetail('sarkut')
 				"
 			>
 			</MyFormSarkut>
 			<MyFormBarang
 				v-if="active_detail == 'barang'"
 				:state.sync="state"
-				:sbp_id="sbp_id"
+				:doc_type="doc_type"
+				:doc_id="doc_id"
 				@input-data="
 					$emit('update:state', 'edit')
-					displayDetail('barang', $event)
+					displayDetail('barang')
 				"
 			>
 			</MyFormBarang>
 			<MyFormBangunan
 				v-if="active_detail == 'bangunan'"
 				:state.sync="state"
-				:sbp_id="sbp_id"
+				:doc_type="doc_type"
+				:doc_id="doc_id"
 				@input-data="
 					$emit('update:state', 'edit')
-					displayDetail('bangunan', $event)
+					displayDetail('bangunan')
 				"
 			>
 			</MyFormBangunan>
 			<MyFormBadan
 				v-if="active_detail == 'badan'"
 				:state.sync="state"
-				:sbp_id="sbp_id"
+				:doc_type="doc_type"
+				:doc_id="doc_id"
 				@input-data="
 					$emit('update:state', 'edit')
-					displayDetail('badan', $event)
+					displayDetail('badan')
 				"
 			>
 			</MyFormBadan>
@@ -105,10 +109,8 @@ export default {
 			type: String,
 			default: 'input'
 		},
-		sbp_id: {
-			type: Number,
-			default: null
-		},
+		doc_type: String,
+		doc_id: Number
 	},
 	computed: {
 		options_jenis_penindakan() {
@@ -128,12 +130,8 @@ export default {
 	},
 	methods: {
 		validatorRequired(val) { return validators.required(val) },
-		displayDetail(type, response) {
-			let data = {
-				type: type,
-				data: response.data
-			}
-			this.$emit('input-data', data)
+		displayDetail(type) {
+			this.$emit('input-data', type)
 		},
 	},
 }

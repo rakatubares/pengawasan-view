@@ -66,9 +66,7 @@ import axios from "axios"
 import MyAlert from '../components/AlertSubmit.vue'
 import validators from '../../helpers/validator.js'
 
-const API = process.env.VUE_APP_BASEAPI + '/sbp'
-
-const data_default ={
+const data_default = {
 	uraian_barang: null,
 	jumlah_barang: null,
 	satuan_barang: null
@@ -88,18 +86,13 @@ export default {
 			type: String,
 			default: 'insert'
 		},
-		id: {
-			type: Number,
-			default: null
-		},
-		sbp_id: {
-			type: Number,
-			default: null
-		},
+		id: Number,
+		doc_type: String,
+		doc_id: Number,
 	},
 	computed: {
-		API_BARANG() { return API + '/' + this.sbp_id + '/barang/detail' },
-		API_BARANG_ID() { return API + '/' + this.sbp_id + '/barang/detail/' + this.id },
+		API_BARANG() { return process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/barang/item' },
+		API_BARANG_ID() { return this.API_BARANG + '/' + this.id },
 	},
 	data() {
 		return {

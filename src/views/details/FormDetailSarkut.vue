@@ -93,8 +93,6 @@ import axios from "axios"
 import MyAlert from '../components/AlertSubmit.vue'
 import validators from '../../helpers/validator.js'
 
-const API = process.env.VUE_APP_BASEAPI + '/sbp'
-
 const data_default = {
 	nama_sarkut: null,
 	jenis_sarkut: null,
@@ -115,17 +113,12 @@ export default {
 			type: String,
 			default: 'input'
 		},
-		id: {
-			type: Number,
-			default: null
-		},
-		sbp_id: {
-			type: Number,
-			default: null
-		},
+		id: Number,
+		doc_type: String,
+		doc_id: Number,
 	},
 	computed: {
-		API_SARKUT() { return API + '/' + this.sbp_id + '/sarkut' },
+		API_SARKUT() { return process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/sarkut' },
 	},
 	data() {
 		return {
@@ -152,7 +145,7 @@ export default {
 				.then(
 					(response) => {
 						this.alert('Penindakan sarana pengangkut berhasil disimpan')
-						this.$emit('input-data', response.data)
+						this.$emit('input-data')
 					}
 				)
 				.catch((error) => {console.error(error)})

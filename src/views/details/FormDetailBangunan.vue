@@ -78,8 +78,6 @@ import axios from "axios"
 import MyAlert from '../components/AlertSubmit.vue'
 import validators from '../../helpers/validator.js'
 
-const API = process.env.VUE_APP_BASEAPI + '/sbp'
-
 const data_default = {
 	alamat: null,
 	no_reg: null,
@@ -97,17 +95,12 @@ export default {
 			type: String,
 			default: 'input'
 		},
-		id: {
-			type: Number,
-			default: null
-		},
-		sbp_id: {
-			type: Number,
-			default: null
-		},
+		id: Number,
+		doc_type: String,
+		doc_id: Number,
 	},
 	computed: {
-		API_BANGUNAN() { return API + '/' + this.sbp_id + '/bangunan' },
+		API_BANGUNAN() { return process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/bangunan' },
 	},
 	data() {
 		return {
@@ -134,7 +127,7 @@ export default {
 				.then(
 					(response) => {
 						this.alert('Penindakan bangunan berhasil disimpan')
-						this.$emit('input-data', response.data)
+						this.$emit('input-data')
 					}
 				)
 				.catch((error) => {console.error(error)})
