@@ -9,7 +9,6 @@ const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
-const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 
 Vue.use(Router)
 
@@ -37,11 +36,6 @@ function configRoutes () {
 					path: 'sbp',
 					name: 'SBP',
 					component: PageSbp
-				},
-				{
-					path: 'segel',
-					name: 'Segel',
-					component: PageSegel
 				},
 			]
 		},
