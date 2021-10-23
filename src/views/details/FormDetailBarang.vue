@@ -89,8 +89,6 @@ import 'vue2-datepicker/index.css'
 import MyAlert from '../components/AlertSubmit.vue'
 import validators from '../../helpers/validator.js'
 
-const API = process.env.VUE_APP_BASEAPI + '/sbp'
-
 const data_default = {
 	jumlah_kemasan: null,
 	satuan_kemasan: null,
@@ -111,17 +109,12 @@ export default {
 			type: String,
 			default: 'input'
 		},
-		id: {
-			type: Number,
-			default: null
-		},
-		sbp_id: {
-			type: Number,
-			default: null
-		},
+		id: Number,
+		doc_type: String,
+		doc_id: Number,
 	},
 	computed: {
-		API_BARANG() { return API + '/' + this.sbp_id + '/barang' },
+		API_BARANG() { return process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/barang' },
 	},
 	data() {
 		return {
@@ -148,7 +141,7 @@ export default {
 				.then(
 					(response) => {
 						this.alert('Penindakan barang berhasil disimpan')
-						this.$emit('input-data', response.data)
+						this.$emit('input-data')
 					}
 				)
 				.catch((error) => {console.error(error)})

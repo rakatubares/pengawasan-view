@@ -2,7 +2,10 @@
 	<div class="wrapper">
 
 		<!-- Button tambah data -->
-		<CRow class="mt-3">
+		<CRow 
+			v-if="(state==='insert') || (state==='edit')"
+			class="mt-3"
+		>
 			<CCol md="3" sm="12">
 				<CButton 
 					block 
@@ -15,31 +18,44 @@
 			</CCol>
 		</CRow>
 
-		<!-- Dsiplay data detail -->
+		<!-- Display data detail -->
 		<MyDisplaySarkut
+			ref="display_sarkut"
 			v-if="display_details.sarkut.visibility"
-			:data.sync="display_details.sarkut.data"	
+			:state="state"
+			:doc_type="doc_type"
+			:doc_id="doc_id"
 			@edit-data="editData('sarkut')"
 			@delete-data="deleteData('sarkut')"
 		>
 		</MyDisplaySarkut>
 		<MyDisplayBarang
+			ref="display_barang"
 			v-if="display_details.barang.visibility"	
-			:data.sync="display_details.barang.data"	
+			:state="state"
+			:doc_type="doc_type"
+			:doc_id="doc_id"	
 			@edit-data="editData('barang')"
 			@delete-data="deleteData('barang')"
+			@edit-item="$emit('edit-data')"
 		>
 		</MyDisplayBarang>
 		<MyDisplayBangunan
+			ref="display_bangunan"
 			v-if="display_details.bangunan.visibility"
-			:data.sync="display_details.bangunan.data"	
+			:state="state"
+			:doc_type="doc_type"
+			:doc_id="doc_id"
 			@edit-data="editData('bangunan')"
 			@delete-data="deleteData('bangunan')"
 		>
 		</MyDisplayBangunan>
 		<MyDisplayBadan
+			ref="display_badan"
 			v-if="display_details.badan.visibility"
-			:data.sync="display_details.badan.data"	
+			:state="state"
+			:doc_type="doc_type"
+			:doc_id="doc_id"
 			@edit-data="editData('badan')"
 			@delete-data="deleteData('badan')"
 		>
@@ -52,8 +68,9 @@
 			:available_details.sync="available_details_form"
 			:active_detail.sync="active_detail"
 			:state.sync="form_state"
-			:sbp_id="sbp_id"
-			@input-data="displayDetail($event)"
+			:doc_type="doc_type"
+			:doc_id="doc_id"
+			@input-data="inputData"
 		>
 		</MyModalDetailForm>
 	</div>
@@ -67,24 +84,18 @@ import MyDisplayBarang from '../details/DisplayBarang.vue'
 import MyDisplaySarkut from '../details/DisplaySarkut.vue'
 import MyModalDetailForm from '../details/ModalDetailForm.vue'
 
-const API = process.env.VUE_APP_BASEAPI + '/sbp'
-
 const display_details_default = {
 	sarkut: {
 		visibility: false,
-		data: {}
 	},
 	barang: {
 		visibility: false,
-		data: {}
 	},
 	bangunan: {
 		visibility: false,
-		data: {}
 	},
 	badan: {
 		visibility: false,
-		data: {}
 	},
 }
 
@@ -100,7 +111,15 @@ export default {
 		MyModalDetailForm
 	},
 	props: {
-		sbp_id: {
+		state: {
+			type: String,
+			default: 'insert'
+		},
+		doc_type: {
+			type: String,
+			default: null
+		},
+		doc_id: {
 			type: Number,
 			default: null
 		},
@@ -110,6 +129,9 @@ export default {
 				return available_details_default
 			} 
 		}
+	},
+	computed: {
+		API_DETAILS() { return process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/details' }
 	},
 	data() {
 		return {
@@ -127,10 +149,18 @@ export default {
 			this.active_detail = null
 			this.show_modal_detail = true
 		},
-		displayDetail({type, data}) {
-			this.display_details[type]['visibility'] = true
-			this.display_details[type]['data'] = data
+		inputData(type) {
+			this.displayDetail(type)
 			this.filterDetails(type)
+			this.$emit('edit-data')
+		},
+		displayDetail(type) {
+			this.display_details[type]['visibility'] = true
+			
+			let ref_name = 'display_'+type
+			if (typeof this.$refs[ref_name] != 'undefined') {
+				this.$refs['display_'+type].getData()	
+			}
 		},
 		editData(type) {
 			this.show_modal_detail = true
@@ -140,23 +170,27 @@ export default {
 		deleteData(type) {
 			this.display_details[type]['visibility'] = false
 			this.available_details_form.push(type)
+			this.$emit('edit-data')
 		},
 		filterDetails(type) {
 			this.available_details_form = this.available_details_form.filter(item => item !== type)
 		},
 		getDetails() {
-			for (const key in available_details_default) {
-				let type = available_details_default[key]
-				let API_DETAIL = API + '/' + this.sbp_id + '/' + type
-				axios
-					.get(API_DETAIL)
-					.then(
-						(response) => {
-							let data = response.data.data
-							this.displayDetail({type, data})
+			axios
+				.get(this.API_DETAILS)
+				.then(
+					(response) => {
+						let data = response.data.data
+						for (const key in data) {
+							if (data[key] == 1) {
+								this.display_details[key]['visibility'] = true	
+							} else {
+								this.display_details[key]['visibility'] = false
+							}
 						}
-					)
-			}
+						console.log('display detail - get details', JSON.parse(JSON.stringify(this.display_details)))
+					}
+				)
 		}
 	},
 	mounted() {
