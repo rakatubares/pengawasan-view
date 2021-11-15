@@ -10,8 +10,9 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
-const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
-const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
+// const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
+// const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
+const PageBast = () => import('@/views/penindakan/bast/PageBast')
 
 Vue.use(Router)
 
@@ -36,15 +37,10 @@ function configRoutes () {
 					component: Homepage
 				},
 				{
-					path: 'sbp',
-					name: 'SBP',
-					component: PageSbp
-				},
-				{
-					path: 'segel',
-					name: 'Segel',
-					component: PageSegel
-				},
+					path: 'bast',
+					name: 'BAST',
+					component: PageBast
+				}
 			]
 		},
 	]

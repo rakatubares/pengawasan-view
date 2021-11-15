@@ -14,14 +14,8 @@ export default [
 			},
 			{
 				_name: 'CSidebarNavItem',
-				name: 'SBP',
-				to: '/sbp',
-				icon: 'cil-file'
-			},
-			{
-				_name: 'CSidebarNavItem',
-				name: 'Segel',
-				to: '/segel',
+				name: 'BAST',
+				to: '/bast',
 				icon: 'cil-file'
 			}
 		]
