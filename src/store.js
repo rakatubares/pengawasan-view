@@ -1,10 +1,12 @@
+import SSO from '../src/helpers/sso'
 import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
   sidebarShow: 'responsive',
-  sidebarMinimize: false
+  sidebarMinimize: false,
+  sso: new SSO(false)
 }
 
 const mutations = {
@@ -21,7 +23,12 @@ const mutations = {
   }
 }
 
+const getters = {
+	sso: state => { return state.sso }
+}
+
 export default new Vuex.Store({
   state,
-  mutations
+  mutations,
+  getters
 })
