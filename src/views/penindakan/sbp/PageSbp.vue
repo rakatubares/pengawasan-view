@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper" data-app>
 		<!-- Display table data for SBP list -->
 		<CRow>
 			<CCol>
@@ -145,7 +145,7 @@ export default {
 			fields: [
 				{ key: 'no_dok_lengkap', label: 'No SBP' },
 				{ key: 'tgl_dok', label: 'Tgl SBP' },
-				{ key: 'nama_pemilik', label: 'Pemilik' },
+				{ key: 'nama_saksi', label: 'Saksi/Pemilik' },
 				{ key: 'pejabat1', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
@@ -174,6 +174,7 @@ export default {
 				.then(
 					(response) => {
 						this.list_sbp = response.data.data
+						console.log('list_sbp', this.list_sbp)
 					}
 				)
 		},

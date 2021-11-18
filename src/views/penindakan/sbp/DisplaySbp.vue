@@ -78,10 +78,10 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3">
-						<b>Pemilik</b>
+						<b>Saksi/Pemilik</b>
 					</CCol>
 					<CCol md="9">
-						{{ disp_pemilik }}
+						{{ disp_saksi }}
 					</CCol>
 				</CRow>
 			</CCol>
@@ -97,16 +97,17 @@ const API = process.env.VUE_APP_BASEAPI + '/sbp'
 const data_default = {
 	no_dok_lengkap: null,
 	tgl_dok: null,
-	no_sprint: null,
-	tgl_sprint: null,
+	sprint: {
+		nomor_sprint: null,
+		tanggal_sprint: null
+	},
 	uraian_penindakan: null,
-	alasan_penindakan: null,
 	alasan_penindakan: null,
 	jenis_pelanggaran: null,
 	wkt_mulai_penindakan: null,
 	wkt_selesai_penindakan: null,
 	hal_terjadi: null,
-	nama_pemilik: null,
+	saksi: {nama: null},
 	pejabat1: null,
 	pejabat2: null
 }
@@ -120,7 +121,7 @@ export default {
 		API_SBP_ID() { return API + '/' + this.id },
 		disp_no_sbp() { return this.data.no_dok_lengkap || '-' },
 		disp_tgl_sbp() { return this.data.tgl_dok || '-' },
-		disp_sprint() { return ((this.data.no_sprint || '') + ' tanggal ' + (this.data.tgl_sprint || '')) },
+		disp_sprint() { return ((this.data.sprint.nomor_sprint || '') + ' tanggal ' + (this.data.sprint.tanggal_sprint || '')) },
 		disp_lokasi() { return this.data.lokasi_penindakan || '-' },
 		disp_uraian() { return this.data.uraian_penindakan || '-' },
 		disp_alasan() { return this.data.alasan_penindakan || '-' },
@@ -128,7 +129,7 @@ export default {
 		disp_waktu_mulai() { return this.data.wkt_mulai_penindakan || '-' },
 		disp_waktu_selesai() { return this.data.wkt_selesai_penindakan || '-' },
 		disp_hal_terjadi() { return this.data.hal_terjadi || '-' },
-		disp_pemilik() { return this.data.nama_pemilik || '-' },
+		disp_saksi() { return this.data.saksi.nama || '-' },
 	},
 	data() {
 		return {
@@ -142,6 +143,7 @@ export default {
 				.then(
 					(response) => { 
 						this.data = JSON.parse(JSON.stringify(response.data.data ))
+						console.log('display sbp - data', JSON.parse(JSON.stringify(this.data)))
 					}
 				)
 		}
