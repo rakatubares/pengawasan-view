@@ -174,7 +174,6 @@ export default {
 				.then(
 					(response) => {
 						this.list_sbp = response.data.data
-						console.log('list_sbp', this.list_sbp)
 					}
 				)
 		},
@@ -247,11 +246,6 @@ export default {
 		refreshPdf() {
 			this.$refs.pdf_sbp.showPdf()
 		}
-		// checkTab(tab_index) {
-		// 	if (tab_index == 2) {
-		// 		this.$refs.pdf_sbp.showPdf()
-		// 	}
-		// }
 	},
 	created() {
 		this.getDataSbp()

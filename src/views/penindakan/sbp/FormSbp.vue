@@ -3,44 +3,6 @@
 
 		<!-- Form SBP header -->
 		<CForm class="pt-3">
-			<!-- <CRow>
-				<CCol md="9" sm="12">
-					<CInput
-						label="No Sprint"
-						description="Nomor Surat Perintah"
-						:value.sync="data.no_sprint"
-						:is-valid="validatorRequired"
-						invalid-feedback="No SPRINT wajib diisi"
-					/>
-				</CCol>
-				<CCol md="3" sm="12">
-					<div class="form-group">
-						<label class="w-100">Tgl Sprint</label>
-						<date-picker 
-							v-model="data.tgl_sprint" 
-							format="DD-MM-YYYY" 
-							value-type="format"
-							type="date"
-							@change="validatorDatetime($event, 'DD-MM-YYYY', 'validasi.tgl_sprint', 'Tanggal SPRINT wajib diisi')"
-						>
-							<template v-slot:input="slotProps">
-								<input
-									class="form-control" 
-									type="text" 
-									v-bind="slotProps.props" 
-									v-on="slotProps.events"
-									v-bind:class="{
-										'is-valid': validasi.tgl_sprint.state,
-										'is-invalid': !validasi.tgl_sprint.state
-									}"
-								/>
-								<div class="invalid-feedback pb-1">{{validasi.tgl_sprint.text}}</div>
-							</template>
-							<i slot="icon-calendar"></i>
-						</date-picker>	
-					</div>
-				</CCol>
-			</CRow> -->
 			<CRow>
 				<CCol md="12">
 					<MySelectSprint
@@ -178,18 +140,6 @@
 					/>
 				</CCol>
 			</CRow>
-			<!-- <CRow>
-				<CCol sm="12">
-					<CInput
-						label="Nama Pengangkut/Pemilik/Kuasa/Saksi"
-						description="Nama terang Pengangkut/Pemilik/Kuasa/Saksi yang menyaksikan penindakan"
-						:value.sync="data.nama_pemilik"
-						:is-valid="validatorRequired"
-						invalid-feedback="Nama pengangkut/pemilik/kuasa/saksi wajib diisi"
-					/>
-					<MySelectEntitas></MySelectEntitas>
-				</CCol>
-			</CRow> -->
 			<CRow>
 				<CCol md="12">
 					<MySelectEntitas
@@ -198,7 +148,6 @@
 						description="Nama terang Pengangkut/Pemilik/Kuasa/Saksi yang menyaksikan penindakan"
 						:id.sync="data.saksi.id"
 					>
-					<!-- @update-value="data.saksi_id=$event" -->
 					</MySelectEntitas>
 				</CCol>
 			</CRow>
@@ -285,7 +234,6 @@ export default {
 	},
 	data() {
 		return {
-			// data: { ...data_default },
 			data: JSON.parse(JSON.stringify(data_default)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 			jenis_pelanggaran_options: [ ...jenis_pelanggaran ],
