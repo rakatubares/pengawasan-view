@@ -27,21 +27,21 @@
 							<CInput
 								label="Jenis dokumen"
 								description="Jenis dokumen yang menyertai barang"
-								:value.sync="data.jns_dok"
+								:value.sync="data.dokumen.jns_dok"
 							/>
 						</CCol>
 						<CCol md="4">
 							<CInput
 								label="Nomor dokumen"
 								description="Nomor dokumen yang menyertai barang"
-								:value.sync="data.no_dok"
+								:value.sync="data.dokumen.no_dok"
 							/>
 						</CCol>
 						<CCol md="2">
 							<div class="form-group">
 								<label class="w-100">Tanggal dokumen</label>
 								<date-picker 
-									v-model="data.tgl_dok" 
+									v-model="data.dokumen.tgl_dok" 
 									format="DD-MM-YYYY" 
 									value-type="format"
 									type="date"
@@ -50,13 +50,13 @@
 						</CCol>
 					</CRow>
 					<CRow>
-						<CCol>
-							<CInput
+						<CCol md="12">
+							<MySelectEntitas
+								ref="selectPemilik"
 								label="Nama pemilik/importir/eksportir/kuasa"
-								:value.sync="data.pemilik"
-								:is-valid="validatorRequired"
-								invalid-feedback="Nama pemilik/importir/eksportir/kuasa wajib diisi"
-							/>
+								:id.sync="data.pemilik.id"
+							>
+							</MySelectEntitas>
 						</CCol>
 					</CRow>
 
@@ -87,22 +87,27 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import MyAlert from '../components/AlertSubmit.vue'
+import MySelectEntitas from '../components/SelectEntitas.vue'
+import api from '../../router/api.js'
 import validators from '../../helpers/validator.js'
 
 const data_default = {
 	jumlah_kemasan: null,
 	satuan_kemasan: null,
-	jns_dok: null,
-	no_dok: null,
-	tgl_dok: null,
-	pemilik: null,
+	dokumen: {
+		jns_dok: null,
+		no_dok: null,
+		tgl_dok: null
+	},
+	pemilik: {id: null},
 }
 
 export default {
 	name: 'FormDetailBarang',
 	components: {
 		DatePicker,
-		MyAlert
+		MyAlert,
+		MySelectEntitas
 	},
 	props: {
 		state: {
@@ -113,29 +118,27 @@ export default {
 		doc_type: String,
 		doc_id: Number,
 	},
-	computed: {
-		API_BARANG() { return process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/barang' },
-	},
 	data() {
 		return {
-			data: { ...data_default }
+			data: JSON.parse(JSON.stringify(data_default))
 		}
 	},
 	methods: {
 		getData() {
 			if (this.state != 'input') {
 				axios
-					.get(this.API_BARANG)
+					.get(api.upsertBarang(this.doc_type, this.doc_id))
 					.then(
 						(response) => {
 							this.data = response.data.data
+							this.$refs.selectPemilik.getEntitas(this.data.pemilik.id, true)
 						}
 					)
 					.catch((error) => console.log(error))
 			}
 		},
 		saveData() {
-			let submit_url = this.API_BARANG
+			let submit_url = api.upsertBarang(this.doc_type, this.doc_id)
 			axios
 				.post(submit_url, this.data)
 				.then(

@@ -63,7 +63,7 @@
 						<MyTableData
 							class="mt-3"
 							:fields="fields_barang"
-							:items="list_barang"
+							:items="list_barang_table"
 							:editData="editBarang"
 							:deleteData="confirmDeleteBarang"
 						>
@@ -117,6 +117,7 @@ import axios from "axios"
 import MyModalDelete from '../components/ModalDelete.vue'
 import MyFormItemBarang from '../details/FormItemBarang.vue'
 import MyTableData from '../components/TableData.vue'
+import api from '../../router/api.js'
 
 export default {
 	name: 'DisplayBarang',
@@ -140,10 +141,15 @@ export default {
 			return (this.data.jumlah_kemasan || '-') + ' ' + (this.data.satuan_kemasan || '')
 		},
 		disp_dokumen() {
-			return (this.data.jns_dok || '') + ' ' + (this.data.no_dok || '-') + ' / ' + (this.data.tgl_dok || '-')
+			if (this.data.dokumen != null) {
+				var txt = (this.data.dokumen.jns_dok || '') + ' ' + (this.data.dokumen.no_dok || '-') + ' / ' + (this.data.dokumen.tgl_dok || '-')
+			} else {
+				var txt = '-'
+			}
+			return txt
 		},
 		disp_pemilik() {
-			return this.data.pemilik || '-'
+			return this.data.pemilik.nama || '-'
 		},
 		fields_barang() {
 			let fields = [
@@ -157,20 +163,18 @@ export default {
 
 			return fields
 		},
-		list_barang_table: {
-			get() { return this.list_barang },
-			set(arr) {
-				let data_barang = []
-				for (let idx in arr) {
-					let temp_barang = {
-						id: arr[idx]['id'],
-						uraian_barang: arr[idx]['uraian_barang'],
-						jumlah: (arr[idx]['jumlah_barang'] || '-') + ' ' + (arr[idx]['satuan_barang'] || '')
-					}
-					data_barang.push(temp_barang)
+		list_barang_table() {
+			let arr = this.list_barang
+			let data_barang = []
+			for (let idx in arr) {
+				let temp_barang = {
+					id: arr[idx]['id'],
+					uraian_barang: arr[idx]['uraian_barang'],
+					jumlah: (arr[idx]['jumlah_barang'] || '-') + ' ' + (arr[idx]['satuan_barang'] || '')
 				}
-				this.list_barang = data_barang
+				data_barang.push(temp_barang)
 			}
+			return data_barang
 		}
 	},
 	data() {
@@ -181,10 +185,12 @@ export default {
 				doc_id: null,
 				jumlah_kemasan: null,
 				satuan_kemasan: null,
-				jns_dok: null,
-				no_dok: null,
-				tgl_dok: null,
-				pemilik: null,
+				dokumen: {
+					jns_dok: null,
+					no_dok: null,
+					tgl_dok: null,
+				},
+				pemilik: {nama: null},
 			},
 			modal_delete_props: {
 				type: null,
@@ -201,10 +207,11 @@ export default {
 	methods: {
 		getData() {
 			axios
-				.get(this.API_BARANG)
+				.get(api.getBarangById(this.doc_type, this.doc_id))
 				.then(
 					(response) => {
 						this.data = response.data.data
+						this.list_barang = response.data.data.item
 					}
 				)
 		},
@@ -235,16 +242,6 @@ export default {
 				this.$emit('delete-data')
 			}
 		},
-		getListBarang() {
-			axios
-				.get(this.API_BARANG_DETAIL)
-				.then(
-					(response) => {
-						this.list_barang_table = response.data.data
-					}
-				)
-				.catch((error) => {console.error(error)})
-		},
 		inputNewBarang() {
 			this.show_modal_barang = true
 			this.item_state = 'insert'
@@ -267,13 +264,12 @@ export default {
 			this.modal_delete_props.show = true
 		},
 		saveItem() {
-			this.getListBarang()
+			this.getData()
 			this.$emit('edit-item')
 		}
 	},
 	mounted() {
 		this.getData()
-		this.getListBarang()
 	}
 }
 </script>

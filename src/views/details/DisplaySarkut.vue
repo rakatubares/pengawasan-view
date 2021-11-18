@@ -111,6 +111,7 @@
 import axios from "axios"
 
 import MyModalDelete from '../components/ModalDelete.vue'
+import api from '../../router/api.js'
 
 export default {
 	name: 'DisplaySarkut',
@@ -126,7 +127,6 @@ export default {
 		doc_id: Number,
 	},
 	computed: {
-		API_SARKUT() { return process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/sarkut' },
 		disp_nama_sarkut() {
 			return this.data.nama_sarkut || '-'
 		},
@@ -137,10 +137,10 @@ export default {
 			return this.data.no_flight_trayek || '-'
 		},
 		disp_kapasitas_sarkut() {
-			return (this.data.kapasitas || '-') + ' ' + (this.data.satuan_kapasitas || '')
+			return (this.data.jumlah_kapasitas || '-') + ' ' + (this.data.satuan_kapasitas || '')
 		},
 		disp_nama_pilot_pengemudi() {
-			return this.data.nama_pilot_pengemudi || '-'
+			return this.data.pilot.nama || '-'
 		},
 		disp_bendera() {
 			return this.data.bendera || '-'
@@ -159,7 +159,7 @@ export default {
 				no_flight_trayek: null,
 				kapasitas: null,
 				satuan_kapasitas: null,
-				nama_pilot_pengemudi: null,
+				pilot: {nama: null},
 				bendera: null,
 				no_reg_polisi: null,
 			},
@@ -173,7 +173,7 @@ export default {
 	methods: {
 		getData() {
 			axios
-				.get(this.API_SARKUT)
+				.get(api.getSarkutById(this.doc_type, this.doc_id))
 				.then(
 					(response) => {
 						this.data = response.data.data
