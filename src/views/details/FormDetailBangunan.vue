@@ -25,30 +25,14 @@
 						</CCol>
 					</CRow>
 					<CRow>
-						<CCol md="6">
-							<CInput
+						<CCol md="12">
+							<MySelectEntitas
+								ref="selectPemilik"
 								label="Nama pemilik/yang menguasai"
 								description="Nama pemilik/yang menguasai tempat/bangunan"
-								:value.sync="data.pemilik"
-								:is-valid="validatorRequired"
-								invalid-feedback="Nama pemilik wajib diisi"
-							/>
-						</CCol>
-					</CRow>
-					<CRow>
-						<CCol md="2">
-							<CInput
-								label="Jenis identitas"
-								description="Jenis Identitas pemilik/yang menguasai"
-								:value.sync="data.jns_identitas"
-							/>
-						</CCol>
-						<CCol md="4">
-							<CInput
-								label="Nomor identitas"
-								description="Nomor Identitas pemilik/yang menguasai"
-								:value.sync="data.no_identitas"
-							/>
+								:id.sync="data.pemilik.id"
+							>
+							</MySelectEntitas>
 						</CCol>
 					</CRow>
 
@@ -76,19 +60,21 @@
 import axios from "axios"
 
 import MyAlert from '../components/AlertSubmit.vue'
+import MySelectEntitas from '../components/SelectEntitas.vue'
+import api from '../../router/api.js'
 import validators from '../../helpers/validator.js'
 
 const data_default = {
 	alamat: null,
 	no_reg: null,
-	pemilik: null,
-	identitas: null,
+	pemilik: {id: null},
 }
 
 export default {
 	name: 'FormDetailBangunan',
 	components: {
-		MyAlert
+		MyAlert,
+		MySelectEntitas
 	},
 	props: {
 		state: {
@@ -99,9 +85,6 @@ export default {
 		doc_type: String,
 		doc_id: Number,
 	},
-	computed: {
-		API_BANGUNAN() { return process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/bangunan' },
-	},
 	data() {
 		return {
 			data: { ...data_default }
@@ -111,17 +94,18 @@ export default {
 		getData() {
 			if (this.state != 'input') {
 				axios
-					.get(this.API_BANGUNAN)
+					.get(api.getBangunanById(this.doc_type, this.doc_id))
 					.then(
 						(response) => {
 							this.data = response.data.data
+							this.$refs.selectPemilik.getEntitas(this.data.pemilik.id, true)
 						}
 					)
 					.catch((error) => console.error(error))
 			}
 		},
 		saveData() {
-			let submit_url = this.API_BANGUNAN
+			let submit_url = api.getBangunanById(this.doc_type, this.doc_id)
 			axios
 				.post(submit_url, this.data)
 				.then(

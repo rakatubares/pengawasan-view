@@ -106,10 +106,10 @@ export default {
 			return (this.data.no_reg || '-')
 		},
 		disp_pemilik() {
-			return (this.data.pemilik || '-')
+			return (this.data.pemilik.nama || '-')
 		},
 		disp_identitas() {
-			return (this.data.jns_identitas || '') + ' ' + (this.data.no_identitas || '-')
+			return (this.data.pemilik.jenis_identitas || '') + ' ' + (this.data.pemilik.nomor_identitas || '-')
 		},
 	},
 	data() {
@@ -119,9 +119,11 @@ export default {
 				doc_id: null,
 				alamat: null,
 				no_reg: null,
-				pemilik: null,
-				jns_identitas: null,
-				no_identitas: null,
+				pemilik: {
+					nama: null,
+					jenis_identitas: null,
+					nomor_identitas: null,
+				}
 			},
 			modal_delete_props: {
 				show: false,

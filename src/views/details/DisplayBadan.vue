@@ -22,7 +22,7 @@
 						<b>Tanggal Lahir</b>
 					</CCol>
 					<CCol md="9">
-						&nbsp;{{disp_tgl_lahir}}
+						&nbsp;{{disp_tanggal_lahir}}
 					</CCol>
 				</CRow>
 				<CRow class="mt-2 ml-1">
@@ -112,8 +112,8 @@ export default {
 		disp_nama() {
 			return this.data.nama || '-'
 		},
-		disp_tgl_lahir() {
-			return this.data.tgl_lahir || '-'
+		disp_tanggal_lahir() {
+			return this.data.tanggal_lahir || '-'
 		},
 		disp_warga_negara() {
 			return this.data.warga_negara || '-'
@@ -122,7 +122,7 @@ export default {
 			return this.data.alamat || '-'
 		},
 		disp_identitas() {
-			return (this.data.jns_identitas || '') + ' ' + (this.data.no_identitas || '-')
+			return (this.data.jenis_identitas || '') + ' ' + (this.data.nomor_identitas || '-')
 		},
 	},
 	data() {
@@ -131,7 +131,7 @@ export default {
 				id: null,
 				doc_id: null,
 				nama: null,
-				tgl_lahir: null,
+				tanggal_lahir: null,
 				warga_negara: null,
 				alamat: null,
 				jns_identitas: null,
@@ -150,7 +150,7 @@ export default {
 				.get(this.API_BADAN)
 				.then(
 					(response) => {
-						this.data = response.data.data
+						this.data = response.data.data.entitas
 					}
 				)
 		},
