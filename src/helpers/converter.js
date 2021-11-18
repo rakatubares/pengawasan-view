@@ -101,7 +101,7 @@ converters.sarkut = (data) => {
 		let satuan_kapasitas = converters.string(data.satuan_kapasitas)
 		let kapasitas = jml_kapasitas + satuan_kapasitas
 
-		let pilot = converters.string(data.nama_pilot_pengemudi)
+		let pilot = converters.string(data.pilot.nama)
 		
 		let bendera = converters.string(data.bendera)
 
@@ -132,14 +132,14 @@ converters.barang = (data) => {
 		let satuan_kemasan = converters.string(data.satuan_kemasan)
 		let kemasan = jumlah_kemasan + satuan_kemasan
 
-		let jenis_dok = converters.string_format(converters.string(data.jenis_dok), '{} ')
-		let no_dok = converters.string_format(converters.string(data.no_dok), '{} ')
-		let dt_dok = converters.date(data.tgl_dok, 'DD-MM-YYYY')
+		let jenis_dok = converters.string_format(converters.string(data.dokumen.jns_dok), '{} ')
+		let nomor_dok = converters.string_format(converters.string(data.dokumen.no_dok), '{} ')
+		let dt_dok = converters.date(data.dokumen.tgl_dok, 'DD-MM-YYYY')
 		let full_date = (dt_dok != null) ? converters.fullDate(dt_dok) : ''
 		let tgl_dok = full_date != '' ? converters.string_format(converters.string(full_date), 'tanggal {}') : ''
-		let dokumen = jenis_dok + no_dok + tgl_dok
+		let dokumen = jenis_dok + nomor_dok + tgl_dok
 
-		let pemilik = converters.string(data.pemilik)
+		let pemilik = converters.string(data.pemilik.nama)
 
 		parsedData = {
 			kemasan: kemasan,
@@ -163,10 +163,10 @@ converters.bangunan = (data) => {
 		
 		let no_reg = converters.string(data.no_reg)
 		
-		let nama_pemilik = converters.string_format(converters.string(data.pemilik), '{} ')
-		let jns_identitas = converters.string(data.jns_identitas)
-		let no_identitas = converters.string(data.no_identitas)
-		let pemilik = nama_pemilik + converters.string_format(jns_identitas + ' ' + no_identitas, '({})')
+		let nama_pemilik = converters.string_format(converters.string(data.pemilik.nama), '{} ')
+		let jenis_identitas = converters.string(data.pemilik.jenis_identitas)
+		let nomor_identitas = converters.string(data.pemilik.nomor_identitas)
+		let pemilik = nama_pemilik + converters.string_format(jenis_identitas + ' ' + nomor_identitas, '({})')
 
 		parsedData = {
 			alamat: alamat,
@@ -188,16 +188,16 @@ converters.badan = (data) => {
 	}
 
 	if (data != null) {
-		let nama = converters.string(data.nama)
+		let nama = converters.string(data.entitas.nama)
 		
-		let tgl_lahir = converters.string(data.tgl_lahir)
+		let tgl_lahir = converters.string(data.entitas.tanggal_lahir)
 		
-		let warga_negara = converters.string(data.warga_negara)
+		let warga_negara = converters.string(data.entitas.warga_negara)
 		
-		let alamat = converters.string(data.alamat).replace('\n', ' ')
+		let alamat = converters.string(data.entitas.alamat).replace('\n', ' ')
 
-		let jns_identitas = converters.string_format(converters.string(data.jns_identitas), '{} ')
-		let no_identitas = converters.string(data.no_identitas)
+		let jns_identitas = converters.string_format(converters.string(data.entitas.jenis_identitas), '{} ')
+		let no_identitas = converters.string(data.entitas.nomor_identitas)
 		let identitas = jns_identitas + no_identitas
 
 		parsedData = {
