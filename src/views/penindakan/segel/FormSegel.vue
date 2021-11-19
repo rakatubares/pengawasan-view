@@ -3,41 +3,12 @@
 		<!-- Form BA Segel header -->
 		<CForm class="pt-3">
 			<CRow>
-				<CCol md="9" sm="12">
-					<CInput
-						label="No Sprint"
-						description="Nomor Surat Perintah"
-						:value.sync="data.no_sprint"
-						:is-valid="validatorRequired"
-						invalid-feedback="No SPRINT wajib diisi"
-					/>
-				</CCol>
-				<CCol md="3" sm="12">
-					<div class="form-group">
-						<label class="w-100">Tgl Sprint</label>
-						<date-picker 
-							v-model="data.tgl_sprint" 
-							format="DD-MM-YYYY" 
-							value-type="format"
-							type="date"
-							@change="validatorDatetime($event, 'DD-MM-YYYY', 'validasi.tgl_sprint', 'Tanggal SPRINT wajib diisi')"
-						>
-							<template v-slot:input="slotProps">
-								<input
-									class="form-control" 
-									type="text" 
-									v-bind="slotProps.props" 
-									v-on="slotProps.events"
-									v-bind:class="{
-										'is-valid': validasi.tgl_sprint.state,
-										'is-invalid': !validasi.tgl_sprint.state
-									}"
-								/>
-								<div class="invalid-feedback pb-1">{{validasi.tgl_sprint.text}}</div>
-							</template>
-							<i slot="icon-calendar"></i>
-						</date-picker>	
-					</div>
+				<CCol md="12">
+					<MySelectSprint
+						ref="selectSprint"
+						:id.sync="data.sprint.id"
+					>
+					</MySelectSprint>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -69,7 +40,7 @@
 					/>
 				</CCol>
 			</CRow>
-			<CRow>
+			<!-- <CRow>
 				<CCol sm="12">
 					<CInput
 						label="Nama Saksi"
@@ -104,6 +75,18 @@
 						:value.sync="data.no_identitas"
 					/>
 				</CCol>
+			</CRow> -->
+			<CRow>
+				<CCol md="12">
+					<MySelectEntitas
+						ref="selectSaksi"
+						label="Nama Saksi"
+						description="Nama lengkap pengangkut / kuasa barang / sarana pengangkut atau pemilik / yang menguasai bangunan atau tempat lain yang menyaksikan penyegelan"
+						:showAlamat="true"
+						:id.sync="data.saksi.id"
+					>
+					</MySelectEntitas>
+				</CCol>
 			</CRow>
 
 			<!-- Button simpan -->
@@ -129,24 +112,23 @@ import axios from "axios"
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
-import converters from '../../../helpers/converter.js'
 import MyAlert from '../../components/AlertSubmit.vue'
+import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectSprint from '../../components/SelectSprint.vue'
+import api from '../../../router/api.js'
+import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
 
 const API = process.env.VUE_APP_BASEAPI + '/segel'
 
 const data_default = {
-	no_string: null,
+	sprint: {id: null},
 	tgl_sprint: null,
 	jenis_segel: null,
 	jumlah_segel: null,
 	nomor_segel: null,
 	lokasi_segel: null,
-	nama_pemilik: null,
-	alamat_pemilik: null,
-	pekerjaan_pemilik: null,
-	jns_identitas: null,
-	no_identitas: null,
+	saksi: {id: null},
 	pejabat1: 'pemeriksa'
 }
 
@@ -161,7 +143,9 @@ export default {
 	name: 'FormSegel',
 	components: {
 		DatePicker,
-		MyAlert
+		MyAlert,
+		MySelectEntitas,
+		MySelectSprint
 	},
 	props: {
 		state: {
@@ -175,16 +159,33 @@ export default {
 	},
 	data() {
 		return {
-			data: { ...data_default },
+			data: JSON.parse(JSON.stringify(data_default)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 		}
 	},
 	methods: {
+		getData() {
+			if (this.state == 'edit') {
+				axios
+					.get(api.getSegelById(this.id))
+					.then(
+						(response) => {
+							this.data = response.data.data
+
+							// Show reference
+							this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
+							this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
+						}
+					)
+			}
+		},
 		saveData() {
 			let submit_method
 			let submit_url
 			submit_method = this.state == 'insert' ? 'post' : 'put'
-			submit_url = this.state == 'insert' ? API : API + '/' + this.id
+			submit_url = this.state == 'insert' ? 
+				api.getSegel() : 
+				api.getSegelById(this.id)
 
 			axios({
 				method: submit_method,
@@ -211,10 +212,18 @@ export default {
 			_.set(this, validasiName+'.state', valid)
 			_.set(this, validasiName+'.text', text)
 		},
+	},
+	mounted() {
+		this.getData(true)
 	}
 }
 </script>
 
 <style>
-
+.row+.row {
+	margin-top:0;
+}
+.v-text-field__details {
+	display: none;
+}
 </style>

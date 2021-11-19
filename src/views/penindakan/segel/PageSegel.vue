@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper" data-app>
 		<!-- Display table data for BA Segel list -->
 		<CRow>
 			<CCol>
@@ -7,6 +7,7 @@
 					state="list"
 					:fields="fields"
 					:items="list_segel"
+					:editData="editSegel"
 					:showData="showSegel"
 				>
 					<template #header>
@@ -129,7 +130,7 @@ export default {
 			fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Segel' },
 				{ key: 'tgl_dok', label: 'Tgl BA' },
-				{ key: 'nama_pemilik', label: 'Pemilik/Saksi' },
+				{ key: 'nama_saksi', label: 'Pemilik/Saksi' },
 				{ key: 'pejabat1', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
@@ -172,6 +173,15 @@ export default {
 			this.modal_props.doc_id = id
 			this.modal_props.header_form = false
 			this.modal_props.header_display = true
+			this.modal_props.show = true
+		},
+		editSegel(id) {
+			this.modal_props.state = 'edit'
+			this.modal_props.tabs.list[1]['visibility'] = true
+			this.modal_props.tabs.list[2]['visibility'] = true
+			this.modal_props.doc_id = id
+			this.modal_props.header_form = true
+			this.modal_props.header_display = false
 			this.modal_props.show = true
 		},
 		closeModalInput() {

@@ -34,11 +34,10 @@ import axios from 'axios'
 import jsPDF from "jspdf"
 import 'jspdf-autotable'
 
+import MyAlert from '../../components/AlertSubmit.vue'
+import api from '../../../router/api.js'
 import converters from '../../../helpers/converter.js'
 import pdf from '../../../helpers/pdf.js'
-import MyAlert from '../../components/AlertSubmit.vue'
-
-const API = process.env.VUE_APP_BASEAPI + '/segel'
 
 const pdf_props = {
 	font: {
@@ -70,8 +69,6 @@ export default {
 		id: Number
 	},
 	computed: {
-		API_SEGEL_ID() { return API + '/' + this.id },
-		API_SEGEL_PUBLISH() { return this.API_SEGEL_ID + '/publish' },
 		pdf_txt() {
 			let txt = {
 				doc_no: 'Nomor: ' + this.data.header.no_dok_lengkap
@@ -92,7 +89,7 @@ export default {
 	methods: {
 		publishSbp() {
 			axios
-				.put(this.API_SEGEL_PUBLISH)
+				.put(api.publishSegel(this.id))
 				.then(
 					(response) => { 
 						console.log(response)
@@ -114,56 +111,20 @@ export default {
 			this.$refs.alert.show_alert(text, color, time)
 		},
 		async showPdf() {
-			this.data.header = await this.getDataHeader()
-			if (this.data.header.detail_sarkut == 1) {
-				this.data.sarkut = await this.getDataSarkut()
-			} else {
-				this.data.sarkut = null
-			}
-
-			if (this.data.header.detail_barang == 1) {
-				this.data.barang = await this.getDataBarang()
-				this.data.item_barang = await this.getDataItemBarang()
-			} else {
-				this.data.barang = null
-				this.data.item_barang = null
-			}
-
-			if (this.data.header.detail_bangunan == 1) {
-				this.data.bangunan = await this.getDataBangunan()
-			} else {
-				this.data.bangunan = null
-			}
-
-			this.status_pdf = this.data.header.status.kode_status
+			this.data = await this.getData()
+			this.status_pdf = this.data.status.kode_status
 			this.show_pdf = false
 			this.src_pdf = this.createPDF()
 			this.show_pdf = true
 		},
-		async getDataHeader() {
-			const response =  await axios.get(this.API_SEGEL_ID)
-			return response.data.data
-		},
-		async getDataSarkut() {
-			const response =  await axios.get(this.API_SEGEL_ID + '/sarkut')
-			return response.data.data
-		},
-		async getDataBarang() {
-			const response =  await axios.get(this.API_SEGEL_ID + '/barang')
-			return response.data.data
-		},
-		async getDataBangunan() {
-			const response =  await axios.get(this.API_SEGEL_ID + '/bangunan')
-			return response.data.data
-		},
-		async getDataItemBarang() {
-			const response =  await axios.get(this.API_SEGEL_ID + '/barang/item')
+		async getData() {
+			const response =  await axios.get(api.getSegelComplete(this.id))
 			return response.data.data
 		},
 		createPDF() {
 			let ln
-			let tgl_dok = converters.date(this.data.header.tgl_dok, 'DD-MM-YYYY')
-			let tgl_sprint = converters.date(this.data.header.tgl_sprint, 'DD-MM-YYYY')
+			let tgl_dok = converters.date(this.data.tgl_dok, 'DD-MM-YYYY')
+			let tgl_sprint = converters.date(this.data.sprint.tanggal_sprint, 'DD-MM-YYYY')
 			let hr = tgl_dok != null ? converters.weekDay(tgl_dok) : ''
 			let tgl = tgl_dok != null ? tgl_dok.getDate() : ''
 			let bln = tgl_dok != null ? converters.monthName(tgl_dok) : ''
@@ -178,7 +139,7 @@ export default {
 
 			////// NOMOR SURAT //////
 			let doc_title = 'BERITA ACARA PENYEGELAN'
-			let doc_no = 'Nomor: ' + this.data.header.no_dok_lengkap
+			let doc_no = 'Nomor: ' + this.data.no_dok_lengkap
 			let res_nomor = pdf.nomor(
 				doc, 
 				pdf_props.font.size, 
@@ -197,7 +158,7 @@ export default {
 			ln += pdf_props.font.height
 
 			let txt_sprint = 'Berdasarkan Surat Perintah : Kepala Bidang Penindakan dan Penyidikan Nomor ' 
-				+ this.data.header.no_sprint 
+				+ this.data.sprint.nomor_sprint 
 				+ ' tanggal ' + full_tgl_sprint + '.'
 			let arr_sprint = converters.array_text(txt_sprint, 105)
 			doc.text(arr_sprint, pdf_props.ind.alp, ln)
@@ -216,31 +177,31 @@ export default {
 			}
 
 			// Sarkut
-			let res_sarkut = pdf.detail_sarkut(doc, this.data.sarkut, ln, pdf_props.font.height, indents)
+			let res_sarkut = pdf.detail_sarkut(doc, this.data.detail.sarkut, ln, pdf_props.font.height, indents)
 			doc = res_sarkut[0]
 			ln = res_sarkut[1]
 
 			// Barang
-			let res_barang = pdf.detail_barang(doc, this.data.barang, this.data.item_barang, ln, pdf_props.font.height, indents)
+			let res_barang = pdf.detail_barang(doc, this.data.detail.barang, ln, pdf_props.font.height, indents)
 			doc = res_barang[0]
 			ln = res_barang[1]
 
 			// Bangunan
-			let res_bangunan = pdf.detail_bangunan(doc, this.data.bangunan, ln, pdf_props.font.height, indents)
+			let res_bangunan = pdf.detail_bangunan(doc, this.data.detail.bangunan, ln, pdf_props.font.height, indents)
 			doc = res_bangunan[0]
 			ln = res_bangunan[1]
 
 			ln += pdf_props.font.height
 			let txt_segel = 'dengan menggunakan segel/tanda pengaman ' 
-				+ converters.string(this.data.header.jenis_segel)
+				+ converters.string(this.data.jenis_segel)
 				+ ' sebanyak ' 
-				+ converters.string(this.data.header.jumlah_segel)
+				+ converters.string(this.data.jumlah_segel)
 				+ ' Nomor ' 
-				+ converters.string(this.data.header.no_dok)
-				+ converters.string(this.data.header.agenda_dok)
-				+ converters.string(this.data.header.thn_dok)
+				+ converters.string(this.data.no_dok)
+				+ converters.string(this.data.agenda_dok)
+				+ converters.string(this.data.thn_dok)
 				+ ' penempatan/pelekatan segel sebagai berikut: '
-				+ converters.string(this.data.header.lokasi_segel)
+				+ converters.string(this.data.lokasi_segel)
 				+ '.'
 			let arr_segel = converters.array_text(txt_segel, 100)
 			doc.text(arr_segel, pdf_props.ind.alp, ln)
@@ -254,20 +215,20 @@ export default {
 
 			doc.text('Nama', pdf_props.ind.alp, ln)
 			doc.text(':', pdf_props.ind.cln2, ln)
-			doc.text(converters.string(this.data.header.nama_pemilik), pdf_props.ind.txt2, ln)
+			doc.text(converters.string(this.data.saksi.nama), pdf_props.ind.txt2, ln)
 			ln += pdf_props.font.height
 			doc.text('Alamat', pdf_props.ind.alp, ln)
 			doc.text(':', pdf_props.ind.cln2, ln)
-			doc.text(converters.string(this.data.header.alamat_pemilik).replace('\n', ' '), pdf_props.ind.txt2, ln)
+			doc.text(converters.string(this.data.saksi.alamat).replace('\n', ' '), pdf_props.ind.txt2, ln)
 			ln += pdf_props.font.height
 			doc.text('Pekerjaan', pdf_props.ind.alp, ln)
 			doc.text(':', pdf_props.ind.cln2, ln)
-			doc.text(converters.string(this.data.header.pekerjaan_pemilik), pdf_props.ind.txt2, ln)
+			doc.text(converters.string(this.data.saksi.pekerjaan), pdf_props.ind.txt2, ln)
 			ln += pdf_props.font.height
 			doc.text('Identitas (KTP/SIM/Paspor*)', pdf_props.ind.alp, ln)
 			doc.text(':', pdf_props.ind.cln2, ln)
-			let txt_identitas = converters.string(this.data.header.no_identitas)
-				+ converters.string_format(converters.string(this.data.header.jns_identitas), ' ({})')
+			let txt_identitas = converters.string(this.data.saksi.nomor_identitas)
+				+ converters.string_format(converters.string(this.data.saksi.jenis_identitas), ' ({})')
 			doc.text(txt_identitas, pdf_props.ind.txt2, ln)
 			ln += pdf_props.font.height
 
@@ -285,7 +246,7 @@ export default {
 
 			// Pemilik/kuasa
 			doc.text('Pengangkut / Pemilik / Kuasanya / Saksi*', pdf_props.ind.alp, ln_jabatan_1)
-			doc.text(this.data.header.nama_pemilik, pdf_props.ind.alp, ln_nama_1)
+			doc.text(this.data.saksi.nama, pdf_props.ind.alp, ln_nama_1)
 
 			// Pejabat
 			doc.text('Tangerang, ' + full_tgl_dok, pdf_props.ind.ttd, ln_tgl)
@@ -303,8 +264,8 @@ export default {
 			doc.text('*Coret yang tidak perlu', pdf_props.ind.alp, ln_coret)
 
 			////// LAMPIRAN //////
-			if (this.data.item_barang != null) {
-				if (this.data.item_barang.length > 1) {
+			if (this.data.detail.barang != null) {
+				if (this.data.detail.barang.item.length > 1) {
 					doc.setFont('Helvetica', 'normal')
 					ln = 10
 					doc.addPage()
@@ -313,7 +274,7 @@ export default {
 					let res_att_head = pdf.header_lampiran(
 						doc, 
 						doc_title, 
-						this.data.header.no_dok_lengkap,
+						this.data.no_dok_lengkap,
 						full_tgl_dok,
 						pdf_props.font.size,
 						pdf_props.font.height,
@@ -324,13 +285,13 @@ export default {
 					ln = res_att_head[1]
 
 					// Tabel barang
-					const tabelData = converters.item_barang(this.data.item_barang)
+					const tabelData = converters.item_barang(this.data.detail.barang.item)
 					doc = pdf.tabel_barang(doc, tabelData, ln, pdf_props.font.size)
 				}
 			}
 
 			////// WATERMARK //////
-			if ([100,101].includes(this.data.header.status.kode_status)) {
+			if ([100,101].includes(this.data.status.kode_status)) {
 				doc = pdf.watermark(doc)	
 			}
 
