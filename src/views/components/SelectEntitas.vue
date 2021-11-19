@@ -41,6 +41,24 @@
 				</div>
 			</CCol>
 		</CRow>
+		<CRow>
+			<CCol md="3" sm="5">
+				<CInput
+					label="Jenis Identitas"
+					:value.sync="entitas.jenis_identitas"
+					disabled
+				>
+				</CInput>
+			</CCol>
+			<CCol md="5" sm="7">
+				<CInput
+					label="Nomor Identitas"
+					:value.sync="entitas.nomor_identitas"
+					disabled
+				>
+				</CInput>
+			</CCol>
+		</CRow>
 		<CRow v-if="showTanggalLahir">
 			<CCol md="4">
 				<CInput
@@ -63,30 +81,12 @@
 		</CRow>
 		<CRow v-if="showAlamat">
 			<CCol md="12">
-				<CInput
+				<CTextarea
 					label="Alamat"
 					:value.sync="entitas.alamat"
 					disabled
 				>
-				</CInput>
-			</CCol>
-		</CRow>
-		<CRow>
-			<CCol md="3" sm="5">
-				<CInput
-					label="Jenis Identitas"
-					:value.sync="entitas.jenis_identitas"
-					disabled
-				>
-				</CInput>
-			</CCol>
-			<CCol md="5" sm="7">
-				<CInput
-					label="Nomor Identitas"
-					:value.sync="entitas.nomor_identitas"
-					disabled
-				>
-				</CInput>
+				</CTextarea>
 			</CCol>
 		</CRow>
 
