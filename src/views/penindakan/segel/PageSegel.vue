@@ -8,6 +8,7 @@
 					:fields="fields"
 					:items="list_segel"
 					:editData="editSegel"
+					:deleteData="deleteSegel"
 					:showData="showSegel"
 				>
 					<template #header>
@@ -77,11 +78,23 @@
 					<MyPdfSegel
 						ref="pdf_segel"
 						:id.sync="modal_props.doc_id"
-						@publish-sbp="showSegel"
+						@publish-segel="showSegel"
 					></MyPdfSegel>
 				</CTab>
 			</template>
 		</MyModalTabs>
+
+		<!-- Modal konfirmasi delete SBP -->
+		<MyModalDelete
+			v-if="modal_delete_props.show"
+			:url.sync="modal_delete_props.url"
+			@close-modal="closeModalDelete"
+			@delete-data="closeModalDelete(); getDataSegel()"
+		>
+			<template #text>
+				<span v-html="modal_delete_props.text"></span>
+			</template>
+		</MyModalDelete>
 	</div>
 </template>
 
@@ -91,11 +104,11 @@ import axios from 'axios'
 import MyDisplayDetail from '../../details/DisplayDetail.vue'
 import MyDisplaySegel from '../segel/DisplaySegel.vue'
 import MyFormSegel from '../segel/FormSegel.vue'
+import MyModalDelete from '../../components/ModalDelete.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 import MyPdfSegel from '../segel/PdfSegel.vue'
 import MyTableData from '../../components/TableData.vue'
-
-const API = process.env.VUE_APP_BASEAPI
+import api from '../../../router/api.js'
 
 const tabs_default = {
 	current: 0,
@@ -121,6 +134,7 @@ export default {
 		MyDisplayDetail,
 		MyDisplaySegel,
 		MyFormSegel,
+		MyModalDelete,
 		MyModalTabs,
 		MyPdfSegel,
 		MyTableData
@@ -145,13 +159,18 @@ export default {
 				doc_id: null,
 				header_form: false,
 				header_display: false
+			},
+			modal_delete_props: {
+				show: false,
+				url: null,
+				text: null
 			}
 		}
 	},
 	methods: {
 		getDataSegel() {
 			axios
-				.get(API + '/segel')
+				.get(api.getSegel())
 				.then(
 					(response) => {
 						this.list_segel = response.data.data
@@ -200,6 +219,22 @@ export default {
 			} else {
 				this.refreshPdf()
 			}
+		},
+		deleteSegel(item) {
+			let text = "Apakah Anda yakin untuk menghapus data " 
+				+ item.no_dok_lengkap.bold() 
+				+ " a.n. " 
+				+ item.nama_saksi.bold() 
+				+ "?"
+			
+			this.modal_delete_props.url = api.getSegelById(item.id)
+			this.modal_delete_props.text = text
+			this.modal_delete_props.show = true
+		},
+		closeModalDelete() {
+			this.modal_delete_props.url = null
+			this.modal_delete_props.text = null
+			this.modal_delete_props.show = false
 		},
 		displayTab(tab_index) {
 			this.modal_props.tabs.list[tab_index]['visibility'] = true

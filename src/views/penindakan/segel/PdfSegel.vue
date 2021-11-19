@@ -17,7 +17,7 @@
 				<CButton
 					color="success"
 					shape="pill"
-					@click="publishSbp"
+					@click="publishSegel"
 				>
 					Terbitkan
 				</CButton>
@@ -87,7 +87,7 @@ export default {
 		}
 	},
 	methods: {
-		publishSbp() {
+		publishSegel() {
 			axios
 				.put(api.publishSegel(this.id))
 				.then(
@@ -95,7 +95,7 @@ export default {
 						console.log(response)
 						this.alert('BA Penyegelan berhasil diterbitkan', 'success', 2)
 						this.showPdf()
-						this.$emit('publish-sbp', this.id)
+						this.$emit('publish-segel', this.id)
 					}
 				)
 				.catch(
