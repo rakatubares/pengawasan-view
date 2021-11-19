@@ -6,60 +6,15 @@
 				<CForm>
 					<CRow>
 						<CCol md="12">
-							<CInput
-								label="Nama"
-								description="Nama orang yang dilakukan penindakan"
-								:value.sync="data.nama"
-								:is-valid="validatorRequired"
-								invalid-feedback="Nama wajib diisi"
-							/>
-						</CCol>
-					</CRow>
-					<CRow>
-						<CCol md="6">
-							<div class="form-group">
-								<label class="w-100">Tanggal Lahir</label>
-								<date-picker 
-									v-model="data.tgl_lahir" 
-									format="DD-MM-YYYY" 
-									value-type="format"
-									type="date"
-								></date-picker>	
-							</div>
-						</CCol>
-					</CRow>
-					<CRow>
-						<CCol md="6">
-							<CInput
-								label="Kewarganegaraan"
-								description="Warga negara orang yang dilakukan penindakan"
-								:value.sync="data.warga_negara"
-							/>
-						</CCol>
-					</CRow>
-					<CRow>
-						<CCol md="12">
-							<CTextarea
-								label="Alamat"
-								description="Alamat orang yang dilakukan penindakan"
-								:value.sync="data.alamat"
-							/>
-						</CCol>
-					</CRow>
-					<CRow>
-						<CCol md="2">
-							<CInput
-								label="Jenis identitas"
-								description="Jenis identias orang yang dilakukan penindakan"
-								:value.sync="data.jns_identitas"
-							/>
-						</CCol>
-						<CCol md="4">
-							<CInput
-								label="Nomor identitas"
-								description="Nomor identitas orang yang dilakukan penindakan"
-								:value.sync="data.no_identitas"
-							/>
+							<MySelectEntitas
+								ref="selectPilot"
+								label="Nama nahkoda/pengemudi/pilot"
+								:id.sync="data.entitas.id"
+								:showTanggalLahir="true"
+								:showWargaNegara="true"
+								:showAlamat="true"
+							>
+							</MySelectEntitas>
 						</CCol>
 					</CRow>
 
@@ -89,24 +44,20 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import MyAlert from '../components/AlertSubmit.vue'
+import MySelectEntitas from '../components/SelectEntitas.vue'
+import api from '../../router/api.js'
 import validators from '../../helpers/validator.js'
 
-const API = process.env.VUE_APP_BASEAPI + '/sbp'
-
 const data_default = {
-	nama: null,
-	tgl_lahir: null,
-	warga_negara: null,
-	alamat: null,
-	jns_identitas: null,
-	no_identitas: null,
+	entitas: {id: null}
 }
 
 export default {
 	name: 'FormDetailBadan',
 	components: {
 		DatePicker,
-		MyAlert
+		MyAlert,
+		MySelectEntitas
 	},
 	props: {
 		state: {
@@ -114,10 +65,8 @@ export default {
 			default: 'input'
 		},
 		id: Number,
+		doc_type: String,
 		doc_id: Number,
-	},
-	computed: {
-		API_BADAN() { return API + '/' + this.doc_id + '/badan' },
 	},
 	data() {
 		return {
@@ -128,7 +77,7 @@ export default {
 		getData() {
 			if (this.state != 'input') {
 				axios
-					.get(this.API_BADAN)
+					.get(api.getBadanById(this.doc_type, this.doc_id))
 					.then(
 						(response) => {
 							this.data = response.data.data
@@ -137,7 +86,7 @@ export default {
 			}
 		},
 		saveData() {
-			let submit_url = this.API_BADAN
+			let submit_url = api.getBadanById(this.doc_type, this.doc_id)
 			axios
 				.post(submit_url, this.data)
 				.then(

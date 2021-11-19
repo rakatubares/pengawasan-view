@@ -34,21 +34,13 @@
 						<CCol md="4" sm="8">
 							<CInput
 								label="Ukuran/kapasitas muatan"
-								:value.sync="data.kapasitas"
+								:value.sync="data.jumlah_kapasitas"
 							/>
 						</CCol>
 						<CCol md="2" sm="4">
 							<CInput
 								label="Satuan muatan"
 								:value.sync="data.satuan_kapasitas"
-							/>
-						</CCol>
-					</CRow>
-					<CRow>
-						<CCol md="6" sm="12">
-							<CInput
-								label="Nama nahkoda/pengemudi/pilot"
-								:value.sync="data.nama_pilot_pengemudi"
 							/>
 						</CCol>
 					</CRow>
@@ -64,6 +56,16 @@
 								label="Nomor registrasi/polisi"
 								:value.sync="data.no_reg_polisi"
 							/>
+						</CCol>
+					</CRow>
+					<CRow>
+						<CCol md="12">
+							<MySelectEntitas
+								ref="selectPilot"
+								label="Nama nahkoda/pengemudi/pilot"
+								:id.sync="data.pilot.id"
+							>
+							</MySelectEntitas>
 						</CCol>
 					</CRow>
 
@@ -91,14 +93,17 @@
 import axios from "axios"
 
 import MyAlert from '../components/AlertSubmit.vue'
+import MySelectEntitas from '../components/SelectEntitas.vue'
+import api from '../../router/api.js'
 import validators from '../../helpers/validator.js'
 
 const data_default = {
 	nama_sarkut: null,
 	jenis_sarkut: null,
 	no_flight_trayek: null,
-	kapasitas_sarkut: null,
-	nama_pilot_pengemudi: null,
+	jumlah_kapasitas: null,
+	satuan_kapasitas: null,
+	pilot: {id: null},
 	bendera: null,
 	no_reg_polisi: null,
 }
@@ -106,7 +111,8 @@ const data_default = {
 export default {
 	name: 'FormDetailSarkut',
 	components: {
-		MyAlert
+		MyAlert,
+		MySelectEntitas
 	},
 	props: {
 		state: {
@@ -117,9 +123,6 @@ export default {
 		doc_type: String,
 		doc_id: Number,
 	},
-	computed: {
-		API_SARKUT() { return process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/sarkut' },
-	},
 	data() {
 		return {
 			data: { ...data_default }
@@ -129,17 +132,18 @@ export default {
 		getData() {
 			if (this.state != 'input') {
 				axios
-					.get(this.API_SARKUT)
+					.get(api.getSarkutById(this.doc_type, this.doc_id))
 					.then(
 						(response) => {
 							this.data = response.data.data
+							this.$refs.selectPilot.getEntitas(this.data.pilot.id, true)
 						}
 					)
 					.catch((error) => console.log(error))
 			}
 		},
 		saveData() {
-			let submit_url = this.API_SARKUT
+			let submit_url = api.getSarkutById(this.doc_type, this.doc_id)
 			axios
 				.post(submit_url, this.data)
 				.then(
