@@ -12,18 +12,6 @@ export default [
 				_name: 'CSidebarNavTitle',
 				_children: ['Penindakan']
 			},
-			{
-				_name: 'CSidebarNavItem',
-				name: 'SBP',
-				to: '/sbp',
-				icon: 'cil-file'
-			},
-			{
-				_name: 'CSidebarNavItem',
-				name: 'Segel',
-				to: '/segel',
-				icon: 'cil-file'
-			}
 		]
 	}
 ]
