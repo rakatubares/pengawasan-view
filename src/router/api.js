@@ -25,4 +25,9 @@ api.getBadanById = (doc_type, doc_id) => {return base_url + '/' + doc_type + '/'
 // API for documents
 api.getSbpComplete = (id) => {return base_url + '/sbp/' + id + '/complete'}
 
+api.getSegel = () => {return base_url + '/segel'}
+api.getSegelById = (id) => {return base_url + '/segel/' + id}
+api.getSegelComplete = (id) => {return base_url + '/segel/' + id + '/complete'}
+api.publishSegel = (id) => {return base_url + '/segel/' + id + '/publish'}
+
 export default api

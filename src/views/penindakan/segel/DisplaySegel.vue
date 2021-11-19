@@ -92,22 +92,26 @@
 <script>
 import axios from "axios"
 
-const API = process.env.VUE_APP_BASEAPI + '/segel'
+import api from '../../../router/api.js'
 
 const data_default = {
 	no_dok_lengkap: null,
 	tgl_dok: null,
-	no_sprint: null,
-	tgl_sprint: null,
+	sprint: {
+		nomor_sprint: null,
+		tanggal_sprint: null
+	},
 	jenis_segel: null,
 	jumlah_segel: null,
 	nomor_segel: null,
 	lokasi_segel: null,
-	nama_pemilik: null,
-	alamat_pemilik: null,
-	pekerjaan_pemilik: null,
-	jns_identitas: null,
-	no_identitas: null,
+	saksi: {
+		nama: null,
+		alamat: null,
+		pekerjaan: null,
+		jenis_identitas: null,
+		nomor_identitas: null
+	},
 	pejabat1: null,
 	pejabat2: null
 }
@@ -118,18 +122,17 @@ export default {
 		id: Number
 	},
 	computed: {
-		API_SEGEL_ID() { return API + '/' + this.id},
 		disp_no_ba_segel() { return this.data.no_dok_lengkap || '-' },
 		disp_tgl_ba_segel() { return this.data.tgl_dok || '-' },
-		disp_sprint() { return ((this.data.no_sprint || '') + ' tanggal ' + (this.data.tgl_sprint || '')) },
+		disp_sprint() { return ((this.data.sprint.nomor_sprint || '') + ' tanggal ' + (this.data.sprint.tanggal_sprint || '')) },
 		disp_jenis_segel() { return this.data.jenis_segel || '-' },
 		disp_jumlah_segel() { return this.data.jumlah_segel || '-' },
-		disp_nomor_segel() { return this.data.nomor_dok || '-' },
-		disp_lokasi_segel() { return this.data.lokasi_dok || '-' },
-		disp_nama_pemilik() { return this.data.nama_pemilik || '-' },
-		disp_alamat_pemilik() { return this.data.alamat_pemilik || '-' },
-		disp_pekerjaan_pemilik() { return this.data.pekerjaan_pemilik || '-' },
-		disp_identitas() { return (this.data.jns_identitas || '') + ' ' + (this.data.no_identitas || '-') },
+		disp_nomor_segel() { return (this.data.no_dok || '') + (this.data.agenda_dok || '') + (this.data.thn_dok || '') },
+		disp_lokasi_segel() { return this.data.lokasi_segel || '-' },
+		disp_nama_pemilik() { return this.data.saksi.nama || '-' },
+		disp_alamat_pemilik() { return this.data.saksi.alamat || '-' },
+		disp_pekerjaan_pemilik() { return this.data.saksi.pekerjaan || '-' },
+		disp_identitas() { return (this.data.saksi.jenis_identitas || '') + ' ' + (this.data.saksi.nomor_identitas || '-') },
 		disp_pejabat1() { return this.data.pejabat1 || '-' },
 		disp_pejabat2() { return this.data.pejabat2 || '-' },
 	},
@@ -141,7 +144,7 @@ export default {
 	methods: {
 		getData() {
 			axios
-				.get(this.API_SEGEL_ID)
+				.get(api.getSegelById(this.id))
 				.then(
 					(response) => {
 						this.data = JSON.parse(JSON.stringify(response.data.data))
