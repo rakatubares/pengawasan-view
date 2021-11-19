@@ -93,8 +93,9 @@ pdf.detail_sarkut = (doc, data_sarkut, ln, font_height, indents) => {
 	return [doc, ln]
 }
 
-pdf.detail_barang = (doc, data_barang, item_barang, ln, font_height, indents) => {
+pdf.detail_barang = (doc, data_barang, ln, font_height, indents) => {
 	let data = converters.barang(data_barang)
+	let item_barang = data_barang != null ? data_barang.item : null
 
 	doc.setFont('Helvetica', 'bold')
 	doc.text('b.', indents.alp, ln)

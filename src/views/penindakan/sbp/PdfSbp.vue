@@ -35,6 +35,7 @@ import jsPDF from "jspdf"
 import 'jspdf-autotable'
 
 import MyAlert from '../../components/AlertSubmit.vue'
+import api from '../../../router/api.js'
 import converters from '../../../helpers/converter.js'
 import pdf from '../../../helpers/pdf.js'
 
@@ -73,43 +74,13 @@ export default {
 	computed: {
 		API_SBP_ID() { return API + '/' + this.id },
 		API_SBP_PUBLISH() { return this.API_SBP_ID + '/publish' },
-		pdf_txt() {
-			let txt = {
-				no_sbp: 'Nomor: ' + this.data.header.no_sbp_lengkap,
-				tgl_sbp: converters.string(this.data.tgl_sbp),
-				no_sprint: 'Dasar penindakan, Surat Perintah Nomor : ' 
-					+ this.data.header.no_sprint 
-					+ ' tanggal ' 
-					+ this.data.header.tgl_sprint 
-					+ '.',
-				perintah: 'Perintah yang dilaksanakan : '
-					+ 'Penghentian, pemeriksaan, penegahan, penyegelan, '
-					+ 'penghentian pembongkaran dan/atau penegahan di bidang HKI*.',
-				lokasi: this.data.header.lokasi_penindakan,
-				uraian: converters.array_text(this.data.header.uraian_penindakan, 95),
-				alasan: converters.string(this.data.alasan),
-				jenis: this.data.header.jenis_pelanggaran,
-				wkt_mulai_penindakan: this.data.header.wkt_mulai_penindakan.replace(" ", " jam "),
-				wkt_selesai_penindakan: this.data.header.wkt_selesai_penindakan.replace(" ", " jam "),
-				hal_terjadi: converters.string(this.data.hal_terjadi),
-
-				sarkut: converters.sarkut(this.data.sarkut),
-				barang: converters.barang(this.data.barang),
-				bangunan: converters.bangunan(this.data.bangunan),
-				badan: converters.badan(this.data.badan)
-			}
-			return txt
-		}
 	},
 	data() {
 		return {
 			show_pdf: false,
 			src_pdf: null,
 			status_pdf: null,
-			data: {
-				header: null,
-				sarkut: null,
-			}
+			data: null
 		}
 	},
 	methods: {
@@ -136,66 +107,20 @@ export default {
 			this.$refs.alert.show_alert(text, color, time)
 		},
 		async showPdf() {
-			this.data.header = await this.getDataHeader()
-			if (this.data.header.detail_sarkut == 1) {
-				this.data.sarkut = await this.getDataSarkut()
-			} else {
-				this.data.sarkut = null
-			}
-
-			if (this.data.header.detail_barang == 1) {
-				this.data.barang = await this.getDataBarang()
-				this.data.item_barang = await this.getDataItemBarang()
-			} else {
-				this.data.barang = null
-				this.data.item_barang = null
-			}
-
-			if (this.data.header.detail_bangunan == 1) {
-				this.data.bangunan = await this.getDataBangunan()
-			} else {
-				this.data.bangunan = null
-			}
-
-			if (this.data.header.detail_badan == 1) {
-				this.data.badan = await this.getDataBadan()
-			} else {
-				this.data.badan = null
-			}
-
-			this.status_pdf = this.data.header.status.kode_status
+			this.data = await this.getData()
+			this.status_pdf = this.data.status.kode_status
 			this.show_pdf = false
 			this.src_pdf = this.createPDF()
 			this.show_pdf = true
 		},
-		async getDataHeader() {
-			const response =  await axios.get(this.API_SBP_ID)
-			return response.data.data
-		},
-		async getDataSarkut() {
-			const response =  await axios.get(this.API_SBP_ID + '/sarkut')
-			return response.data.data
-		},
-		async getDataBarang() {
-			const response =  await axios.get(this.API_SBP_ID + '/barang')
-			return response.data.data
-		},
-		async getDataBangunan() {
-			const response =  await axios.get(this.API_SBP_ID + '/bangunan')
-			return response.data.data
-		},
-		async getDataBadan() {
-			const response =  await axios.get(this.API_SBP_ID + '/badan')
-			return response.data.data
-		},
-		async getDataItemBarang() {
-			const response =  await axios.get(this.API_SBP_ID + '/barang/item')
+		async getData() {
+			const response =  await axios.get(api.getSbpComplete(this.id))
 			return response.data.data
 		},
 		createPDF() {
 			let ln
-			let tgl_dok = converters.date(this.data.header.tgl_dok, 'DD-MM-YYYY')
-			let tgl_sprint = converters.date(this.data.header.tgl_sprint, 'DD-MM-YYYY')
+			let tgl_dok = converters.date(this.data.tgl_dok, 'DD-MM-YYYY')
+			let tgl_sprint = converters.date(this.data.sprint.tanggal_sprint, 'DD-MM-YYYY')
 			let full_tgl_dok = tgl_dok != null ? converters.fullDate(tgl_dok) : ''
 			let full_tgl_sprint = converters.fullDate(tgl_sprint)
 
@@ -206,7 +131,7 @@ export default {
 
 			////// NOMOR SURAT //////
 			let doc_title = 'SURAT BUKTI PENINDAKAN'
-			let doc_no = 'Nomor: ' + this.data.header.no_dok_lengkap
+			let doc_no = 'Nomor: ' + this.data.no_dok_lengkap
 			let res_nomor = pdf.nomor(
 				doc, 
 				pdf_props.font.size, 
@@ -221,7 +146,7 @@ export default {
 
 			////// URAIAN //////
 			let txt_sprint = 'Dasar penindakan, Surat Perintah Nomor : ' 
-				+ this.data.header.no_sprint 
+				+ this.data.sprint.nomor_sprint 
 				+ ' tanggal ' + full_tgl_sprint + '.'
 			doc.text('1.', pdf_props.ind.num, ln)
 			doc.text(txt_sprint, 21, ln)
@@ -247,49 +172,49 @@ export default {
 			}
 
 			// Sarkut
-			let res_sarkut = pdf.detail_sarkut(doc, this.data.sarkut, ln, pdf_props.font.height, indents)
+			let res_sarkut = pdf.detail_sarkut(doc, this.data.detail.sarkut, ln, pdf_props.font.height, indents)
 			doc = res_sarkut[0]
 			ln = res_sarkut[1]
 
 			// Barang
-			let res_barang = pdf.detail_barang(doc, this.data.barang, this.data.item_barang, ln, pdf_props.font.height, indents)
+			let res_barang = pdf.detail_barang(doc, this.data.detail.barang, ln, pdf_props.font.height, indents)
 			doc = res_barang[0]
 			ln = res_barang[1]
 
 			// Bangunan
-			let res_bangunan = pdf.detail_bangunan(doc, this.data.bangunan, ln, pdf_props.font.height, indents)
+			let res_bangunan = pdf.detail_bangunan(doc, this.data.detail.bangunan, ln, pdf_props.font.height, indents)
 			doc = res_bangunan[0]
 			ln = res_bangunan[1]
 
 			// Badan
-			let res_badan = pdf.detail_badan(doc, this.data.badan, ln, pdf_props.font.height, indents)
+			let res_badan = pdf.detail_badan(doc, this.data.detail.badan, ln, pdf_props.font.height, indents)
 			doc = res_badan[0]
 			ln = res_badan[1]
 
 			doc.text('4.', pdf_props.ind.num, ln)
 			doc.text('Lokasi Penindakan', pdf_props.ind.alp, ln)
 			doc.text(':', pdf_props.ind.num_cln, ln)
-			doc.text(this.data.header.lokasi_penindakan, pdf_props.ind.num_txt, ln)
+			doc.text(this.data.lokasi_penindakan, pdf_props.ind.num_txt, ln)
 			ln += pdf_props.font.height
 
-			let txt_uraian = converters.array_text(this.data.header.uraian_penindakan, 95)
+			let txt_uraian = converters.array_text(this.data.uraian_penindakan, 90)
 			doc.text('5.', pdf_props.ind.num, ln)
 			doc.text('Uraian Penindakan', pdf_props.ind.alp, ln)
 			doc.text(':', pdf_props.ind.num_cln, ln)
 			doc.text(txt_uraian, pdf_props.ind.num_txt, ln)
-			ln += pdf_props.font.height*(((this.pdf_txt.uraian).length) ? ((this.pdf_txt.uraian).length) > 0 : 1)
+			ln += pdf_props.font.height*((txt_uraian.length) > 0 ? txt_uraian.length : 1)
 
-			let txt_alasan = converters.string(this.data.header.alasan_penindakan)
+			let txt_alasan = converters.array_text(this.data.alasan_penindakan, 90)
 			doc.text('6.', pdf_props.ind.num, ln)
 			doc.text('Alasan Penindakan', pdf_props.ind.alp, ln)
 			doc.text(':', pdf_props.ind.num_cln, ln)
 			doc.text(txt_alasan, pdf_props.ind.num_txt, ln)
-			ln += pdf_props.font.height
+			ln += pdf_props.font.height*((txt_alasan.length) > 0 ? txt_alasan.length : 1)
 
 			doc.text('7.', pdf_props.ind.num, ln)
 			doc.text('Jenis Pelanggaran', pdf_props.ind.alp, ln)
 			doc.text(':', pdf_props.ind.num_cln, ln)
-			doc.text(this.data.header.jenis_pelanggaran, pdf_props.ind.num_txt, ln)
+			doc.text(this.data.jenis_pelanggaran, pdf_props.ind.num_txt, ln)
 			ln += pdf_props.font.height
 
 			doc.text('8.', pdf_props.ind.num, ln)
@@ -299,8 +224,8 @@ export default {
 			doc.text(tindakan, pdf_props.ind.alp, ln,{maxWidth: 180})
 			ln += pdf_props.font.height*3
 
-			let txt_mulai_penindakan = this.data.header.wkt_mulai_penindakan.replace(" ", " jam ")
-			let txt_selesai_penindakan = this.data.header.wkt_selesai_penindakan.replace(" ", " jam ")
+			let txt_mulai_penindakan = this.data.wkt_mulai_penindakan.replace(" ", " jam ")
+			let txt_selesai_penindakan = this.data.wkt_selesai_penindakan.replace(" ", " jam ")
 			doc.text('9.', pdf_props.ind.num, ln)
 			doc.text('Waktu Penindakan', pdf_props.ind.alp, ln)
 			ln += pdf_props.font.height
@@ -313,11 +238,12 @@ export default {
 			doc.text(txt_selesai_penindakan, pdf_props.ind.num_txt, ln)
 			ln += pdf_props.font.height
 
-			let txt_hal_terjadi = converters.string(this.data.header.hal_terjadi)
+			let txt_hal_terjadi = converters.array_text(this.data.hal_terjadi, 90)
 			doc.text('10.', pdf_props.ind.num, ln)
 			doc.text('Hal yang terjadi', pdf_props.ind.alp, ln)
 			doc.text(':', pdf_props.ind.num_cln, ln)
 			doc.text(txt_hal_terjadi, pdf_props.ind.num_txt, ln)
+			ln += pdf_props.font.height*((txt_hal_terjadi.length) > 0 ? txt_hal_terjadi.length : 1)
 
 			////// TTD //////
 			let ln_tgl = ln + pdf_props.font.height*1.5
@@ -329,7 +255,7 @@ export default {
 
 			// Pemilik/kuasa
 			doc.text('Pengangkut / Pemilik / Kuasanya / Saksi*', pdf_props.ind.alp, ln_jabatan_1)
-			doc.text(this.data.header.nama_pemilik, pdf_props.ind.alp, ln_nama_1)
+			doc.text(this.data.saksi.nama, pdf_props.ind.alp, ln_nama_1)
 
 			// Pejabat
 			doc.text('Tangerang, ' + full_tgl_dok, pdf_props.ind.ttd, ln_tgl)
@@ -358,8 +284,8 @@ export default {
 			doc.text(ket, pdf_props.ind.num, ln_ket, {maxWidth: 185})
 
 			////// LAMPIRAN //////
-			if (this.data.item_barang != null) {
-				if (this.data.item_barang.length > 1) {
+			if (this.data.detail.barang != null) {
+				if (this.data.detail.barang.item.length > 1) {
 					doc.setFont('Helvetica', 'normal')
 					ln = 10
 					doc.addPage()
@@ -368,7 +294,7 @@ export default {
 					let res_att_head = pdf.header_lampiran(
 						doc, 
 						doc_title, 
-						this.data.header.no_dok_lengkap,
+						this.data.no_dok_lengkap,
 						full_tgl_dok,
 						pdf_props.font.size,
 						pdf_props.font.height,
@@ -379,13 +305,13 @@ export default {
 					ln = res_att_head[1]
 
 					// Tabel barang
-					const tabelData = converters.item_barang(this.data.item_barang)
+					const tabelData = converters.item_barang(this.data.detail.barang.item)
 					doc = pdf.tabel_barang(doc, tabelData, ln, pdf_props.font.size)
 				}
 			}
 
 			////// WATERMARK //////
-			if ([100,101].includes(this.data.header.status.kode_status)) {
+			if ([100,101].includes(this.data.status.kode_status)) {
 				doc = pdf.watermark(doc)	
 			}
 
