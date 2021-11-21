@@ -10,6 +10,10 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
+<<<<<<< HEAD
+=======
+
+>>>>>>> general
 
 Vue.use(Router)
 
