@@ -22,4 +22,10 @@ api.getBangunanById = (doc_type, doc_id) => {return base_url + '/' + doc_type + 
 
 api.getBadanById = (doc_type, doc_id) => {return base_url + '/' + doc_type + '/' + doc_id + '/badan'}
 
+// API for documents
+api.getBukaSegel = () => {return base_url + '/bukasegel'}
+api.getBukaSegelById = (id) => {return api.getBukaSegel() + '/' + id}
+api.getBukaSegelComplete = (id) => {return api.getBukaSegelById(id) + '/complete'}
+api.publishSegel = (id) => {return api.getBukaSegelById(id) + '/publish'}
+
 export default api

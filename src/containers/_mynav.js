@@ -12,6 +12,12 @@ export default [
 				_name: 'CSidebarNavTitle',
 				_children: ['Penindakan']
 			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'Buka Segel',
+				to: '/bukasegel',
+				icon: 'cil-file'
+			}
 		]
 	}
 ]
