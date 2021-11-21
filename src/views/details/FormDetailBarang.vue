@@ -131,6 +131,9 @@ export default {
 					.then(
 						(response) => {
 							this.data = response.data.data
+							if (response.data.data.dokumen == null) {
+								this.data.dokumen = JSON.parse(JSON.stringify(data_default.dokumen))
+							}
 							this.$refs.selectPemilik.getEntitas(this.data.pemilik.id, true)
 						}
 					)
