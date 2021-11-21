@@ -29,7 +29,13 @@ export default [
 				name: 'Buka Segel',
 				to: '/bukasegel',
 				icon: 'cil-file'
-			}
+			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'Penitipan',
+				to: '/titip',
+				icon: 'cil-file'
+			},
 		]
 	}
 ]
