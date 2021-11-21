@@ -10,6 +10,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
+const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
 
 Vue.use(Router)
 
@@ -32,6 +33,11 @@ function configRoutes () {
 					path: 'homepage',
 					name: 'Homepage',
 					component: Homepage
+				},
+				{
+					path: 'titip',
+					name: 'Penitipan',
+					component: PageTitip
 				},
 			]
 		},

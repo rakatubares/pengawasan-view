@@ -22,4 +22,10 @@ api.getBangunanById = (doc_type, doc_id) => {return base_url + '/' + doc_type + 
 
 api.getBadanById = (doc_type, doc_id) => {return base_url + '/' + doc_type + '/' + doc_id + '/badan'}
 
+// API for documents
+api.getPenitipan = () => {return base_url + '/titip'}
+api.getPenitipanById = (id) => {return api.getPenitipan() + '/' + id}
+api.getPenitipanComplete = (id) => {return api.getPenitipanById(id) + '/complete'}
+api.publishPenitipan = (id) => {return api.getPenitipanById(id) + '/publish'}
+
 export default api
