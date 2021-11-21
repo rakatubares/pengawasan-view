@@ -12,6 +12,7 @@ const Homepage = () => import('@/views/Homepage')
 // Views - Penindakan
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
+const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
 
 Vue.use(Router)
 
@@ -44,6 +45,11 @@ function configRoutes () {
 					path: 'segel',
 					name: 'Segel',
 					component: PageSegel
+				},
+				{
+					path: 'bukasegel',
+					name: 'BukaSegel',
+					component: PageBukaSegel
 				},
 			]
 		},

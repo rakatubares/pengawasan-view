@@ -23,6 +23,12 @@ export default [
 				name: 'Segel',
 				to: '/segel',
 				icon: 'cil-file'
+			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'Buka Segel',
+				to: '/bukasegel',
+				icon: 'cil-file'
 			}
 		]
 	}
