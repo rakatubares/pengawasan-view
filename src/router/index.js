@@ -14,6 +14,7 @@ const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
 const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
+const PageTegah = () => import('@/views/penindakan/tegah/PageTegah')
 
 Vue.use(Router)
 
@@ -56,6 +57,11 @@ function configRoutes () {
 					path: 'titip',
 					name: 'Penitipan',
 					component: PageTitip
+				},
+				{
+					path: 'tegah',
+					name: 'Penegahan',
+					component: PageTegah
 				},
 			]
 		},

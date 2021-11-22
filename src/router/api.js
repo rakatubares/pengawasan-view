@@ -40,4 +40,9 @@ api.getPenitipanById = (id) => {return api.getPenitipan() + '/' + id}
 api.getPenitipanComplete = (id) => {return api.getPenitipanById(id) + '/complete'}
 api.publishPenitipan = (id) => {return api.getPenitipanById(id) + '/publish'}
 
+api.getPenegahan = () => {return base_url + '/tegah'}
+api.getPenegahanById = (id) => {return api.getPenegahan() + '/' + id}
+api.getPenegahanComplete = (id) => {return api.getPenegahanById(id) + '/complete'}
+api.publishPenegahan = (id) => {return api.getPenegahanById(id) + '/publish'}
+
 export default api

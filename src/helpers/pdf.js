@@ -51,7 +51,7 @@ pdf.nomor = (doc, font_size, font_height, line_start, line_end, doc_title, doc_n
 	return [doc, ln]
 }
 
-pdf.detail_sarkut = (doc, data_sarkut, ln, font_height, indents) => {
+pdf.detail_sarkut = (doc, data_sarkut, ln, font_height, indents, show_identitas=false) => {
 	let data = converters.sarkut(data_sarkut)
 
 	doc.setFont('Helvetica', 'bold')
@@ -80,12 +80,19 @@ pdf.detail_sarkut = (doc, data_sarkut, ln, font_height, indents) => {
 	doc.text(data.pilot, indents.txt, ln)
 	ln += font_height
 
-	doc.text('Bendera*', indents.lbl, ln)
+	if (show_identitas) {
+		doc.text('Nomor Identitas', indents.lbl, ln)
+		doc.text(':', indents.cln, ln)
+		doc.text(data.identitas, indents.txt, ln)
+		ln += font_height
+	}
+
+	doc.text('Bendera', indents.lbl, ln)
 	doc.text(':', indents.cln, ln)
 	doc.text(data.bendera, indents.txt, ln)
 	ln += font_height
 
-	doc.text('Nomor Register / Polisi', indents.lbl, ln)
+	doc.text('Nomor Register / Polisi*', indents.lbl, ln)
 	doc.text(':', indents.cln, ln)
 	doc.text(data.no_reg, indents.txt, ln)
 	ln += font_height
@@ -93,7 +100,7 @@ pdf.detail_sarkut = (doc, data_sarkut, ln, font_height, indents) => {
 	return [doc, ln]
 }
 
-pdf.detail_barang = (doc, data_barang, ln, font_height, indents) => {
+pdf.detail_barang = (doc, data_barang, ln, font_height, indents, show_identitas=false) => {
 	let data = converters.barang(data_barang)
 	let item_barang = data_barang != null ? data_barang.item : null
 
@@ -132,6 +139,13 @@ pdf.detail_barang = (doc, data_barang, ln, font_height, indents) => {
 	doc.text(':', indents.cln, ln)
 	doc.text(data.pemilik, indents.txt, ln)
 	ln += font_height
+
+	if (show_identitas) {
+		doc.text('Nomor Identitas', indents.lbl, ln)
+		doc.text(':', indents.cln, ln)
+		doc.text(data.identitas, indents.txt, ln)
+		ln += font_height
+	}
 
 	return [doc, ln]
 }
