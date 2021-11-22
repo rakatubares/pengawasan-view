@@ -224,7 +224,7 @@ export default {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
 				+ " a.n. " 
-				+ item.nama_penerima.bold() 
+				+ item.nama_saksi.bold() 
 				+ "?"
 			
 			this.modal_delete_props.url = api.getPenegahanById(item.id)
