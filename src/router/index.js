@@ -10,10 +10,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
-<<<<<<< HEAD
-=======
-
->>>>>>> general
+const PageTegah = () => import('@/views/penindakan/tegah/PageTegah')
 
 Vue.use(Router)
 
@@ -36,6 +33,11 @@ function configRoutes () {
 					path: 'homepage',
 					name: 'Homepage',
 					component: Homepage
+				},
+				{
+					path: 'tegah',
+					name: 'Penegahan',
+					component: PageTegah
 				},
 			]
 		},

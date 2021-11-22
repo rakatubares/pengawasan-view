@@ -22,4 +22,10 @@ api.getBangunanById = (doc_type, doc_id) => {return base_url + '/' + doc_type + 
 
 api.getBadanById = (doc_type, doc_id) => {return base_url + '/' + doc_type + '/' + doc_id + '/badan'}
 
+// API for documents
+api.getPenegahan = () => {return base_url + '/tegah'}
+api.getPenegahanById = (id) => {return api.getPenegahan() + '/' + id}
+api.getPenegahanComplete = (id) => {return api.getPenegahanById(id) + '/complete'}
+api.publishPenegahan = (id) => {return api.getPenegahanById(id) + '/publish'}
+
 export default api
