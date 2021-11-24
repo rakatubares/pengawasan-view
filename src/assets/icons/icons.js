@@ -34,6 +34,7 @@ import {
 import {
   cilArrowRight,
   cilBan,
+  cilBarcode,
   cilBasket,
   cilBell,
   cilCalculator,
@@ -92,6 +93,7 @@ export const iconsSet = Object.assign(
   {
     cilArrowRight,
     cilBan,
+	cilBarcode,
     cilBasket,
     cilBell,
     cilCalculator,

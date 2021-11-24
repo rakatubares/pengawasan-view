@@ -68,7 +68,7 @@ class SSO {
     // logout using post
     logout() {
         return axios({
-            method: 'post',
+            method: 'get',
             url: '/sso/api.php?command=logout'
         })
     }
@@ -80,6 +80,22 @@ class SSO {
             url: '/sso/api.php?command=getUserInfo'
         })
     }
+
+	// get users by role
+    getUsersByRole(role, nama) {
+        return axios({
+            method: 'get',
+            url: '/sso/api.php?command=getUserByRole&roles=' + role + '&nama=' + nama
+        })
+    }
+
+	// get user by id
+	getUserById(id) {
+		return axios({
+			method: 'get',
+			url: '/sso/api.php?command=getUserById&id=' + id
+		})
+	}
 }
 
 export default SSO 
