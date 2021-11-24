@@ -41,6 +41,24 @@
 				</div>
 			</CCol>
 		</CRow>
+		<CRow>
+			<CCol md="3" sm="5">
+				<CInput
+					label="Jenis Identitas"
+					:value.sync="entitas.jenis_identitas"
+					disabled
+				>
+				</CInput>
+			</CCol>
+			<CCol md="5" sm="7">
+				<CInput
+					label="Nomor Identitas"
+					:value.sync="entitas.nomor_identitas"
+					disabled
+				>
+				</CInput>
+			</CCol>
+		</CRow>
 		<CRow v-if="showTanggalLahir">
 			<CCol md="4">
 				<CInput
@@ -61,32 +79,24 @@
 				</CInput>
 			</CCol>
 		</CRow>
-		<CRow v-if="showAlamat">
-			<CCol md="12">
+		<CRow v-if="showPekerjaan">
+			<CCol md="6">
 				<CInput
-					label="Alamat"
-					:value.sync="entitas.alamat"
+					label="Pekerjaan"
+					:value.sync="entitas.pekerjaan"
 					disabled
 				>
 				</CInput>
 			</CCol>
 		</CRow>
-		<CRow>
-			<CCol md="3" sm="5">
-				<CInput
-					label="Jenis Identitas"
-					:value.sync="entitas.jenis_identitas"
+		<CRow v-if="showAlamat">
+			<CCol md="12">
+				<CTextarea
+					label="Alamat"
+					:value.sync="entitas.alamat"
 					disabled
 				>
-				</CInput>
-			</CCol>
-			<CCol md="5" sm="7">
-				<CInput
-					label="Nomor Identitas"
-					:value.sync="entitas.nomor_identitas"
-					disabled
-				>
-				</CInput>
+				</CTextarea>
 			</CCol>
 		</CRow>
 
@@ -217,7 +227,6 @@ import 'vue2-datepicker/index.css'
 
 import MyAlert from '../components/AlertSubmit.vue'
 import api from '../../router/api.js'
-import converters from '../../helpers/converter.js'
 import validators from '../../helpers/validator.js'
 
 const default_entitas = {
@@ -245,6 +254,10 @@ export default {
 			default: false
 		},
 		showWargaNegara: {
+			type: Boolean,
+			default: false
+		},
+		showPekerjaan: {
 			type: Boolean,
 			default: false
 		},
@@ -304,6 +317,7 @@ export default {
 				.then(
 					(response) => {
 						this.alert('Entitas berhasil disimpan')
+						this.$emit('update:id', response.data.id)
 						this.getEntitas(response.data.id, true)
 						this.closeModalEntitas()
 					}
