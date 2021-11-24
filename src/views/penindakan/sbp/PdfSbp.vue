@@ -39,8 +39,6 @@ import api from '../../../router/api.js'
 import converters from '../../../helpers/converter.js'
 import pdf from '../../../helpers/pdf.js'
 
-const API = process.env.VUE_APP_BASEAPI + '/sbp'
-
 const pdf_props = {
 	font: {
 		size: 10,
@@ -71,10 +69,6 @@ export default {
 	props: {
 		id: Number
 	},
-	computed: {
-		API_SBP_ID() { return API + '/' + this.id },
-		API_SBP_PUBLISH() { return this.API_SBP_ID + '/publish' },
-	},
 	data() {
 		return {
 			show_pdf: false,
@@ -86,7 +80,7 @@ export default {
 	methods: {
 		publishSbp() {
 			axios
-				.put(this.API_SBP_PUBLISH)
+				.put(api.publishSbp(this.id))
 				.then(
 					(response) => { 
 						this.alert('SBP berhasil diterbitkan', 'success', 2)
@@ -114,7 +108,7 @@ export default {
 			this.show_pdf = true
 		},
 		async getData() {
-			const response =  await axios.get(api.getSbpComplete(this.id))
+			const response =  await axios.get(api.sbpComplete(this.id))
 			return response.data.data
 		},
 		createPDF() {
@@ -260,11 +254,17 @@ export default {
 			// Pejabat
 			doc.text('Tangerang, ' + full_tgl_dok, pdf_props.ind.ttd, ln_tgl)
 			doc.text('Pejabat yang melakukan penindakan,', pdf_props.ind.ttd, ln_jabatan_1)
-			doc.text('..............', pdf_props.ind.ttd, ln_nama_1)
-			doc.text('NIP ......', pdf_props.ind.ttd, ln_nip_1)
-
-			doc.text('..............', pdf_props.ind.ttd, ln_nama_2)
-			doc.text('NIP ......', pdf_props.ind.ttd, ln_nip_2)
+			doc.text(this.data.petugas1.name, pdf_props.ind.ttd, ln_nama_1)
+			doc.text('NIP ' + this.data.petugas1.nip, pdf_props.ind.ttd, ln_nip_1)
+			if (this.data.petugas2 != null) {
+				var txt_nama_pejabat2 = this.data.petugas2.name
+				var txt_nip_pejabat2 = this.data.petugas2.nip
+			} else {
+				var txt_nama_pejabat2 = '...........................................'
+				var txt_nip_pejabat2 = '....................................'
+			}
+			doc.text(txt_nama_pejabat2, pdf_props.ind.ttd, ln_nama_2)
+			doc.text('NIP ' + txt_nip_pejabat2, pdf_props.ind.ttd, ln_nip_2)
 
 			////// KETERANGAN //////
 			let ln_coret = ln_nip_2 + pdf_props.font.height

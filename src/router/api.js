@@ -25,6 +25,9 @@ api.getBangunanById = (doc_type, doc_id) => {return base_url + '/' + doc_type + 
 api.getBadanById = (doc_type, doc_id) => {return base_url + '/' + doc_type + '/' + doc_id + '/badan'}
 
 // API for documents
-api.getSbpComplete = (id) => {return base_url + '/sbp/' + id + '/complete'}
+api.sbp = () => {return base_url + '/sbp'}
+api.sbpId = (id) => {return api.sbp() + '/' + id}
+api.sbpComplete = (id) => {return api.sbpId(id) + '/complete'}
+api.publishSbp = (id) => {return api.sbpId(id) + '/publish'}
 
 export default api

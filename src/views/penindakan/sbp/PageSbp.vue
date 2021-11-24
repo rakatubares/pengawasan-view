@@ -12,14 +12,14 @@
 					:showData="showSbp"
 				>
 					<template #header>
-						<CIcon name="cil-grid"/>Data SBP
+						<CIcon name="cil-grid"/>Daftar SBP
 						<div class="card-header-actions">
 							<CButton 
 								color="primary" 
 								@click="createNewSbp()"
 								class="mr-1"
 							>
-								+ Tambah SBP
+								+ Buat SBP
 							</CButton>
 						</div>
 					</template>
@@ -100,6 +100,7 @@
 <script>
 import axios from "axios"
 
+import api from '../../../router/api.js'
 import MyDisplaySbp from '../sbp/DisplaySbp.vue'
 import MyFormSbp from '../sbp/FormSbp.vue'
 import MyPdfSbp from '../sbp/PdfSbp.vue'
@@ -107,8 +108,6 @@ import MyModalDelete from '../../components/ModalDelete.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 import MyTableData from '../../components/TableData.vue'
 import MyDisplayDetail from '../../details/DisplayDetail.vue'
-
-const API = process.env.VUE_APP_BASEAPI
 
 const tabs_default = {
 	current: 0,
@@ -141,12 +140,11 @@ export default {
 	},
 	data() {
 		return {
-			console,
 			fields: [
 				{ key: 'no_dok_lengkap', label: 'No SBP' },
 				{ key: 'tgl_dok', label: 'Tgl SBP' },
 				{ key: 'nama_saksi', label: 'Saksi/Pemilik' },
-				{ key: 'pejabat1', label: 'Petugas' },
+				{ key: 'petugas1', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
 			],
@@ -170,7 +168,7 @@ export default {
 	methods: {
 		getDataSbp() {
 			axios
-				.get(API + '/sbp')
+				.get(api.sbp())
 				.then(
 					(response) => {
 						this.list_sbp = response.data.data
@@ -221,14 +219,13 @@ export default {
 			}
 		},
 		deleteSbp(item) {
-			let API_SBP_ID = API + '/sbp/' + item.id
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
 				+ " a.n. " 
 				+ item.nama_pemilik.bold() 
 				+ "?"
 			
-			this.modal_delete_props.url = API_SBP_ID
+			this.modal_delete_props.url = api.sbpId(item.id)
 			this.modal_delete_props.text = text
 			this.modal_delete_props.show = true
 		},
