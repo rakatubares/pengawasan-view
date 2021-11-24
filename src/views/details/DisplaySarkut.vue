@@ -48,7 +48,15 @@
 						<b>Nahkoda/Pilot/Pengemudi</b>
 					</CCol>
 					<CCol md="9">
-						&nbsp;{{disp_nama_pilot_pengemudi}}
+						&nbsp;{{disp_nama_pilot}}
+					</CCol>
+				</CRow>
+				<CRow class="mt-2 ml-1">
+					<CCol md="3">
+						<b>Identitas</b>
+					</CCol>
+					<CCol md="9">
+						&nbsp;{{disp_identitas_pilot}}
 					</CCol>
 				</CRow>
 				<CRow class="mt-2 ml-1">
@@ -139,8 +147,11 @@ export default {
 		disp_kapasitas_sarkut() {
 			return (this.data.jumlah_kapasitas || '-') + ' ' + (this.data.satuan_kapasitas || '')
 		},
-		disp_nama_pilot_pengemudi() {
+		disp_nama_pilot() {
 			return this.data.pilot.nama || '-'
+		},
+		disp_identitas_pilot() { 
+			return (this.data.pilot.jenis_identitas || '') + ' ' + (this.data.pilot.nomor_identitas || '-') 
 		},
 		disp_bendera() {
 			return this.data.bendera || '-'
