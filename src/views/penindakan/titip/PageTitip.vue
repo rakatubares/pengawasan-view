@@ -142,10 +142,10 @@ export default {
 	data() {
 		return {
 			fields: [
-				{ key: 'no_dok_lengkap', label: 'No BA Buka Segel' },
+				{ key: 'no_dok_lengkap', label: 'No BA Penitipan' },
 				{ key: 'tgl_dok', label: 'Tgl BA' },
 				{ key: 'nama_penerima', label: 'Pemilik/Penerima' },
-				{ key: 'pejabat1', label: 'Petugas' },
+				{ key: 'petugas1', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
 			],
