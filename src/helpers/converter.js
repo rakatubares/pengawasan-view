@@ -86,6 +86,7 @@ converters.sarkut = (data) => {
 		flight: '',
 		kapasitas: '',
 		pilot: '',
+		identitas: '',
 		bendera: '',
 		no_reg: ''
 	}
@@ -102,6 +103,10 @@ converters.sarkut = (data) => {
 		let kapasitas = jml_kapasitas + satuan_kapasitas
 
 		let pilot = converters.string(data.pilot.nama)
+
+		let jenis_identitas = converters.string_format(converters.string(data.pilot.jenis_identitas), '({}) ')
+		let nomor_identitas = converters.string(data.pilot.nomor_identitas)
+		let identitas = jenis_identitas + nomor_identitas
 		
 		let bendera = converters.string(data.bendera)
 
@@ -112,6 +117,7 @@ converters.sarkut = (data) => {
 			flight: flight,
 			kapasitas: kapasitas,
 			pilot: pilot,
+			identitas: identitas,
 			bendera: bendera,
 			no_reg: no_reg
 		}
@@ -124,7 +130,8 @@ converters.barang = (data) => {
 	let parsedData = {
 		kemasan: '',
 		dokumen: '',
-		pemilik: ''
+		pemilik: '',
+		identitas: '',
 	}
 
 	if (data != null) {
@@ -132,19 +139,28 @@ converters.barang = (data) => {
 		let satuan_kemasan = converters.string(data.satuan_kemasan)
 		let kemasan = jumlah_kemasan + satuan_kemasan
 
-		let jenis_dok = converters.string_format(converters.string(data.dokumen.jns_dok), '{} ')
-		let nomor_dok = converters.string_format(converters.string(data.dokumen.no_dok), '{} ')
-		let dt_dok = converters.date(data.dokumen.tgl_dok, 'DD-MM-YYYY')
-		let full_date = (dt_dok != null) ? converters.fullDate(dt_dok) : ''
-		let tgl_dok = full_date != '' ? converters.string_format(converters.string(full_date), 'tanggal {}') : ''
-		let dokumen = jenis_dok + nomor_dok + tgl_dok
+		if (data.dokumen != null) {
+			let jenis_dok = converters.string_format(converters.string(data.dokumen.jns_dok), '{} ')
+			let nomor_dok = converters.string_format(converters.string(data.dokumen.no_dok), '{} ')
+			let dt_dok = converters.date(data.dokumen.tgl_dok, 'DD-MM-YYYY')
+			let full_date = (dt_dok != null) ? converters.fullDate(dt_dok) : ''
+			let tgl_dok = full_date != '' ? converters.string_format(converters.string(full_date), 'tanggal {}') : ''
+			var dokumen = jenis_dok + nomor_dok + tgl_dok	
+		} else {
+			var dokumen = '-'
+		}
 
 		let pemilik = converters.string(data.pemilik.nama)
+
+		let jenis_identitas = converters.string_format(converters.string(data.pemilik.jenis_identitas), '({}) ')
+		let nomor_identitas = converters.string(data.pemilik.nomor_identitas)
+		let identitas = jenis_identitas + nomor_identitas
 
 		parsedData = {
 			kemasan: kemasan,
 			dokumen: dokumen,
-			pemilik: pemilik
+			pemilik: pemilik,
+			identitas: identitas
 		}
 	}
 
