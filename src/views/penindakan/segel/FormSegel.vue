@@ -40,42 +40,6 @@
 					/>
 				</CCol>
 			</CRow>
-			<!-- <CRow>
-				<CCol sm="12">
-					<CInput
-						label="Nama Saksi"
-						description="Nama lengkap pengangkut / kuasa barang / sarana pengangkut atau pemilik / yang menguasai bangunan atau tempat lain yang menyaksikan penyegelan"
-						:value.sync="data.nama_pemilik"
-						:is-valid="validatorRequired"
-						invalid-feedback="Nama saksi wajib diisi"
-					/>
-				</CCol>
-			</CRow>
-			<CRow>
-				<CCol sm="12">
-					<CTextarea
-						label="Alamat Saksi"
-						description="Alamat yang menyaksikan penyegelan"
-						:value.sync="data.alamat_pemilik"
-					/>
-				</CCol>
-			</CRow>
-			<CRow>
-				<CCol sm="3">
-					<CInput
-						label="Jenis Identitas"
-						description="Jenis identitas yang menyaksikan penyegelan"
-						:value.sync="data.jns_identitas"
-					/>
-				</CCol>
-				<CCol sm="3">
-					<CInput
-						label="Nomor Identitas"
-						description="Nomor identitas yang menyaksikan penyegelan"
-						:value.sync="data.no_identitas"
-					/>
-				</CCol>
-			</CRow> -->
 			<CRow>
 				<CCol md="12">
 					<MySelectEntitas
@@ -86,6 +50,29 @@
 						:id.sync="data.saksi.id"
 					>
 					</MySelectEntitas>
+				</CCol>
+			</CRow>
+			<CRow>
+				<CCol md="12">
+					<MySelectPetugas
+						ref="selectPetugas1"
+						label="Nama Petugas 1"
+						description="Nama Pejabat Bea dan Cukai yang melakukan penitipan"
+						:id.sync="data.petugas1.user_id"
+						:byUser="true"
+					>
+					</MySelectPetugas>
+				</CCol>
+			</CRow>
+			<CRow>
+				<CCol md="12">
+					<MySelectPetugas
+						ref="selectPetugas2"
+						label="Nama Petugas 2"
+						description="Nama Pejabat Bea dan Cukai yang melakukan penitipan"
+						:id.sync="data.petugas2.user_id"
+					>
+					</MySelectPetugas>
 				</CCol>
 			</CRow>
 
@@ -109,15 +96,13 @@
 
 <script>
 import axios from "axios"
-import DatePicker from 'vue2-datepicker'
-import 'vue2-datepicker/index.css'
 
+import api from '../../../router/api.js'
+import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
-import api from '../../../router/api.js'
-import converters from '../../../helpers/converter.js'
-import validators from '../../../helpers/validator.js'
 
 const API = process.env.VUE_APP_BASEAPI + '/segel'
 
@@ -129,22 +114,16 @@ const data_default = {
 	nomor_segel: null,
 	lokasi_segel: null,
 	saksi: {id: null},
-	pejabat1: 'pemeriksa'
-}
-
-const custom_validations_default = {
-	tgl_sprint: {
-		state: false,
-		text: 'Tanggal SPRINT wajib diisi'
-	},
+	petugas1: {user_id: null},
+	petugas2: {user_id: null},
 }
 
 export default {
 	name: 'FormSegel',
 	components: {
-		DatePicker,
 		MyAlert,
 		MySelectEntitas,
+		MySelectPetugas,
 		MySelectSprint
 	},
 	props: {
@@ -154,13 +133,9 @@ export default {
 		},
 		id: Number
 	},
-	computed: {
-		API_SEGEL_ID() { return API + '/' + this.id }
-	},
 	data() {
 		return {
 			data: JSON.parse(JSON.stringify(data_default)),
-			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 		}
 	},
 	methods: {
@@ -175,6 +150,12 @@ export default {
 							// Show reference
 							this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
 							this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
+							this.$refs.selectPetugas1.getPetugas(this.data.petugas1.user_id, true)
+							if (response.data.data.petugas2 != null) {
+								this.$refs.selectPetugas2.getPetugas(this.data.petugas2.user_id, true)	
+							} else {
+								this.data.petugas2 = {user_id: null}
+							}
 						}
 					)
 			}
@@ -206,12 +187,6 @@ export default {
 		},
 		validatorRequired(val) { return validators.required(val) },
 		validatorNumber(val) { return validators.number(val) },
-		validatorDatetime(val, format, validasiName, text) { 
-			let dt = converters.date(val, format)
-			let valid = validators.date(dt)
-			_.set(this, validasiName+'.state', valid)
-			_.set(this, validasiName+'.text', text)
-		},
 	},
 	mounted() {
 		this.getData(true)
