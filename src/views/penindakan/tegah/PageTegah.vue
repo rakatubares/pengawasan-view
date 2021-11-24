@@ -145,7 +145,7 @@ export default {
 				{ key: 'no_dok_lengkap', label: 'No BA Penegahan' },
 				{ key: 'tgl_dok', label: 'Tgl BA' },
 				{ key: 'nama_saksi', label: 'Pemilik/Saksi' },
-				{ key: 'pejabat1', label: 'Petugas' },
+				{ key: 'petugas1', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
 			],
