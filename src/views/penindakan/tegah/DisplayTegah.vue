@@ -52,6 +52,22 @@
 						{{ disp_identitas_saksi }}
 					</CCol>
 				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3">
+						<b>Petugas 1</b>
+					</CCol>
+					<CCol md="9">
+						{{ disp_petugas1 }}
+					</CCol>
+				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3">
+						<b>Petugas 2</b>
+					</CCol>
+					<CCol md="9">
+						{{ disp_petugas2 }}
+					</CCol>
+				</CRow>
 			</CCol>
 		</CRow>
 	</div>
@@ -76,8 +92,14 @@ const data_default = {
 		jenis_identitas: null,
 		nomor_identitas: null
 	},
-	pejabat1: null,
-	pejabat2: null
+	petugas1: {
+		name: null,
+		nip: null
+	},
+	petugas2: {
+		name: null,
+		nip: null
+	}
 }
 export default {
 	name: 'DisplayTegah',
@@ -92,8 +114,14 @@ export default {
 		disp_alamat_saksi() { return this.data.saksi.alamat || '-' },
 		disp_jabatan_saksi() { return this.data.saksi.pekerjaan || '-' },
 		disp_identitas_saksi() { return (this.data.saksi.jenis_identitas || '') + ' ' + (this.data.saksi.nomor_identitas || '-') },
-		disp_pejabat1() { return this.data.pejabat1 || '-' },
-		disp_pejabat2() { return this.data.pejabat2 || '-' },
+		disp_petugas1() { return this.data.petugas1.name || '-' },
+		disp_petugas2() { 
+			if (this.data.petugas2 != null) {
+				return this.data.petugas2.name
+			} else {
+				return '-'
+			}
+		},
 	},
 	data() {
 		return {
