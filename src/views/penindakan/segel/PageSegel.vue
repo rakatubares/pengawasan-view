@@ -12,14 +12,14 @@
 					:showData="showSegel"
 				>
 					<template #header>
-						<CIcon name="cil-grid"/>Data BA Penyegelan
+						<CIcon name="cil-grid"/>Daftar BA Penyegelan
 						<div class="card-header-actions">
 							<CButton 
 								color="primary" 
 								@click="createNewSegel()"
 								class="mr-1"
 							>
-								+ Tambah BA Segel
+								+ Buat BA Segel
 							</CButton>
 						</div>
 					</template>
@@ -145,7 +145,7 @@ export default {
 				{ key: 'no_dok_lengkap', label: 'No BA Segel' },
 				{ key: 'tgl_dok', label: 'Tgl BA' },
 				{ key: 'nama_saksi', label: 'Pemilik/Saksi' },
-				{ key: 'pejabat1', label: 'Petugas' },
+				{ key: 'petugas1', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
 			],
