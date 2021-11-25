@@ -6,7 +6,8 @@ Vue.use(Vuex)
 const state = {
   sidebarShow: 'responsive',
   sidebarMinimize: false,
-  sso: new SSO(false)
+  sso: new SSO(false),
+  userInfo: 'test'
 }
 
 const mutations = {
@@ -24,7 +25,7 @@ const mutations = {
 }
 
 const getters = {
-	sso: state => { return state.sso }
+	sso: state => { return state.sso },
 }
 
 export default new Vuex.Store({

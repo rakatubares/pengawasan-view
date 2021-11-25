@@ -47,32 +47,36 @@ function configRoutes () {
 router.beforeEach(async (to, from, next) => {
 	var env = process.env.VUE_APP_MODE
 
-	if (env == 'production') {
+	if (env != 'development') {
+		let token_name = 'sso_token_' + process.env.VUE_APP_ID
 		var cookies = Cookie.parse(document.cookie)
-		var token = cookies.sso_token_1
+		var token = cookies[token_name]
 
 		var tries = 0
 		while ((typeof token === 'undefined' || !token) && tries <= 100) {
 			// welp, not attached yet. force attachment
 			await Store.getters.sso.attach()
 			cookies = Cookie.parse(document.cookie)
-			token = cookies.sso_token_3
+			token = cookies[token_name]
 		}
 
 		if (typeof token === 'undefined' || !token) {
 			await Store.getters.sso.attach()
 			cookies = Cookie.parse(document.cookie)
-			token = cookies.sso_token_3
+			token = cookies[token_name]
 		} else {
 			Store.getters.sso.getUserInfo()
 				.then((e) => {
 					if (!e.data) {
-						window.location.replace("http://ssologin.local/login?appid=3");
+						let login_url = process.env.VUE_APP_LOGIN_URL + '?appid=' + process.env.VUE_APP_ID
+						window.location.replace(login_url);
 					} else {
-						console.log(e)
+						Store.commit('set', ['userInfo', e.data])
 					}
 				})
 		}
+	} else {
+		console.log('DEVELOPMENT - NO SSO')
 	}
 	
 	next()

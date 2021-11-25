@@ -86,6 +86,7 @@ converters.sarkut = (data) => {
 		flight: '',
 		kapasitas: '',
 		pilot: '',
+		identitas: '',
 		bendera: '',
 		no_reg: ''
 	}
@@ -102,6 +103,10 @@ converters.sarkut = (data) => {
 		let kapasitas = jml_kapasitas + satuan_kapasitas
 
 		let pilot = converters.string(data.pilot.nama)
+
+		let jenis_identitas = converters.string_format(converters.string(data.pilot.jenis_identitas), '({}) ')
+		let nomor_identitas = converters.string(data.pilot.nomor_identitas)
+		let identitas = jenis_identitas + nomor_identitas
 		
 		let bendera = converters.string(data.bendera)
 
@@ -112,6 +117,7 @@ converters.sarkut = (data) => {
 			flight: flight,
 			kapasitas: kapasitas,
 			pilot: pilot,
+			identitas: identitas,
 			bendera: bendera,
 			no_reg: no_reg
 		}
@@ -124,7 +130,8 @@ converters.barang = (data) => {
 	let parsedData = {
 		kemasan: '',
 		dokumen: '',
-		pemilik: ''
+		pemilik: '',
+		identitas: '',
 	}
 
 	if (data != null) {
@@ -145,10 +152,15 @@ converters.barang = (data) => {
 
 		let pemilik = converters.string(data.pemilik.nama)
 
+		let jenis_identitas = converters.string_format(converters.string(data.pemilik.jenis_identitas), '({}) ')
+		let nomor_identitas = converters.string(data.pemilik.nomor_identitas)
+		let identitas = jenis_identitas + nomor_identitas
+
 		parsedData = {
 			kemasan: kemasan,
 			dokumen: dokumen,
-			pemilik: pemilik
+			pemilik: pemilik,
+			identitas: identitas
 		}
 	}
 

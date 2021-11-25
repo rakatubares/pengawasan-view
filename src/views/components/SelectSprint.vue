@@ -197,7 +197,6 @@ export default {
 			this.$emit('update:id', id)
 		},
 		getSprint(id, mounted=false) {
-			console.log('select sprint - get sprint', id)
 			if (id != null) {
 				axios
 					.get(api.getSprintById(id))
