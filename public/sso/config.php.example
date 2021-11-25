@@ -1,0 +1,9 @@
+<?php
+define('SSO_URL', 'http://ssoserver.com/');
+define('LOGIN_URL', 'http://ssologin.com/login');
+define('APP_ID', '0');
+define('APP_SECRET', 'app_secret');
+
+// User params
+define('USERNAME', 'test');
+define('PASSWORD', '123456');
