@@ -76,6 +76,29 @@
 					</MySelectEntitas>
 				</CCol>
 			</CRow>
+			<CRow>
+				<CCol md="12">
+					<MySelectPetugas
+						ref="selectPetugas1"
+						label="Nama Petugas 1"
+						description="Nama Pejabat Bea dan Cukai yang melakukan penitipan"
+						:id.sync="data.petugas1.user_id"
+						:byUser="true"
+					>
+					</MySelectPetugas>
+				</CCol>
+			</CRow>
+			<CRow>
+				<CCol md="12">
+					<MySelectPetugas
+						ref="selectPetugas2"
+						label="Nama Petugas 2"
+						description="Nama Pejabat Bea dan Cukai yang melakukan penitipan"
+						:id.sync="data.petugas2.user_id"
+					>
+					</MySelectPetugas>
+				</CCol>
+			</CRow>
 
 			<!-- Button simpan -->
 			<CRow>
@@ -105,6 +128,7 @@ import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
 const data_default = {
@@ -114,7 +138,8 @@ const data_default = {
 	tanggal_segel: null,
 	penerima: {id: null},
 	saksi: {id: null},
-	pejabat1: 'petugas'
+	petugas1: {user_id: null},
+	petugas2: {user_id: null},
 }
 
 const custom_validations_default = {
@@ -130,6 +155,7 @@ export default {
 		DatePicker,
 		MyAlert,
 		MySelectEntitas,
+		MySelectPetugas,
 		MySelectSprint
 	},
 	props: {
@@ -157,6 +183,12 @@ export default {
 							this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
 							this.$refs.selectPenerima.getEntitas(this.data.penerima.id, true)
 							this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
+							this.$refs.selectPetugas1.getPetugas(this.data.petugas1.user_id, true)
+							if (response.data.data.petugas2 != null) {
+								this.$refs.selectPetugas2.getPetugas(this.data.petugas2.user_id, true)	
+							} else {
+								this.data.petugas2 = {user_id: null}
+							}
 						}
 					)
 			}
