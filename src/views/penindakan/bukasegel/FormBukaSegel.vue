@@ -63,6 +63,29 @@
 					</MySelectEntitas>
 				</CCol>
 			</CRow>
+			<CRow>
+				<CCol md="12">
+					<MySelectPetugas
+						ref="selectPetugas1"
+						label="Nama Petugas 1"
+						description="Nama Pejabat Bea dan Cukai yang melakukan penitipan"
+						:id.sync="data.petugas1.user_id"
+						:byUser="true"
+					>
+					</MySelectPetugas>
+				</CCol>
+			</CRow>
+			<CRow>
+				<CCol md="12">
+					<MySelectPetugas
+						ref="selectPetugas2"
+						label="Nama Petugas 2"
+						description="Nama Pejabat Bea dan Cukai yang melakukan penitipan"
+						:id.sync="data.petugas2.user_id"
+					>
+					</MySelectPetugas>
+				</CCol>
+			</CRow>
 
 			<!-- Button simpan -->
 			<CRow>
@@ -84,14 +107,12 @@
 
 <script>
 import axios from "axios"
-import DatePicker from 'vue2-datepicker'
-import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api.js'
-import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
 const data_default = {
@@ -102,20 +123,16 @@ const data_default = {
 	nomor_segel: null,
 	lokasi_segel: null,
 	saksi: {id: null},
-	pejabat1: 'pemeriksa'
+	petugas1: {user_id: null},
+	petugas2: {user_id: null},
 }
-const custom_validations_default = {
-	tgl_sprint: {
-		state: false,
-		text: 'Tanggal SPRINT wajib diisi'
-	},
-}
+
 export default {
-	name: 'FormSegel',
+	name: 'FormBukaSegel',
 	components: {
-		DatePicker,
 		MyAlert,
 		MySelectEntitas,
+		MySelectPetugas,
 		MySelectSprint
 	},
 	props: {
@@ -128,20 +145,25 @@ export default {
 	data() {
 		return {
 			data: JSON.parse(JSON.stringify(data_default)),
-			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 		}
 	},
 	methods: {
 		getData() {
 			if (this.state == 'edit') {
 				axios
-					.get(api.getBukaSegelById(this.id))
+					.get(api.bukaSegelId(this.id))
 					.then(
 						(response) => {
 							this.data = response.data.data
 							// Show reference
 							this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
 							this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
+							this.$refs.selectPetugas1.getPetugas(this.data.petugas1.user_id, true)
+							if (response.data.data.petugas2 != null) {
+								this.$refs.selectPetugas2.getPetugas(this.data.petugas2.user_id, true)	
+							} else {
+								this.data.petugas2 = {user_id: null}
+							}
 						}
 					)
 			}
@@ -151,8 +173,8 @@ export default {
 			let submit_url
 			submit_method = this.state == 'insert' ? 'post' : 'put'
 			submit_url = this.state == 'insert' ? 
-				api.getBukaSegel() : 
-				api.getBukaSegelById(this.id)
+				api.bukaSegel() : 
+				api.bukaSegelId(this.id)
 
 			axios({
 				method: submit_method,
@@ -173,12 +195,6 @@ export default {
 		},
 		validatorRequired(val) { return validators.required(val) },
 		validatorNumber(val) { return validators.number(val) },
-		validatorDatetime(val, format, validasiName, text) { 
-			let dt = converters.date(val, format)
-			let valid = validators.date(dt)
-			_.set(this, validasiName+'.state', valid)
-			_.set(this, validasiName+'.text', text)
-		},
 	},
 	mounted() {
 		this.getData(true)
