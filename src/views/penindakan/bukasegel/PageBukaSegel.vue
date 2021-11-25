@@ -7,18 +7,19 @@
 					state="list"
 					:fields="fields"
 					:items="list_table"
-					:showData="showDoc"
 					:editData="editDoc"
+					:showData="showDoc"
+					:deleteData="deleteDoc"
 				>
 					<template #header>
-						<CIcon name="cil-grid"/>Data BA Pembukaan Segel
+						<CIcon name="cil-grid"/>Daftar BA Pembukaan Segel
 						<div class="card-header-actions">
 							<CButton 
 								color="primary" 
 								@click="createNewDoc()"
 								class="mr-1"
 							>
-								+ Tambah BA Buka Segel
+								+ Buat BA Buka Segel
 							</CButton>
 						</div>
 					</template>
@@ -82,6 +83,18 @@
 				</CTab>
 			</template>
 		</MyModalTabs>
+
+		<!-- Modal konfirmasi delete SBP -->
+		<MyModalDelete
+			v-if="modal_delete_props.show"
+			:url.sync="modal_delete_props.url"
+			@close-modal="closeModalDelete"
+			@delete-data="closeModalDelete(); getDataTable()"
+		>
+			<template #text>
+				<span v-html="modal_delete_props.text"></span>
+			</template>
+		</MyModalDelete>
   </div>
 </template>
 
@@ -93,6 +106,7 @@ import MyDisplayDetail from '../../details/DisplayDetail.vue'
 import MyDisplayBukaSegel from '../bukasegel/DisplayBukaSegel.vue'
 import MyFormBukaSegel from '../bukasegel/FormBukaSegel.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
+import MyModalDelete from '../../components/ModalDelete.vue'
 import MyPdfBukaSegel from '../bukasegel/PdfBukaSegel.vue'
 import MyTableData from '../../components/TableData.vue'
 
@@ -120,6 +134,7 @@ export default {
 		MyDisplayDetail,
 		MyDisplayBukaSegel,
 		MyFormBukaSegel,
+		MyModalDelete,
 		MyModalTabs,
 		MyPdfBukaSegel,
 		MyTableData,
@@ -130,7 +145,7 @@ export default {
 				{ key: 'no_dok_lengkap', label: 'No BA Buka Segel' },
 				{ key: 'tgl_dok', label: 'Tgl BA' },
 				{ key: 'nama_saksi', label: 'Pemilik/Saksi' },
-				{ key: 'pejabat1', label: 'Petugas' },
+				{ key: 'petugas1', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
 			],
@@ -155,7 +170,7 @@ export default {
 	methods: {
 		getDataTable() {
 			axios
-				.get(api.getBukaSegel())
+				.get(api.bukaSegel())
 				.then(
 					(response) => {
 						this.list_table = response.data.data
@@ -204,6 +219,22 @@ export default {
 			} else {
 				this.refreshPdf()
 			}
+		},
+		deleteDoc(item) {
+			let text = "Apakah Anda yakin untuk menghapus data " 
+				+ item.no_dok_lengkap.bold() 
+				+ " a.n. " 
+				+ item.nama_saksi.bold() 
+				+ "?"
+			
+			this.modal_delete_props.url = api.bukaSegelId(item.id)
+			this.modal_delete_props.text = text
+			this.modal_delete_props.show = true
+		},
+		closeModalDelete() {
+			this.modal_delete_props.url = null
+			this.modal_delete_props.text = null
+			this.modal_delete_props.show = false
 		},
 		displayTab(tab_index) {
 			this.modal_props.tabs.list[tab_index]['visibility'] = true

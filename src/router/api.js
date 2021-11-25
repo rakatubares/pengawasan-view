@@ -35,10 +35,10 @@ api.getSegelById = (id) => {return base_url + '/segel/' + id}
 api.getSegelComplete = (id) => {return base_url + '/segel/' + id + '/complete'}
 api.publishSegel = (id) => {return base_url + '/segel/' + id + '/publish'}
 
-api.getBukaSegel = () => {return base_url + '/bukasegel'}
-api.getBukaSegelById = (id) => {return api.getBukaSegel() + '/' + id}
-api.getBukaSegelComplete = (id) => {return api.getBukaSegelById(id) + '/complete'}
-api.publishSegel = (id) => {return api.getBukaSegelById(id) + '/publish'}
+api.bukaSegel = () => {return base_url + '/bukasegel'}
+api.bukaSegelId = (id) => {return api.bukaSegel() + '/' + id}
+api.bukaSegelComplete = (id) => {return api.bukaSegelId(id) + '/complete'}
+api.publishBukaSegel = (id) => {return api.bukaSegelId(id) + '/publish'}
 
 api.getPenitipan = () => {return base_url + '/titip'}
 api.getPenitipanById = (id) => {return api.getPenitipan() + '/' + id}

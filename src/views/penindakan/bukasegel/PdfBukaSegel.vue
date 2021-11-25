@@ -89,7 +89,7 @@ export default {
 	methods: {
 		publishDoc() {
 			axios
-				.put(api.publishSegel(this.id))
+				.put(api.publishBukaSegel(this.id))
 				.then(
 					(response) => { 
 						this.alert('BA Pembukaan Segel berhasil diterbitkan', 'success', 2)
@@ -118,7 +118,7 @@ export default {
 			this.show_pdf = true
 		},
 		async getData() {
-			const response =  await axios.get(api.getBukaSegelComplete(this.id))
+			const response =  await axios.get(api.bukaSegelComplete(this.id))
 			return response.data.data
 		},
 		createPDF() {
@@ -247,11 +247,17 @@ export default {
 			// Pejabat
 			doc.text('Tangerang, ' + full_tgl_dok, pdf_props.ind.ttd, ln_tgl)
 			doc.text('Pejabat yang melakukan pembukaan segel,', pdf_props.ind.ttd, ln_jabatan_1)
-			doc.text('..............', pdf_props.ind.ttd, ln_nama_1)
-			doc.text('NIP ......', pdf_props.ind.ttd, ln_nip_1)
-
-			doc.text('..............', pdf_props.ind.ttd, ln_nama_2)
-			doc.text('NIP ......', pdf_props.ind.ttd, ln_nip_2)
+			doc.text(this.data.petugas1.name, pdf_props.ind.ttd, ln_nama_1)
+			doc.text('NIP ' + this.data.petugas1.nip, pdf_props.ind.ttd, ln_nip_1)
+			if (this.data.petugas2 != null) {
+				var txt_nama_pejabat2 = this.data.petugas2.name
+				var txt_nip_pejabat2 = this.data.petugas2.nip
+			} else {
+				var txt_nama_pejabat2 = '...........................................'
+				var txt_nip_pejabat2 = '....................................'
+			}
+			doc.text(txt_nama_pejabat2, pdf_props.ind.ttd, ln_nama_2)
+			doc.text('NIP ' + txt_nip_pejabat2, pdf_props.ind.ttd, ln_nip_2)
 
 			////// KETERANGAN //////
 			let ln_coret = ln_nip_2 + pdf_props.font.height
