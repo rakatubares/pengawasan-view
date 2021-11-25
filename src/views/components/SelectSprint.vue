@@ -228,6 +228,7 @@ export default {
 				.then(
 					(response) => {
 						this.alert('SPRINT berhasil disimpan')
+						this.$emit('update:id', response.data.id)
 						this.getSprint(response.data.id, true)
 						this.closeModalSprint()
 					}
