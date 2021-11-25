@@ -151,6 +151,29 @@
 					</MySelectEntitas>
 				</CCol>
 			</CRow>
+			<CRow>
+				<CCol md="12">
+					<MySelectPetugas
+						ref="selectPetugas1"
+						label="Nama Petugas 1"
+						description="Nama Pejabat Bea dan Cukai yang melakukan penitipan"
+						:id.sync="data.petugas1.user_id"
+						:byUser="true"
+					>
+					</MySelectPetugas>
+				</CCol>
+			</CRow>
+			<CRow>
+				<CCol md="12">
+					<MySelectPetugas
+						ref="selectPetugas2"
+						label="Nama Petugas 2"
+						description="Nama Pejabat Bea dan Cukai yang melakukan penitipan"
+						:id.sync="data.petugas2.user_id"
+					>
+					</MySelectPetugas>
+				</CCol>
+			</CRow>
 
 			<!-- Button simpan -->
 			<CRow>
@@ -176,13 +199,13 @@ import axios from "axios"
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
-import MyAlert from '../../components/AlertSubmit.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
-import MySelectSprint from '../../components/SelectSprint.vue'
+import api from '../../../router/api.js'
 import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
-
-const API = process.env.VUE_APP_BASEAPI + '/sbp'
+import MyAlert from '../../components/AlertSubmit.vue'
+import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectPetugas from '../../components/SelectPetugas.vue'
+import MySelectSprint from '../../components/SelectSprint.vue'
 
 const data_default = {
 	sprint: {id: null},
@@ -194,7 +217,8 @@ const data_default = {
 	wkt_selesai_penindakan: null,
 	hal_terjadi: null,
 	saksi: {id: null},
-	pejabat1: 'pemeriksa'
+	petugas1: {user_id: null},
+	petugas2: {user_id: null},
 }
 
 const custom_validations_default = {
@@ -220,6 +244,7 @@ export default {
 		DatePicker,
 		MyAlert,
 		MySelectEntitas,
+		MySelectPetugas,
 		MySelectSprint,
 	},
 	props: {
@@ -229,22 +254,18 @@ export default {
 		},
 		id: Number
 	},
-	computed: {
-		API_SBP_ID() { return API + '/' + this.id }
-	},
 	data() {
 		return {
 			data: JSON.parse(JSON.stringify(data_default)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 			jenis_pelanggaran_options: [ ...jenis_pelanggaran ],
-			console
 		}
 	},
 	methods: {
 		getData(validate_first = false) {
 			if (this.state == 'edit') {
 				axios
-					.get(this.API_SBP_ID)
+					.get(api.sbpId(this.id))
 					.then(
 						(response) => {
 							this.data = response.data.data
@@ -266,6 +287,12 @@ export default {
 							// Show reference
 							this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
 							this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
+							this.$refs.selectPetugas1.getPetugas(this.data.petugas1.user_id, true)
+							if (response.data.data.petugas2 != null) {
+								this.$refs.selectPetugas2.getPetugas(this.data.petugas2.user_id, true)	
+							} else {
+								this.data.petugas2 = {user_id: null}
+							}
 						}
 					)
 			}
@@ -274,7 +301,9 @@ export default {
 			let submit_method
 			let submit_url
 			submit_method = this.state == 'insert' ? 'post' : 'put'
-			submit_url = this.state == 'insert' ? API : API + '/' + this.id
+			submit_url = this.state == 'insert' ? 
+				api.sbp() : 
+				api.sbpId(this.id)
 
 			axios({
 				method: submit_method,

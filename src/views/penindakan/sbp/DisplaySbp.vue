@@ -84,6 +84,22 @@
 						{{ disp_saksi }}
 					</CCol>
 				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3">
+						<b>Petugas 1</b>
+					</CCol>
+					<CCol md="9">
+						{{ disp_petugas1 }}
+					</CCol>
+				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3">
+						<b>Petugas 2</b>
+					</CCol>
+					<CCol md="9">
+						{{ disp_petugas2 }}
+					</CCol>
+				</CRow>
 			</CCol>
 		</CRow>
 	</div>
@@ -92,7 +108,7 @@
 <script>
 import axios from "axios"
 
-const API = process.env.VUE_APP_BASEAPI + '/sbp'
+import api from '../../../router/api.js'
 
 const data_default = {
 	no_dok_lengkap: null,
@@ -108,8 +124,14 @@ const data_default = {
 	wkt_selesai_penindakan: null,
 	hal_terjadi: null,
 	saksi: {nama: null},
-	pejabat1: null,
-	pejabat2: null
+	petugas1: {
+		name: null,
+		nip: null
+	},
+	petugas2: {
+		name: null,
+		nip: null
+	}
 }
 
 export default {
@@ -118,7 +140,6 @@ export default {
 		id: Number
 	},
 	computed: {
-		API_SBP_ID() { return API + '/' + this.id },
 		disp_no_sbp() { return this.data.no_dok_lengkap || '-' },
 		disp_tgl_sbp() { return this.data.tgl_dok || '-' },
 		disp_sprint() { return ((this.data.sprint.nomor_sprint || '') + ' tanggal ' + (this.data.sprint.tanggal_sprint || '')) },
@@ -130,6 +151,14 @@ export default {
 		disp_waktu_selesai() { return this.data.wkt_selesai_penindakan || '-' },
 		disp_hal_terjadi() { return this.data.hal_terjadi || '-' },
 		disp_saksi() { return this.data.saksi.nama || '-' },
+		disp_petugas1() { return this.data.petugas1.name || '-' },
+		disp_petugas2() { 
+			if (this.data.petugas2 != null) {
+				return this.data.petugas2.name
+			} else {
+				return '-'
+			}
+		},
 	},
 	data() {
 		return {
@@ -139,7 +168,7 @@ export default {
 	methods: {
 		getData() {
 			axios
-				.get(this.API_SBP_ID)
+				.get(api.sbpId(this.id))
 				.then(
 					(response) => { 
 						this.data = JSON.parse(JSON.stringify(response.data.data ))

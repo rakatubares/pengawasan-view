@@ -71,7 +71,7 @@ function configRoutes () {
 router.beforeEach(async (to, from, next) => {
 	var env = process.env.VUE_APP_MODE
 
-	if (env == 'production') {
+	if (env != 'development') {
 		var cookies = Cookie.parse(document.cookie)
 		var token = cookies.sso_token_1
 
@@ -93,10 +93,12 @@ router.beforeEach(async (to, from, next) => {
 					if (!e.data) {
 						window.location.replace("http://ssologin.local/login?appid=3");
 					} else {
-						console.log(e)
+						Store.commit('set', ['userInfo', e.data])
 					}
 				})
 		}
+	} else {
+		console.log('DEVELOPMENT - NO SSO')
 	}
 	
 	next()
