@@ -13,28 +13,10 @@ $broker = new \Jasny\SSO\Broker(
 );
 
 if (empty($_REQUEST['command']) || !method_exists($broker, $_REQUEST['command'])) {
-	if ($_REQUEST['command'] == 'getUserByRole') {
-		// magic method userByRole
-		try {
-			$result = $broker->{$_REQUEST['command']}([$_REQUEST['roles']], $_REQUEST['nama']);
-		} catch (Exception $e) {
-			$status = $e->getCode();
-			$result = ['error' => $e->getMessage()];
-		}
-	} else if ($_REQUEST['command'] == 'getUserById') {
-		// magic method userById
-		try {
-			$result = $broker->{$_REQUEST['command']}($_REQUEST['id']);
-		} catch (Exception $e) {
-			$status = $e->getCode();
-			$result = ['error' => $e->getMessage()];
-		}
-	} else {
-		header("Content-Type: application/json");
-		header("HTTP/1.1 400 Bad Request");
-		echo json_encode(['error' => 'Command not specified']);
-		return;
-	}
+	header("Content-Type: application/json");
+	header("HTTP/1.1 400 Bad Request");
+	echo json_encode(['error' => 'Command not specified']);
+	return;
 } else {
 	try {
 		$result = $broker->{$_REQUEST['command']}();
