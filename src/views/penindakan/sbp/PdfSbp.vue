@@ -34,10 +34,11 @@ import axios from "axios"
 import jsPDF from "jspdf"
 import 'jspdf-autotable'
 
-import MyAlert from '../../components/AlertSubmit.vue'
 import api from '../../../router/api.js'
+import api2 from '../../../router/api2.js'
 import converters from '../../../helpers/converter.js'
 import pdf from '../../../helpers/pdf.js'
+import MyAlert from '../../components/AlertSubmit.vue'
 
 const pdf_props = {
 	font: {
@@ -101,7 +102,8 @@ export default {
 			this.$refs.alert.show_alert(text, color, time)
 		},
 		async showPdf() {
-			this.data = await this.getData()
+			// this.data = await this.getData()
+			this.data = await api2.getDocumentById('sbp', this.id)
 			this.status_pdf = this.data.status.kode_status
 			this.show_pdf = false
 			this.src_pdf = this.createPDF()

@@ -106,32 +106,39 @@
 </template>
 
 <script>
-import axios from "axios"
-
-import api from '../../../router/api.js'
+import api from '../../../router/api2.js'
 
 const data_default = {
-	no_dok_lengkap: null,
-	tgl_dok: null,
-	sprint: {
-		nomor_sprint: null,
-		tanggal_sprint: null
+	main:{
+		data: {
+			no_dok_lengkap: null,
+			uraian_penindakan: null,
+			alasan_penindakan: null,
+			jenis_pelanggaran: null,
+			wkt_mulai_penindakan: null,
+			wkt_selesai_penindakan: null,
+			hal_terjadi: null,
+		},
 	},
-	uraian_penindakan: null,
-	alasan_penindakan: null,
-	jenis_pelanggaran: null,
-	wkt_mulai_penindakan: null,
-	wkt_selesai_penindakan: null,
-	hal_terjadi: null,
-	saksi: {nama: null},
-	petugas1: {
-		name: null,
-		nip: null
-	},
-	petugas2: {
-		name: null,
-		nip: null
+	penindakan: {
+		tanggal_penindakan: null,
+		sprint: {
+			nomor_sprint: null,
+			tanggal_sprint: null
+		},
+		saksi: {
+			nama: null
+		},
+		petugas1: {
+			name: null,
+			nip: null
+		},
+		petugas2: {
+			name: null,
+			nip: null
+		}
 	}
+	
 }
 
 export default {
@@ -140,21 +147,21 @@ export default {
 		id: Number
 	},
 	computed: {
-		disp_no_sbp() { return this.data.no_dok_lengkap || '-' },
-		disp_tgl_sbp() { return this.data.tgl_dok || '-' },
-		disp_sprint() { return ((this.data.sprint.nomor_sprint || '') + ' tanggal ' + (this.data.sprint.tanggal_sprint || '')) },
-		disp_lokasi() { return this.data.lokasi_penindakan || '-' },
-		disp_uraian() { return this.data.uraian_penindakan || '-' },
-		disp_alasan() { return this.data.alasan_penindakan || '-' },
-		disp_pelanggaran() { return this.data.jenis_pelanggaran || '-' },
-		disp_waktu_mulai() { return this.data.wkt_mulai_penindakan || '-' },
-		disp_waktu_selesai() { return this.data.wkt_selesai_penindakan || '-' },
-		disp_hal_terjadi() { return this.data.hal_terjadi || '-' },
-		disp_saksi() { return this.data.saksi.nama || '-' },
-		disp_petugas1() { return this.data.petugas1.name || '-' },
+		disp_no_sbp() { return this.data.main.data.no_dok_lengkap || '-' },
+		disp_tgl_sbp() { return this.data.penindakan.tanggal_penindakan || '-' },
+		disp_sprint() { return ((this.data.penindakan.sprint.nomor_sprint || '') + ' tanggal ' + (this.data.penindakan.sprint.tanggal_sprint || '')) },
+		disp_lokasi() { return this.data.penindakan.lokasi_penindakan || '-' },
+		disp_uraian() { return this.data.main.data.uraian_penindakan || '-' },
+		disp_alasan() { return this.data.main.data.alasan_penindakan || '-' },
+		disp_pelanggaran() { return this.data.main.data.jenis_pelanggaran || '-' },
+		disp_waktu_mulai() { return this.data.main.data.wkt_mulai_penindakan || '-' },
+		disp_waktu_selesai() { return this.data.main.data.wkt_selesai_penindakan || '-' },
+		disp_hal_terjadi() { return this.data.main.data.hal_terjadi || '-' },
+		disp_saksi() { return this.data.penindakan.saksi.nama || '-' },
+		disp_petugas1() { return this.data.penindakan.petugas1.name || '-' },
 		disp_petugas2() { 
-			if (this.data.petugas2 != null) {
-				return this.data.petugas2.name
+			if (this.data.penindakan.petugas2 != null) {
+				return this.data.penindakan.petugas2.name
 			} else {
 				return '-'
 			}
@@ -166,15 +173,8 @@ export default {
 		}
 	},
 	methods: {
-		getData() {
-			axios
-				.get(api.sbpId(this.id))
-				.then(
-					(response) => { 
-						this.data = JSON.parse(JSON.stringify(response.data.data ))
-						console.log('display sbp - data', JSON.parse(JSON.stringify(this.data)))
-					}
-				)
+		async getData() { 
+			this.data = await api.getDocumentById('sbp', this.id)
 		}
 	},
 	mounted() {
