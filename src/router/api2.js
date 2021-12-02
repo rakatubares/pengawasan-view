@@ -17,8 +17,15 @@ class API {
 	}
 
 	postApi(url, data) {
-		axios.post(`${this.base_url}${url}`, data)
+		let response = axios.post(`${this.base_url}${url}`, data)
+		return response
 	}
+
+	/*
+    |--------------------------------------------------------------------------
+    | API for SSO users
+    |--------------------------------------------------------------------------
+    */
 
 	async getUserById(id) {
 		let response = await this.getApi(`/user/${id}`)
@@ -34,6 +41,64 @@ class API {
 
 	saveUser(data) {
 		this.postApi('/user', data)
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| API for documents
+	|--------------------------------------------------------------------------
+	*/
+
+	async getListDocuments(doc_type) {
+		let response = await this.getApi(`/${doc_type}`)
+		let list = response.data.data
+		return list
+	}
+
+	async getDocumentById(doc_type, doc_id) {
+		let response = await this.getApi(`/${doc_type}/${doc_id}`)
+		let doc = response.data.data
+		return doc
+	}
+
+	async getObjek(doc_type, doc_id) {
+		let response = await this.getApi(`/${doc_type}/${doc_id}/objek`)
+		let objek = response.data
+		return objek
+	}
+
+	async getPenindakanById(penindakan_id) {
+		let response = await this.getApi(`/penindakan/${penindakan_id}`)
+		let penindakan = response.data.data
+		return penindakan
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| API for details
+	|--------------------------------------------------------------------------
+	*/
+
+	async getDetailByDocId(doc_type, doc_id, detail_type) {
+		let response = await this.getApi(`/${doc_type}/${doc_id}/${detail_type}`)
+		let objek = response.data.data
+		return objek
+	}
+
+	async getItemBarangByDocId(doc_type, doc_id) {
+		let response = await this.getApi(`/${doc_type}/${doc_id}/barang/item`)
+		let objek = response.data.data.item
+		return objek
+	}
+
+	upsertDetail(doc_type, doc_id, detail_type, data) {
+		let response = this.postApi(`/${doc_type}/${doc_id}/${detail_type}/upsert`, data)
+		return response
+	}
+
+	upsertLinkedDoc(doc_type, doc_id, data) {
+		let response = this.postApi(`/${doc_type}/${doc_id}/storelinked`, data)
+		return response
 	}
 }
 
