@@ -117,7 +117,7 @@ export default {
 	props: {
 		state: {
 			type: String,
-			default: 'input'
+			default: 'insert'
 		},
 		id: Number,
 		doc_type: String,
@@ -130,7 +130,8 @@ export default {
 	},
 	methods: {
 		getData() {
-			if (this.state != 'input') {
+			console.log('state', this.state)
+			if (this.state == 'edit') {
 				axios
 					.get(api.getSarkutById(this.doc_type, this.doc_id))
 					.then(
