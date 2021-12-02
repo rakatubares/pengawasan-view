@@ -204,16 +204,16 @@ converters.badan = (data) => {
 	}
 
 	if (data != null) {
-		let nama = converters.string(data.entitas.nama)
+		let nama = converters.string(data.nama)
 		
-		let tgl_lahir = converters.string(data.entitas.tanggal_lahir)
+		let tgl_lahir = converters.string(data.tanggal_lahir)
 		
-		let warga_negara = converters.string(data.entitas.warga_negara)
+		let warga_negara = converters.string(data.warga_negara)
 		
-		let alamat = converters.string(data.entitas.alamat).replace('\n', ' ')
+		let alamat = converters.string(data.alamat).replace('\n', ' ')
 
-		let jns_identitas = converters.string_format(converters.string(data.entitas.jenis_identitas), '{} ')
-		let no_identitas = converters.string(data.entitas.nomor_identitas)
+		let jns_identitas = converters.string_format(converters.string(data.jenis_identitas), '{} ')
+		let no_identitas = converters.string(data.nomor_identitas)
 		let identitas = jns_identitas + no_identitas
 
 		parsedData = {
