@@ -39,7 +39,9 @@
 					<CCol>
 						<MyTableBarang
 							state="show"
-							:doc="doc"
+							:doc_type="doc.main.type"
+							:doc_id="doc.main.data.id"
+							:detail="doc"
 						>
 						</MyTableBarang>
 					</CCol>

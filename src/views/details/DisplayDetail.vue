@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import api from '../../router/api2.js'
 import MyDisplayBadan from '../details/DisplayBadan.vue'
 import MyDisplayBangunan from '../details/DisplayBangunan.vue'
 import MyDisplayBarang from '../details/DisplayBarang.vue'
@@ -40,30 +39,13 @@ export default {
 		MyDisplaySarkut,
 	},
 	props: {
-		doc_type: {
-			type: String,
-			default: null
-		},
-		doc_id: {
-			type: Number,
-			default: null
-		},
+		doc: Object
 	},
-	data() {
-		return {
-			doc: null,
-			active_detail: null,
+	computed: {
+		active_detail() {
+			return this.doc.objek.type
 		}
 	},
-	methods: {
-		async getDetail() {
-			this.doc = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.active_detail = this.doc.objek.type
-		}
-	},
-	mounted() {
-		this.getDetail()
-	}
 }
 </script>
 
