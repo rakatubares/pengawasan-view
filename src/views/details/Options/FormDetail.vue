@@ -175,12 +175,16 @@
 				</CRow>
 			</CCol>
 		</CRow>
+
+		<!-- Alert -->
+		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
 <script>
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
+import MyAlert from '../../components/AlertSubmit.vue'
 import MyFormBadan from '../FormDetailBadan.vue'
 import MyFormBangunan from '../FormDetailBangunan.vue'
 import MyFormBarang from './FormDetailBarang.vue'
@@ -196,6 +200,7 @@ const objek_penindakan_default = [
 export default {
 	name: 'FormDetail',
 	components: {
+		MyAlert,
 		MyFormBadan,
 		MyFormBangunan,
 		MyFormBarang,
@@ -308,11 +313,14 @@ export default {
 		displayDetail(type) {
 			this.$emit('input-data', type)
 		},
-		saveLinkedDoc() {
-			api.upsertLinkedDoc(this.doc_type, this.doc_id, this.tindakan.data)
+		async saveLinkedDoc() {
+			await api.upsertLinkedDoc(this.doc_type, this.doc_id, this.tindakan.data)
 			this.$emit('submit-data')
 			this.alert('Data dokumen terkait berhasil disimpan')
-		}
+		},
+		alert(text, color, time) {
+			this.$refs.alert.show_alert(text, color, time)
+		},
 	},
 	mounted() {
 		this.getData()
