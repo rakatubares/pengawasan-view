@@ -7,16 +7,16 @@
 					state="list"
 					:fields="fields"
 					:items="list_table"
-					:editData="editSbp"
-					:deleteData="deleteSbp"
-					:showData="showSbp"
+					:editData="editDoc"
+					:deleteData="deleteDoc"
+					:showData="showDoc"
 				>
 					<template #header>
 						<CIcon name="cil-grid"/>Daftar SBP
 						<div class="card-header-actions">
 							<CButton 
 								color="primary" 
-								@click="createNewSbp()"
+								@click="createDoc"
 								class="mr-1"
 							>
 								+ Buat SBP
@@ -28,7 +28,7 @@
 		</CRow>
 
 		<!-- Modal input SBP -->
-		<MyModalTabs
+		<!-- <MyModalTabs
 			ref="modal_tabs"
 			title="Input Data SBP"
 			v-if="modal_props.show"
@@ -81,18 +81,20 @@
 					v-if="modal_props.tabs.list[2]['visibility']"
 					:title="modal_props.tabs.list[2]['title']" 
 				>
-					<!-- <MyPdfSbp
-						ref="pdf_sbp"
-						:id.sync="modal_props.doc_id"
-						@publish-sbp="publishSbp"
-					></MyPdfSbp> -->
 					<MyDisplayPdf
 						:doc_type="doc_type"
 						:doc_id="modal_props.doc_id"
 					></MyDisplayPdf>
 				</CTab>
 			</template>
-		</MyModalTabs>
+		</MyModalTabs> -->
+		<MyModalSbp
+			v-if="modal_props.show"
+			:state="modal_props.state"
+			:doc_id.sync="modal_props.doc_id"
+			@close-modal="closeModal"
+		>
+		</MyModalSbp>
 
 		<!-- Modal konfirmasi delete SBP -->
 		<MyModalDelete
@@ -120,6 +122,7 @@ import MyFormDetail from '../../details/Options/FormDetail.vue'
 import MyFormSbp from '../sbp/FormSbp.vue'
 import MyPdfSbp from '../sbp/PdfSbp.vue'
 import MyModalDelete from '../../components/ModalDelete.vue'
+import MyModalSbp from './ModalSbp.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 import MyTableData from '../../components/TableData.vue'
 
@@ -150,6 +153,7 @@ export default {
 		MyFormDetail,
 		MyFormSbp,
 		MyModalDelete,
+		MyModalSbp,
 		MyModalTabs,
 		MyPdfSbp,
 		MyTableData,
@@ -166,70 +170,95 @@ export default {
 			],
 			list_table: [],
 			doc_type: 'sbp',
+			// modal_props: {
+			// 	show: false,
+			// 	state: 'insert',
+			// 	tabs: JSON.parse(JSON.stringify(tabs_default)),
+			// 	doc_id: null,
+			// 	header_form: false,
+			// 	header_display: false,
+			// 	detail_form: false,
+			// 	detail_display:false
+			// },
 			modal_props: {
 				show: false,
-				state: 'insert',
-				tabs: JSON.parse(JSON.stringify(tabs_default)),
-				doc_id: null,
-				header_form: false,
-				header_display: false,
-				detail_form: false,
-				detail_display:false
+				state: null,
+				doc_id: null
 			},
 			modal_delete_props: {
 				show: false,
 				url: null,
 				text: null
-			}
+			},
 		}
 	},
 	methods: {
 		async getDataTable() {
 			this.list_table = await api2.getListDocuments('sbp')
 		},
-		createNewSbp() {
+		// createNewSbp() {
+		// 	this.modal_props.state = 'insert'
+		// 	this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
+		// 	this.modal_props.doc_id = null
+		// 	this.modal_props.header_form = true
+		// 	this.modal_props.header_display = false
+		// 	this.modal_props.detail_form = true
+		// 	this.modal_props.detail_display = false
+		// 	this.modal_props.show = true
+		// },
+		// showSbp(id) {
+		// 	console.log('page sbp - show data', id)
+		// 	this.modal_props.state = 'display'
+		// 	this.modal_props.tabs.list[1]['visibility'] = true
+		// 	this.modal_props.tabs.list[2]['visibility'] = true
+		// 	this.modal_props.doc_id = id
+		// 	this.modal_props.header_form = false
+		// 	this.modal_props.header_display = true
+		// 	this.modal_props.detail_form = false
+		// 	this.modal_props.detail_display = true
+		// 	this.modal_props.show = true
+		// },
+		createDoc() {
 			this.modal_props.state = 'insert'
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
 			this.modal_props.doc_id = null
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
-			this.modal_props.detail_form = true
-			this.modal_props.detail_display = false
 			this.modal_props.show = true
 		},
-		showSbp(id) {
-			console.log('page sbp - show data', id)
-			this.modal_props.state = 'display'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
-			this.modal_props.doc_id = id
-			this.modal_props.header_form = false
-			this.modal_props.header_display = true
-			this.modal_props.detail_form = false
-			this.modal_props.detail_display = true
-			this.modal_props.show = true
-		},
-		editSbp(id) {
+		editDoc(id) {
 			this.modal_props.state = 'edit'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
 			this.modal_props.doc_id = id
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
-			this.modal_props.detail_form = true
-			this.modal_props.detail_display = false
 			this.modal_props.show = true
 		},
-		closeModalInput() {
-			this.getDataTable()
-			this.modal_props.show = false
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-			this.modal_props.doc_id = null
-			this.modal_props.header_form = false
-			this.modal_props.header_display = false
-			this.modal_props.detail_form = false
-			this.modal_props.detail_display = false
+		showDoc(id) {
+			this.modal_props.state = 'show'
+			this.modal_props.doc_id = id
+			this.modal_props.show = true
 		},
+		closeModal() {
+			this.modal_props.state = null
+			this.modal_props.doc_id = null
+			this.modal_props.show = false
+		},
+		// editSbp(id) {
+		// 	this.modal_props.state = 'edit'
+		// 	this.modal_props.tabs.list[1]['visibility'] = true
+		// 	this.modal_props.tabs.list[2]['visibility'] = true
+		// 	this.modal_props.doc_id = id
+		// 	this.modal_props.header_form = true
+		// 	this.modal_props.header_display = false
+		// 	this.modal_props.detail_form = true
+		// 	this.modal_props.detail_display = false
+		// 	this.modal_props.show = true
+		// },
+		// closeModalInput() {
+		// 	this.getDataTable()
+		// 	this.modal_props.show = false
+		// 	this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
+		// 	this.modal_props.doc_id = null
+		// 	this.modal_props.header_form = false
+		// 	this.modal_props.header_display = false
+		// 	this.modal_props.detail_form = false
+		// 	this.modal_props.detail_display = false
+		// },
 		saveData(state) {
 			if (state == 'insert') {
 				this.displayTab(1)
@@ -239,7 +268,7 @@ export default {
 				this.refreshPdf()
 			}
 		},
-		deleteSbp(item) {
+		deleteDoc(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
 				+ " a.n. " 

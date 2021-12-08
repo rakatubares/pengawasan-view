@@ -55,16 +55,32 @@ class PdfSbp extends Pdf {
 		this.ln += this.props.font.height
 
 		////// DETAIL //////
-		let data_sarkut = (this.data.objek.type == 'sarkut') ? this.data.objek.data : null
+		// let data_sarkut = this.data.objek != null 
+		// 	? this.data.objek.type == 'sarkut'
+		// 		? this.data.objek.data
+		// 		: null
+		// 	: null
+		let data_sarkut = this.dataObjek(this.data.objek, 'sarkut')
 		this.detailSarkut(data_sarkut)
 
-		let data_barang = (this.data.objek.type == 'barang') ? this.data.objek.data : null
+		// let data_barang = this.data.objek != null 
+		// 	? this.data.objek.type == 'barang'
+		// 		? this.data.objek.data
+		// 		: null
+		// 	: null
+		let data_barang = this.dataObjek(this.data.objek, 'barang')
 		this.detailBarang(data_barang)
 
-		let data_bangunan = (this.data.objek.type == 'bangunan') ? this.data.objek.data : null
+		// let data_bangunan = this.data.objek != null 
+		// 	? this.data.objek.type == 'bangunan'
+		// 		? this.data.objek.data
+		// 		: null
+		// 	: null
+		let data_bangunan = this.dataObjek(this.data.objek, 'bangunan')
 		this.detailBangunan(data_bangunan)
 
-		let data_orang = (this.data.objek.type == 'orang') ? this.data.objek.data : null
+		// let data_orang = (this.data.objek.type == 'orang') ? this.data.objek.data : null
+		let data_orang = this.dataObjek(this.data.objek, 'orang')
 		this.detailOrang(data_orang)
 
 		////// URAIAN BOTTOM //////
@@ -144,14 +160,16 @@ class PdfSbp extends Pdf {
 		this.pdf.text(ket, this.props.ind.num, this.ln, {maxWidth: 185})
 
 		////// LAMPIRAN //////
-		if (this.data.objek.type == 'barang') {
-			if (this.data.objek.data.item.length > 1) {
-				this.pdf.setFont('Helvetica', 'normal')
-				this.pdf.addPage()
-				// Header
-				this.headerLampiran(this.data.dokumen.sbp.no_dok_lengkap)
-				// Tabel barang
-				this.tabelBarang()
+		if (this.data.objek != null) {
+			if (this.data.objek.type == 'barang') {
+				if (this.data.objek.data.item.length > 1) {
+					this.pdf.setFont('Helvetica', 'normal')
+					this.pdf.addPage()
+					// Header
+					this.headerLampiran(this.data.dokumen.sbp.no_dok_lengkap)
+					// Tabel barang
+					this.tabelBarang()
+				}
 			}
 		}
 
