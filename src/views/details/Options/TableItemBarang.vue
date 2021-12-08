@@ -33,7 +33,7 @@
 			:doc_type="doc_type"
 			:doc_id="doc_id"
 			:state.sync="item_state"
-			@save-data="saveItem"
+			@submit-data="saveItem"
 		>
 		</MyFormItemBarang>
 
@@ -66,13 +66,10 @@ export default {
 		MyTableData
 	},
 	props: {
-		state: {
-			type: String,
-			default: 'insert'
-		},
+		state: String,
 		doc_type: String,
 		doc_id: Number,
-		doc: Object
+		detail: Object
 	},
 	computed: {
 		fields_barang() {
@@ -110,7 +107,7 @@ export default {
 				text: null
 			},
 			// list_barang: [],
-			list_barang: this.doc.objek.data.item,
+			list_barang: this.detail.item,
 			show_modal_barang: false,
 			item_state: 'insert',
 			item_to_edit: null
@@ -118,8 +115,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let data = await api.getItemBarangByDocId(this.doc_type, this.doc_id)
-			this.list_barang = data
+			let response = await api.getItemBarangByDocId(this.doc_type, this.doc_id)
+			this.list_barang = response.data.data
 		},
 		inputNewBarang() {
 			this.show_modal_barang = true
@@ -133,7 +130,7 @@ export default {
 		},
 		saveItem() {
 			this.getData()
-			this.$emit('edit-item')
+			this.$emit('submit-data')
 		},
 		confirmDeleteBarang(item) {
 			let API_BARANG_DETAIL_ID = process.env.VUE_APP_BASEAPI 
@@ -167,9 +164,11 @@ export default {
 			this.modal_delete_props.show = false
 		},
 	},
-	// mounted() {
-	// 	this.getData()
-	// }
+	mounted() {
+		console.log('table item - mounted 1', JSON.parse(JSON.stringify(this.detail)))
+		console.log('table item - mounted 2', this.state)
+		this.getData()
+	}
 }
 </script>
 

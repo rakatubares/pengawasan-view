@@ -10,7 +10,7 @@
 						dense
 						:items.sync="items"
 						:search-input.sync="search"
-						:disabled="byUser == true"
+						:disabled="currentUser == true"
 						item-text="name"
 						item-value="user_id"
 						@change="changeValue"
@@ -60,10 +60,11 @@ export default {
 	props: {
 		label: String,
 		description: String,
-		byUser: {
+		currentUser: {
 			type: Boolean,
 			default: false
-		}
+		},
+		role: String
 	},
 	computed: {
 		...mapState(['userInfo'])
@@ -79,7 +80,8 @@ export default {
 	watch: {
 		async search (val) {
 			if (val != null) {
-				this.items = await api.getUserByRole('penindakan')
+				let roles = {roles: [this.role]}
+				this.items = await api.getUserByRole(roles)
 			}
 		}
 	},
@@ -105,7 +107,7 @@ export default {
 		},
 	},
 	mounted() {
-		if (this.byUser == true) {
+		if (this.currentUser == true) {
 			this.changeValue(this.userInfo.user_id, true)
 		}
 	}

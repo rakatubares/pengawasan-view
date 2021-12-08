@@ -74,6 +74,16 @@ class Pdf {
 		this.ln += this.props.font.height*2
 	}
 
+	dataObjek(data_objek, type) {
+		let data = data_objek != null
+			? data_objek.type == type
+				? data_objek.data
+				: null
+			: null
+
+		return data;
+	}
+
 	/**
 	 * Data sarana pengangkut
 	 * 

@@ -9,9 +9,10 @@
 			:activeTab="current_tab"
 			@update:activeTab="changeTab($event)"
 		>
-			<slot name="tab-header"></slot>
+			<!-- <slot name="tab-header"></slot>
 			<slot name="tab-detail"></slot>
-			<slot name="tab-form"></slot>
+			<slot name="tab-form"></slot> -->
+			<slot name="tabs"></slot>
 		</CTabs>
 
 		<template #footer>

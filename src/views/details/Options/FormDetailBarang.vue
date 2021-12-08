@@ -79,6 +79,9 @@
 			v-if="state == 'edit'"
 			:doc_type="doc_type"
 			:doc_id="doc_id"
+			:detail.sync="data"
+			state="insert"
+			@submit-data="$emit('submit-data')"
 		>
 		</MyTableItemBarang>
 
@@ -89,14 +92,12 @@
 
 <script>
 import _ from 'lodash'
-// import axios from "axios"
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MyTableItemBarang from './TableItemBarang.vue'
-// import api from '../../router/api.js'
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 
@@ -120,11 +121,7 @@ export default {
 		MyTableItemBarang,
 	},
 	props: {
-		state: {
-			type: String,
-			default: 'input'
-		},
-		id: Number,
+		state: String,
 		doc_type: String,
 		doc_id: Number,
 	},
@@ -139,38 +136,30 @@ export default {
 				let detail_barang = await api.getDetailByDocId(this.doc_type, this.doc_id, 'barang')
 				this.data = JSON.parse(JSON.stringify(detail_barang))
 				this.$refs.selectPemilik.getEntitas(this.data.pemilik.id, true)
-				// axios
-				// 	.get(api.upsertBarang(this.doc_type, this.doc_id))
-				// 	.then(
-				// 		(response) => {
-				// 			this.data = response.data.data
-				// 			if (response.data.data.dokumen == null) {
-				// 				this.data.dokumen = JSON.parse(JSON.stringify(data_default.dokumen))
-				// 			}
-				// 			this.$refs.selectPemilik.getEntitas(this.data.pemilik.id, true)
-				// 		}
-				// 	)
-				// 	.catch((error) => console.log(error))
 			}
 		},
-		saveData() {
-			try {
-				api.upsertDetail(this.doc_type, this.doc_id, 'barang', this.data)
-				this.alert('Penindakan barang berhasil disimpan')
-				this.$emit('update:state', 'edit')
-			} catch (error) {
-				console.error(error)
+		async saveData() {
+			if (this.state == 'insert') {
+				try {
+					let response = await api.insertDetail(this.doc_type, this.doc_id, 'barang', this.data)
+					this.data = response.data.data
+					if (this.data.dokumen == null) {
+						this.data.dokumen = {
+							jns_dok: null,
+							no_dok: null,
+							tgl_dok: null
+						}
+					}
+					this.alert('Data barang berhasil disimpan')
+					this.$emit('update:state', 'edit')
+					this.$emit('submit-data')
+				} catch (error) {
+					console.log(error)
+				}
+			} else {
+				api.updateDetail(this.doc_type, this.doc_id, 'barang', this.data.id, this.data)
+				this.$emit('submit-data')
 			}
-			// let submit_url = api.upsertBarang(this.doc_type, this.doc_id)
-			// axios
-			// 	.post(submit_url, this.data)
-			// 	.then(
-			// 		(response) => {
-			// 			this.alert('Penindakan barang berhasil disimpan')
-			// 			this.$emit('input-data')
-			// 		}
-			// 	)
-			// 	.catch((error) => {console.error(error)})
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
@@ -179,6 +168,7 @@ export default {
 		validatorInteger(val) { return validators.integer(val) },
 	},
 	mounted() {
+		console.log('form detail barang', this.doc_type, this.doc_id)
 		this.getData()
 	}
 }

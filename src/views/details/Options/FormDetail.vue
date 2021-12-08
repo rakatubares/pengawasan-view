@@ -32,6 +32,7 @@
 						$emit('update:state', 'edit')
 						displayDetail('sarkut')
 					"
+					@submit-data="$emit('submit-data')"
 				>
 				</MyFormSarkut>
 				<MyFormBarang
@@ -43,6 +44,7 @@
 						$emit('update:state', 'edit')
 						displayDetail('barang')
 					"
+					@submit-data="$emit('submit-data')"
 				>
 				</MyFormBarang>
 				<MyFormBangunan
@@ -54,6 +56,7 @@
 						$emit('update:state', 'edit')
 						displayDetail('bangunan')
 					"
+					@submit-data="$emit('submit-data')"
 				>
 				</MyFormBangunan>
 				<MyFormBadan
@@ -65,6 +68,7 @@
 						$emit('update:state', 'edit')
 						displayDetail('badan')
 					"
+					@submit-data="$emit('submit-data')"
 				>
 				</MyFormBadan>
 			</CCol>
@@ -124,24 +128,36 @@
 						</CCol>
 					</CRow>
 					<CRow v-if="tindakan.data.segel">
-						<CCol class="col-12" md="3">
-							<CSelect
-								label="Jenis Segel"
-								:options="['Kertas', 'Kunci', 'Timah', 'Lakban', 'Segel Elektronik', 'Lainnya']"
-								:value.sync="tindakan.data.data_segel.jenis"
-							/>	
-						</CCol>
-						<CCol class="col-12" md="2">
-							<CInput
-								label="Jumlah Segel"
-								:value.sync="tindakan.data.data_segel.jumlah"
-							/>	
-						</CCol>
-						<CCol class="col-12" md="3">
-							<CInput
-								label="Satuan"
-								:value.sync="tindakan.data.data_segel.satuan"
-							/>	
+						<CCol class="col-12">
+							<CRow>
+								<CCol class="col-12" md="3">
+									<CSelect
+										label="Jenis Segel"
+										:options="['Kertas', 'Kunci', 'Timah', 'Lakban', 'Segel Elektronik', 'Lainnya']"
+										:value.sync="tindakan.data.data_segel.jenis"
+									/>	
+								</CCol>
+								<CCol class="col-12" md="2">
+									<CInput
+										label="Jumlah Segel"
+										:value.sync="tindakan.data.data_segel.jumlah"
+									/>	
+								</CCol>
+								<CCol class="col-12" md="3">
+									<CInput
+										label="Satuan"
+										:value.sync="tindakan.data.data_segel.satuan"
+									/>	
+								</CCol>
+							</CRow>
+							<CRow>
+								<CCol class="col-12">
+									<CInput
+										label="Tempat Segel"
+										:value.sync="tindakan.data.data_segel.tempat"
+									/>	
+								</CCol>
+							</CRow>
 						</CCol>
 					</CRow>
 				</CForm>
@@ -192,10 +208,6 @@ export default {
 				return ['sarkut', 'barang', 'bangunan', 'badan']
 			} 
 		},
-		state: {
-			type: String,
-			default: 'insert'
-		},
 		doc_type: String,
 		doc_id: Number
 	},
@@ -229,7 +241,8 @@ export default {
 					data_segel: {
 						jenis: 'Kertas',
 						jumlah: null,
-						satuan: null
+						satuan: null,
+						tempat: null
 					}
 				}
 			},
@@ -282,8 +295,9 @@ export default {
 		async getData() {
 			if (this.state == 'edit') {
 				let objek = await api.getObjek(this.doc_type, this.doc_id)
-				this.active_detail = objek
-				if (objek != "") {
+				
+				if (objek.type != null) {
+					this.active_detail = objek.type
 					this.detail_state = 'edit'
 				} else {
 					this.detail_state = 'insert'
@@ -295,8 +309,9 @@ export default {
 			this.$emit('input-data', type)
 		},
 		saveLinkedDoc() {
-			let response = api.upsertLinkedDoc(this.doc_type, this.doc_id, this.tindakan.data)
-			console.log(JSON.parse(JSON.stringify(response)))
+			api.upsertLinkedDoc(this.doc_type, this.doc_id, this.tindakan.data)
+			this.$emit('submit-data')
+			this.alert('Data dokumen terkait berhasil disimpan')
 		}
 	},
 	mounted() {
