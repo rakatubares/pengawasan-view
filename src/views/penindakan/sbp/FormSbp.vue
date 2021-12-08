@@ -7,7 +7,7 @@
 				<CCol md="12">
 					<MySelectSprint
 						ref="selectSprint"
-						:id.sync="data.sprint.id"
+						:id.sync="data.penindakan.sprint.id"
 					>
 					</MySelectSprint>
 				</CCol>
@@ -17,7 +17,7 @@
 					<CInput
 						label="Lokasi Penindakan"
 						description="Tempat / lokasi dilakukan penindakan"
-						:value.sync="data.lokasi_penindakan"
+						:value.sync="data.penindakan.lokasi_penindakan"
 						:is-valid="validatorRequired"
 						invalid-feedback="Lokasi penindakan wajib diisi"
 					/>
@@ -28,7 +28,7 @@
 					<CTextarea
 						label="Uraian Penindakan"
 						description="Uraian / kronologis singkat terkait penindakan"
-						:value.sync="data.uraian_penindakan"
+						:value.sync="data.main.data.uraian_penindakan"
 					/>
 				</CCol>
 			</CRow>
@@ -37,7 +37,7 @@
 					<CTextarea
 						label="Alasan Penindakan"
 						description="Pertimbangan dan alasan dilakukannya penindakan"
-						:value.sync="data.alasan_penindakan"
+						:value.sync="data.main.data.alasan_penindakan"
 					/>
 				</CCol>
 			</CRow>
@@ -47,7 +47,7 @@
 						label="Jenis Pelanggaran"
 						description="Jenis dugaan pelanggaran"
 						:options="jenis_pelanggaran_options"
-						:value.sync="data.jenis_pelanggaran"
+						:value.sync="data.main.data.jenis_pelanggaran"
 					/>
 				</CCol>
 			</CRow>
@@ -56,7 +56,7 @@
 					<div class="form-group">
 						<label class="w-100">Waktu mulai penindakan</label>
 						<date-picker 
-							v-model="data.wkt_mulai_penindakan" 
+							v-model="data.main.data.wkt_mulai_penindakan" 
 							format="DD-MM-YYYY HH:mm" 
 							value-type="format"
 							type="datetime"
@@ -95,7 +95,7 @@
 					<div class="form-group">
 						<label class="w-100">Waktu selesai penindakan</label>
 						<date-picker 
-							v-model="data.wkt_selesai_penindakan" 
+							v-model="data.main.data.wkt_selesai_penindakan" 
 							format="DD-MM-YYYY HH:mm" 
 							value-type="format"
 							type="datetime"
@@ -136,7 +136,7 @@
 					<CTextarea
 						label="Hal yang terjadi"
 						description="Hal-hal lain yang perlu diterangkan pada saat proses penindakan"
-						:value.sync="data.hal_terjadi"
+						:value.sync="data.main.data.hal_terjadi"
 					/>
 				</CCol>
 			</CRow>
@@ -146,7 +146,7 @@
 						ref="selectSaksi"
 						label="Nama Pengangkut/Pemilik/Kuasa/Saksi"
 						description="Nama terang Pengangkut/Pemilik/Kuasa/Saksi yang menyaksikan penindakan"
-						:id.sync="data.saksi.id"
+						:id.sync="data.penindakan.saksi.id"
 					>
 					</MySelectEntitas>
 				</CCol>
@@ -156,9 +156,10 @@
 					<MySelectPetugas
 						ref="selectPetugas1"
 						label="Nama Petugas 1"
-						description="Nama Pejabat Bea dan Cukai yang melakukan penitipan"
-						:id.sync="data.petugas1.user_id"
-						:byUser="true"
+						description="Nama Petugas Bea dan Cukai yang melakukan penindakan"
+						:id.sync="data.penindakan.petugas1.user_id"
+						role="p2vue.penindakan"
+						:currentUser="true"
 					>
 					</MySelectPetugas>
 				</CCol>
@@ -168,10 +169,24 @@
 					<MySelectPetugas
 						ref="selectPetugas2"
 						label="Nama Petugas 2"
-						description="Nama Pejabat Bea dan Cukai yang melakukan penitipan"
-						:id.sync="data.petugas2.user_id"
+						description="Nama Petugas Bea dan Cukai yang melakukan penindakan"
+						:id.sync="data.penindakan.petugas2.user_id"
+						role="p2vue.penindakan"
 					>
 					</MySelectPetugas>
+				</CCol>
+			</CRow>
+			<CRow>
+				<CCol md="12">
+					<MySelectPejabat
+						:label="{jabatan: 'Jabatan Atasan', nama: 'Nama Atasan'}"
+						:selectable_jabatan="['bd.0503', 'bd.0504']"
+						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
+						:id_pejabat.sync="data.dokumen.lptp.atasan.user_id"
+						:jabatan.sync="data.dokumen.lptp.jabatan_atasan.kode"
+						:plh.sync="data.dokumen.lptp.plh"
+					>
+					</MySelectPejabat>
 				</CCol>
 			</CRow>
 
@@ -200,26 +215,14 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api.js'
+import api2 from '../../../router/api2.js'
 import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
-
-const data_default = {
-	sprint: {id: null},
-	lokasi_penindakan: null,
-	uraian_penindakan: null,
-	alasan_penindakan: null,
-	jenis_pelanggaran: 'Kepabeanan',
-	wkt_mulai_penindakan: null,
-	wkt_selesai_penindakan: null,
-	hal_terjadi: null,
-	saksi: {id: null},
-	petugas1: {user_id: null},
-	petugas2: {user_id: null},
-}
 
 const custom_validations_default = {
 	tgl_sprint: {
@@ -244,21 +247,19 @@ export default {
 		DatePicker,
 		MyAlert,
 		MySelectEntitas,
+		MySelectPejabat,
 		MySelectPetugas,
 		MySelectSprint,
 	},
 	props: {
-		state: {
-			type: String,
-			default: 'insert'
-		},
-		id: Number
+		state: String,
+		data: Object
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(data_default)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 			jenis_pelanggaran_options: [ ...jenis_pelanggaran ],
+			filter_jabatan: ['bd.0503']
 		}
 	},
 	methods: {
@@ -297,27 +298,26 @@ export default {
 					)
 			}
 		},
-		saveData() {
-			let submit_method
-			let submit_url
-			submit_method = this.state == 'insert' ? 'post' : 'put'
-			submit_url = this.state == 'insert' ? 
-				api.sbp() : 
-				api.sbpId(this.id)
-
-			axios({
-				method: submit_method,
-				url: submit_url,
-				data: this.data,
-			})
-				.then((response) => {
-					this.$emit('save-data', this.state)
-					this.$emit('update:state', 'edit')
-					if (submit_method == 'post') {
-						this.$emit('update:id', response.data.id)
+		async saveData() {
+			if (this.state == 'insert') {
+				try {
+					let response = await api2.storeDoc('sbp', this.data)
+					if (response.penindakan.petugas2 == null) {
+						response.penindakan.petugas2 = {user_id: null}
 					}
-					this.alert('Data header berhasil disimpan')
-				})
+					this.$emit('update:data', response)
+					this.$emit('update:state', 'edit')
+					this.alert('Data SBP berhasil disimpan')
+				} catch (error) {
+					console.log('form sbp - save data - error', JSON.parse(JSON.stringify(error)))
+				}
+			} else if (this.state == 'edit') {
+				try {
+					await api2.updateDoc('sbp', this.data.main.data.id, this.data)
+				} catch (error) {
+					console.log('form sbp - update data - error', JSON.parse(JSON.stringify(response)))
+				}
+			}
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
