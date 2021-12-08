@@ -16,8 +16,13 @@ class API {
 		return response
 	}
 
-	postApi(url, data) {
-		let response = axios.post(`${this.base_url}${url}`, data)
+	async postApi(url, data) {
+		let response = await axios.post(`${this.base_url}${url}`, data, this.config)
+		return response
+	}
+
+	async putApi(url, data) {
+		let response = await axios.put(`${this.base_url}${url}`, data, this.config)
 		return response
 	}
 
@@ -33,10 +38,22 @@ class API {
 		return user
 	}
 
-	async getUserByRole(role) {
-		let response = await this.getApi(`/user/role/${role}`)
+	async getUserByRole(roles) {
+		let response = await this.postApi(`/user/role`, roles)
 		let users = response.data.data
 		return users
+	}
+
+	async getUserByPosition(positions) {
+		let response = await this.postApi(`/user/jabatan`, positions)
+		let users = response.data.data
+		return users
+	}
+
+	async getJabatanByCode(positions) {
+		let response = await this.postApi(`/jabatan/list`, positions)
+		let jabatan = response.data.data
+		return jabatan
 	}
 
 	saveUser(data) {
@@ -73,6 +90,21 @@ class API {
 		return penindakan
 	}
 
+	async storeDoc(doc_type, data) {
+		let response = await this.postApi(`/${doc_type}`, data)
+		let doc = response.data.data
+		return doc
+	}
+
+	async updateDoc(doc_type, doc_id, data) {
+		let response = await this.putApi(`/${doc_type}/${doc_id}`, data)
+		return response.data.data
+	}
+
+	async publishDoc(doc_type, doc_id) {
+		await this.putApi(`/${doc_type}/${doc_id}/publish`)
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| API for details
@@ -87,12 +119,22 @@ class API {
 
 	async getItemBarangByDocId(doc_type, doc_id) {
 		let response = await this.getApi(`/${doc_type}/${doc_id}/barang/item`)
-		let objek = response.data.data.item
-		return objek
+		// let objek = response.data.data.data
+		return response
 	}
 
-	upsertDetail(doc_type, doc_id, detail_type, data) {
-		let response = this.postApi(`/${doc_type}/${doc_id}/${detail_type}/upsert`, data)
+	// async upsertDetail(doc_type, doc_id, detail_type, data) {
+	// 	let response = await this.postApi(`/${doc_type}/${doc_id}/${detail_type}/upsert`, data)
+	// 	return response
+	// }
+
+	async insertDetail(doc_type, doc_id, detail_type, data) {
+		let response = await this.postApi(`/${doc_type}/${doc_id}/${detail_type}`, data)
+		return response
+	}
+
+	async updateDetail(doc_type, doc_id, detail_type, detail_id, data) {
+		let response = await this.putApi(`/${doc_type}/${doc_id}/${detail_type}/${detail_id}`, data)
 		return response
 	}
 

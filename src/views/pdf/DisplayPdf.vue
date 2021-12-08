@@ -33,7 +33,7 @@
 				<CButton
 					color="success"
 					shape="pill"
-					@click="publishSbp"
+					@click="publishDoc"
 				>
 					Terbitkan
 				</CButton>
@@ -47,6 +47,8 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfLptp from '../pdf/PdfLptp.js'
+import PdfRiksa from '../pdf/PdfRiksa.js'
 import PdfSbp from '../pdf/PdfSbp.js'
 import PdfSegel from '../pdf/PdfSegel.js'
 import PdfTegah from '../pdf/PdfTegah.js'
@@ -73,13 +75,13 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let doc = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data = await api.getPenindakanById(doc.penindakan.id)
+			this.data = await api.getDocumentById(this.doc_type, this.doc_id)
 			for (const key in this.data.dokumen) {
 				if (!this.list_pdf.includes(key)) {
 					this.list_pdf.push(key)
 				}
 			}
+			this.status_pdf = this.data.dokumen[this.doc_type]['kode_status']
 		},
 		async getPdf() {
 			await this.getData()
@@ -99,6 +101,16 @@ export default {
 					let pdfTegah = new PdfTegah(this.data)
 					this.src_pdf = pdfTegah.generatePdf()
 					break;
+
+				case 'riksa':
+					let pdfRiksa = new PdfRiksa(this.data)
+					this.src_pdf = pdfRiksa.generatePdf()
+					break;
+
+				case 'lptp':
+					let pdfLptp = new PdfLptp(this.data)
+					this.src_pdf = pdfLptp.generatePdf()
+					break;
 			
 				default:
 					break;
@@ -111,6 +123,10 @@ export default {
 			this.show_pdf = false
 			this.getPdf()
 			this.show_pdf = true
+		},
+		async publishDoc() {
+			await api.publishDoc(this.doc_type, this.doc_id)
+			await this.getPdf()
 		}
 	},
 	mounted() {
