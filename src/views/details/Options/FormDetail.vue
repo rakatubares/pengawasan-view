@@ -15,7 +15,7 @@
 							<CSelect
 								placeholder="pilih objek penindakan"
 								:options.sync="options_objek_penindakan"
-								:value.sync="active_detail"
+								:value.sync="data.objek.type"
 								:is-valid="validatorRequired"
 								invalid-feedback="Objek penindakan harus dipilih"
 							/>
@@ -24,50 +24,26 @@
 				</CForm>
 
 				<MyFormSarkut
-					v-if="active_detail == 'sarkut'"
-					:state.sync="detail_state"
-					:doc_type="doc_type"
-					:doc_id="doc_id"
-					@input-data="
-						$emit('update:state', 'edit')
-						displayDetail('sarkut')
-					"
+					v-if="data.objek.type == 'sarkut'"
+					:data.sync="data"
 					@submit-data="$emit('submit-data')"
 				>
 				</MyFormSarkut>
 				<MyFormBarang
-					v-if="active_detail == 'barang'"
-					:state.sync="detail_state"
-					:doc_type="doc_type"
-					:doc_id="doc_id"
-					@input-data="
-						$emit('update:state', 'edit')
-						displayDetail('barang')
-					"
+					v-if="data.objek.type == 'barang'"
+					:data.sync="data"
 					@submit-data="$emit('submit-data')"
 				>
 				</MyFormBarang>
 				<MyFormBangunan
-					v-if="active_detail == 'bangunan'"
-					:state.sync="detail_state"
-					:doc_type="doc_type"
-					:doc_id="doc_id"
-					@input-data="
-						$emit('update:state', 'edit')
-						displayDetail('bangunan')
-					"
+					v-if="data.objek.type == 'bangunan'"
+					:data.sync="data"
 					@submit-data="$emit('submit-data')"
 				>
 				</MyFormBangunan>
 				<MyFormBadan
-					v-if="active_detail == 'badan'"
-					:state.sync="detail_state"
-					:doc_type="doc_type"
-					:doc_id="doc_id"
-					@input-data="
-						$emit('update:state', 'edit')
-						displayDetail('badan')
-					"
+					v-if="data.objek.type == 'orang'"
+					:data.sync="data"
 					@submit-data="$emit('submit-data')"
 				>
 				</MyFormBadan>
@@ -194,7 +170,7 @@ const objek_penindakan_default = [
 	{ value: 'sarkut', label: 'Sarana Pengangkut', disabled: false },
 	{ value: 'barang', label: 'Barang', disabled: false },
 	{ value: 'bangunan', label: 'Bangunan / Tempat', disabled: false },
-	{ value: 'badan', label: 'Badan / Orang', disabled: false }
+	{ value: 'orang', label: 'Badan / Orang', disabled: false }
 ]
 
 export default {
@@ -210,11 +186,12 @@ export default {
 		available_details: {
 			type: Array,
 			default() {
-				return ['sarkut', 'barang', 'bangunan', 'badan']
+				return ['sarkut', 'barang', 'bangunan', 'orang']
 			} 
 		},
-		doc_type: String,
-		doc_id: Number
+		data: Object
+		// doc_type: String,
+		// doc_id: Number
 	},
 	computed: {
 		options_objek_penindakan() {
@@ -258,9 +235,10 @@ export default {
 		}
 	},
 	watch: {
-		active_detail: function (val) {
-			if (this.doc_type == 'sbp') {
-				switch (val) {
+		data: function (val) {
+			if (this.data.main.type == 'sbp') {
+				console.log('form detail - objek type', val.objek.type)
+				switch (val.objek.type) {
 					case 'sarkut':
 						this.tindakan.show.main = true
 						this.tindakan.show.riksa = true
@@ -297,24 +275,9 @@ export default {
 		}
 	},
 	methods: {
-		async getData() {
-			if (this.state == 'edit') {
-				let objek = await api.getObjek(this.doc_type, this.doc_id)
-				
-				if (objek.type != null) {
-					this.active_detail = objek.type
-					this.detail_state = 'edit'
-				} else {
-					this.detail_state = 'insert'
-				}
-			}
-		},
 		validatorRequired(val) { return validators.required(val) },
-		displayDetail(type) {
-			this.$emit('input-data', type)
-		},
 		async saveLinkedDoc() {
-			await api.upsertLinkedDoc(this.doc_type, this.doc_id, this.tindakan.data)
+			await api.upsertLinkedDoc(this.data.main.type, this.data.main.data.id, this.tindakan.data)
 			this.$emit('submit-data')
 			this.alert('Data dokumen terkait berhasil disimpan')
 		},
@@ -322,9 +285,6 @@ export default {
 			this.$refs.alert.show_alert(text, color, time)
 		},
 	},
-	mounted() {
-		this.getData()
-	}
 }
 </script>
 
