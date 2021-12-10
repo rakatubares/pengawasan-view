@@ -172,6 +172,9 @@ export default {
 		DatePicker,
 		MyAlert
 	},
+	props: {
+		id: Number
+	},
 	data() {
 		return {
 			items: [],
@@ -264,6 +267,7 @@ export default {
 		}
 	},
 	mounted() {
+		console.log('select sprint - mounted', this.id)
 		this.getJabatan()
 	}
 }
