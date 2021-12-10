@@ -88,7 +88,8 @@ class PdfLptp extends Pdf {
 			: ""
 		let no_flight = this.data.objek != null
 			? this.data.objek.type == 'sarkut' 
-				? this.data.objek.data.no_flight_trayek 
+				? this.data.objek.data.no_flight_trayek != null
+					? this.data.objek.data.no_flight_trayek : ''
 				: ""
 			: ""
 
@@ -148,7 +149,9 @@ class PdfLptp extends Pdf {
 			: ''
 		let no_reg = this.data.objek != null
 			? this.data.objek.type == 'bangunan' 
-				? this.data.objek.data.no_reg : ''
+				? this.data.objek.data.no_reg != null
+					? this.data.objek.data.no_reg : ''
+				: ''
 			: ''
 		let pemilik = this.data.objek != null
 			? this.data.objek.type == 'bangunan' 
@@ -230,7 +233,7 @@ class PdfLptp extends Pdf {
 		this.pdf.text('Kewarganegaraan', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
 		this.pdf.text(warga_negara, this.props.ind.txt2, this.ln)
-		this.ln += this.props.font.height
+		this.ln += this.props.font.height*alamat_orang.length
 
 		////// URAIAN BOTTOM //////
 		this.pdf.text('4.', this.props.ind.num, this.ln)

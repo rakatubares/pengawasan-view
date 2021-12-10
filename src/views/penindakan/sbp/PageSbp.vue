@@ -91,7 +91,7 @@
 		<MyModalSbp
 			v-if="modal_props.show"
 			:state="modal_props.state"
-			:doc_id.sync="modal_props.doc_id"
+			:id.sync="modal_props.doc_id"
 			@close-modal="closeModal"
 		>
 		</MyModalSbp>
@@ -224,6 +224,7 @@ export default {
 			this.modal_props.show = true
 		},
 		editDoc(id) {
+			console.log('page sbp - edit doc', id)
 			this.modal_props.state = 'edit'
 			this.modal_props.doc_id = id
 			this.modal_props.show = true
@@ -234,6 +235,7 @@ export default {
 			this.modal_props.show = true
 		},
 		closeModal() {
+			this.getDataTable()
 			this.modal_props.state = null
 			this.modal_props.doc_id = null
 			this.modal_props.show = false
