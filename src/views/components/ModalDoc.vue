@@ -96,8 +96,8 @@ export default {
 		}
 	},
 	methods: {
-		async getData() {
-			return await api.getDocumentById(this.doc_type, this.doc_id)
+		async getData(doc_id) {
+			return await api.getDocumentById(this.doc_type, doc_id)
 		},
 		changeState(state) {
 			this.modal_state = state
@@ -143,6 +143,7 @@ export default {
 		}
 	},
 	mounted() {
+		console.log('modal doc - mounted', this.doc_id)
 		// Change state on mounted to trigger watcher
 		this.modal_state = this.state
 	}
