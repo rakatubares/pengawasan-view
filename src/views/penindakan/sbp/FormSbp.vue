@@ -179,6 +179,7 @@
 			<CRow>
 				<CCol md="12">
 					<MySelectPejabat
+						ref="selectPejabat"
 						:label="{jabatan: 'Jabatan Atasan', nama: 'Nama Atasan'}"
 						:selectable_jabatan="['bd.0503', 'bd.0504']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
@@ -259,53 +260,33 @@ export default {
 		return {
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 			jenis_pelanggaran_options: [ ...jenis_pelanggaran ],
-			filter_jabatan: ['bd.0503']
 		}
 	},
 	methods: {
-		getData(validate_first = false) {
-			if (this.state == 'edit') {
-				axios
-					.get(api.sbpId(this.id))
-					.then(
-						(response) => {
-							this.data = response.data.data
-							if (validate_first) {
-								this.validatorDatetime(this.data.tgl_sprint, 'DD-MM-YYYY', 'validasi.tgl_sprint', 'Tanggal SPRINT wajib diisi')	
-								this.validatorDatetime(this.data.wkt_mulai_penindakan, 'DD-MM-YYYY HH:mm', 'validasi.wkt_mulai_penindakan', 'Waktu mulai penindakan wajib diisi')
-								this.validatorDatetime(this.data.wkt_selesai_penindakan, 'DD-MM-YYYY HH:mm', 'validasi.wkt_selesai_penindakan', 'Waktu selesai penindakan wajib diisi')
-								this.validatorSequence(
-									this.data.wkt_mulai_penindakan, 
-									this.data.wkt_selesai_penindakan, 
-									'validasi.wkt_mulai_penindakan',
-									'validasi.wkt_selesai_penindakan',
-									'Waktu mulai penindakan sebelum waktu selesai',
-									'Waktu selesai penindakan setelah waktu mulai',
-									'DD-MM-YYYY HH:mm'
-								)
-							}
-
-							// Show reference
-							this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
-							this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
-							this.$refs.selectPetugas1.getPetugas(this.data.petugas1.user_id, true)
-							if (response.data.data.petugas2 != null) {
-								this.$refs.selectPetugas2.getPetugas(this.data.petugas2.user_id, true)	
-							} else {
-								this.data.petugas2 = {user_id: null}
-							}
-						}
-					)
-			}
+		validateData() {
+			this.validatorDatetime(this.data.main.data.wkt_mulai_penindakan, 'DD-MM-YYYY HH:mm', 'validasi.wkt_mulai_penindakan', 'Waktu mulai penindakan wajib diisi')
+			this.validatorDatetime(this.data.main.data.wkt_selesai_penindakan, 'DD-MM-YYYY HH:mm', 'validasi.wkt_selesai_penindakan', 'Waktu selesai penindakan wajib diisi')
+			this.validatorSequence(
+				this.data.main.data.wkt_mulai_penindakan, 
+				this.data.main.data.wkt_selesai_penindakan, 
+				'validasi.wkt_mulai_penindakan',
+				'validasi.wkt_selesai_penindakan',
+				'Waktu mulai penindakan sebelum waktu selesai',
+				'Waktu selesai penindakan setelah waktu mulai',
+				'DD-MM-YYYY HH:mm'
+			)
+			this.$refs.selectSprint.getSprint(this.data.penindakan.sprint.id, true)
+			this.$refs.selectSaksi.getEntitas(this.data.penindakan.saksi.id, true)
+			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
+			this.$refs.selectPetugas2.getPetugas(this.data.penindakan.petugas2.user_id, true)
+			this.$refs.selectPejabat.getPetugas(this.data.dokumen.lptp.atasan.user_id, true)
 		},
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
 					let response = await api2.storeDoc('sbp', this.data)
-					if (response.penindakan.petugas2 == null) {
-						response.penindakan.petugas2 = {user_id: null}
-					}
-					this.$emit('update:data', response)
+					let doc_id = response.main.data.id
+					this.$emit('submit-data', doc_id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data SBP berhasil disimpan')
 				} catch (error) {
@@ -314,6 +295,8 @@ export default {
 			} else if (this.state == 'edit') {
 				try {
 					await api2.updateDoc('sbp', this.data.main.data.id, this.data)
+					this.$emit('submit-data')
+					this.alert('Data SBP berhasil diubah')
 				} catch (error) {
 					console.log('form sbp - update data - error', JSON.parse(JSON.stringify(response)))
 				}
@@ -341,9 +324,11 @@ export default {
 			}
 		}
 	},
-	mounted() {
-		this.getData(true)
-	}
+	watch: {
+		data: function(val) {
+			this.validateData()
+		}
+	},
 }
 </script>
 

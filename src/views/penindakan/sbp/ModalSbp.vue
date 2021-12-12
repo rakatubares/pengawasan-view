@@ -5,14 +5,15 @@
 			title="Data SBP"
 			:state.sync="modal_state"
 			:doc_type="doc_type"
-			:doc_id="doc_id"
+			:doc_id.sync="doc_id"
 			@close-modal="closeModal"
 		>
 			<template #form-doc>
 				<MyFormSbp 
+					ref="form_sbp"
 					:state.sync="modal_state"
 					:data.sync="data"
-					@update:data="doc_id = data.main.data.id"
+					@submit-data="refreshData"
 				></MyFormSbp>
 			</template>
 			<template #disp-doc>
@@ -22,10 +23,8 @@
 			</template>
 			<template #form-object>
 				<MyFormDetail 
-					doc_type="sbp"
-					:doc_id.sync="data.main.data.id"
-					:state.sync="modal_state"
-					@submit-data="$refs.display_pdf.getPdf()"
+					:data.sync="data"
+					@submit-data="refreshData"
 				></MyFormDetail>
 			</template>
 			<template #disp-object>
@@ -118,16 +117,35 @@ export default {
 	},
 	props: {
 		state: String,
-		doc_id: Number
+		id: Number
 	},
 	data() {
 		return {
 			doc_type: 'sbp',
+			doc_id: this.id,
 			data: JSON.parse(JSON.stringify(data_default)),
 			modal_state: this.state
 		}
 	},
 	methods: {
+		async getData() {
+			let data = await this.$refs.modal_doc.getData(this.doc_id)
+			if (data.penindakan.petugas2 == null) {
+				data.penindakan.petugas2 = {user_id: null}
+			}
+			if (data.objek == null) {
+				data.objek = {
+					type: null,
+					data: null
+				}
+			}
+			this.data = data
+		},
+		async refreshData(id) {
+			this.doc_id = id != undefined ? id : this.doc_id
+			await this.getData()
+			await this.$refs.display_pdf.getPdf()
+		},
 		closeModal() {
 			this.$emit('close-modal')
 		}
@@ -140,7 +158,7 @@ export default {
 	},
 	async mounted() {
 		if (['edit', 'show'].includes(this.state)) {
-			this.data = await this.$refs.modal_doc.getData()
+			await this.getData()
 		}
 	}
 }

@@ -11,10 +11,17 @@ const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
+<<<<<<< HEAD
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
 const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
 const PageTegah = () => import('@/views/penindakan/tegah/PageTegah')
+=======
+// const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
+// const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
+// const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
+// const PageTegah = () => import('@/views/penindakan/tegah/PageTegah')
+>>>>>>> penindakan/sbp
 
 Vue.use(Router)
 
@@ -43,26 +50,26 @@ function configRoutes () {
 					name: 'SBP',
 					component: PageSbp
 				},
-				{
-					path: 'segel',
-					name: 'Segel',
-					component: PageSegel
-				},
-				{
-					path: 'bukasegel',
-					name: 'BukaSegel',
-					component: PageBukaSegel
-				},
-				{
-					path: 'titip',
-					name: 'Penitipan',
-					component: PageTitip
-				},
-				{
-					path: 'tegah',
-					name: 'Penegahan',
-					component: PageTegah
-				},
+				// {
+				// 	path: 'segel',
+				// 	name: 'Segel',
+				// 	component: PageSegel
+				// },
+				// {
+				// 	path: 'bukasegel',
+				// 	name: 'BukaSegel',
+				// 	component: PageBukaSegel
+				// },
+				// {
+				// 	path: 'titip',
+				// 	name: 'Penitipan',
+				// 	component: PageTitip
+				// },
+				// {
+				// 	path: 'tegah',
+				// 	name: 'Penegahan',
+				// 	component: PageTegah
+				// },
 			]
 		},
 	]
