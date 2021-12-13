@@ -150,6 +150,7 @@ export default {
 				}
 			} else {
 				api.updateDetail(this.data.main.type, this.data.main.data.id, 'barang', this.data_objek.id, this.data_objek)
+				this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
 				this.$emit('submit-data')
 				this.alert('Data barang berhasil diubah')
 			}
