@@ -1,28 +1,29 @@
 <template>
-	<div class="wrapper">
-		<MyModalDoc
+  <div class="wrapper">
+	  <MyModalDoc
 			ref="modal_doc"
-			title="Data SBP"
+			title="Data BA Segel"
 			:state.sync="modal_state"
 			:doc_type="doc_type"
 			:doc_id.sync="doc_id"
 			@close-modal="closeModal"
 		>
 			<template #form-doc>
-				<MyFormSbp 
+				<MyFormSegel
 					ref="form_sbp"
 					:state.sync="modal_state"
 					:data.sync="data"
 					@submit-data="refreshData"
-				></MyFormSbp>
+				></MyFormSegel>
 			</template>
 			<template #disp-doc>
-				<MyDisplaySbp 
-					:data_sbp.sync="data"
-				></MyDisplaySbp>
+				<MyDisplaySegel
+					:data_segel.sync="data"
+				></MyDisplaySegel>
 			</template>
 			<template #form-object>
 				<MyFormDetail 
+					:available_details="['sarkut', 'barang', 'bangunan']"
 					:data.sync="data"
 					@submit-data="refreshData"
 				></MyFormDetail>
@@ -40,29 +41,27 @@
 				></MyDisplayPdf>
 			</template>
 		</MyModalDoc>
-	</div>
+  </div>
 </template>
 
 <script>
 import MyDisplayDetail from '../../details/DisplayDetail.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
-import MyDisplaySbp from './DisplaySbp.vue'
+import MyDisplaySegel from './DisplaySegel.vue'
 import MyFormDetail from '../../details/Options/FormDetail.vue'
-import MyFormSbp from './FormSbp.vue'
+import MyFormSegel from './FormSegel.vue'
 import MyModalDoc from '../../components/ModalDoc.vue'
 
 const data_default = {
-	main:{
+	main: {
 		data: {
 			id: null,
 			no_dok_lengkap: null,
-			uraian_penindakan: null,
-			alasan_penindakan: null,
-			jenis_pelanggaran: 'Kepabeanan',
-			wkt_mulai_penindakan: null,
-			wkt_selesai_penindakan: null,
-			hal_terjadi: null,
-		},
+			jenis_segel: null,
+			jumlah_segel: null,
+			nomor_segel: null,
+			lokasi_segel: null,
+		}
 	},
 	penindakan: {
 		tanggal_penindakan: null,
@@ -91,28 +90,16 @@ const data_default = {
 		type: null,
 		data: null
 	},
-	dokumen: {
-		lptp: {
-			jabatan_atasan: {
-				kode: 'bd.0503',
-				jabatan: null
-			},
-			plh: false,
-			atasan: {
-				user_id: null
-			}
-		}
-	}
 }
 
 export default {
-	name: 'ModalSbp',
+	name: 'ModalSegel',
 	components: {
 		MyDisplayDetail,
 		MyDisplayPdf,
-		MyDisplaySbp,
+		MyDisplaySegel,
 		MyFormDetail,
-		MyFormSbp,
+		MyFormSegel,
 		MyModalDoc,
 	},
 	props: {
@@ -121,7 +108,7 @@ export default {
 	},
 	data() {
 		return {
-			doc_type: 'sbp',
+			doc_type: 'segel',
 			doc_id: this.id,
 			data: JSON.parse(JSON.stringify(data_default)),
 			modal_state: this.state
@@ -148,7 +135,7 @@ export default {
 		},
 		closeModal() {
 			this.$emit('close-modal')
-		}
+		},
 	},
 	watch: {
 		modal_state: function(val) {

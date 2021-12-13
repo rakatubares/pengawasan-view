@@ -6,17 +6,17 @@
 				<MyTableData
 					state="list"
 					:fields="fields"
-					:items="list_segel"
-					:editData="editSegel"
-					:deleteData="deleteSegel"
-					:showData="showSegel"
+					:items="list_table"
+					:editData="editDoc"
+					:deleteData="deleteDoc"
+					:showData="showDoc"
 				>
 					<template #header>
 						<CIcon name="cil-grid"/>Daftar BA Penyegelan
 						<div class="card-header-actions">
 							<CButton 
 								color="primary" 
-								@click="createNewSegel()"
+								@click="createDoc"
 								class="mr-1"
 							>
 								+ Buat BA Segel
@@ -28,7 +28,7 @@
 		</CRow>
 
 		<!-- Modal input BA segel -->
-		<MyModalTabs
+		<!-- <MyModalTabs
 			ref="modal_tabs"
 			title="Input Data BA Segel"
 			v-if="modal_props.show"
@@ -82,14 +82,21 @@
 					></MyPdfSegel>
 				</CTab>
 			</template>
-		</MyModalTabs>
+		</MyModalTabs> -->
+		<MyModalSegel
+			v-if="modal_props.show"
+			:state="modal_props.state"
+			:id.sync="modal_props.doc_id"
+			@close-modal="closeModal"
+		>
+		</MyModalSegel>
 
 		<!-- Modal konfirmasi delete SBP -->
 		<MyModalDelete
 			v-if="modal_delete_props.show"
 			:url.sync="modal_delete_props.url"
 			@close-modal="closeModalDelete"
-			@delete-data="closeModalDelete(); getDataSegel()"
+			@delete-data="closeModalDelete(); getDataTable()"
 		>
 			<template #text>
 				<span v-html="modal_delete_props.text"></span>
@@ -101,28 +108,30 @@
 <script>
 import axios from 'axios'
 
+import api from '../../../router/api.js'
+import api2 from '../../../router/api2.js'
 import MyDisplayDetail from '../../details/DisplayDetail.vue'
 import MyDisplaySegel from '../segel/DisplaySegel.vue'
 import MyFormSegel from '../segel/FormSegel.vue'
 import MyModalDelete from '../../components/ModalDelete.vue'
+import MyModalSegel from './ModalSegel.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 import MyPdfSegel from '../segel/PdfSegel.vue'
 import MyTableData from '../../components/TableData.vue'
-import api from '../../../router/api.js'
 
 const tabs_default = {
 	current: 0,
 	list: [
 		{
-			title: 'Header',
+			title: 'Uraian',
 			visibility: true
 		}, 
 		{
-			title: 'Detail',
+			title: 'Objek',
 			visibility: false
 		}, 
 		{
-			title: 'Form BA Segel',
+			title: 'Print',
 			visibility: false
 		}
 	]
@@ -135,6 +144,7 @@ export default {
 		MyDisplaySegel,
 		MyFormSegel,
 		MyModalDelete,
+		MyModalSegel,
 		MyModalTabs,
 		MyPdfSegel,
 		MyTableData
@@ -143,22 +153,27 @@ export default {
 		return {
 			fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Segel' },
-				{ key: 'tgl_dok', label: 'Tgl BA' },
+				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
 				{ key: 'nama_saksi', label: 'Pemilik/Saksi' },
 				{ key: 'petugas1', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
 			],
-			list_segel: [],
+			list_table: [],
 			doc_type: 'segel',
 			available_details: ['sarkut', 'barang', 'bangunan'],
+			// modal_props: {
+			// 	show: false,
+			// 	state: 'insert',
+			// 	tabs: JSON.parse(JSON.stringify(tabs_default)),
+			// 	doc_id: null,
+			// 	header_form: false,
+			// 	header_display: false
+			// },
 			modal_props: {
 				show: false,
-				state: 'insert',
-				tabs: JSON.parse(JSON.stringify(tabs_default)),
-				doc_id: null,
-				header_form: false,
-				header_display: false
+				state: null,
+				doc_id: null
 			},
 			modal_delete_props: {
 				show: false,
@@ -168,48 +183,51 @@ export default {
 		}
 	},
 	methods: {
-		getDataSegel() {
-			axios
-				.get(api.getSegel())
-				.then(
-					(response) => {
-						this.list_segel = response.data.data
-					}
-				)
-		},
-		createNewSegel() {
-			this.modal_props.state = 'insert'
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-			this.modal_props.doc_id = null
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
-			this.modal_props.show = true
-		},
-		showSegel(id) {
-			this.modal_props.state = 'display'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
-			this.modal_props.doc_id = id
-			this.modal_props.header_form = false
-			this.modal_props.header_display = true
-			this.modal_props.show = true
-		},
-		editSegel(id) {
-			this.modal_props.state = 'edit'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
-			this.modal_props.doc_id = id
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
-			this.modal_props.show = true
-		},
-		closeModalInput() {
-			this.getDataSegel()
-			this.modal_props.show = false
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-			this.modal_props.doc_id = null
-			this.modal_props.header_form = false
-			this.modal_props.header_display = false
+		// getDataSegel() {
+		// 	axios
+		// 		.get(api.getSegel())
+		// 		.then(
+		// 			(response) => {
+		// 				this.list_segel = response.data.data
+		// 			}
+		// 		)
+		// },
+		// createNewSegel() {
+		// 	this.modal_props.state = 'insert'
+		// 	this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
+		// 	this.modal_props.doc_id = null
+		// 	this.modal_props.header_form = true
+		// 	this.modal_props.header_display = false
+		// 	this.modal_props.show = true
+		// },
+		// showSegel(id) {
+		// 	this.modal_props.state = 'display'
+		// 	this.modal_props.tabs.list[1]['visibility'] = true
+		// 	this.modal_props.tabs.list[2]['visibility'] = true
+		// 	this.modal_props.doc_id = id
+		// 	this.modal_props.header_form = false
+		// 	this.modal_props.header_display = true
+		// 	this.modal_props.show = true
+		// },
+		// editSegel(id) {
+		// 	this.modal_props.state = 'edit'
+		// 	this.modal_props.tabs.list[1]['visibility'] = true
+		// 	this.modal_props.tabs.list[2]['visibility'] = true
+		// 	this.modal_props.doc_id = id
+		// 	this.modal_props.header_form = true
+		// 	this.modal_props.header_display = false
+		// 	this.modal_props.show = true
+		// },
+		// closeModalInput() {
+		// 	this.getDataSegel()
+		// 	this.modal_props.show = false
+		// 	this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
+		// 	this.modal_props.doc_id = null
+		// 	this.modal_props.header_form = false
+		// 	this.modal_props.header_display = false
+		// },
+		async getDataTable() {
+			this.list_table = await api2.getListDocuments('segel')
 		},
 		saveData(state) {
 			if (state == 'insert') {
@@ -219,6 +237,28 @@ export default {
 			} else {
 				this.refreshPdf()
 			}
+		},
+		createDoc() {
+			this.modal_props.state = 'insert'
+			this.modal_props.doc_id = null
+			this.modal_props.show = true
+		},
+		editDoc(id) {
+			this.modal_props.state = 'edit'
+			this.modal_props.doc_id = id
+			this.modal_props.show = true
+		},
+		showDoc(id) {
+			this.modal_props.state = 'show'
+			this.modal_props.doc_id = id
+			this.modal_props.show = true
+		},
+		deleteDoc() {},
+		closeModal() {
+			this.getDataTable()
+			this.modal_props.state = null
+			this.modal_props.doc_id = null
+			this.modal_props.show = false
 		},
 		deleteSegel(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
@@ -244,7 +284,7 @@ export default {
 		}
 	},
 	created() {
-		this.getDataSegel()
+		this.getDataTable()
 	}
 }
 </script>
