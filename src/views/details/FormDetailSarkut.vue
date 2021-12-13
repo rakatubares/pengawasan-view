@@ -129,37 +129,11 @@ export default {
 		}
 	},
 	methods: {
-		// getData() {
-		// 	console.log('state', this.state)
-		// 	if (this.state == 'edit') {
-		// 		axios
-		// 			.get(api.getSarkutById(this.doc_type, this.doc_id))
-		// 			.then(
-		// 				(response) => {
-		// 					this.data = response.data.data
-		// 					this.$refs.selectPilot.getEntitas(this.data.pilot.id, true)
-		// 				}
-		// 			)
-		// 			.catch((error) => console.log(error))
-		// 	}
-		// },
-		// saveData() {
-		// 	let submit_url = api.getSarkutById(this.doc_type, this.doc_id)
-		// 	axios
-		// 		.post(submit_url, this.data)
-		// 		.then(
-		// 			(response) => {
-		// 				this.alert('Penindakan sarana pengangkut berhasil disimpan')
-		// 				this.$emit('input-data')
-		// 			}
-		// 		)
-		// 		.catch((error) => {console.error(error)})
-		// },
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
 					let response = await api.insertDetail(this.data.main.type, this.data.main.data.id, 'sarkut', this.data_objek)
-					this.parseData(response.data.data)
+					this.parseData(response.data.data.objek.data)
 					this.state = 'edit'
 					this.$emit('submit-data')
 					this.alert('Data sarkut berhasil disimpan')
@@ -168,6 +142,7 @@ export default {
 				}
 			} else {
 				api.updateDetail(this.data.main.type, this.data.main.data.id, 'sarkut', this.data_objek.id, this.data_objek)
+				this.$refs.selectPilot.getEntitas(this.data_objek.pilot.id, true)
 				this.$emit('submit-data')
 				this.alert('Data sarkut berhasil diubah')
 			}
