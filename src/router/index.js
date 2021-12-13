@@ -11,10 +11,10 @@ const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
-const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
-const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
-const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
-const PageTegah = () => import('@/views/penindakan/tegah/PageTegah')
+// const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
+// const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
+// const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
+// const PageTegah = () => import('@/views/penindakan/tegah/PageTegah')
 
 Vue.use(Router)
 
