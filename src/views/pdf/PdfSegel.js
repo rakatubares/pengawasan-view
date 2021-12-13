@@ -51,13 +51,13 @@ class PdfSegel extends Pdf {
 		this.ln += this.props.font.height
 
 		////// DETAIL //////
-		let data_sarkut = (this.data.objek.type == 'sarkut') ? this.data.objek.data : null
+		let data_sarkut = this.dataObjek(this.data.objek, 'sarkut')
 		this.detailSarkut(data_sarkut)
 
-		let data_barang = (this.data.objek.type == 'barang') ? this.data.objek.data : null
+		let data_barang = this.dataObjek(this.data.objek, 'barang')
 		this.detailBarang(data_barang)
 
-		let data_bangunan = (this.data.objek.type == 'bangunan') ? this.data.objek.data : null
+		let data_bangunan = this.dataObjek(this.data.objek, 'bangunan')
 		this.detailBangunan(data_bangunan)
 
 		////// URAIAN BOTTOM //////
@@ -118,14 +118,16 @@ class PdfSegel extends Pdf {
 		this.pdf.text('*Coret yang tidak perlu', this.props.ind.alp, this.ln)
 
 		////// LAMPIRAN //////
-		if (this.data.objek.type == 'barang') {
-			if (this.data.objek.data.item.length > 1) {
-				this.pdf.setFont('Helvetica', 'normal')
-				this.pdf.addPage()
-				// Header
-				this.headerLampiran(this.data.dokumen.segel.no_dok_lengkap)
-				// Tabel barang
-				this.tabelBarang()
+		if (this.data.objek != null) {
+			if (this.data.objek.type == 'barang') {
+				if (this.data.objek.data.item.length > 1) {
+					this.pdf.setFont('Helvetica', 'normal')
+					this.pdf.addPage()
+					// Header
+					this.headerLampiran(this.data.dokumen.segel.no_dok_lengkap)
+					// Tabel barang
+					this.tabelBarang()
+				}
 			}
 		}
 

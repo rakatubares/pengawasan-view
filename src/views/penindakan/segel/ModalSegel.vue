@@ -8,25 +8,25 @@
 			:doc_id.sync="doc_id"
 			@close-modal="closeModal"
 		>
-			<!-- <template #form-doc>
+			<template #form-doc>
 				<MyFormSegel
 					ref="form_sbp"
 					:state.sync="modal_state"
 					:data.sync="data"
 					@submit-data="refreshData"
 				></MyFormSegel>
-			</template> -->
+			</template>
 			<template #disp-doc>
 				<MyDisplaySegel
 					:data_segel.sync="data"
 				></MyDisplaySegel>
 			</template>
-			<!-- <template #form-object>
+			<template #form-object>
 				<MyFormDetail 
 					:data.sync="data"
 					@submit-data="refreshData"
 				></MyFormDetail>
-			</template> -->
+			</template>
 			<template #disp-object>
 				<MyDisplayDetail 
 					:doc.sync="data"

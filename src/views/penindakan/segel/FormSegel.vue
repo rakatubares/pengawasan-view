@@ -6,7 +6,7 @@
 				<CCol md="12">
 					<MySelectSprint
 						ref="selectSprint"
-						:id.sync="data.sprint.id"
+						:id.sync="data.penindakan.sprint.id"
 					>
 					</MySelectSprint>
 				</CCol>
@@ -16,7 +16,7 @@
 					<CInput
 						label="Jenis Segel"
 						description="Jenis segel yang digunakan (kertas, kunci, timah, lak, segel elektronik, dll)"
-						:value.sync="data.jenis_segel"
+						:value.sync="data.main.data.jenis_segel"
 						:is-valid="validatorRequired"
 						invalid-feedback="Jenis segel wajib diisi"
 					/>
@@ -25,18 +25,24 @@
 					<CInput
 						label="Jumlah Segel"
 						description="Jumlah segel yang digunakan"
-						:value.sync="data.jumlah_segel"
+						:value.sync="data.main.data.jumlah_segel"
 						:is-valid="validatorNumber"
 						invalid-feedback="Jumlah segel wajib diisi"
+					/>
+				</CCol>
+				<CCol md="3" sm="12">
+					<CInput
+						label="Satuan"
+						:value.sync="data.main.data.satuan_segel"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol sm="12">
 					<CInput
-						label="Lokasi Segel"
+						label="Tempat Segel"
 						description="Bagian / lokasi tempat segel ditempatkan / dilekatkan"
-						:value.sync="data.lokasi_segel"
+						:value.sync="data.main.data.tempat_segel"
 					/>
 				</CCol>
 			</CRow>
@@ -47,7 +53,7 @@
 						label="Nama Saksi"
 						description="Nama lengkap pengangkut / kuasa barang / sarana pengangkut atau pemilik / yang menguasai bangunan atau tempat lain yang menyaksikan penyegelan"
 						:showAlamat="true"
-						:id.sync="data.saksi.id"
+						:id.sync="data.penindakan.saksi.id"
 					>
 					</MySelectEntitas>
 				</CCol>
@@ -57,9 +63,10 @@
 					<MySelectPetugas
 						ref="selectPetugas1"
 						label="Nama Petugas 1"
-						description="Nama Pejabat Bea dan Cukai yang melakukan penitipan"
-						:id.sync="data.petugas1.user_id"
-						:byUser="true"
+						description="Nama Pejabat Bea dan Cukai yang melakukan penyegelan"
+						:id.sync="data.penindakan.petugas1.user_id"
+						role="p2vue.penindakan"
+						:currentUser="true"
 					>
 					</MySelectPetugas>
 				</CCol>
@@ -69,8 +76,9 @@
 					<MySelectPetugas
 						ref="selectPetugas2"
 						label="Nama Petugas 2"
-						description="Nama Pejabat Bea dan Cukai yang melakukan penitipan"
-						:id.sync="data.petugas2.user_id"
+						description="Nama Pejabat Bea dan Cukai yang melakukan penyegelan"
+						:id.sync="data.penindakan.petugas2.user_id"
+						role="p2vue.penindakan"
 					>
 					</MySelectPetugas>
 				</CCol>
@@ -95,28 +103,29 @@
 </template>
 
 <script>
-import axios from "axios"
+// import axios from "axios"
 
-import api from '../../../router/api.js'
+// import api from '../../../router/api.js'
+import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
-const API = process.env.VUE_APP_BASEAPI + '/segel'
+// const API = process.env.VUE_APP_BASEAPI + '/segel'
 
-const data_default = {
-	sprint: {id: null},
-	tgl_sprint: null,
-	jenis_segel: null,
-	jumlah_segel: null,
-	nomor_segel: null,
-	lokasi_segel: null,
-	saksi: {id: null},
-	petugas1: {user_id: null},
-	petugas2: {user_id: null},
-}
+// const data_default = {
+// 	sprint: {id: null},
+// 	tgl_sprint: null,
+// 	jenis_segel: null,
+// 	jumlah_segel: null,
+// 	nomor_segel: null,
+// 	lokasi_segel: null,
+// 	saksi: {id: null},
+// 	petugas1: {user_id: null},
+// 	petugas2: {user_id: null},
+// }
 
 export default {
 	name: 'FormSegel',
@@ -127,60 +136,89 @@ export default {
 		MySelectSprint
 	},
 	props: {
-		state: {
-			Type: String,
-			default: 'insert'
-		},
-		id: Number
+		// state: {
+		// 	Type: String,
+		// 	default: 'insert'
+		// },
+		// id: Number
+		state: String,
+		data: Object
 	},
-	data() {
-		return {
-			data: JSON.parse(JSON.stringify(data_default)),
-		}
-	},
+	// data() {
+	// 	return {
+	// 		data: JSON.parse(JSON.stringify(data_default)),
+	// 	}
+	// },
 	methods: {
-		getData() {
-			if (this.state == 'edit') {
-				axios
-					.get(api.getSegelById(this.id))
-					.then(
-						(response) => {
-							this.data = response.data.data
+		// getData() {
+		// 	if (this.state == 'edit') {
+		// 		axios
+		// 			.get(api.getSegelById(this.id))
+		// 			.then(
+		// 				(response) => {
+		// 					this.data = response.data.data
 
-							// Show reference
-							this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
-							this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
-							this.$refs.selectPetugas1.getPetugas(this.data.petugas1.user_id, true)
-							if (response.data.data.petugas2 != null) {
-								this.$refs.selectPetugas2.getPetugas(this.data.petugas2.user_id, true)	
-							} else {
-								this.data.petugas2 = {user_id: null}
-							}
-						}
-					)
-			}
+		// 					// Show reference
+		// 					this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
+		// 					this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
+		// 					this.$refs.selectPetugas1.getPetugas(this.data.petugas1.user_id, true)
+		// 					if (response.data.data.petugas2 != null) {
+		// 						this.$refs.selectPetugas2.getPetugas(this.data.petugas2.user_id, true)	
+		// 					} else {
+		// 						this.data.petugas2 = {user_id: null}
+		// 					}
+		// 				}
+		// 			)
+		// 	}
+		// },
+		// saveData() {
+		// 	let submit_method
+		// 	let submit_url
+		// 	submit_method = this.state == 'insert' ? 'post' : 'put'
+		// 	submit_url = this.state == 'insert' ? 
+		// 		api.getSegel() : 
+		// 		api.getSegelById(this.id)
+
+		// 	axios({
+		// 		method: submit_method,
+		// 		url: submit_url,
+		// 		data: this.data,
+		// 	})
+		// 		.then((response) => {
+		// 			this.$emit('save-data', this.state)
+		// 			this.$emit('update:state', 'edit')
+		// 			if (submit_method == 'post') {
+		// 				this.$emit('update:id', response.data.id)
+		// 			}
+		// 			this.alert('Data header berhasil disimpan')
+		// 		})
+		// },
+		validateData() {
+			this.$refs.selectSprint.getSprint(this.data.penindakan.sprint.id, true)
+			this.$refs.selectSaksi.getEntitas(this.data.penindakan.saksi.id, true)
+			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
+			this.$refs.selectPetugas2.getPetugas(this.data.penindakan.petugas2.user_id, true)
 		},
-		saveData() {
-			let submit_method
-			let submit_url
-			submit_method = this.state == 'insert' ? 'post' : 'put'
-			submit_url = this.state == 'insert' ? 
-				api.getSegel() : 
-				api.getSegelById(this.id)
-
-			axios({
-				method: submit_method,
-				url: submit_url,
-				data: this.data,
-			})
-				.then((response) => {
-					this.$emit('save-data', this.state)
+		async saveData() {
+			if (this.state == 'insert') {
+				try {
+					let response = await api.storeDoc('segel', this.data)
+					let doc_id = response.main.data.id
+					this.$emit('submit-data', doc_id)
 					this.$emit('update:state', 'edit')
-					if (submit_method == 'post') {
-						this.$emit('update:id', response.data.id)
-					}
-					this.alert('Data header berhasil disimpan')
-				})
+					this.alert('Data BA Segel berhasil disimpan')
+				} catch (error) {
+					console.log('form segel - save data - error', JSON.parse(JSON.stringify(error)))
+				}
+			} else if (this.state == 'edit') {
+				try {
+					await api.updateDoc('segel', this.data.main.data.id, this.data)
+					this.$emit('submit-data')
+					this.alert('Data BA Segel berhasil diubah')
+				} catch (error) {
+					console.log('form segel - update data - error', JSON.parse(JSON.stringify(response)))
+				}
+			}
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
@@ -188,9 +226,14 @@ export default {
 		validatorRequired(val) { return validators.required(val) },
 		validatorNumber(val) { return validators.number(val) },
 	},
-	mounted() {
-		this.getData(true)
-	}
+	watch: {
+		data: function(val) {
+			this.validateData()
+		}
+	},
+	// mounted() {
+	// 	this.getData(true)
+	// }
 }
 </script>
 
