@@ -9,7 +9,7 @@
 							<CTextarea
 								label="Alamat"
 								description="Tempat/lokasi dilakukan penindakan"
-								:value.sync="data.alamat"
+								:value.sync="data_objek.alamat"
 								:is-valid="validatorRequired"
 								invalid-feedback="Alamat wajib diisi"
 							/>
@@ -20,7 +20,7 @@
 							<CInput
 								label="Nomor registrasi"
 								description="Nomor registrasi bangunan/NPPBKC/NPWP/dokumen lainnya yang berkaitan dengan bangunan/tempat lain yang terhadapnya dilakukan penindakan"
-								:value.sync="data.no_reg"
+								:value.sync="data_objek.no_reg"
 							/>
 						</CCol>
 					</CRow>
@@ -30,7 +30,7 @@
 								ref="selectPemilik"
 								label="Nama pemilik/yang menguasai"
 								description="Nama pemilik/yang menguasai tempat/bangunan"
-								:id.sync="data.pemilik.id"
+								:id.sync="data_objek.pemilik.id"
 							>
 							</MySelectEntitas>
 						</CCol>
@@ -57,12 +57,10 @@
 </template>
 
 <script>
-import axios from "axios"
-
+import api from '../../router/api2.js'
+import validators from '../../helpers/validator.js'
 import MyAlert from '../components/AlertSubmit.vue'
 import MySelectEntitas from '../components/SelectEntitas.vue'
-import api from '../../router/api.js'
-import validators from '../../helpers/validator.js'
 
 const data_default = {
 	alamat: null,
@@ -77,44 +75,48 @@ export default {
 		MySelectEntitas
 	},
 	props: {
-		state: {
-			type: String,
-			default: 'input'
-		},
-		id: Number,
-		doc_type: String,
-		doc_id: Number,
+		data: Object
 	},
 	data() {
 		return {
-			data: { ...data_default }
+			state: 'insert',
+			data_objek: JSON.parse(JSON.stringify(data_default))
+		}
+	},
+	watch: {
+		data: {
+			handler: function(val) {
+				this.parseData(val.objek.data)
+			}
 		}
 	},
 	methods: {
-		getData() {
-			if (this.state != 'input') {
-				axios
-					.get(api.getBangunanById(this.doc_type, this.doc_id))
-					.then(
-						(response) => {
-							this.data = response.data.data
-							this.$refs.selectPemilik.getEntitas(this.data.pemilik.id, true)
-						}
-					)
-					.catch((error) => console.error(error))
+		async saveData() {
+			if (this.state == 'insert') {
+				try {
+					let response = await api.insertDetail(this.data.main.type, this.data.main.data.id, 'bangunan', this.data_objek)
+					this.parseData(response.data.data)
+					this.state = 'edit'
+					this.$emit('submit-data')
+					this.alert('Data bangunan berhasil disimpan')
+				} catch (error) {
+					console.log(error)
+				}
+			} else {
+				api.updateDetail(this.data.main.type, this.data.main.data.id, 'bangunan', this.data_objek.id, this.data_objek)
+				this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
+				this.$emit('submit-data')
+				this.alert('Data bangunan berhasil diubah')
 			}
 		},
-		saveData() {
-			let submit_url = api.getBangunanById(this.doc_type, this.doc_id)
-			axios
-				.post(submit_url, this.data)
-				.then(
-					(response) => {
-						this.alert('Penindakan bangunan berhasil disimpan')
-						this.$emit('input-data')
-					}
-				)
-				.catch((error) => {console.error(error)})
+		parseData(objek) {
+			if (objek.pemilik == null) {
+				objek.pemilik = {
+					id: null
+				}
+			}
+			this.data_objek = objek
+			this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
@@ -122,7 +124,18 @@ export default {
 		validatorRequired(val) { return validators.required(val) },
 	},
 	mounted() {
-		this.getData()
+		if (this.data.objek.type == 'bangunan') {
+			if (this.data.objek.data != null) {
+				this.parseData(this.data.objek.data)
+				this.state = 'edit'
+			} else {
+				this.data_objek = JSON.parse(JSON.stringify(data_default))
+				this.state = 'insert'
+			}	
+		} else {
+			this.data_objek = JSON.parse(JSON.stringify(data_default))
+			this.state = 'insert'
+		}
 	}
 }
 </script>

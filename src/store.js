@@ -7,7 +7,8 @@ const state = {
   sidebarShow: 'responsive',
   sidebarMinimize: false,
   sso: new SSO(false),
-  userInfo: 'test'
+  userInfo: null,
+  token: null,
 }
 
 const mutations = {
@@ -26,6 +27,7 @@ const mutations = {
 
 const getters = {
 	sso: state => { return state.sso },
+	token: state => { return state.token }
 }
 
 export default new Vuex.Store({
