@@ -23,6 +23,7 @@
 			</template>
 			<template #form-object>
 				<MyFormDetail 
+					:available_details="['sarkut', 'barang', 'bangunan']"
 					:data.sync="data"
 					@submit-data="refreshData"
 				></MyFormDetail>
