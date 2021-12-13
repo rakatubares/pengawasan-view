@@ -98,9 +98,9 @@ converters.sarkut = (data) => {
 
 		let flight = converters.string(data.no_flight_trayek)
 
-		let jml_kapasitas = converters.string_format(converters.string(data.kapasitas), '{} ')
+		let jumlah_kapasitas = converters.string_format(converters.string(data.jumlah_kapasitas), '{} ')
 		let satuan_kapasitas = converters.string(data.satuan_kapasitas)
-		let kapasitas = jml_kapasitas + satuan_kapasitas
+		let kapasitas = jumlah_kapasitas + satuan_kapasitas
 
 		let pilot = converters.string(data.pilot.nama)
 
