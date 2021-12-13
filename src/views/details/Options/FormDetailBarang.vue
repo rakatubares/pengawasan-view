@@ -141,7 +141,7 @@ export default {
 			if (this.state == 'insert') {
 				try {
 					let response = await api.insertDetail(this.data.main.type, this.data.main.data.id, 'barang', this.data_objek)
-					this.parseData(response.data.data)
+					this.parseData(response.data.data.objek.data)
 					this.state = 'edit'
 					this.$emit('submit-data')
 					this.alert('Data barang berhasil disimpan')

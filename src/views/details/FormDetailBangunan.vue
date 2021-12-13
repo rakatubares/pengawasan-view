@@ -91,36 +91,11 @@ export default {
 		}
 	},
 	methods: {
-		// getData() {
-		// 	if (this.state != 'input') {
-		// 		axios
-		// 			.get(api.getBangunanById(this.doc_type, this.doc_id))
-		// 			.then(
-		// 				(response) => {
-		// 					this.data = response.data.data
-		// 					this.$refs.selectPemilik.getEntitas(this.data.pemilik.id, true)
-		// 				}
-		// 			)
-		// 			.catch((error) => console.error(error))
-		// 	}
-		// },
-		// saveData() {
-		// 	let submit_url = api.getBangunanById(this.doc_type, this.doc_id)
-		// 	axios
-		// 		.post(submit_url, this.data)
-		// 		.then(
-		// 			(response) => {
-		// 				this.alert('Penindakan bangunan berhasil disimpan')
-		// 				this.$emit('input-data')
-		// 			}
-		// 		)
-		// 		.catch((error) => {console.error(error)})
-		// },
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
 					let response = await api.insertDetail(this.data.main.type, this.data.main.data.id, 'bangunan', this.data_objek)
-					this.parseData(response.data.data)
+					this.parseData(response.data.data.objek.data)
 					this.state = 'edit'
 					this.$emit('submit-data')
 					this.alert('Data bangunan berhasil disimpan')
@@ -129,6 +104,7 @@ export default {
 				}
 			} else {
 				api.updateDetail(this.data.main.type, this.data.main.data.id, 'bangunan', this.data_objek.id, this.data_objek)
+				this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
 				this.$emit('submit-data')
 				this.alert('Data bangunan berhasil diubah')
 			}
