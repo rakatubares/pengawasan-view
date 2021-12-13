@@ -190,8 +190,6 @@ export default {
 			} 
 		},
 		data: Object
-		// doc_type: String,
-		// doc_id: Number
 	},
 	computed: {
 		options_objek_penindakan() {
