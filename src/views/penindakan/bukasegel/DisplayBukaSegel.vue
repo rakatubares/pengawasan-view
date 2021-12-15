@@ -46,6 +46,14 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3">
+						<b>Tanggal Segel</b>
+					</CCol>
+					<CCol md="9">
+						{{ disp_tanggal_segel }}
+					</CCol>
+				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3">
 						<b>Tempat Segel</b>
 					</CCol>
 					<CCol md="9">
@@ -106,82 +114,83 @@
 </template>
 
 <script>
-import axios from "axios"
+// import axios from "axios"
 
-import api from '../../../router/api.js'
+// import api from '../../../router/api.js'
 
-const data_default = {
-	no_dok_lengkap: null,
-	tgl_dok: null,
-	sprint: {
-		nomor_sprint: null,
-		tanggal_sprint: null
-	},
-	jenis_segel: null,
-	jumlah_segel: null,
-	nomor_segel: null,
-	tempat_segel: null,
-	saksi: {
-		nama: null,
-		alamat: null,
-		pekerjaan: null,
-		jenis_identitas: null,
-		nomor_identitas: null
-	},
-	petugas1: {
-		name: null,
-		nip: null
-	},
-	petugas2: {
-		name: null,
-		nip: null
-	}
-}
+// const data_default = {
+// 	no_dok_lengkap: null,
+// 	tgl_dok: null,
+// 	sprint: {
+// 		nomor_sprint: null,
+// 		tanggal_sprint: null
+// 	},
+// 	jenis_segel: null,
+// 	jumlah_segel: null,
+// 	nomor_segel: null,
+// 	tempat_segel: null,
+// 	saksi: {
+// 		nama: null,
+// 		alamat: null,
+// 		pekerjaan: null,
+// 		jenis_identitas: null,
+// 		nomor_identitas: null
+// 	},
+// 	petugas1: {
+// 		name: null,
+// 		nip: null
+// 	},
+// 	petugas2: {
+// 		name: null,
+// 		nip: null
+// 	}
+// }
 export default {
 	name: 'DisplayBukaSegel',
 	props: {
-		id: Number
+		data: Object
 	},
 	computed: {
-		disp_no_dok_lengkap() { return this.data.no_dok_lengkap || '-' },
-		disp_tgl_dok() { return this.data.tgl_dok || '-' },
-		disp_sprint() { return ((this.data.sprint.nomor_sprint || '') + ' tanggal ' + (this.data.sprint.tanggal_sprint || '')) },
-		disp_jenis_segel() { return this.data.jenis_segel || '-' },
-		disp_jumlah_segel() { return this.data.jumlah_segel || '-' },
-		disp_nomor_segel() { return this.data.nomor_segel || '-' },
-		disp_tempat_segel() { return this.data.tempat_segel || '-' },
-		disp_nama_saksi() { return this.data.saksi.nama || '-' },
-		disp_alamat_saksi() { return this.data.saksi.alamat || '-' },
-		disp_pekerjaan_saksi() { return this.data.saksi.pekerjaan || '-' },
-		disp_identitas() { return (this.data.saksi.jenis_identitas || '') + ' ' + (this.data.saksi.nomor_identitas || '-') },
-		disp_petugas1() { return this.data.petugas1.name || '-' },
+		disp_no_dok_lengkap() { return this.data.main.data.no_dok_lengkap || '-' },
+		disp_tgl_dok() { return this.data.main.data.tanggal_dokumen || '-' },
+		disp_sprint() { return ((this.data.main.data.sprint.nomor_sprint || '') + ' tanggal ' + (this.data.main.data.sprint.tanggal_sprint || '')) },
+		disp_jenis_segel() { return this.data.main.data.jenis_segel || '-' },
+		disp_jumlah_segel() { return ((this.data.main.data.jumlah_segel || '-') + ' ' + (this.data.main.data.satuan_segel || '')) },
+		disp_nomor_segel() { return this.data.main.data.nomor_segel || '-' },
+		disp_tanggal_segel() { return this.data.main.data.tanggal_segel || '-' },
+		disp_tempat_segel() { return this.data.main.data.tempat_segel || '-' },
+		disp_nama_saksi() { return this.data.main.data.saksi.nama || '-' },
+		disp_alamat_saksi() { return this.data.main.data.saksi.alamat || '-' },
+		disp_pekerjaan_saksi() { return this.data.main.data.saksi.pekerjaan || '-' },
+		disp_identitas() { return (this.data.main.data.saksi.jenis_identitas || '') + ' ' + (this.data.main.data.saksi.nomor_identitas || '-') },
+		disp_petugas1() { return this.data.main.data.petugas1.name || '-' },
 		disp_petugas2() { 
-			if (this.data.petugas2 != null) {
-				return this.data.petugas2.name
+			if (this.data.main.data.petugas2 != null) {
+				return this.data.main.data.petugas2.name
 			} else {
 				return '-'
 			}
 		},
 	},
-	data() {
-		return {
-			data: JSON.parse(JSON.stringify(data_default))
-		}
-	},
-	methods: {
-		getData() {
-			axios
-				.get(api.bukaSegelId(this.id))
-				.then(
-					(response) => {
-						this.data = JSON.parse(JSON.stringify(response.data.data))
-					}
-				)
-		}
-	},
-	mounted() {
-		this.getData()
-	}
+	// data() {
+	// 	return {
+	// 		data: JSON.parse(JSON.stringify(data_default))
+	// 	}
+	// },
+	// methods: {
+	// 	getData() {
+	// 		axios
+	// 			.get(api.bukaSegelId(this.id))
+	// 			.then(
+	// 				(response) => {
+	// 					this.data = JSON.parse(JSON.stringify(response.data.data))
+	// 				}
+	// 			)
+	// 	}
+	// },
+	// mounted() {
+	// 	this.getData()
+	// }
 }
 </script>
 

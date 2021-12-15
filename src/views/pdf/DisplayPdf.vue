@@ -47,12 +47,13 @@
 
 <script>
 import api from '../../router/api2.js'
-import PdfLptp from '../pdf/PdfLptp.js'
-import PdfRiksa from '../pdf/PdfRiksa.js'
-import PdfSbp from '../pdf/PdfSbp.js'
-import PdfSegel from '../pdf/PdfSegel.js'
-import PdfTegah from '../pdf/PdfTegah.js'
 import MyAlert from '../components/AlertSubmit.vue'
+import PdfBukaSegel from './PdfBukaSegel.js'
+import PdfLptp from './PdfLptp.js'
+import PdfRiksa from './PdfRiksa.js'
+import PdfSbp from './PdfSbp.js'
+import PdfSegel from './PdfSegel.js'
+import PdfTegah from './PdfTegah.js'
 
 export default {
 	name: "DisplayPdf",
@@ -87,6 +88,11 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
+				case 'bukasegel':
+					let pdfBukaSegel = new PdfBukaSegel(this.data)
+					this.src_pdf = pdfBukaSegel.generatePdf()
+					break;
+
 				case 'sbp':
 					let pdfSbp = new PdfSbp(this.data)
 					this.src_pdf = pdfSbp.generatePdf()
