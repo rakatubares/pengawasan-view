@@ -16,7 +16,7 @@
 						<div class="card-header-actions">
 							<CButton 
 								color="primary" 
-								@click="createNewDoc()"
+								@click="createDoc"
 								class="mr-1"
 							>
 								+ Buat BA Buka Segel
@@ -28,7 +28,7 @@
 		</CRow>
 
 		<!-- Modal input BA Buka segel -->
-		<MyModalTabs
+		<!-- <MyModalTabs
 			ref="modal_tabs"
 			title="Input Data BA Buka Segel"
 			v-if="modal_props.show"
@@ -82,7 +82,14 @@
 					></MyPdfBukaSegel>
 				</CTab>
 			</template>
-		</MyModalTabs>
+		</MyModalTabs> -->
+		<MyModalBukaSegel
+			v-if="modal_props.show"
+			:state="modal_props.state"
+			:id.sync="modal_props.doc_id"
+			@close-modal="closeModal"
+		>
+		</MyModalBukaSegel>
 
 		<!-- Modal konfirmasi delete SBP -->
 		<MyModalDelete
@@ -102,10 +109,12 @@
 import axios from 'axios'
 
 import api from '../../../router/api.js'
+import api2 from '../../../router/api2.js'
 import MyDisplayDetail from '../../details/DisplayDetail.vue'
 import MyDisplayBukaSegel from '../bukasegel/DisplayBukaSegel.vue'
 import MyFormBukaSegel from '../bukasegel/FormBukaSegel.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
+import MyModalBukaSegel from './ModalBukaSegel.vue'
 import MyModalDelete from '../../components/ModalDelete.vue'
 import MyPdfBukaSegel from '../bukasegel/PdfBukaSegel.vue'
 import MyTableData from '../../components/TableData.vue'
@@ -114,15 +123,15 @@ const tabs_default = {
 	current: 0,
 	list: [
 		{
-			title: 'Header',
+			title: 'Uraian',
 			visibility: true
 		}, 
 		{
-			title: 'Detail',
+			title: 'Objek',
 			visibility: false
 		}, 
 		{
-			title: 'Form BA Buka Segel',
+			title: 'Print',
 			visibility: false
 		}
 	]
@@ -134,6 +143,7 @@ export default {
 		MyDisplayDetail,
 		MyDisplayBukaSegel,
 		MyFormBukaSegel,
+		MyModalBukaSegel,
 		MyModalDelete,
 		MyModalTabs,
 		MyPdfBukaSegel,
@@ -143,7 +153,7 @@ export default {
 		return {
 			fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Buka Segel' },
-				{ key: 'tgl_dok', label: 'Tgl BA' },
+				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
 				{ key: 'nama_saksi', label: 'Pemilik/Saksi' },
 				{ key: 'petugas1', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
@@ -151,14 +161,18 @@ export default {
 			],
 			list_table: [],
 			doc_type: 'bukasegel',
-			available_details: ['sarkut', 'barang', 'bangunan'],
+			// modal_props: {
+			// 	show: false,
+			// 	state: 'insert',
+			// 	tabs: JSON.parse(JSON.stringify(tabs_default)),
+			// 	doc_id: null,
+			// 	header_form: false,
+			// 	header_display: false
+			// },
 			modal_props: {
 				show: false,
-				state: 'insert',
-				tabs: JSON.parse(JSON.stringify(tabs_default)),
-				doc_id: null,
-				header_form: false,
-				header_display: false
+				state: null,
+				doc_id: null
 			},
 			modal_delete_props: {
 				show: false,
@@ -168,48 +182,51 @@ export default {
 		}
 	},
 	methods: {
-		getDataTable() {
-			axios
-				.get(api.bukaSegel())
-				.then(
-					(response) => {
-						this.list_table = response.data.data
-					}
-				)
-		},
-		showDoc(id) {
-			this.modal_props.state = 'display'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
-			this.modal_props.doc_id = id
-			this.modal_props.header_form = false
-			this.modal_props.header_display = true
-			this.modal_props.show = true
-		},
-		createNewDoc() {
-			this.modal_props.state = 'insert'
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-			this.modal_props.doc_id = null
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
-			this.modal_props.show = true
-		},
-		editDoc(id) {
-			this.modal_props.state = 'edit'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
-			this.modal_props.doc_id = id
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
-			this.modal_props.show = true
-		},
-		closeModalInput() {
-			this.getDataTable()
-			this.modal_props.show = false
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-			this.modal_props.doc_id = null
-			this.modal_props.header_form = false
-			this.modal_props.header_display = false
+		// getDataTable() {
+		// 	axios
+		// 		.get(api.bukaSegel())
+		// 		.then(
+		// 			(response) => {
+		// 				this.list_table = response.data.data
+		// 			}
+		// 		)
+		// },
+		// showDoc(id) {
+		// 	this.modal_props.state = 'display'
+		// 	this.modal_props.tabs.list[1]['visibility'] = true
+		// 	this.modal_props.tabs.list[2]['visibility'] = true
+		// 	this.modal_props.doc_id = id
+		// 	this.modal_props.header_form = false
+		// 	this.modal_props.header_display = true
+		// 	this.modal_props.show = true
+		// },
+		// createNewDoc() {
+		// 	this.modal_props.state = 'insert'
+		// 	this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
+		// 	this.modal_props.doc_id = null
+		// 	this.modal_props.header_form = true
+		// 	this.modal_props.header_display = false
+		// 	this.modal_props.show = true
+		// },
+		// editDoc(id) {
+		// 	this.modal_props.state = 'edit'
+		// 	this.modal_props.tabs.list[1]['visibility'] = true
+		// 	this.modal_props.tabs.list[2]['visibility'] = true
+		// 	this.modal_props.doc_id = id
+		// 	this.modal_props.header_form = true
+		// 	this.modal_props.header_display = false
+		// 	this.modal_props.show = true
+		// },
+		// closeModalInput() {
+		// 	this.getDataTable()
+		// 	this.modal_props.show = false
+		// 	this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
+		// 	this.modal_props.doc_id = null
+		// 	this.modal_props.header_form = false
+		// 	this.modal_props.header_display = false
+		// },
+		async getDataTable() {
+			this.list_table = await api2.getListDocuments('bukasegel')
 		},
 		saveData(state) {
 			if (state == 'insert') {
@@ -219,6 +236,27 @@ export default {
 			} else {
 				this.refreshPdf()
 			}
+		},
+		createDoc() {
+			this.modal_props.state = 'insert'
+			this.modal_props.doc_id = null
+			this.modal_props.show = true
+		},
+		editDoc(id) {
+			this.modal_props.state = 'edit'
+			this.modal_props.doc_id = id
+			this.modal_props.show = true
+		},
+		showDoc(id) {
+			this.modal_props.state = 'show'
+			this.modal_props.doc_id = id
+			this.modal_props.show = true
+		},
+		closeModal() {
+			this.getDataTable()
+			this.modal_props.state = null
+			this.modal_props.doc_id = null
+			this.modal_props.show = false
 		},
 		deleteDoc(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
