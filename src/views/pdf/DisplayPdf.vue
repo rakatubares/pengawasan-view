@@ -87,6 +87,7 @@ export default {
 		async getPdf() {
 			await this.getData()
 			
+			console.log('display pdf - active pdf', this.active_pdf)
 			switch (this.active_pdf) {
 				case 'bukasegel':
 					let pdfBukaSegel = new PdfBukaSegel(this.data)
