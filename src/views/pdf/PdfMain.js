@@ -10,9 +10,9 @@ class Pdf {
 		this.ln = 50
 	}
 
-	prepareDate() {
-		this.tgl_dok = converters.date(this.data.penindakan.tanggal_penindakan, 'DD-MM-YYYY')
-		this.tgl_sprint = converters.date(this.data.penindakan.sprint.tanggal_sprint, 'DD-MM-YYYY')
+	prepareDate(tgl_dok=this.data.penindakan.tanggal_penindakan, tgl_sprint=this.data.penindakan.sprint.tanggal_sprint) {
+		this.tgl_dok = converters.date(tgl_dok, 'DD-MM-YYYY')
+		this.tgl_sprint = converters.date(tgl_sprint, 'DD-MM-YYYY')
 		this.full_tgl_dok = this.tgl_dok != null ? converters.fullDate(this.tgl_dok) : ''
 		this.full_tgl_sprint = converters.fullDate(this.tgl_sprint)
 		this.hr = this.tgl_dok != null ? converters.weekDay(this.tgl_dok) : ''
@@ -251,7 +251,13 @@ class Pdf {
 		this.ln += this.props.font.height
 	}
 
-	ttd(txt_saksi, txt_pejabat, ln_tgl_hgt=1.5, ttd_hgt=6) {
+	ttd(
+		txt_saksi, txt_pejabat, 
+		saksi=this.data.penindakan.saksi, 
+		petugas1=this.data.penindakan.petugas1, 
+		petugas2=this.data.penindakan.petugas2, 
+		ln_tgl_hgt=1.5, ttd_hgt=6
+	) {
 		let ln_tgl = this.ln + this.props.font.height*ln_tgl_hgt
 		let ln_jabatan_1 = ln_tgl + this.props.font.height
 		let ln_nama_1 = ln_jabatan_1 + this.props.font.height*ttd_hgt
@@ -262,16 +268,16 @@ class Pdf {
 
 		// Pemilik/kuasa
 		this.pdf.text(txt_saksi, this.props.ind.alp, ln_jabatan_1)
-		this.pdf.text(this.data.penindakan.saksi.nama, this.props.ind.alp, ln_nama_1)
+		this.pdf.text(saksi.nama, this.props.ind.alp, ln_nama_1)
 
 		// Pejabat
 		this.pdf.text('Tangerang, ' + this.full_tgl_dok, this.props.ind.ttd, ln_tgl)
 		this.pdf.text(txt_pejabat, this.props.ind.ttd, ln_jabatan_1)
-		this.pdf.text(this.data.penindakan.petugas1.name, this.props.ind.ttd, ln_nama_1)
-		this.pdf.text('NIP ' + this.data.penindakan.petugas1.nip, this.props.ind.ttd, ln_nip_1)
+		this.pdf.text(petugas1.name, this.props.ind.ttd, ln_nama_1)
+		this.pdf.text('NIP ' + petugas1.nip, this.props.ind.ttd, ln_nip_1)
 		if (this.data.penindakan.petugas2 != null) {
-			var txt_nama_pejabat2 = this.data.penindakan.petugas2.name
-			var txt_nip_pejabat2 = this.data.penindakan.petugas2.nip
+			var txt_nama_pejabat2 = petugas2.name
+			var txt_nip_pejabat2 = petugas2.nip
 		} else {
 			var txt_nama_pejabat2 = '...........................................'
 			var txt_nip_pejabat2 = '....................................'
