@@ -105,6 +105,10 @@ class API {
 		await this.putApi(`/${doc_type}/${doc_id}/publish`)
 	}
 
+	async searchDoc(doc_type, search_query) {
+		return await this.postApi(`/${doc_type}/search`, search_query)
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| API for details
