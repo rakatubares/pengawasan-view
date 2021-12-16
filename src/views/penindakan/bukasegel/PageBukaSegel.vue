@@ -28,61 +28,6 @@
 		</CRow>
 
 		<!-- Modal input BA Buka segel -->
-		<!-- <MyModalTabs
-			ref="modal_tabs"
-			title="Input Data BA Buka Segel"
-			v-if="modal_props.show"
-			:tabs_list.sync="modal_props.tabs.list"
-			:current_tab.sync="modal_props.tabs.current"
-			@close-modal="closeModalInput"
-		>
-			<template #tab-header>
-				<CTab :title="modal_props.tabs.list[0]['title']">
-					<MyFormBukaSegel
-						ref="form_segel"
-						v-if="modal_props.header_form"
-						:id.sync="modal_props.doc_id"
-						:state.sync="modal_props.state"
-						@save-data="saveData"
-					>
-					</MyFormBukaSegel>
-					<MyDisplayBukaSegel
-						v-if="modal_props.header_display"
-						:id.sync="modal_props.doc_id"
-					>
-					</MyDisplayBukaSegel>
-				</CTab>
-			</template>
-
-			<template #tab-detail>
-				<CTab
-					v-if="modal_props.tabs.list[1]['visibility']"
-					:title="modal_props.tabs.list[1]['title']" 
-				>
-					<MyDisplayDetail
-						:available_details="available_details"
-						:state="modal_props.state"
-						:doc_type="doc_type"
-						:doc_id.sync="modal_props.doc_id"
-						@edit-data="refreshPdf"
-					>
-					</MyDisplayDetail>
-				</CTab>
-			</template>
-
-			<template #tab-form>
-				<CTab 
-					v-if="modal_props.tabs.list[2]['visibility']"
-					:title="modal_props.tabs.list[2]['title']" 
-				>
-					<MyPdfBukaSegel
-						ref="pdf_doc"
-						:id.sync="modal_props.doc_id"
-						@publish-segel="showDoc"
-					></MyPdfBukaSegel>
-				</CTab>
-			</template>
-		</MyModalTabs> -->
 		<MyModalBukaSegel
 			v-if="modal_props.show"
 			:state="modal_props.state"
@@ -161,14 +106,6 @@ export default {
 			],
 			list_table: [],
 			doc_type: 'bukasegel',
-			// modal_props: {
-			// 	show: false,
-			// 	state: 'insert',
-			// 	tabs: JSON.parse(JSON.stringify(tabs_default)),
-			// 	doc_id: null,
-			// 	header_form: false,
-			// 	header_display: false
-			// },
 			modal_props: {
 				show: false,
 				state: null,
@@ -182,49 +119,6 @@ export default {
 		}
 	},
 	methods: {
-		// getDataTable() {
-		// 	axios
-		// 		.get(api.bukaSegel())
-		// 		.then(
-		// 			(response) => {
-		// 				this.list_table = response.data.data
-		// 			}
-		// 		)
-		// },
-		// showDoc(id) {
-		// 	this.modal_props.state = 'display'
-		// 	this.modal_props.tabs.list[1]['visibility'] = true
-		// 	this.modal_props.tabs.list[2]['visibility'] = true
-		// 	this.modal_props.doc_id = id
-		// 	this.modal_props.header_form = false
-		// 	this.modal_props.header_display = true
-		// 	this.modal_props.show = true
-		// },
-		// createNewDoc() {
-		// 	this.modal_props.state = 'insert'
-		// 	this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-		// 	this.modal_props.doc_id = null
-		// 	this.modal_props.header_form = true
-		// 	this.modal_props.header_display = false
-		// 	this.modal_props.show = true
-		// },
-		// editDoc(id) {
-		// 	this.modal_props.state = 'edit'
-		// 	this.modal_props.tabs.list[1]['visibility'] = true
-		// 	this.modal_props.tabs.list[2]['visibility'] = true
-		// 	this.modal_props.doc_id = id
-		// 	this.modal_props.header_form = true
-		// 	this.modal_props.header_display = false
-		// 	this.modal_props.show = true
-		// },
-		// closeModalInput() {
-		// 	this.getDataTable()
-		// 	this.modal_props.show = false
-		// 	this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-		// 	this.modal_props.doc_id = null
-		// 	this.modal_props.header_form = false
-		// 	this.modal_props.header_display = false
-		// },
 		async getDataTable() {
 			this.list_table = await api2.getListDocuments('bukasegel')
 		},

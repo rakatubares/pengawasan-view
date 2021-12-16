@@ -87,6 +87,11 @@ const data_default = {
 	objek: {
 		type: null,
 		data: null
+	},
+	dokumen: {
+		segel: {
+			id: null
+		}
 	}
 }
 

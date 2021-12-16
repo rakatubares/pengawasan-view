@@ -275,7 +275,7 @@ class Pdf {
 		this.pdf.text(txt_pejabat, this.props.ind.ttd, ln_jabatan_1)
 		this.pdf.text(petugas1.name, this.props.ind.ttd, ln_nama_1)
 		this.pdf.text('NIP ' + petugas1.nip, this.props.ind.ttd, ln_nip_1)
-		if (this.data.penindakan.petugas2 != null) {
+		if (petugas2 != null) {
 			var txt_nama_pejabat2 = petugas2.name
 			var txt_nip_pejabat2 = petugas2.nip
 		} else {
