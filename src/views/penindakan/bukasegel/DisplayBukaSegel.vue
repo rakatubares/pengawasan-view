@@ -114,37 +114,6 @@
 </template>
 
 <script>
-// import axios from "axios"
-
-// import api from '../../../router/api.js'
-
-// const data_default = {
-// 	no_dok_lengkap: null,
-// 	tgl_dok: null,
-// 	sprint: {
-// 		nomor_sprint: null,
-// 		tanggal_sprint: null
-// 	},
-// 	jenis_segel: null,
-// 	jumlah_segel: null,
-// 	nomor_segel: null,
-// 	tempat_segel: null,
-// 	saksi: {
-// 		nama: null,
-// 		alamat: null,
-// 		pekerjaan: null,
-// 		jenis_identitas: null,
-// 		nomor_identitas: null
-// 	},
-// 	petugas1: {
-// 		name: null,
-// 		nip: null
-// 	},
-// 	petugas2: {
-// 		name: null,
-// 		nip: null
-// 	}
-// }
 export default {
 	name: 'DisplayBukaSegel',
 	props: {
@@ -172,25 +141,6 @@ export default {
 			}
 		},
 	},
-	// data() {
-	// 	return {
-	// 		data: JSON.parse(JSON.stringify(data_default))
-	// 	}
-	// },
-	// methods: {
-	// 	getData() {
-	// 		axios
-	// 			.get(api.bukaSegelId(this.id))
-	// 			.then(
-	// 				(response) => {
-	// 					this.data = JSON.parse(JSON.stringify(response.data.data))
-	// 				}
-	// 			)
-	// 	}
-	// },
-	// mounted() {
-	// 	this.getData()
-	// }
 }
 </script>
 
