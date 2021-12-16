@@ -98,6 +98,8 @@ export default {
 			return status === 100 ? 'warning'
 				: status === 101 ? 'warning'
 				: status === 200 ? 'success'
+				: status === 210 ? 'warning'
+				: status === 211 ? 'success'
 				: status === 300 ? 'danger' 
 				: 'primary'
 		},
@@ -114,7 +116,7 @@ export default {
 				if ((type == 'edit') || (type == 'delete')) {
 					btn = [100, 101].includes(item.status.kode_status)
 				} else if (type == 'show') {
-					btn = [200].includes(item.status.kode_status)
+					btn = [200, 210, 211].includes(item.status.kode_status)
 				} else {
 					btn = false
 				}
