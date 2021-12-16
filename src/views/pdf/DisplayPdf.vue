@@ -94,6 +94,16 @@ export default {
 					this.src_pdf = pdfBukaSegel.generatePdf()
 					break;
 
+				case 'lptp':
+					let pdfLptp = new PdfLptp(this.data)
+					this.src_pdf = pdfLptp.generatePdf()
+					break;
+
+				case 'riksa':
+					let pdfRiksa = new PdfRiksa(this.data)
+					this.src_pdf = pdfRiksa.generatePdf()
+					break;
+
 				case 'sbp':
 					let pdfSbp = new PdfSbp(this.data)
 					this.src_pdf = pdfSbp.generatePdf()
@@ -107,16 +117,6 @@ export default {
 				case 'tegah':
 					let pdfTegah = new PdfTegah(this.data)
 					this.src_pdf = pdfTegah.generatePdf()
-					break;
-
-				case 'riksa':
-					let pdfRiksa = new PdfRiksa(this.data)
-					this.src_pdf = pdfRiksa.generatePdf()
-					break;
-
-				case 'lptp':
-					let pdfLptp = new PdfLptp(this.data)
-					this.src_pdf = pdfLptp.generatePdf()
 					break;
 			
 				default:

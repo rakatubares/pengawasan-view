@@ -165,8 +165,7 @@ export default {
 		},
 	},
 	mounted() {
-		console.log('table item - mounted 1', JSON.parse(JSON.stringify(this.detail)))
-		console.log('table item - mounted 2', this.state)
+
 		this.getData()
 	}
 }

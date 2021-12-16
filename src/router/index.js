@@ -11,6 +11,7 @@ const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
+const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
 // const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
@@ -42,6 +43,11 @@ function configRoutes () {
 					path: 'sbp',
 					name: 'SBP',
 					component: PageSbp
+				},
+				{
+					path: 'riksa',
+					name: 'Periksa',
+					component: PageRiksa
 				},
 				{
 					path: 'segel',
