@@ -135,6 +135,15 @@ export default {
 					this.tabs.list[1].children.display = false
 					this.tabs.list[2].visibility = true
 					break;
+
+				case 'edit-header':
+					this.tabs.list[0].children.form = true
+					this.tabs.list[0].children.display = false
+					this.tabs.list[1].visibility = true
+					this.tabs.list[1].children.form = false
+					this.tabs.list[1].children.display = true
+					this.tabs.list[2].visibility = true
+					break;
 			
 				default:
 					break;
