@@ -141,7 +141,7 @@ class PdfSbp extends Pdf {
 		////// TTD //////
 		let txt_saksi = 'Pengangkut/Pemilik/Kuasanya/Saksi*'
 		let txt_pejabat = 'Pejabat yang melakukan penindakan,'
-		this.ttd(txt_saksi, txt_pejabat, this.data.penindakan.saksi, this.data.penindakan.petugas1, this.data.penindakan.petugas1, 1, 4)
+		this.ttd(txt_saksi, txt_pejabat, undefined, undefined, undefined, 1, 4)
 
 		////// KETERANGAN //////
 		this.ln += this.props.font.height
