@@ -11,20 +11,10 @@ class API {
 		this.base_url = process.env.VUE_APP_BASEAPI
 	}
 
-	async getApi(url) {
-		let response =  await axios.get(`${this.base_url}${url}`, this.config)
-		return response
-	}
-
-	async postApi(url, data) {
-		let response = await axios.post(`${this.base_url}${url}`, data, this.config)
-		return response
-	}
-
-	async putApi(url, data) {
-		let response = await axios.put(`${this.base_url}${url}`, data, this.config)
-		return response
-	}
+	async getApi(url) 		 { return await axios.get(`${this.base_url}${url}`, this.config) }
+	async postApi(url, data) { return await axios.post(`${this.base_url}${url}`, data, this.config) }
+	async putApi(url, data)  { return await axios.put(`${this.base_url}${url}`, data, this.config) }
+	async delApi(url) 		 { return await axios.delete(`${this.base_url}${url}`, this.config) }
 
 	/*
     |--------------------------------------------------------------------------
@@ -105,6 +95,14 @@ class API {
 		await this.putApi(`/${doc_type}/${doc_id}/publish`)
 	}
 
+	async searchDoc(doc_type, search_query) {
+		return await this.postApi(`/${doc_type}/search`, search_query)
+	}
+
+	async deleteDoc(doc_type, doc_id) {
+		return await this.delApi(`/${doc_type}/${doc_id}`)
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| API for details
@@ -118,29 +116,19 @@ class API {
 	}
 
 	async getItemBarangByDocId(doc_type, doc_id) {
-		let response = await this.getApi(`/${doc_type}/${doc_id}/barang/item`)
-		// let objek = response.data.data.data
-		return response
+		return await this.getApi(`/${doc_type}/${doc_id}/barang/item`)
 	}
 
-	// async upsertDetail(doc_type, doc_id, detail_type, data) {
-	// 	let response = await this.postApi(`/${doc_type}/${doc_id}/${detail_type}/upsert`, data)
-	// 	return response
-	// }
-
 	async insertDetail(doc_type, doc_id, detail_type, data) {
-		let response = await this.postApi(`/${doc_type}/${doc_id}/${detail_type}`, data)
-		return response
+		return await this.postApi(`/${doc_type}/${doc_id}/${detail_type}`, data)
 	}
 
 	async updateDetail(doc_type, doc_id, detail_type, detail_id, data) {
-		let response = await this.putApi(`/${doc_type}/${doc_id}/${detail_type}/${detail_id}`, data)
-		return response
+		return await this.putApi(`/${doc_type}/${doc_id}/${detail_type}/${detail_id}`, data)
 	}
 
 	upsertLinkedDoc(doc_type, doc_id, data) {
-		let response = this.postApi(`/${doc_type}/${doc_id}/storelinked`, data)
-		return response
+		return this.postApi(`/${doc_type}/${doc_id}/storelinked`, data)
 	}
 }
 
