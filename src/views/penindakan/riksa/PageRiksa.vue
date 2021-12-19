@@ -39,9 +39,10 @@
 		<!-- Modal konfirmasi delete BA Pemeriksaan -->
 		<MyModalDelete
 			v-if="modal_delete_props.show"
-			:url.sync="modal_delete_props.url"
+			:doc_type="modal_delete_props.doc_type"
+			:doc_id="modal_delete_props.doc_id"
 			@close-modal="closeModalDelete"
-			@delete-data="closeModalDelete(); getDataTable()"
+			@delete-data="closeModalDelete"
 		>
 			<template #text>
 				<span v-html="modal_delete_props.text"></span>
@@ -100,7 +101,8 @@ export default {
 			},
 			modal_delete_props: {
 				show: false,
-				url: null,
+				doc_type: null,
+				doc_id: null,
 				text: null
 			}
 		}
@@ -146,12 +148,15 @@ export default {
 				+ item.nama_saksi.bold() 
 				+ "?"
 			
-			this.modal_delete_props.url = api.bukaSegelId(item.id)
+			this.modal_delete_props.doc_type = this.doc_type
+			this.modal_delete_props.doc_id = item.id
 			this.modal_delete_props.text = text
 			this.modal_delete_props.show = true
 		},
 		closeModalDelete() {
-			this.modal_delete_props.url = null
+			this.getDataTable()
+			this.modal_delete_props.doc_type = null
+			this.modal_delete_props.doc_id = null
 			this.modal_delete_props.text = null
 			this.modal_delete_props.show = false
 		},

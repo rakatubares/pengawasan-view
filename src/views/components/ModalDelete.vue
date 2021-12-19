@@ -31,8 +31,7 @@
 </template>
 
 <script>
-import axios from "axios"
-
+import api from '../../router/api2.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -41,8 +40,8 @@ export default {
 		MyAlert
 	},
 	props: {
-		type: null,
-		url: String
+		doc_type: String,
+		doc_id: Number
 	},
 	data() {
 		return {
@@ -50,15 +49,10 @@ export default {
 		}
 	},
 	methods: {
-		deleteData() {
-			axios
-				.delete(this.url)
-				.then(
-					(response) => {
-						this.alert('Data berhasil dihapus.')
-						this.$emit('delete-data', this.type)
-					}
-				)
+		async deleteData() {
+			await api.deleteDoc(this.doc_type, this.doc_id)
+			this.alert('Data berhasil dihapus.')
+			this.$emit('delete-data')
 		},
 		alert(text) {
 			this.$refs.alert.show_alert(text)
