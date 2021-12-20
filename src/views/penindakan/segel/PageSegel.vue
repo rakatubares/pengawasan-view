@@ -53,13 +53,8 @@
 
 <script>
 import api2 from '../../../router/api2.js'
-import MyDisplayDetail from '../../details/DisplayDetail.vue'
-import MyDisplaySegel from '../segel/DisplaySegel.vue'
-import MyFormSegel from '../segel/FormSegel.vue'
 import MyModalDelete from '../../components/ModalDelete.vue'
 import MyModalSegel from './ModalSegel.vue'
-import MyModalTabs from '../../components/ModalTabs.vue'
-import MyPdfSegel from '../segel/PdfSegel.vue'
 import MyTableData from '../../components/TableData.vue'
 
 const tabs_default = {
@@ -83,13 +78,8 @@ const tabs_default = {
 export default {
 	name: 'PageSegel',
 	components: {
-		MyDisplayDetail,
-		MyDisplaySegel,
-		MyFormSegel,
 		MyModalDelete,
 		MyModalSegel,
-		MyModalTabs,
-		MyPdfSegel,
 		MyTableData
 	},
 	data() {
