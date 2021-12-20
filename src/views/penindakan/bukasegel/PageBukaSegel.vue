@@ -39,9 +39,10 @@
 		<!-- Modal konfirmasi delete SBP -->
 		<MyModalDelete
 			v-if="modal_delete_props.show"
-			:url.sync="modal_delete_props.url"
+			:doc_type="modal_delete_props.doc_type"
+			:doc_id="modal_delete_props.doc_id"
 			@close-modal="closeModalDelete"
-			@delete-data="closeModalDelete(); getDataTable()"
+			@delete-data="closeModalDelete"
 		>
 			<template #text>
 				<span v-html="modal_delete_props.text"></span>
@@ -51,17 +52,9 @@
 </template>
 
 <script>
-import axios from 'axios'
-
-import api from '../../../router/api.js'
 import api2 from '../../../router/api2.js'
-import MyDisplayDetail from '../../details/DisplayDetail.vue'
-import MyDisplayBukaSegel from '../bukasegel/DisplayBukaSegel.vue'
-import MyFormBukaSegel from '../bukasegel/FormBukaSegel.vue'
-import MyModalTabs from '../../components/ModalTabs.vue'
 import MyModalBukaSegel from './ModalBukaSegel.vue'
 import MyModalDelete from '../../components/ModalDelete.vue'
-import MyPdfBukaSegel from '../bukasegel/PdfBukaSegel.vue'
 import MyTableData from '../../components/TableData.vue'
 
 const tabs_default = {
@@ -85,13 +78,8 @@ const tabs_default = {
 export default {
 	name: 'PageBukaSegel',
 	components: {
-		MyDisplayDetail,
-		MyDisplayBukaSegel,
-		MyFormBukaSegel,
 		MyModalBukaSegel,
 		MyModalDelete,
-		MyModalTabs,
-		MyPdfBukaSegel,
 		MyTableData,
 	},
 	data() {
@@ -159,12 +147,15 @@ export default {
 				+ item.nama_saksi.bold() 
 				+ "?"
 			
-			this.modal_delete_props.url = api.bukaSegelId(item.id)
+			this.modal_delete_props.doc_type = this.doc_type
+			this.modal_delete_props.doc_id = item.id
 			this.modal_delete_props.text = text
 			this.modal_delete_props.show = true
 		},
 		closeModalDelete() {
-			this.modal_delete_props.url = null
+			this.getDataTable()
+			this.modal_delete_props.doc_type = null
+			this.modal_delete_props.doc_id = null
 			this.modal_delete_props.text = null
 			this.modal_delete_props.show = false
 		},

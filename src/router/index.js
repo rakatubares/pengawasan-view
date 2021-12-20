@@ -10,10 +10,10 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
-const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
-const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
-const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
+const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
+const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
+const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 // const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
 // const PageTegah = () => import('@/views/penindakan/tegah/PageTegah')
 
