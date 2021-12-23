@@ -27,7 +27,7 @@
 			</CCol>
 		</CRow>
 		<CRow
-			v-if="[100, 101].includes(status_pdf)"
+			v-if="show_publish_button"
 		>
 			<CCol col="12">
 				<CButton
@@ -47,13 +47,14 @@
 
 <script>
 import api from '../../router/api2.js'
-import MyAlert from '../components/AlertSubmit.vue'
 import PdfBukaSegel from './PdfBukaSegel.js'
+import PdfLphp from './PdfLphp.js'
 import PdfLptp from './PdfLptp.js'
 import PdfRiksa from './PdfRiksa.js'
 import PdfSbp from './PdfSbp.js'
 import PdfSegel from './PdfSegel.js'
 import PdfTegah from './PdfTegah.js'
+import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
 	name: "DisplayPdf",
@@ -74,9 +75,24 @@ export default {
 			active_pdf: this.doc_type
 		}
 	},
+	computed: {
+		show_publish_button() {
+			let show = false
+			if (this.status_pdf == 100) {
+				show = true
+			} else if ((this.status_pdf == 102) && (this.active_pdf == 'lphp')) {
+				show = true
+			} else {
+				show = false
+			}
+
+			return show
+		}
+	},
 	methods: {
 		async getData() {
 			this.data = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.list_pdf = [this.doc_type]
 			for (const key in this.data.dokumen) {
 				if (!this.list_pdf.includes(key)) {
 					this.list_pdf.push(key)
@@ -92,6 +108,11 @@ export default {
 				case 'bukasegel':
 					let pdfBukaSegel = new PdfBukaSegel(this.data)
 					this.src_pdf = pdfBukaSegel.generatePdf()
+					break;
+
+				case 'lphp':
+					let pdfLphp = new PdfLphp(this.data)
+					this.src_pdf = pdfLphp.generatePdf()
 					break;
 
 				case 'lptp':
@@ -132,7 +153,19 @@ export default {
 			this.show_pdf = true
 		},
 		async publishDoc() {
-			await api.publishDoc(this.doc_type, this.doc_id)
+			switch (this.status_pdf) {
+				case 100:
+					await api.publishDoc(this.doc_type, this.doc_id)		
+					break;
+
+				case 102:
+					await api.publishLphp(this.doc_id)
+					this.$emit('publish-refresh', this.doc_id)
+					break;
+			
+				default:
+					break;
+			}
 			await this.getPdf()
 		}
 	},

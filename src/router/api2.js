@@ -103,6 +103,14 @@ class API {
 		return await this.delApi(`/${doc_type}/${doc_id}`)
 	}
 
+	async storeLphp(sbp_id, data) {
+		return await this.postApi(`/sbp/${sbp_id}/lphp`, data)
+	}
+
+	async publishLphp(sbp_id, data) {
+		return await this.putApi(`/sbp/${sbp_id}/lphp/publish`)
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| API for details
