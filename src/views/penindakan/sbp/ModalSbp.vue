@@ -5,9 +5,22 @@
 			title="Data SBP"
 			:state.sync="modal_state"
 			:doc_type="doc_type"
-			:doc_id.sync="doc_id"
+			:doc_id="doc_id"
 			@close-modal="closeModal"
 		>
+			<!-- Action buttons -->
+			<template #action-buttons>
+				<MyModalLphp
+					:state="lphp_state"
+					:doc_type="doc_type"
+					:doc_id="doc_id"
+					:doc_num="data.main.data.no_dok_lengkap"
+					:data.sync="data.dokumen.lphp"
+					@submit-data="refreshData(doc_id)"
+				/>
+			</template>
+
+			<!-- Documents' components -->
 			<template #form-doc>
 				<MyFormSbp 
 					ref="form_sbp"
@@ -37,6 +50,7 @@
 					ref="display_pdf"
 					:doc_type="doc_type" 
 					:doc_id.sync="doc_id"
+					@publish-refresh="refreshData"
 				></MyDisplayPdf>
 			</template>
 		</MyModalDoc>
@@ -50,6 +64,7 @@ import MyDisplaySbp from './DisplaySbp.vue'
 import MyFormDetail from '../../details/Options/FormDetail.vue'
 import MyFormSbp from './FormSbp.vue'
 import MyModalDoc from '../../components/ModalDoc.vue'
+import MyModalLphp from './ModalLphp.vue'
 
 const data_default = {
 	main:{
@@ -91,6 +106,9 @@ const data_default = {
 		type: null,
 		data: null
 	},
+	status: {
+		kode_status: null
+	},
 	dokumen: {
 		lptp: {
 			jabatan_atasan: {
@@ -101,7 +119,7 @@ const data_default = {
 			atasan: {
 				user_id: null
 			}
-		}
+		},
 	}
 }
 
@@ -114,6 +132,7 @@ export default {
 		MyFormDetail,
 		MyFormSbp,
 		MyModalDoc,
+		MyModalLphp,
 	},
 	props: {
 		state: String,
@@ -121,11 +140,23 @@ export default {
 	},
 	data() {
 		return {
+			console,
 			doc_type: 'sbp',
 			doc_id: this.id,
 			data: JSON.parse(JSON.stringify(data_default)),
-			modal_state: this.state
+			modal_state: this.state,
 		}
+	},
+	computed: {
+		lphp_state() {
+			let state = null
+			if (this.data.status.kode_status == 200) {
+				state = 'create'
+			} else if (this.data.status.kode_status == 102) {
+				state = 'edit'
+			}
+			return state
+		},
 	},
 	methods: {
 		async getData() {
@@ -144,11 +175,12 @@ export default {
 		async refreshData(id) {
 			this.doc_id = id != undefined ? id : this.doc_id
 			await this.getData()
+			this.$refs.display_pdf.active_pdf = 'sbp'
 			await this.$refs.display_pdf.getPdf()
 		},
 		closeModal() {
 			this.$emit('close-modal')
-		}
+		},
 	},
 	watch: {
 		modal_state: function(val) {
@@ -160,6 +192,7 @@ export default {
 		if (['edit', 'show'].includes(this.state)) {
 			await this.getData()
 		}
+		console.log('modal sbp - data', JSON.parse(JSON.stringify(this.data)))
 	}
 }
 </script>
