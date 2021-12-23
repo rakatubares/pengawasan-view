@@ -7,6 +7,10 @@
 			:current_tab.sync="tabs.current"
 			@close-modal="closeModal"
 		>
+			<template #action-buttons>
+				<slot name="action-buttons" />
+			</template>
+			
 			<template #tabs>
 				<!-- Uraian -->
 				<CTab :title="tabs.list[0]['title']">
@@ -152,7 +156,6 @@ export default {
 		}
 	},
 	mounted() {
-		console.log('modal doc - mounted', this.doc_id)
 		// Change state on mounted to trigger watcher
 		this.modal_state = this.state
 	}
