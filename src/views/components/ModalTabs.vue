@@ -5,6 +5,10 @@
 		:show.sync="show"
 		@update:show="show == false && closeModal()"
 	>
+		<div class="action-buttons">
+			<slot name="action-buttons"></slot>
+		</div>
+
 		<CTabs 
 			:activeTab="current_tab"
 			@update:activeTab="changeTab($event)"
@@ -135,5 +139,12 @@ export default {
 </script>
 
 <style>
+div.action-buttons {
+	display: flow-root;
+}
 
+div.action-buttons button {
+	float: right;
+	margin: 0 5px;
+}
 </style>
