@@ -117,7 +117,7 @@ class PdfTegah extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100,101].includes(this.data.dokumen.tegah.kode_status)) {
+		if ([100].includes(this.data.dokumen.tegah.kode_status)) {
 			this.watermark()
 		}
 
