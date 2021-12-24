@@ -132,7 +132,7 @@ class PdfBukaSegel extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100,101].includes(this.data.dokumen.bukasegel.kode_status)) {
+		if ([100].includes(this.data.dokumen.bukasegel.kode_status)) {
 			this.watermark()
 		}
 
