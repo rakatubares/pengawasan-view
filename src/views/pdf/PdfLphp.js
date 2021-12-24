@@ -274,7 +274,7 @@ class PdfLphp extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100,101].includes(this.data.dokumen.lphp.kode_status)) {
+		if ([100].includes(this.data.dokumen.lphp.kode_status)) {
 			this.watermark()
 		}
 
