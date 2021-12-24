@@ -126,7 +126,7 @@ class PdfRiksa extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100,101].includes(this.data.dokumen.riksa.kode_status)) {
+		if ([100].includes(this.data.dokumen.riksa.kode_status)) {
 			this.watermark()
 		}
 
