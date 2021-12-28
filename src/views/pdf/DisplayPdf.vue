@@ -48,6 +48,7 @@
 <script>
 import api from '../../router/api2.js'
 import PdfBukaSegel from './PdfBukaSegel.js'
+import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLptp from './PdfLptp.js'
 import PdfRiksa from './PdfRiksa.js'
@@ -82,6 +83,8 @@ export default {
 				show = true
 			} else if ((this.status_pdf == 102) && (this.active_pdf == 'lphp')) {
 				show = true
+			} else if ((this.status_pdf == 103) && (this.active_pdf == 'lp')) {
+				show = true
 			} else {
 				show = false
 			}
@@ -108,6 +111,10 @@ export default {
 				case 'bukasegel':
 					let pdfBukaSegel = new PdfBukaSegel(this.data)
 					this.src_pdf = pdfBukaSegel.generatePdf()
+
+				case 'lp':
+					let pdfLp = new PdfLp(this.data)
+					this.src_pdf = pdfLp.generatePdf()
 					break;
 
 				case 'lphp':
@@ -160,6 +167,11 @@ export default {
 
 				case 102:
 					await api.publishLphp(this.doc_id)
+					this.$emit('publish-refresh', this.doc_id)
+					break;
+
+				case 103:
+					await api.publishLp(this.doc_id)
 					this.$emit('publish-refresh', this.doc_id)
 					break;
 			

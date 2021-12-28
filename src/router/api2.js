@@ -107,8 +107,16 @@ class API {
 		return await this.postApi(`/sbp/${sbp_id}/lphp`, data)
 	}
 
-	async publishLphp(sbp_id, data) {
+	async publishLphp(sbp_id) {
 		return await this.putApi(`/sbp/${sbp_id}/lphp/publish`)
+	}
+
+	async storeLp(sbp_id, data) {
+		return await this.postApi(`/sbp/${sbp_id}/lp`, data)
+	}
+
+	async publishLp(sbp_id) {
+		return await this.putApi(`/sbp/${sbp_id}/lp/publish`)
 	}
 
 	/*

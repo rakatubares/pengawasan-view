@@ -233,7 +233,8 @@ class PdfLptp extends Pdf {
 		this.pdf.text('Kewarganegaraan', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
 		this.pdf.text(warga_negara, this.props.ind.txt2, this.ln)
-		this.ln += this.props.font.height*alamat_orang.length
+		let len_alamat_orang = alamat_orang.length > 0 ? alamat_orang.length : 1
+		this.ln += this.props.font.height*len_alamat_orang
 
 		////// URAIAN BOTTOM //////
 		this.pdf.text('4.', this.props.ind.num, this.ln)

@@ -4,9 +4,9 @@
 			v-if="state == 'create'"
 			color="success"
 			shape="pill"
-			@click="show_modal_lphp=true"
+			@click="show_modal_lp=true"
 		>
-			Buat LPHP	
+			Buat LP
 		</CButton>
 		<CButton
 			v-if="state == 'edit'"
@@ -14,7 +14,7 @@
 			shape="pill"
 			@click="openModal"
 		>
-			Edit LPHP	
+			Edit LP
 		</CButton>
 		<CButton
 			v-if="state == 'edit'"
@@ -22,28 +22,28 @@
 			shape="pill"
 			@click="openModalDelete"
 		>
-			Hapus LPHP	
+			Hapus LP
 		</CButton>
 
-		<!-- Modal LPHP -->
+		<!-- Modal LP -->
 		<CModal
-			class="modal-lphp"
-			title="Data LPHP"
+			class="modal-lp"
+			title="Data LP"
 			size="lg"
-			:show.sync="show_modal_lphp"
+			:show.sync="show_modal_lp"
 		>
 			<CForm>
 				<CRow>
 					<CCol md="12">
 						<div class="form-group">
-							<label class="w-100">Tanggal LPHP</label>
+							<label class="w-100">Tanggal LP</label>
 							<date-picker 
-								v-model="data_lphp.tanggal_dokumen" 
+								v-model="data_lp.tanggal_dokumen" 
 								format="DD-MM-YYYY"
 								value-type="format"
 								type="date"
 								@change="
-									validatorDatetime($event, 'DD-MM-YYYY', 'validasi.tanggal_lphp', 'Tanggal LPHP wajib diisi')
+									validatorDatetime($event, 'DD-MM-YYYY', 'validasi.tanggal_lp', 'Tanggal LP wajib diisi')
 								"
 							>
 								<template v-slot:input="slotProps">
@@ -53,11 +53,11 @@
 										v-bind="slotProps.props" 
 										v-on="slotProps.events"
 										v-bind:class="{
-											'is-valid': validasi.tanggal_lphp.state,
-											'is-invalid': !validasi.tanggal_lphp.state
+											'is-valid': validasi.tanggal_lp.state,
+											'is-invalid': !validasi.tanggal_lp.state
 										}"
 									/>
-									<div class="invalid-feedback pb-1">{{validasi.tanggal_lphp.text}}</div>
+									<div class="invalid-feedback pb-1">{{validasi.tanggal_lp.text}}</div>
 								</template>
 								<i slot="icon-calendar"></i>
 								<i slot="icon-clear"></i>
@@ -67,46 +67,32 @@
 				</CRow>
 				<CRow>
 					<CCol sm="12">
-						<CTextarea
-							label="Analisa hasil penindakan"
-							description="Analisa penentuan hasil penindakan oleh atasan pejabat yang melakukan penindakan"
-							:value.sync="data_lphp.analisa"
+						<CInput
+							label="Pasal"
+							description="Pasal yang diduga terkait pelanggaran"
+							:value.sync="data_lp.pasal"
 						/>
 					</CCol>
 				</CRow>
 				<CRow>
 					<CCol sm="12">
 						<CTextarea
-							label="Catatan"
-							description="Catatan atasan pejabat penyusun LPHP"
-							:value.sync="data_lphp.catatan"
+							label="Modus"
+							description="Uraian modus yang dilakukan terkait dengan pelanggaran"
+							:value.sync="data_lp.modus"
 						/>
 					</CCol>
 				</CRow>
 				<CRow>
 					<CCol md="12">
 						<MySelectPejabat
-							ref="selectPenyusun"
-							:label="{jabatan: 'Jabatan Penyusun', nama: 'Nama Penyusun'}"
+							ref="selectPenerbit"
+							:label="{jabatan: 'Jabatan Penerbit', nama: 'Nama Pejabat'}"
 							:selectable_jabatan="['bd.0503', 'bd.0504']"
 							:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-							:id_pejabat.sync="data_lphp.penyusun.user.user_id"
-							:jabatan.sync="data_lphp.penyusun.jabatan.kode"
-							:plh.sync="data_lphp.penyusun.plh"
-						>
-						</MySelectPejabat>
-					</CCol>
-				</CRow>
-				<CRow>
-					<CCol md="12">
-						<MySelectPejabat
-							ref="selectAtasan"
-							:label="{jabatan: 'Jabatan Atasan', nama: 'Nama Atasan'}"
-							:selectable_jabatan="['bd.05']"
-							:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-							:id_pejabat.sync="data_lphp.atasan.user.user_id"
-							:jabatan.sync="data_lphp.atasan.jabatan.kode"
-							:plh.sync="data_lphp.atasan.plh"
+							:id_pejabat.sync="data_lp.pejabat.user.user_id"
+							:jabatan.sync="data_lp.pejabat.jabatan.kode"
+							:plh.sync="data_lp.pejabat.plh"
 						>
 						</MySelectPejabat>
 					</CCol>
@@ -132,8 +118,8 @@
 		<!-- Modal delete -->
 		<MyModalDelete
 			v-if="modal_delete_props.show"
-			doc_type="lphp"
-			:doc_id="data_lphp.id"
+			doc_type="lp"
+			:doc_id="data_lp.id"
 			@close-modal="closeModalDelete"
 			@delete-data="closeModalDelete"
 		>
@@ -159,30 +145,25 @@ import MyModalDelete from '../../components/ModalDelete.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 
 const custom_validations_default = {
-	tanggal_lphp: {
+	tanggal_lp: {
 		state: false,
-		text: 'Tanggal LPHP wajib diisi'
+		text: 'Tanggal LP wajib diisi'
 	},
 }
 
-const data_lphp_default = {
-	tanggal_lphp: null,
-	analisa: null,
-	catatan: null,
-	penyusun: {
+const data_lp_default = {
+	tanggal_lp: null,
+	pasal: null,
+	modus: null,
+	pejabat: {
 		jabatan: {kode: 'bd.0503'},
 		plh: false,
 		user: {user_id: null}
 	},
-	atasan: {
-		jabatan: {kode: 'bd.05'},
-		plh: false,
-		user: {user_id: null}
-	},	
 }
 
 export default {
-	name: 'ModalLphp',
+	name: 'ModalLp',
 	components: {
 		DatePicker,
 		MyAlert,
@@ -198,10 +179,10 @@ export default {
 	},
 	data() {
 		return {
-			show_modal_lphp: false,
+			show_modal_lp: false,
 			show_modal_delete: false,
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
-			data_lphp: JSON.parse(JSON.stringify(data_lphp_default)),
+			data_lp: JSON.parse(JSON.stringify(data_lp_default)),
 			modal_delete_props: {
 				show: false,
 				text: null
@@ -211,33 +192,32 @@ export default {
 	watch: {
 		data: function(val) {
 			if (val != undefined) {
-				this.data_lphp = val
+				this.data_lp = val
 			} else {
-				this.data_lphp = JSON.parse(JSON.stringify(data_lphp_default))
+				this.data_lp = JSON.parse(JSON.stringify(data_lp_default))
 			}
 			this.validateData()
 		}
 	},
 	methods: {
 		openModal() {
-			this.show_modal_lphp = true
+			this.show_modal_lp = true
 		},
 		closeModal() {
-			this.show_modal_lphp = false
-			this.data_lphp = JSON.parse(JSON.stringify(data_lphp_default))
+			this.show_modal_lp = false
+			this.data_lp = JSON.parse(JSON.stringify(data_lp_default))
 		},
 		async saveData() {
-			console.log('save data - lphp', JSON.parse(JSON.stringify(this.data_lphp)))
 			try {
-				await api.storeLphp(this.doc_id, this.data_lphp)
+				await api.storeLp(this.doc_id, this.data_lp)
 				this.$emit('submit-data', this.doc_id)
-				this.alert('Data LPHP berhasil disimpan')
+				this.alert('Data LP berhasil disimpan')
 			} catch (error) {
-				console.log('form lphp - save data - error', JSON.parse(JSON.stringify(error)))
+				console.log('form lp - save data - error', JSON.parse(JSON.stringify(error)))
 			}
 		},
 		openModalDelete() {
-			let text = "Apakah Anda yakin untuk menghapus data LPHP"
+			let text = "Apakah Anda yakin untuk menghapus data LP"
 				+ " atas " + this.doc_type.bold()
 				+ " nomor " + this.doc_num.bold()
 				+ "?"
@@ -254,9 +234,8 @@ export default {
 			this.$refs.alert.show_alert(text, color, time)
 		},
 		validateData() {
-			this.validatorDatetime(this.data_lphp.tanggal_dokumen, 'DD-MM-YYYY', 'validasi.tanggal_lphp', 'Tanggal LPHP wajib diisi')
-			this.$refs.selectPenyusun.getPetugas(this.data_lphp.penyusun.user.user_id, true)
-			this.$refs.selectAtasan.getPetugas(this.data_lphp.atasan.user.user_id, true)
+			this.validatorDatetime(this.data_lp.tanggal_dokumen, 'DD-MM-YYYY', 'validasi.tanggal_lp', 'Tanggal LP wajib diisi')
+			this.$refs.selectPenerbit.getPetugas(this.data_lp.pejabat.user.user_id, true)
 		},
 		validatorDatetime(val, format, validasiName, text) { 
 			let dt = converters.date(val, format)
@@ -267,17 +246,18 @@ export default {
 	},
 	mounted() {
 		if (this.data != undefined) {
-			this.data_lphp = this.data
+			this.data_lp = this.data
 		} else {
 			this.data_lp = JSON.parse(JSON.stringify(data_lp_default))
 		}
+		console.log('modal lp - data lp mounted', JSON.parse(JSON.stringify(this.data_lp)))
 		this.validateData()
 	}
 }
 </script>
 
 <style>
-.modal-lphp .modal-dialog {
+.modal-lp .modal-dialog {
 	padding-top: 3rem !important
 }
 </style>
