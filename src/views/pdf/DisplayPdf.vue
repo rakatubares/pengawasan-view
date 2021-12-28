@@ -47,6 +47,8 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfBukaSegel from './PdfBukaSegel.js'
+import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLptp from './PdfLptp.js'
 import PdfRiksa from './PdfRiksa.js'
@@ -81,6 +83,8 @@ export default {
 				show = true
 			} else if ((this.status_pdf == 102) && (this.active_pdf == 'lphp')) {
 				show = true
+			} else if ((this.status_pdf == 103) && (this.active_pdf == 'lp')) {
+				show = true
 			} else {
 				show = false
 			}
@@ -103,6 +107,26 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
+				case 'lp':
+					let pdfLp = new PdfLp(this.data)
+					this.src_pdf = pdfLp.generatePdf()
+					break;
+
+				case 'lphp':
+					let pdfLphp = new PdfLphp(this.data)
+					this.src_pdf = pdfLphp.generatePdf()
+					break;
+
+				case 'lptp':
+					let pdfLptp = new PdfLptp(this.data)
+					this.src_pdf = pdfLptp.generatePdf()
+					break;
+
+				case 'riksa':
+					let pdfRiksa = new PdfRiksa(this.data)
+					this.src_pdf = pdfRiksa.generatePdf()
+					break;
+
 				case 'sbp':
 					let pdfSbp = new PdfSbp(this.data)
 					this.src_pdf = pdfSbp.generatePdf()
@@ -116,21 +140,6 @@ export default {
 				case 'tegah':
 					let pdfTegah = new PdfTegah(this.data)
 					this.src_pdf = pdfTegah.generatePdf()
-					break;
-
-				case 'riksa':
-					let pdfRiksa = new PdfRiksa(this.data)
-					this.src_pdf = pdfRiksa.generatePdf()
-					break;
-
-				case 'lptp':
-					let pdfLptp = new PdfLptp(this.data)
-					this.src_pdf = pdfLptp.generatePdf()
-					break;
-
-				case 'lphp':
-					let pdfLphp = new PdfLphp(this.data)
-					this.src_pdf = pdfLphp.generatePdf()
 					break;
 			
 				default:
@@ -153,6 +162,11 @@ export default {
 
 				case 102:
 					await api.publishLphp(this.doc_id)
+					this.$emit('publish-refresh', this.doc_id)
+					break;
+
+				case 103:
+					await api.publishLp(this.doc_id)
 					this.$emit('publish-refresh', this.doc_id)
 					break;
 			

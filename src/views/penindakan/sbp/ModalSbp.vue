@@ -11,11 +11,21 @@
 			<!-- Action buttons -->
 			<template #action-buttons>
 				<MyModalLphp
+					v-if="show_lphp_button"
 					:state="lphp_state"
 					:doc_type="doc_type"
 					:doc_id="doc_id"
 					:doc_num="data.main.data.no_dok_lengkap"
 					:data.sync="data.dokumen.lphp"
+					@submit-data="refreshData(doc_id)"
+				/>
+				<MyModalLp
+					v-if="show_lp_button"
+					:state="lp_state"
+					:doc_type="doc_type"
+					:doc_id="doc_id"
+					:doc_num="data.main.data.no_dok_lengkap"
+					:data.sync="data.dokumen.lp"
 					@submit-data="refreshData(doc_id)"
 				/>
 			</template>
@@ -64,6 +74,7 @@ import MyDisplaySbp from './DisplaySbp.vue'
 import MyFormDetail from '../../details/Options/FormDetail.vue'
 import MyFormSbp from './FormSbp.vue'
 import MyModalDoc from '../../components/ModalDoc.vue'
+import MyModalLp from './ModalLp.vue'
 import MyModalLphp from './ModalLphp.vue'
 
 const data_default = {
@@ -132,6 +143,7 @@ export default {
 		MyFormDetail,
 		MyFormSbp,
 		MyModalDoc,
+		MyModalLp,
 		MyModalLphp,
 	},
 	props: {
@@ -157,6 +169,29 @@ export default {
 			}
 			return state
 		},
+		show_lphp_button() {
+			let show = false
+			if ([200, 102].includes(this.data.status.kode_status)) {
+				show = true
+			}
+			return show
+		},
+		lp_state() {
+			let state = null
+			if (this.data.status.kode_status == 202) {
+				state = 'create'
+			} else if (this.data.status.kode_status == 103) {
+				state = 'edit'
+			}
+			return state
+		},
+		show_lp_button() {
+			let show = false
+			if ([202, 103].includes(this.data.status.kode_status)) {
+				show = true
+			}
+			return show
+		}
 	},
 	methods: {
 		async getData() {
@@ -192,7 +227,6 @@ export default {
 		if (['edit', 'show'].includes(this.state)) {
 			await this.getData()
 		}
-		console.log('modal sbp - data', JSON.parse(JSON.stringify(this.data)))
 	}
 }
 </script>
