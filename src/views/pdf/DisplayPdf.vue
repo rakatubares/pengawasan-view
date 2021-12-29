@@ -112,6 +112,7 @@ export default {
 				case 'bukasegel':
 					let pdfBukaSegel = new PdfBukaSegel(this.data)
 					this.src_pdf = pdfBukaSegel.generatePdf()
+					break;
 
 				case 'lp':
 					let pdfLp = new PdfLp(this.data)
