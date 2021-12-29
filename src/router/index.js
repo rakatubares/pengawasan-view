@@ -11,6 +11,7 @@ const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
 const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
+const PagePengaman = () => import('@/views/penindakan/pengaman/PagePengaman')
 const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
@@ -58,6 +59,11 @@ function configRoutes () {
 					path: 'bukasegel',
 					name: 'BukaSegel',
 					component: PageBukaSegel
+				},
+				{
+					path: 'pengaman',
+					name: 'BA Tanda Pengaman',
+					component: PagePengaman
 				},
 				// {
 				// 	path: 'titip',

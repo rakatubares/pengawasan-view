@@ -36,6 +36,12 @@ export default [
 				to: '/bukasegel',
 				icon: 'cil-file'
 			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'BA Tanda Pengaman',
+				to: '/pengaman',
+				icon: 'cil-file'
+			},
 			// {
 			// 	_name: 'CSidebarNavItem',
 			// 	name: 'Penitipan',

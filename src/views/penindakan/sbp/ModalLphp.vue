@@ -269,7 +269,7 @@ export default {
 		if (this.data != undefined) {
 			this.data_lphp = this.data
 		} else {
-			this.data_lp = JSON.parse(JSON.stringify(data_lp_default))
+			this.data_lp = JSON.parse(JSON.stringify(data_lphp_default))
 		}
 		this.validateData()
 	}

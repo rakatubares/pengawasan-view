@@ -51,6 +51,7 @@ import PdfBukaSegel from './PdfBukaSegel.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLptp from './PdfLptp.js'
+import PdfPengaman from './PdfPengaman.js'
 import PdfRiksa from './PdfRiksa.js'
 import PdfSbp from './PdfSbp.js'
 import PdfSegel from './PdfSegel.js'
@@ -147,6 +148,11 @@ export default {
 					this.src_pdf = pdfTegah.generatePdf()
 					break;
 			
+				case 'pengaman':
+					let pdfPengaman = new PdfPengaman(this.data)
+					this.src_pdf = pdfPengaman.generatePdf()
+					break;
+
 				default:
 					break;
 			}
