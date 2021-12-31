@@ -47,6 +47,7 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfBukaPengaman from './PdfBukaPengaman.js'
 import PdfBukaSegel from './PdfBukaSegel.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
@@ -109,6 +110,11 @@ export default {
 			
 			console.log('display pdf - active pdf', this.active_pdf)
 			switch (this.active_pdf) {
+				case 'bukapengaman':
+					let pdfBukaPengaman = new PdfBukaPengaman(this.data)
+					this.src_pdf = pdfBukaPengaman.generatePdf()
+					break;
+					
 				case 'bukasegel':
 					let pdfBukaSegel = new PdfBukaSegel(this.data)
 					this.src_pdf = pdfBukaSegel.generatePdf()
@@ -148,7 +154,7 @@ export default {
 					let pdfTegah = new PdfTegah(this.data)
 					this.src_pdf = pdfTegah.generatePdf()
 					break;
-			
+
 				case 'pengaman':
 					let pdfPengaman = new PdfPengaman(this.data)
 					this.src_pdf = pdfPengaman.generatePdf()
