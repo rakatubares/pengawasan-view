@@ -18,6 +18,12 @@ export default [
 				to: '/pengaman',
 				icon: 'cil-file'
 			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'BA Pembukaan TP',
+				to: '/bukapengaman',
+				icon: 'cil-file'
+			},
 		]
 	}
 ]
