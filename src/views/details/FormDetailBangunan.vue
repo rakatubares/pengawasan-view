@@ -9,7 +9,7 @@
 							<CTextarea
 								label="Alamat"
 								description="Tempat/lokasi dilakukan penindakan"
-								:value.sync="data.alamat"
+								:value.sync="data_objek.alamat"
 								:is-valid="validatorRequired"
 								invalid-feedback="Alamat wajib diisi"
 							/>
@@ -20,35 +20,19 @@
 							<CInput
 								label="Nomor registrasi"
 								description="Nomor registrasi bangunan/NPPBKC/NPWP/dokumen lainnya yang berkaitan dengan bangunan/tempat lain yang terhadapnya dilakukan penindakan"
-								:value.sync="data.no_reg"
+								:value.sync="data_objek.no_reg"
 							/>
 						</CCol>
 					</CRow>
 					<CRow>
-						<CCol md="6">
-							<CInput
+						<CCol md="12">
+							<MySelectEntitas
+								ref="selectPemilik"
 								label="Nama pemilik/yang menguasai"
 								description="Nama pemilik/yang menguasai tempat/bangunan"
-								:value.sync="data.pemilik"
-								:is-valid="validatorRequired"
-								invalid-feedback="Nama pemilik wajib diisi"
-							/>
-						</CCol>
-					</CRow>
-					<CRow>
-						<CCol md="2">
-							<CInput
-								label="Jenis identitas"
-								description="Jenis Identitas pemilik/yang menguasai"
-								:value.sync="data.jns_identitas"
-							/>
-						</CCol>
-						<CCol md="4">
-							<CInput
-								label="Nomor identitas"
-								description="Nomor Identitas pemilik/yang menguasai"
-								:value.sync="data.no_identitas"
-							/>
+								:id.sync="data_objek.pemilik.id"
+							>
+							</MySelectEntitas>
 						</CCol>
 					</CRow>
 
@@ -73,64 +57,66 @@
 </template>
 
 <script>
-import axios from "axios"
-
-import MyAlert from '../components/AlertSubmit.vue'
+import api from '../../router/api2.js'
 import validators from '../../helpers/validator.js'
+import MyAlert from '../components/AlertSubmit.vue'
+import MySelectEntitas from '../components/SelectEntitas.vue'
 
 const data_default = {
 	alamat: null,
 	no_reg: null,
-	pemilik: null,
-	identitas: null,
+	pemilik: {id: null},
 }
 
 export default {
 	name: 'FormDetailBangunan',
 	components: {
-		MyAlert
+		MyAlert,
+		MySelectEntitas
 	},
 	props: {
-		state: {
-			type: String,
-			default: 'input'
-		},
-		id: Number,
-		doc_type: String,
-		doc_id: Number,
-	},
-	computed: {
-		API_BANGUNAN() { return process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/bangunan' },
+		data: Object
 	},
 	data() {
 		return {
-			data: { ...data_default }
+			state: 'insert',
+			data_objek: JSON.parse(JSON.stringify(data_default))
+		}
+	},
+	watch: {
+		data: {
+			handler: function(val) {
+				this.parseData(val.objek.data)
+			}
 		}
 	},
 	methods: {
-		getData() {
-			if (this.state != 'input') {
-				axios
-					.get(this.API_BANGUNAN)
-					.then(
-						(response) => {
-							this.data = response.data.data
-						}
-					)
-					.catch((error) => console.error(error))
+		async saveData() {
+			if (this.state == 'insert') {
+				try {
+					let response = await api.insertDetail(this.data.main.type, this.data.main.data.id, 'bangunan', this.data_objek)
+					this.parseData(response.data.data)
+					this.state = 'edit'
+					this.$emit('submit-data')
+					this.alert('Data bangunan berhasil disimpan')
+				} catch (error) {
+					console.log(error)
+				}
+			} else {
+				api.updateDetail(this.data.main.type, this.data.main.data.id, 'bangunan', this.data_objek.id, this.data_objek)
+				this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
+				this.$emit('submit-data')
+				this.alert('Data bangunan berhasil diubah')
 			}
 		},
-		saveData() {
-			let submit_url = this.API_BANGUNAN
-			axios
-				.post(submit_url, this.data)
-				.then(
-					(response) => {
-						this.alert('Penindakan bangunan berhasil disimpan')
-						this.$emit('input-data')
-					}
-				)
-				.catch((error) => {console.error(error)})
+		parseData(objek) {
+			if (objek.pemilik == null) {
+				objek.pemilik = {
+					id: null
+				}
+			}
+			this.data_objek = objek
+			this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
@@ -138,7 +124,18 @@ export default {
 		validatorRequired(val) { return validators.required(val) },
 	},
 	mounted() {
-		this.getData()
+		if (this.data.objek.type == 'bangunan') {
+			if (this.data.objek.data != null) {
+				this.parseData(this.data.objek.data)
+				this.state = 'edit'
+			} else {
+				this.data_objek = JSON.parse(JSON.stringify(data_default))
+				this.state = 'insert'
+			}	
+		} else {
+			this.data_objek = JSON.parse(JSON.stringify(data_default))
+			this.state = 'insert'
+		}
 	}
 }
 </script>

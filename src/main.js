@@ -1,6 +1,7 @@
 import '@babel/polyfill'
 import 'core-js/stable'
 import Vue from 'vue'
+import vuetify from '@/plugins/vuetify'
 import App from './App'
 import router from './router'
 import CoreuiVue from '@coreui/vue'
@@ -20,6 +21,7 @@ new Vue({
   router,
   store,
   icons,
+  vuetify,
 //   icons: { cilPlus, cilTrash },
   template: '<App/>',
   components: {

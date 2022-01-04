@@ -8,7 +8,7 @@
 						<CCol md="4">
 							<CInput
 								label="Jumlah kemasan"
-								:value.sync="data.jumlah_kemasan"
+								:value.sync="data_objek.jumlah_kemasan"
 								:is-valid="validatorInteger"
 								invalid-feedback="Jumlah kemasan wajib diisi"
 							/>
@@ -16,7 +16,7 @@
 						<CCol md="2">
 							<CInput
 								label="Satuan kemasan"
-								:value.sync="data.satuan_kemasan"
+								:value.sync="data_objek.satuan_kemasan"
 								:is-valid="validatorRequired"
 								invalid-feedback="Satuan kemasan wajib diisi"
 							/>
@@ -27,21 +27,21 @@
 							<CInput
 								label="Jenis dokumen"
 								description="Jenis dokumen yang menyertai barang"
-								:value.sync="data.dokumen.jns_dok"
+								:value.sync="data_objek.dokumen.jns_dok"
 							/>
 						</CCol>
 						<CCol md="4">
 							<CInput
 								label="Nomor dokumen"
 								description="Nomor dokumen yang menyertai barang"
-								:value.sync="data.dokumen.no_dok"
+								:value.sync="data_objek.dokumen.no_dok"
 							/>
 						</CCol>
 						<CCol md="2">
 							<div class="form-group">
 								<label class="w-100">Tanggal dokumen</label>
 								<date-picker 
-									v-model="data.dokumen.tgl_dok" 
+									v-model="data_objek.dokumen.tgl_dok" 
 									format="DD-MM-YYYY" 
 									value-type="format"
 									type="date"
@@ -54,7 +54,7 @@
 							<MySelectEntitas
 								ref="selectPemilik"
 								label="Nama pemilik/importir/eksportir/kuasa"
-								:id.sync="data.pemilik.id"
+								:id.sync="data_objek.pemilik.id"
 							>
 							</MySelectEntitas>
 						</CCol>
@@ -75,6 +75,16 @@
 			</CCol>
 		</CRow>
 
+		<MyTableItemBarang
+			v-if="state == 'edit'"
+			:doc_type="data.main.type"
+			:doc_id="data.main.data.id"
+			:detail.sync="data_objek"
+			state="insert"
+			@submit-data="$emit('submit-data')"
+		>
+		</MyTableItemBarang>
+
 		<!-- Alert -->
 		<MyAlert ref="alert"></MyAlert>
 	</div>
@@ -82,14 +92,14 @@
 
 <script>
 import _ from 'lodash'
-import axios from "axios"
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
-import MyAlert from '../components/AlertSubmit.vue'
-import MySelectEntitas from '../components/SelectEntitas.vue'
-import api from '../../router/api.js'
-import validators from '../../helpers/validator.js'
+import api from '../../../router/api2.js'
+import validators from '../../../helpers/validator.js'
+import MyAlert from '../../components/AlertSubmit.vue'
+import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MyTableItemBarang from './TableItemBarang.vue'
 
 const data_default = {
 	jumlah_kemasan: null,
@@ -107,50 +117,54 @@ export default {
 	components: {
 		DatePicker,
 		MyAlert,
-		MySelectEntitas
+		MySelectEntitas,
+		MyTableItemBarang,
 	},
 	props: {
-		state: {
-			type: String,
-			default: 'input'
-		},
-		id: Number,
-		doc_type: String,
-		doc_id: Number,
+		data: Object
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(data_default))
+			state: 'insert',
+			data_objek: JSON.parse(JSON.stringify(data_default))
+		}
+	},
+	watch: {
+		data: {
+			handler: function(val) {
+				this.parseData(val.objek.data)
+			}
 		}
 	},
 	methods: {
-		getData() {
-			if (this.state != 'input') {
-				axios
-					.get(api.upsertBarang(this.doc_type, this.doc_id))
-					.then(
-						(response) => {
-							this.data = response.data.data
-							if (response.data.data.dokumen == null) {
-								this.data.dokumen = JSON.parse(JSON.stringify(data_default.dokumen))
-							}
-							this.$refs.selectPemilik.getEntitas(this.data.pemilik.id, true)
-						}
-					)
-					.catch((error) => console.log(error))
+		async saveData() {
+			if (this.state == 'insert') {
+				try {
+					let response = await api.insertDetail(this.data.main.type, this.data.main.data.id, 'barang', this.data_objek)
+					this.parseData(response.data.data)
+					this.state = 'edit'
+					this.$emit('submit-data')
+					this.alert('Data barang berhasil disimpan')
+				} catch (error) {
+					console.log(error)
+				}
+			} else {
+				api.updateDetail(this.data.main.type, this.data.main.data.id, 'barang', this.data_objek.id, this.data_objek)
+				this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
+				this.$emit('submit-data')
+				this.alert('Data barang berhasil diubah')
 			}
 		},
-		saveData() {
-			let submit_url = api.upsertBarang(this.doc_type, this.doc_id)
-			axios
-				.post(submit_url, this.data)
-				.then(
-					(response) => {
-						this.alert('Penindakan barang berhasil disimpan')
-						this.$emit('input-data')
-					}
-				)
-				.catch((error) => {console.error(error)})
+		parseData(objek) {
+			if (objek.dokumen == null) {
+				objek.dokumen = {
+					jns_dok: null,
+					no_dok: null,
+					tgl_dok: null
+				}
+			}
+			this.data_objek = objek
+			this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
@@ -159,7 +173,18 @@ export default {
 		validatorInteger(val) { return validators.integer(val) },
 	},
 	mounted() {
-		this.getData()
+		if (this.data.objek.type == 'barang') {
+			if (this.data.objek.data != null) {
+				this.parseData(this.data.objek.data)
+				this.state = 'edit'
+			} else {
+				this.data_objek = JSON.parse(JSON.stringify(data_default))
+				this.state = 'insert'
+			}	
+		} else {
+			this.data_objek = JSON.parse(JSON.stringify(data_default))
+			this.state = 'insert'
+		}
 	}
 }
 </script>

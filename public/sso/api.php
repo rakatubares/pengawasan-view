@@ -13,17 +13,17 @@ $broker = new \Jasny\SSO\Broker(
 );
 
 if (empty($_REQUEST['command']) || !method_exists($broker, $_REQUEST['command'])) {
-    header("Content-Type: application/json");
-    header("HTTP/1.1 400 Bad Request");
-    echo json_encode(['error' => 'Command not specified']);
-    return;
-}
-
-try {
-    $result = $broker->{$_REQUEST['command']}();
-} catch (Exception $e) {
-    $status = $e->getCode();
-    $result = ['error' => $e->getMessage()];
+	header("Content-Type: application/json");
+	header("HTTP/1.1 400 Bad Request");
+	echo json_encode(['error' => 'Command not specified']);
+	return;
+} else {
+	try {
+		$result = $broker->{$_REQUEST['command']}();
+	} catch (Exception $e) {
+		$status = $e->getCode();
+		$result = ['error' => $e->getMessage()];
+	}
 }
 
 // JSONP

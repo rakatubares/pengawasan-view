@@ -20,7 +20,7 @@
 			>
 				<template #status="{item}">
 					<td>
-						<CBadge :color="getBadge(item.status.kode_status)">{{item.status.short_status}}</CBadge>
+						<CBadge :color="item.status.color">{{item.status.short_status}}</CBadge>
 					</td>
 				</template>
 				
@@ -98,6 +98,8 @@ export default {
 			return status === 100 ? 'warning'
 				: status === 101 ? 'warning'
 				: status === 200 ? 'success'
+				: status === 210 ? 'warning'
+				: status === 211 ? 'success'
 				: status === 300 ? 'danger' 
 				: 'primary'
 		},
@@ -112,9 +114,9 @@ export default {
 				}
 			} else if (this.state == 'list') {
 				if ((type == 'edit') || (type == 'delete')) {
-					btn = [100, 101].includes(item.status.kode_status)
+					btn = [100].includes(item.status.kode_status)
 				} else if (type == 'show') {
-					btn = [200].includes(item.status.kode_status)
+					btn = [101, 102, 200, 201, 202].includes(item.status.kode_status)
 				} else {
 					btn = false
 				}

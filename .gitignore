@@ -8,6 +8,9 @@ package-lock.json
 selenium-debug.log
 chromedriver.log
 
+# config files
+public/sso/config*.php
+
 # local env files
 .env.local
 .env.*.local
