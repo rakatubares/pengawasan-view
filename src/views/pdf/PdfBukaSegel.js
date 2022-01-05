@@ -27,7 +27,8 @@ class PdfBukaSegel extends Pdf {
 		super(props);
 		this.jenis_dok = 'BERITA ACARA PEMBUKAAN SEGEL'
 		this.data = data
-		this.prepareDate(this.data.dokumen.bukasegel.tanggal_dokumen, this.data.dokumen.bukasegel.sprint.tanggal_sprint)
+		this.prepareDocDate(this.data.dokumen.bukasegel.tanggal_dokumen)
+		this.prepareSprintDate(this.data.dokumen.bukasegel.sprint.tanggal_sprint)
 	}
 
 	generatePdf() {
