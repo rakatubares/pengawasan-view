@@ -33,7 +33,8 @@ class PdfLphp extends Pdf {
 		super(props);
 		this.jenis_dok = 'LEMBAR PENENTUAN HASIL PENINDAKAN'
 		this.data = data
-		this.prepareDate()
+		this.prepareDocDate()
+		this.prepareSprintDate()
 	}
 
 	generatePdf() {

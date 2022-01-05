@@ -10,15 +10,18 @@ class Pdf {
 		this.ln = 50
 	}
 
-	prepareDate(tgl_dok=this.data.penindakan.tanggal_penindakan, tgl_sprint=this.data.penindakan.sprint.tanggal_sprint) {
+	prepareDocDate(tgl_dok=this.data.penindakan.tanggal_penindakan) {
 		this.tgl_dok = converters.date(tgl_dok, 'DD-MM-YYYY')
-		this.tgl_sprint = converters.date(tgl_sprint, 'DD-MM-YYYY')
 		this.full_tgl_dok = this.tgl_dok != null ? converters.fullDate(this.tgl_dok) : ''
-		this.full_tgl_sprint = converters.fullDate(this.tgl_sprint)
 		this.hr = this.tgl_dok != null ? converters.weekDay(this.tgl_dok) : ''
 		this.tgl = this.tgl_dok != null ? this.tgl_dok.getDate() : ''
 		this.bln = this.tgl_dok != null ? converters.monthName(this.tgl_dok) : ''
 		this.thn = this.tgl_dok != null ? this.tgl_dok.getFullYear() : ''
+	}
+
+	prepareSprintDate(tgl_sprint=this.data.penindakan.sprint.tanggal_sprint) {
+		this.tgl_sprint = converters.date(tgl_sprint, 'DD-MM-YYYY')
+		this.full_tgl_sprint = converters.fullDate(this.tgl_sprint)
 	}
 
 	/**

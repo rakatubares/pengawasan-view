@@ -27,7 +27,8 @@ class PdfSegel extends Pdf {
 		super(props);
 		this.jenis_dok = 'BERITA ACARA PENYEGELAN'
 		this.data = data
-		this.prepareDate()
+		this.prepareDocDate()
+		this.prepareSprintDate()
 	}
 
 	generatePdf() {

@@ -27,7 +27,8 @@ class PdfTegah extends Pdf {
 		super(props);
 		this.jenis_dok = 'BERITA ACARA PENEGAHAN'
 		this.data = data
-		this.prepareDate()
+		this.prepareDocDate()
+		this.prepareSprintDate()
 	}
 
 	generatePdf() {
