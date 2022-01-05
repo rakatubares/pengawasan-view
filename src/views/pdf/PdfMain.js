@@ -10,15 +10,18 @@ class Pdf {
 		this.ln = 50
 	}
 
-	prepareDate(tgl_dok=this.data.penindakan.tanggal_penindakan, tgl_sprint=this.data.penindakan.sprint.tanggal_sprint) {
+	prepareDocDate(tgl_dok=this.data.penindakan.tanggal_penindakan) {
 		this.tgl_dok = converters.date(tgl_dok, 'DD-MM-YYYY')
-		this.tgl_sprint = converters.date(tgl_sprint, 'DD-MM-YYYY')
 		this.full_tgl_dok = this.tgl_dok != null ? converters.fullDate(this.tgl_dok) : ''
-		this.full_tgl_sprint = converters.fullDate(this.tgl_sprint)
 		this.hr = this.tgl_dok != null ? converters.weekDay(this.tgl_dok) : ''
 		this.tgl = this.tgl_dok != null ? this.tgl_dok.getDate() : ''
 		this.bln = this.tgl_dok != null ? converters.monthName(this.tgl_dok) : ''
 		this.thn = this.tgl_dok != null ? this.tgl_dok.getFullYear() : ''
+	}
+
+	prepareSprintDate(tgl_sprint=this.data.penindakan.sprint.tanggal_sprint) {
+		this.tgl_sprint = converters.date(tgl_sprint, 'DD-MM-YYYY')
+		this.full_tgl_sprint = converters.fullDate(this.tgl_sprint)
 	}
 
 	/**
@@ -170,8 +173,10 @@ class Pdf {
 					: 'LIHAT LAMPIRAN'
 				: ''
 			: ''
-		this.pdf.text(barang, this.props.ind.txt, this.ln)
-		this.ln += this.props.font.height
+		let txt_barang = converters.array_text(barang, 65)
+		let len_barang = txt_barang.length > 0 ? txt_barang.length : 1
+		this.pdf.text(txt_barang, this.props.ind.txt, this.ln)
+		this.ln += this.props.font.height*len_barang
 	
 		this.pdf.text('Jenis / Nomor dan Tgl Dokumen', this.props.ind.dtl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
