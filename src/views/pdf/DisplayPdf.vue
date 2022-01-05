@@ -47,6 +47,7 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfBast from './PdfBast.js'
 import PdfBukaPengaman from './PdfBukaPengaman.js'
 import PdfBukaSegel from './PdfBukaSegel.js'
 import PdfLp from './PdfLp.js'
@@ -160,6 +161,11 @@ export default {
 					this.src_pdf = pdfPengaman.generatePdf()
 					break;
 
+				case 'bast':
+					let pdfBast = new PdfBast(this.data)
+					this.src_pdf = pdfBast.generatePdf()
+					break;
+			
 				default:
 					break;
 			}

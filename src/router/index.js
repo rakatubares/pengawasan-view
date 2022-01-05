@@ -10,6 +10,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
+const PageBast = () => import('@/views/penindakan/bast/PageBast')
 const PageBukaPengaman = () => import('@/views/penindakan/bukapengaman/PageBukaPengaman')
 const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
 const PagePengaman = () => import('@/views/penindakan/pengaman/PagePengaman')
@@ -71,6 +72,11 @@ function configRoutes () {
 					name: 'BA Pembukaan Tanda Pengaman',
 					component: PageBukaPengaman
 				},
+				{
+					path: 'bast',
+					name: 'BAST',
+					component: PageBast
+				}
 				// {
 				// 	path: 'titip',
 				// 	name: 'Penitipan',

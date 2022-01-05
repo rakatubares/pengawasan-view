@@ -48,6 +48,12 @@ export default [
 				to: '/bukapengaman',
 				icon: 'cil-file'
 			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'BAST',
+				to: '/bast',
+				icon: 'cil-file'
+			},
 			// {
 			// 	_name: 'CSidebarNavItem',
 			// 	name: 'Penitipan',
