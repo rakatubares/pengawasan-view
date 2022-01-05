@@ -10,7 +10,7 @@
 						dense
 						:items.sync="items"
 						:search-input.sync="search"
-						:disabled="byUser == true"
+						:disabled="currentUser == true"
 						item-text="name"
 						item-value="user_id"
 						@change="changeValue"
@@ -45,11 +45,9 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { mapState } from 'vuex'
 
-import api from '../../router/api.js'
-import store from '../../store.js'
+import api from '../../router/api2.js'
 
 const default_petugas = {
 	user_id: null,
@@ -62,10 +60,11 @@ export default {
 	props: {
 		label: String,
 		description: String,
-		byUser: {
+		currentUser: {
 			type: Boolean,
 			default: false
-		}
+		},
+		role: String
 	},
 	computed: {
 		...mapState(['userInfo'])
@@ -81,43 +80,35 @@ export default {
 	watch: {
 		async search (val) {
 			if (val != null) {
-				let response = await store.getters.sso.getUsersByRole('p2vue.penindakan', val)
-				this.items = response.data.data	
+				let roles = {roles: [this.role]}
+				this.items = await api.getUserByRole(roles)
 			}
 		}
 	},
 	methods: {
-		changeValue(id) {
-			this.getPetugas(id)
+		changeValue(id, mounted=false) {
+			this.getPetugas(id, mounted)
 			this.$emit('update:id', id)
 		},
-		getPetugas(id, mounted=false) {
+		async getPetugas(id, mounted=false) {
 			if (id != null) {
-				store.getters.sso.getUserById(id)
-					.then(
-						(response) => {
-							this.petugas = response.data.data[0]
-							if (mounted = true) {
-								this.items = response.data.data
-								this.value = this.items[0]
-							}
-							this.saveCache()
-						}
-					)
+				this.petugas = await api.getUserById(id)
+				if (mounted == true) {
+					this.items = [this.petugas]
+					this.value = this.items[0]
+				}
+				this.saveCache()
 			} else {
 				this.petugas = JSON.parse(JSON.stringify(default_petugas))
 			}
 		},
 		saveCache() {
-			axios.post(api.user(), this.petugas)
+			api.saveUser(this.petugas)
 		},
 	},
 	mounted() {
-		if (this.byUser == true) {
-			let user = store.getters.sso.getUserInfo()
-			console.log('select petugas 1', JSON.parse(JSON.stringify(user)))
-			console.log('select petugas 2', JSON.parse(JSON.stringify(this.userInfo)))
-			this.changeValue(this.userInfo.user_id)
+		if (this.currentUser == true) {
+			this.changeValue(this.userInfo.user_id, true)
 		}
 	}
 }

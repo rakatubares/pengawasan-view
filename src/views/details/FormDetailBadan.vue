@@ -7,9 +7,9 @@
 					<CRow>
 						<CCol md="12">
 							<MySelectEntitas
-								ref="selectPilot"
-								label="Nama nahkoda/pengemudi/pilot"
-								:id.sync="data.entitas.id"
+								ref="selectOrang"
+								label="Nama orang yang ditindak"
+								:id.sync="orang_id"
 								:showTanggalLahir="true"
 								:showWargaNegara="true"
 								:showAlamat="true"
@@ -45,12 +45,8 @@ import 'vue2-datepicker/index.css'
 
 import MyAlert from '../components/AlertSubmit.vue'
 import MySelectEntitas from '../components/SelectEntitas.vue'
-import api from '../../router/api.js'
+import api from '../../router/api2.js'
 import validators from '../../helpers/validator.js'
-
-const data_default = {
-	entitas: {id: null}
-}
 
 export default {
 	name: 'FormDetailBadan',
@@ -60,41 +56,33 @@ export default {
 		MySelectEntitas
 	},
 	props: {
-		state: {
-			type: String,
-			default: 'input'
-		},
-		id: Number,
-		doc_type: String,
-		doc_id: Number,
+		data: Object
 	},
 	data() {
 		return {
-			data: { ...data_default }
+			state: 'insert',
+			orang_id: null
+		}
+	},
+	watch: {
+		data: {
+			handler: function (val) {
+				this.parseData(val.objek.data)
+			}
 		}
 	},
 	methods: {
-		getData() {
-			if (this.state != 'input') {
-				axios
-					.get(api.getBadanById(this.doc_type, this.doc_id))
-					.then(
-						(response) => {
-							this.data = response.data.data
-						}
-					)
-			}
+		async saveData() {
+			let data = {orang_id: this.orang_id}
+			await api.insertDetail(this.data.main.type, this.data.main.data.id, 'orang', data)
+			this.$emit('submit-data')
+			this.alert('Data orang berhasil disimpan')
 		},
-		saveData() {
-			let submit_url = api.getBadanById(this.doc_type, this.doc_id)
-			axios
-				.post(submit_url, this.data)
-				.then(
-					(response) => {
-						this.alert('Penindakan badan berhasil disimpan')
-						this.$emit('input-data')
-					}
-				)
+		parseData(objek) {
+			if (objek == null) {
+				this.orang_id = null
+			}
+			this.$refs.selectOrang.getEntitas(this.orang_id, true)
 		},
 		alert(text) {
 			this.$refs.alert.show_alert(text)
@@ -102,7 +90,19 @@ export default {
 		validatorRequired(val) { return validators.required(val) },
 	},
 	mounted() {
-		this.getData()
+		if (this.data.objek.type == 'orang') {
+			if (this.data.objek.data != null) {
+				this.orang_id = this.data.objek.data.id
+				this.parseData(this.orang_id)
+				this.state = 'edit'
+			} else {
+				this.orang_id = null
+				this.state = 'insert'
+			}
+		} else {
+			this.orang_id = null
+			this.state = 'insert'
+		}
 	}
 }
 </script>

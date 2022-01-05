@@ -128,7 +128,7 @@ export default {
 					if (submit_method == 'post') {
 						this.$emit('update:id', response.data.data.id)
 					}
-					this.$emit('save-data')
+					this.$emit('submit-data')
 					this.alert('Data item barang berhasil disimpan')
 				})
 				.catch((error) => (console.error(error)))

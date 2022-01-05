@@ -5,13 +5,15 @@
 		:show.sync="show"
 		@update:show="show == false && closeModal()"
 	>
+		<div class="action-buttons">
+			<slot name="action-buttons"></slot>
+		</div>
+
 		<CTabs 
 			:activeTab="current_tab"
 			@update:activeTab="changeTab($event)"
 		>
-			<slot name="tab-header"></slot>
-			<slot name="tab-detail"></slot>
-			<slot name="tab-form"></slot>
+			<slot name="tabs"></slot>
 		</CTabs>
 
 		<template #footer>
@@ -137,5 +139,12 @@ export default {
 </script>
 
 <style>
+div.action-buttons {
+	display: flow-root;
+}
 
+div.action-buttons button {
+	float: right;
+	margin: 0 5px;
+}
 </style>

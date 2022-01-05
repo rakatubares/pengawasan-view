@@ -65,6 +65,7 @@ router.beforeEach(async (to, from, next) => {
 			cookies = Cookie.parse(document.cookie)
 			token = cookies[token_name]
 		} else {
+			// Store user info
 			Store.getters.sso.getUserInfo()
 				.then((e) => {
 					if (!e.data) {
@@ -74,6 +75,9 @@ router.beforeEach(async (to, from, next) => {
 						Store.commit('set', ['userInfo', e.data])
 					}
 				})
+
+			// Store token
+			Store.commit('set', ['token', token])
 		}
 	} else {
 		console.log('DEVELOPMENT - NO SSO')

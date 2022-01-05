@@ -75,64 +75,19 @@
 						&nbsp;{{disp_no_reg_polisi}}
 					</CCol>
 				</CRow>
-
-				<!-- Button edit delete -->
-				<CRow 
-					v-if="(state==='insert') || (state==='edit')"
-					class="mt-2 ml-1"
-				>
-					<CButton 
-						class="mx-1" 
-						size="sm" 
-						color="success"
-						@click="editData"
-					>
-						<CIcon name="cil-pencil"/>&nbsp; Edit
-					</CButton>
-					<CButton 
-						class="mx-1" 
-						size="sm" 
-						color="danger"
-						@click="confirmDeleteData"
-					>
-						<CIcon name="cil-trash"/>&nbsp; Hapus
-					</CButton>
-				</CRow>
 			</CCol>
 		</CRow>
-
-		<!-- Modal konfirmasi delete SBP -->
-		<MyModalDelete
-			v-if="modal_delete_props.show"
-			:url.sync="modal_delete_props.url"
-			@close-modal="closeModalDelete"
-			@delete-data="deleteData"
-		>
-			<template #text>
-				<span v-html="modal_delete_props.text"></span>
-			</template>
-		</MyModalDelete>
 	</div>
 </template>
 
 <script>
-import axios from "axios"
-
-import MyModalDelete from '../components/ModalDelete.vue'
-import api from '../../router/api.js'
-
 export default {
 	name: 'DisplaySarkut',
-	components: {
-		MyModalDelete
-	},
 	props: {
-		state: {
-			type: String,
-			default: 'insert'
-		},
-		doc_type: String,
-		doc_id: Number,
+		doc: {
+			type: Object,
+			default: null
+		}
 	},
 	computed: {
 		disp_nama_sarkut() {
@@ -162,58 +117,9 @@ export default {
 	},
 	data() {
 		return {
-			data: {
-				id: null,
-				doc_id: null,
-				nama_sarkut: null,
-				jenis_sarkut: null,
-				no_flight_trayek: null,
-				kapasitas: null,
-				satuan_kapasitas: null,
-				pilot: {nama: null},
-				bendera: null,
-				no_reg_polisi: null,
-			},
-			modal_delete_props: {
-				show: false,
-				url: null,
-				text: null
-			}
+			data: this.doc.objek.data
 		}
 	},
-	methods: {
-		getData() {
-			axios
-				.get(api.getSarkutById(this.doc_type, this.doc_id))
-				.then(
-					(response) => {
-						this.data = response.data.data
-					}
-				)
-		},
-		editData() {
-			this.$emit('edit-data')
-		},
-		confirmDeleteData() {
-			let text = "Apakah Anda yakin untuk menghapus data <b>penindakan sarana pengangkut</b>?" 
-
-			this.modal_delete_props.url = this.API_SARKUT
-			this.modal_delete_props.text = text
-			this.modal_delete_props.show = true
-		},
-		closeModalDelete() {
-			this.modal_delete_props.url = null
-			this.modal_delete_props.text = null
-			this.modal_delete_props.show = false
-		},
-		deleteData() {
-			this.closeModalDelete()
-			this.$emit('delete-data')
-		}
-	},
-	mounted() {
-		this.getData()
-	}
 }
 </script>
 
