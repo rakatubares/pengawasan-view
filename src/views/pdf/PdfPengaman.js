@@ -32,7 +32,8 @@ class PdfPengaman extends Pdf {
 		super(props);
 		this.jenis_dok = 'BERITA ACARA PELEKATAN TANDA PENGAMAN'
 		this.data = data
-		this.prepareDate()
+		this.prepareDocDate()
+		this.prepareSprintDate()
 	}
 
 	generatePdf() {
