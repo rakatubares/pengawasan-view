@@ -28,7 +28,8 @@ class PdfSbp extends Pdf {
 		super(props);
 		this.jenis_dok = 'SURAT BUKTI PENINDAKAN'
 		this.data = data
-		this.prepareDate()
+		this.prepareDocDate()
+		this.prepareSprintDate()
 	}
 
 	generatePdf() {

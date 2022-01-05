@@ -33,7 +33,8 @@ class PdfLptp extends Pdf {
 		super(props);
 		this.jenis_dok = 'LAPORAN PELAKSANAAN TUGAS PENINDAKAN'
 		this.data = data
-		this.prepareDate()
+		this.prepareDocDate()
+		this.prepareSprintDate()
 	}
 
 	generatePdf() {

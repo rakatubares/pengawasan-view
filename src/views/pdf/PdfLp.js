@@ -30,7 +30,8 @@ class PdfLp extends Pdf {
 		super(props);
 		this.jenis_dok = 'LAPORAN PELANGGARAN'
 		this.data = data
-		this.prepareDate()
+		this.prepareDocDate()
+		this.prepareSprintDate()
 	}
 
 	generatePdf() {
