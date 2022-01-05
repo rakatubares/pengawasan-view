@@ -6,20 +6,20 @@
 				<MyTableData
 					state="list"
 					:fields="fields"
-					:items="list_doc"
+					:items="list_table"
 					:editData="editDoc"
 					:deleteData="deleteDoc"
 					:showData="showDoc"
 				>
 					<template #header>
-						<CIcon name="cil-grid"/>Data BAST
+						<CIcon name="cil-grid"/>Daftar BAST
 						<div class="card-header-actions">
 							<CButton 
 								color="primary" 
 								class="mr-1"
 								@click="createNewDoc()"
 							>
-								+ Tambah BAST
+								+ Buat Baru
 							</CButton>
 						</div>
 					</template>
@@ -28,7 +28,7 @@
 		</CRow>
 
 		<!-- Modal data -->
-		<MyModalTabs
+		<!-- <MyModalTabs
 			ref="modal_tabs"
 			title="Input Data BAST"
 			v-if="modal_props.show"
@@ -68,10 +68,17 @@
 					</MyDisplayDetail>
 				</CTab>
 			</template>
-		</MyModalTabs>
+		</MyModalTabs> -->
+		<MyModalBast
+			v-if="modal_props.show"
+			:state="modal_props.state"
+			:id.sync="modal_props.doc_id"
+			@close-modal="closeModal"
+		>
+		</MyModalBast>
 
 		<!-- Modal konfirmasi delete SBP -->
-		<MyModalDelete
+		<!-- <MyModalDelete
 			v-if="modal_delete_props.show"
 			:url.sync="modal_delete_props.url"
 			@close-modal="closeModalDelete"
@@ -80,18 +87,20 @@
 			<template #text>
 				<span v-html="modal_delete_props.text"></span>
 			</template>
-		</MyModalDelete>
+		</MyModalDelete> -->
 	</div>
 </template>
 
 <script>
-import axios from "axios"
+// import axios from "axios"
 
-import MyDisplayBast from '../bast/DisplayBast.vue'
-import MyDisplayDetail from '../../details/DisplayDetail.vue'
-import MyFormBast from '../bast/FormBast.vue'
-import MyModalDelete from '../../components/ModalDelete.vue'
-import MyModalTabs from '../../components/ModalTabs.vue'
+import api from '../../../router/api2.js'
+// import MyDisplayBast from '../bast/DisplayBast.vue'
+// import MyDisplayDetail from '../../details/DisplayDetail.vue'
+// import MyFormBast from '../bast/FormBast.vue'
+// import MyModalDelete from '../../components/ModalDelete.vue'
+// import MyModalTabs from '../../components/ModalTabs.vue'
+import MyModalBast from './ModalBast.vue'
 import MyTableData from '../../components/TableData.vue'
 
 const API = process.env.VUE_APP_BASEAPI
@@ -100,15 +109,15 @@ const tabs_default = {
 	current: 0,
 	list: [
 		{
-			title: 'Header',
+			title: 'Uraian',
 			visibility: true
 		}, 
 		{
-			title: 'Detail',
+			title: 'Objek',
 			visibility: true
 		}, 
 		{
-			title: 'Form BAST',
+			title: 'Print',
 			visibility: false
 		}
 	]
@@ -117,107 +126,96 @@ const tabs_default = {
 export default {
 	name: 'PageBast',
 	components: {
-		MyDisplayBast,
-		MyDisplayDetail,
-		MyFormBast,
-		MyModalDelete,
-		MyModalTabs,
+		// MyDisplayBast,
+		// MyDisplayDetail,
+		// MyFormBast,
+		// MyModalDelete,
+		// MyModalTabs,
+		MyModalBast,
 		MyTableData,
 	},
 	data() {
 		return {
 			fields: [
 				{ key: 'no_dok_lengkap', label: 'No BAST' },
-				{ key: 'tgl_dok', label: 'Tgl BAST' },
-				{ key: 'nama_penerima', label: 'Penerima' },
-				{ key: 'pejabat', label: 'Petugas' },
+				{ key: 'tanggal_dokumen', label: 'Tgl BAST' },
+				{ key: 'yang_menerima', label: 'Penerima' },
+				{ key: 'yang_menyerahkan', label: 'Yang Menyerahkan' },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
 			],
-			list_doc: [],
+			list_table: [],
 			doc_type: 'bast',
 			modal_props: {
 				show: false,
-				state: 'insert',
-				tabs: JSON.parse(JSON.stringify(tabs_default)),
-				doc_id: null,
-				header_form: false,
-				header_display: false
+				state: null,
+				doc_id: null
 			},
-			modal_delete_props: {
-				show: false,
-				url: null,
-				text: null
-			}
+			// modal_props: {
+			// 	show: false,
+			// 	state: 'insert',
+			// 	tabs: JSON.parse(JSON.stringify(tabs_default)),
+			// 	doc_id: null,
+			// 	header_form: false,
+			// 	header_display: false
+			// },
+			// modal_delete_props: {
+			// 	show: false,
+			// 	url: null,
+			// 	text: null
+			// }
 		}
 	},
 	methods: {
-		getData() {
-			axios
-				.get(API + '/bast')
-				.then(
-					(response) => {
-						this.list_doc = response.data.data
-					}
-				)
+		// getData() {
+		// 	axios
+		// 		.get(API + '/bast')
+		// 		.then(
+		// 			(response) => {
+		// 				this.list_doc = response.data.data
+		// 			}
+		// 		)
+		// },
+		async getDataTable() {
+			this.list_table = await api.getListDocuments('bast')
 		},
-		createNewDoc() {
+		createDoc() {
 			this.modal_props.state = 'insert'
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
 			this.modal_props.doc_id = null
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
-			this.modal_props.show = true
-		},
-		showDoc(id) {
-			this.modal_props.state = 'display'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
-			this.modal_props.doc_id = id
-			this.modal_props.header_form = false
-			this.modal_props.header_display = true
 			this.modal_props.show = true
 		},
 		editDoc(id) {
 			this.modal_props.state = 'edit'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
 			this.modal_props.doc_id = id
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
 			this.modal_props.show = true
 		},
-		closeModalInput() {
-			this.getData()
-			this.modal_props.show = false
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-			this.modal_props.doc_id = null
-			this.modal_props.header_form = false
-			this.modal_props.header_display = false
+		showDoc(id) {
+			this.modal_props.state = 'show'
+			this.modal_props.doc_id = id
+			this.modal_props.show = true
 		},
-		saveDoc(state) {
-			if (state == 'insert') {
-				this.displayTab(1)
-				this.displayTab(2)
-				this.$refs.modal_tabs.getNavs(0)
-			} else {
-				this.refreshPdf()
-			}
+		closeModal() {
+			this.getDataTable()
+			this.modal_props.state = null
+			this.modal_props.doc_id = null
+			this.modal_props.show = false
 		},
 		deleteDoc(item) {
-			let API_BAST_ID = API + '/bast/' + item.id
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
 				+ " a.n. " 
-				+ item.nama_penerima.bold() 
+				+ item.nama_saksi.bold() 
 				+ "?"
 			
-			this.modal_delete_props.url = API_BAST_ID
+			this.modal_delete_props.doc_type = this.doc_type
+			this.modal_delete_props.doc_id = item.id
 			this.modal_delete_props.text = text
 			this.modal_delete_props.show = true
 		},
 		closeModalDelete() {
-			this.modal_delete_props.url = null
+			this.getDataTable()
+			this.modal_delete_props.doc_type = null
+			this.modal_delete_props.doc_id = null
 			this.modal_delete_props.text = null
 			this.modal_delete_props.show = false
 		},
@@ -232,7 +230,7 @@ export default {
 		}
 	},
 	created() {
-		this.getData()
+		this.getDataTable()
 	}
 }
 </script>

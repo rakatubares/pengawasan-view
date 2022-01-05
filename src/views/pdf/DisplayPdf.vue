@@ -47,11 +47,7 @@
 
 <script>
 import api from '../../router/api2.js'
-import PdfLptp from '../pdf/PdfLptp.js'
-import PdfRiksa from '../pdf/PdfRiksa.js'
-import PdfSbp from '../pdf/PdfSbp.js'
-import PdfSegel from '../pdf/PdfSegel.js'
-import PdfTegah from '../pdf/PdfTegah.js'
+import PdfBast from './PdfBast.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -87,29 +83,9 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
-				case 'sbp':
-					let pdfSbp = new PdfSbp(this.data)
-					this.src_pdf = pdfSbp.generatePdf()
-					break;
-
-				case 'segel':
-					let pdfSegel = new PdfSegel(this.data)
-					this.src_pdf = pdfSegel.generatePdf()
-					break;
-
-				case 'tegah':
-					let pdfTegah = new PdfTegah(this.data)
-					this.src_pdf = pdfTegah.generatePdf()
-					break;
-
-				case 'riksa':
-					let pdfRiksa = new PdfRiksa(this.data)
-					this.src_pdf = pdfRiksa.generatePdf()
-					break;
-
-				case 'lptp':
-					let pdfLptp = new PdfLptp(this.data)
-					this.src_pdf = pdfLptp.generatePdf()
+				case 'bast':
+					let pdfBast = new PdfBast(this.data)
+					this.src_pdf = pdfBast.generatePdf()
 					break;
 			
 				default:
