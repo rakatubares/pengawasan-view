@@ -4,23 +4,23 @@
 		<MyDisplaySarkut 
 			v-if="active_detail == 'sarkut'"
 			:doc.sync="doc"
-		>
-		</MyDisplaySarkut>
+		/>
 		<MyDisplayBarang 
 			v-if="active_detail == 'barang'"
 			:doc.sync="doc"
-		>
-		</MyDisplayBarang>
+		/>
 		<MyDisplayBangunan
 			v-if="active_detail == 'bangunan'"
 			:doc.sync="doc"
-		>
-		</MyDisplayBangunan>
+		/>
 		<MyDisplayBadan
 			v-if="active_detail == 'orang'"
 			:doc.sync="doc"
-		>
-		</MyDisplayBadan>
+		/>
+		<MyDisplayDokumen
+			v-if="active_detail == 'dokumen'"
+			:doc.sync="doc"
+		/>
 	</div>
 </template>
 
@@ -28,6 +28,7 @@
 import MyDisplayBadan from '../details/DisplayBadan.vue'
 import MyDisplayBangunan from '../details/DisplayBangunan.vue'
 import MyDisplayBarang from '../details/DisplayBarang.vue'
+import MyDisplayDokumen from '../details/DisplayDokumen.vue'
 import MyDisplaySarkut from '../details/DisplaySarkut.vue'
 
 export default {
@@ -36,6 +37,7 @@ export default {
 		MyDisplayBadan,
 		MyDisplayBangunan,
 		MyDisplayBarang,
+		MyDisplayDokumen,
 		MyDisplaySarkut,
 	},
 	props: {
