@@ -39,9 +39,9 @@
 					<CCol>
 						<MyTableBarang
 							state="show"
-							:doc_type="doc.main.type"
-							:doc_id="doc.main.data.id"
-							:detail="doc"
+							:doc_type="doc_type"
+							:doc_id="doc_id"
+							:data_objek="data_objek"
 						>
 						</MyTableBarang>
 					</CCol>
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import MyTableBarang from './Options/TableItemBarang.vue'
+import MyTableBarang from '../Options/TableItemBarang.vue'
 
 export default {
 	name: 'DisplayBarang',
@@ -60,13 +60,14 @@ export default {
 		MyTableBarang
 	},
 	props: {
-		doc: Object
+		doc_type: String,
+		doc_id: Number,
+		data_objek: Object
 	},
 	computed: {
 		disp_kemasan() {
-			let t = (this.data.jumlah_kemasan || '-') + ' ' + (this.data.satuan_kemasan || '')
-			console.log('t', t)
-			return t
+			let txt = (this.data.jumlah_kemasan || '-') + ' ' + (this.data.satuan_kemasan || '')
+			return txt
 		},
 		disp_dokumen() {
 			if (this.data.dokumen != null) {
@@ -82,7 +83,7 @@ export default {
 	},
 	data() {
 		return {
-			data: this.doc.objek.data,
+			data: this.data_objek,
 		}
 	},
 }

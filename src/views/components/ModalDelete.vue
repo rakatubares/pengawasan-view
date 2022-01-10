@@ -40,8 +40,13 @@ export default {
 		MyAlert
 	},
 	props: {
+		target: {
+			type: String,
+			default: 'doc'
+		},
 		doc_type: String,
-		doc_id: Number
+		doc_id: Number,
+		item_id: Number
 	},
 	data() {
 		return {
@@ -50,7 +55,12 @@ export default {
 	},
 	methods: {
 		async deleteData() {
-			await api.deleteDoc(this.doc_type, this.doc_id)
+			if (this.target == 'item') {
+				await api.delItemBarang(this.doc_type, this.doc_id, this.item_id)
+			} else {
+				await api.deleteDoc(this.doc_type, this.doc_id)
+			}
+
 			this.alert('Data berhasil dihapus.')
 			this.$emit('delete-data')
 		},
