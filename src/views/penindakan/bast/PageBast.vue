@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper" data-app>
 		<!-- Display table data for SBP list -->
 		<CRow>
 			<CCol>
@@ -17,7 +17,7 @@
 							<CButton 
 								color="primary" 
 								class="mr-1"
-								@click="createNewDoc()"
+								@click="createDoc()"
 							>
 								+ Buat Baru
 							</CButton>
@@ -28,47 +28,6 @@
 		</CRow>
 
 		<!-- Modal data -->
-		<!-- <MyModalTabs
-			ref="modal_tabs"
-			title="Input Data BAST"
-			v-if="modal_props.show"
-			:tabs_list.sync="modal_props.tabs.list"
-			:current_tab.sync="modal_props.tabs.current"
-			@close-modal="closeModalInput"
-		>
-			<template #tab-header>
-				<CTab :title="modal_props.tabs.list[0]['title']">
-					<MyFormBast
-						ref="form_bast"
-						v-if="modal_props.header_form"
-						:id.sync="modal_props.doc_id"
-						:state.sync="modal_props.state"
-						@save-data="saveDoc"
-					>
-					</MyFormBast>
-					<MyDisplayBast
-						v-if="modal_props.header_display"
-						:id.sync="modal_props.doc_id"
-					>
-					</MyDisplayBast>
-				</CTab>
-			</template>
-
-			<template #tab-detail>
-				<CTab 
-					v-if="modal_props.tabs.list[1]['visibility']"
-					:title="modal_props.tabs.list[1]['title']" 
-				>
-					<MyDisplayDetail 
-						:state="modal_props.state"
-						:doc_type="doc_type"
-						:doc_id.sync="modal_props.doc_id"
-						@edit-data="refreshPdf"
-					>
-					</MyDisplayDetail>
-				</CTab>
-			</template>
-		</MyModalTabs> -->
 		<MyModalBast
 			v-if="modal_props.show"
 			:state="modal_props.state"
@@ -92,14 +51,7 @@
 </template>
 
 <script>
-// import axios from "axios"
-
 import api from '../../../router/api2.js'
-// import MyDisplayBast from '../bast/DisplayBast.vue'
-// import MyDisplayDetail from '../../details/DisplayDetail.vue'
-// import MyFormBast from '../bast/FormBast.vue'
-// import MyModalDelete from '../../components/ModalDelete.vue'
-// import MyModalTabs from '../../components/ModalTabs.vue'
 import MyModalBast from './ModalBast.vue'
 import MyTableData from '../../components/TableData.vue'
 
@@ -126,11 +78,6 @@ const tabs_default = {
 export default {
 	name: 'PageBast',
 	components: {
-		// MyDisplayBast,
-		// MyDisplayDetail,
-		// MyFormBast,
-		// MyModalDelete,
-		// MyModalTabs,
 		MyModalBast,
 		MyTableData,
 	},

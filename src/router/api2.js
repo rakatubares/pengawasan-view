@@ -68,6 +68,12 @@ class API {
 		return doc
 	}
 
+	async getBasicDataById(doc_type, doc_id) {
+		let response = await this.getApi(`/${doc_type}/${doc_id}/basic`)
+		let doc = response.data.data
+		return doc
+	}
+
 	async getObjek(doc_type, doc_id) {
 		let response = await this.getApi(`/${doc_type}/${doc_id}/objek`)
 		let objek = response.data
@@ -117,6 +123,10 @@ class API {
 
 	async getItemBarangByDocId(doc_type, doc_id) {
 		return await this.getApi(`/${doc_type}/${doc_id}/barang/item`)
+	}
+
+	async delItemBarang(doc_type, doc_id, item_id) {
+		await this.delApi(`/${doc_type}/${doc_id}/barang/item/${item_id}`)
 	}
 
 	async insertDetail(doc_type, doc_id, detail_type, data) {

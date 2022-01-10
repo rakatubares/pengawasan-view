@@ -77,9 +77,9 @@
 
 		<MyTableItemBarang
 			v-if="state == 'edit'"
-			:doc_type="data.main.type"
-			:doc_id="data.main.data.id"
-			:detail.sync="data_objek"
+			:doc_type="doc_type"
+			:doc_id="doc_id"
+			:data_objek.sync="data_objek"
 			state="insert"
 			@submit-data="$emit('submit-data')"
 		>
@@ -121,6 +121,8 @@ export default {
 		MyTableItemBarang,
 	},
 	props: {
+		doc_type: String,
+		doc_id: Number,
 		data: Object
 	},
 	data() {
@@ -140,18 +142,17 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					let response = await api.insertDetail(this.data.main.type, this.data.main.data.id, 'barang', this.data_objek)
-					this.parseData(response.data.data)
+					let response = await api.insertDetail(this.doc_type, this.doc_id, 'barang', this.data_objek)
 					this.state = 'edit'
-					this.$emit('submit-data')
+					this.$emit('update:data', response.data)
 					this.alert('Data barang berhasil disimpan')
 				} catch (error) {
 					console.log(error)
 				}
 			} else {
-				api.updateDetail(this.data.main.type, this.data.main.data.id, 'barang', this.data_objek.id, this.data_objek)
+				let response = await api.updateDetail(this.doc_type, this.doc_id, 'barang', this.data_objek.id, this.data_objek)
 				this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
-				this.$emit('submit-data')
+				this.$emit('update:data', response.data)
 				this.alert('Data barang berhasil diubah')
 			}
 		},
@@ -173,9 +174,9 @@ export default {
 		validatorInteger(val) { return validators.integer(val) },
 	},
 	mounted() {
-		if (this.data.objek.type == 'barang') {
-			if (this.data.objek.data != null) {
-				this.parseData(this.data.objek.data)
+		if (this.data.type == 'barang') {
+			if (this.data.data != null) {
+				this.parseData(this.data.data)
 				this.state = 'edit'
 			} else {
 				this.data_objek = JSON.parse(JSON.stringify(data_default))
