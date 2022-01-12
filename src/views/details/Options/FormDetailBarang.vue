@@ -134,7 +134,7 @@ export default {
 	watch: {
 		data: {
 			handler: function(val) {
-				this.parseData(val.objek.data)
+				this.parseData(val.data)
 			}
 		}
 	},

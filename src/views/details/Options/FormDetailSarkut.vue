@@ -87,7 +87,7 @@
 		</CRow>
 
 		<!-- Alert -->
-		<MyAlert ref="alertSarkut"></MyAlert>
+		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
@@ -160,7 +160,7 @@ export default {
 			this.$refs.selectPilot.getEntitas(this.data_objek.pilot.id, true)
 		},
 		alert(text, color, time) {
-			this.$refs.alertSarkut.show_alert(text, color, time)
+			this.$refs.alert.show_alert(text, color, time)
 		},
 		validatorRequired(val) { return validators.required(val) },
 	},

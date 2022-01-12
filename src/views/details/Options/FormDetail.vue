@@ -17,6 +17,7 @@
 								:options.sync="options_objek_penindakan"
 								:value.sync="active_form"
 								:is-valid="validatorRequired"
+								@update:value="$emit('change-value', active_form)"
 								invalid-feedback="Objek penindakan harus dipilih"
 							/>
 						</CCol>
@@ -28,30 +29,35 @@
 					:doc_type="doc_type"
 					:doc_id="doc_id"
 					:data.sync="data"
+					@update:data="$emit('change-data')"
 				/>
 				<MyFormBarang
 					v-if="active_form == 'barang'"
 					:doc_type="doc_type"
 					:doc_id="doc_id"
 					:data.sync="data"
+					@update:data="$emit('change-data')"
 				/>
 				<MyFormBangunan
 					v-if="active_form == 'bangunan'"
 					:doc_type="doc_type"
 					:doc_id="doc_id"
 					:data.sync="data"
+					@update:data="$emit('change-data')"
 				/>
 				<MyFormBadan
 					v-if="active_form == 'orang'"
 					:doc_type="doc_type"
 					:doc_id="doc_id"
 					:data.sync="data"
+					@update:data="$emit('change-data')"
 				/>
 				<MyFormDokumen
 					v-if="active_form == 'dokumen'"
 					:doc_type="doc_type"
 					:doc_id="doc_id"
 					:data.sync="data"
+					@update:data="$emit('change-data')"
 				/>
 			</CCol>
 		</CRow>
@@ -62,7 +68,7 @@
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyFormBadan from './FormDetailBadan.vue'
-import MyFormBangunan from '../FormDetailBangunan.vue'
+import MyFormBangunan from './FormDetailBangunan.vue'
 import MyFormBarang from './FormDetailBarang.vue'
 import MyFormDokumen from './FormDetailDokumen.vue'
 import MyFormSarkut from './FormDetailSarkut.vue'
@@ -121,6 +127,9 @@ export default {
 		async getData() {
 			this.data = await api.getObjek(this.doc_type, this.doc_id)
 			this.active_form = this.data.type
+			if (this.data.type != null) {
+				this.$emit('change-data')
+			}
 		},
 		validatorRequired(val) { return validators.required(val) },
 	},
