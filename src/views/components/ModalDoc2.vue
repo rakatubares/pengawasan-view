@@ -3,34 +3,34 @@
 		<MyModalTabs
 			ref="modal_tabs"
 			:title="title"
-			:tabs_list.sync="tabs.list"
-			:current_tab.sync="tabs.current"
+			:tabs_list.sync="tabs_list"
+			:current_tab.sync="current_tab"
 			@close-modal="closeModal"
 		>
 			<template #tabs>
-				<CTab :title="tabs.list[0]['title']">
+				<CTab :title="tabs_list[0]['title']">
 					<slot
-						v-if="tabs.current == 0"
+						v-if="current_tab == 0"
 						name="tab-uraian"
 					/>
 				</CTab>
 
 				<CTab 
-					v-if="tabs.list[1]['visibility']"
-					:title="tabs.list[1]['title']"
+					v-if="tabs_list[1]['visibility']"
+					:title="tabs_list[1]['title']"
 				>
 					<slot
-						v-if="tabs.current == 1"
+						v-if="current_tab == 1"
 						name="tab-object"
 					/>
 				</CTab>
 
 				<CTab 
-					v-if="tabs.list[2]['visibility']"
-					:title="tabs.list[2]['title']"
+					v-if="tabs_list[2]['visibility']"
+					:title="tabs_list[2]['title']"
 				>
 					<slot
-						v-if="tabs.current == 2"
+						v-if="current_tab == 2"
 						name="tab-pdf"
 					/>
 				</CTab>
@@ -42,23 +42,20 @@
 <script>
 import MyModalTabs from './ModalTabs.vue'
 
-const tabs_default = {
-	current: 0,
-	list: [
-		{
-			title: 'Uraian',
-			visibility: true,
-		}, 
-		{
-			title: 'Objek',
-			visibility: false,
-		}, 
-		{
-			title: 'Print',
-			visibility: false
-		}
-	]
-}
+const default_tabs_list = [
+	{
+		title: 'Uraian',
+		visibility: true,
+	}, 
+	{
+		title: 'Objek',
+		visibility: false,
+	}, 
+	{
+		title: 'Print',
+		visibility: false
+	}
+]
 
 export default {
 	name: 'ModalDoc',
@@ -72,13 +69,14 @@ export default {
 	data() {
 		return {
 			modal_state: null,
-			tabs: JSON.parse(JSON.stringify(tabs_default)),
+			current_tab: 0,
+			tabs_list: JSON.parse(JSON.stringify(default_tabs_list)),
 		}
 	},
 	methods: {
 		closeModal() {
-			this.tabs.list[1].visibility = false
-			this.tabs.list[2].visibility = false
+			this.tabs_list[1].visibility = false
+			this.tabs_list[2].visibility = false
 			this.$emit('close-modal')
 		}
 	},
@@ -86,24 +84,27 @@ export default {
 		modal_state: function (val) {
 			switch (val) {
 				case 'show':
-					this.tabs.list[1].visibility = true
-					this.tabs.list[2].visibility = true
+					this.tabs_list[1].visibility = true
+					this.tabs_list[2].visibility = true
 					break;
 				
 				case 'insert':
-					this.tabs.list[1].visibility = false
-					this.tabs.list[2].visibility = false
+					this.tabs_list[1].visibility = false
+					this.tabs_list[2].visibility = false
 					break;
 
 				case 'edit':
-					this.tabs.list[1].visibility = true
-					this.tabs.list[2].visibility = true
+					this.tabs_list[1].visibility = true
+					this.tabs_list[2].visibility = true
 					break;
 			
 				default:
 					break;
 			}
-			this.$refs.modal_tabs.getNavs(this.tabs.current)
+			this.$refs.modal_tabs.getNavs(this.current_tab)
+		},
+		current_tab: function (val) {
+			this.$emit('change-tab', val)
 		}
 	},
 	mounted() {
