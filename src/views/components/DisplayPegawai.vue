@@ -46,7 +46,10 @@ export default {
 			type: String,
 			default: 'Pegawai'
 		},
-		data: Object
+		data: {
+			type: Object,
+			default() {return JSON.parse(JSON.stringify(data_default))}
+		}
 	}
 }
 </script>

@@ -47,7 +47,6 @@
 
 <script>
 import api from '../../router/api2.js'
-import PdfBukaSegel from './PdfBukaSegel.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLptp from './PdfLptp.js'

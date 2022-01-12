@@ -68,6 +68,12 @@ class API {
 		return doc
 	}
 
+	async getBasicDataById(doc_type, doc_id) {
+		let response = await this.getApi(`/${doc_type}/${doc_id}/basic`)
+		let doc = response.data.data
+		return doc
+	}
+
 	async getObjek(doc_type, doc_id) {
 		let response = await this.getApi(`/${doc_type}/${doc_id}/objek`)
 		let objek = response.data
@@ -143,8 +149,12 @@ class API {
 		return await this.putApi(`/${doc_type}/${doc_id}/${detail_type}/${detail_id}`, data)
 	}
 
-	upsertLinkedDoc(doc_type, doc_id, data) {
-		return this.postApi(`/${doc_type}/${doc_id}/storelinked`, data)
+	async getLinkedDoc(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/linked`)
+	}
+
+	async storeLinkedDoc(doc_type, doc_id, data) {
+		return await this.postApi(`/${doc_type}/${doc_id}/storelinked`, data)
 	}
 }
 

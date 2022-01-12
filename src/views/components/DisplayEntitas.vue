@@ -74,8 +74,11 @@ export default {
 			type: String,
 			default: 'Entitas'
 		},
-		data: Object
-	}
+		data: {
+			type: Object,
+			default() {return JSON.parse(JSON.stringify(data_default))}
+		}
+	},
 }
 </script>
 
