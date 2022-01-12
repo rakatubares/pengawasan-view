@@ -39,23 +39,20 @@
 </template>
 
 <script>
-import axios from "axios"
-import DatePicker from 'vue2-datepicker'
-import 'vue2-datepicker/index.css'
-
-import MyAlert from '../components/AlertSubmit.vue'
-import MySelectEntitas from '../components/SelectEntitas.vue'
-import api from '../../router/api2.js'
-import validators from '../../helpers/validator.js'
+import api from '../../../router/api2.js'
+import validators from '../../../helpers/validator.js'
+import MyAlert from '../../components/AlertSubmit.vue'
+import MySelectEntitas from '../../components/SelectEntitas.vue'
 
 export default {
 	name: 'FormDetailBadan',
 	components: {
-		DatePicker,
 		MyAlert,
 		MySelectEntitas
 	},
 	props: {
+		doc_type: String,
+		doc_id: Number,
 		data: Object
 	},
 	data() {
@@ -67,15 +64,15 @@ export default {
 	watch: {
 		data: {
 			handler: function (val) {
-				this.parseData(val.objek.data)
+				this.parseData(val.data)
 			}
 		}
 	},
 	methods: {
 		async saveData() {
 			let data = {orang_id: this.orang_id}
-			await api.insertDetail(this.data.main.type, this.data.main.data.id, 'orang', data)
-			this.$emit('submit-data')
+			let response = await api.insertDetail(this.doc_type, this.doc_id, 'orang', data)
+			this.$emit('update:data', response.data)
 			this.alert('Data orang berhasil disimpan')
 		},
 		parseData(objek) {
@@ -90,9 +87,9 @@ export default {
 		validatorRequired(val) { return validators.required(val) },
 	},
 	mounted() {
-		if (this.data.objek.type == 'orang') {
-			if (this.data.objek.data != null) {
-				this.orang_id = this.data.objek.data.id
+		if (this.data.type == 'orang') {
+			if (this.data.data != null) {
+				this.orang_id = this.data.data.id
 				this.parseData(this.orang_id)
 				this.state = 'edit'
 			} else {
