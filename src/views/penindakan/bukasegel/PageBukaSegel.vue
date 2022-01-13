@@ -19,7 +19,7 @@
 								@click="createDoc"
 								class="mr-1"
 							>
-								+ Buat BA Buka Segel
+								+ Buat Baru
 							</CButton>
 						</div>
 					</template>
@@ -30,7 +30,7 @@
 		<!-- Modal input BA Buka segel -->
 		<MyModalBukaSegel
 			v-if="modal_props.show"
-			:state="modal_props.state"
+			:state.sync="modal_props.state"
 			:id.sync="modal_props.doc_id"
 			@close-modal="closeModal"
 		>

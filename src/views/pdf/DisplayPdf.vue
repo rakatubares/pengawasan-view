@@ -47,7 +47,6 @@
 
 <script>
 import api from '../../router/api2.js'
-import PdfSegel from '../pdf/PdfSegel.js'
 import MyAlert from '../components/AlertSubmit.vue'
 import PdfBukaSegel from './PdfBukaSegel.js'
 import PdfSegel from './PdfSegel.js'
