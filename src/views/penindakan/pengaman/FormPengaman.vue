@@ -7,18 +7,16 @@
 					<MySelectSprint
 						ref="selectSprint"
 						:id.sync="data.penindakan.sprint.id"
-					>
-					</MySelectSprint>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="3" sm="12">
-					<CInput
+					<CSelect
 						label="Jenis Tanda Pengaman"
-						description="Jenis tanda pengaman yang digunakan (kertas, kunci, timah, lak, segel elektronik, dll)"
+						description="Jenis tanda pengaman yang digunakan"
+						:options="['Kertas', 'Kunci', 'Timah', 'Lak', 'Segel Elektronik', 'Lainnya']"
 						:value.sync="data.main.data.jenis_pengaman"
-						:is-valid="validatorRequired"
-						invalid-feedback="Jenis tanda pengaman wajib diisi"
 					/>
 				</CCol>
 				<CCol md="3" sm="12">
@@ -80,8 +78,7 @@
 						description="Nama lengkap pengangkut / kuasa barang / sarana pengangkut atau pemilik / yang menguasai bangunan atau tempat lain yang menyaksikan pelekatan"
 						:showAlamat="true"
 						:id.sync="data.penindakan.saksi.id"
-					>
-					</MySelectEntitas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -93,8 +90,7 @@
 						:id.sync="data.penindakan.petugas1.user_id"
 						role="p2vue.penindakan"
 						:currentUser="true"
-					>
-					</MySelectPetugas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -105,8 +101,7 @@
 						description="Nama Pejabat Bea dan Cukai yang melakukan pelekatan tanda pengaman"
 						:id.sync="data.penindakan.petugas2.user_id"
 						role="p2vue.penindakan"
-					>
-					</MySelectPetugas>
+					/>
 				</CCol>
 			</CRow>
 
@@ -136,6 +131,26 @@ import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
+const default_data = {
+	main: {
+		data: {
+			jenis_pengaman: 'Kertas',
+			jumlah_pengaman: null,
+			satuan_pengaman: null,
+			tempat_pengaman: null,
+			alasan_pengamanan: null,
+			keterangan: null,
+		}
+	},
+	penindakan: {
+		lokasi_penindakan: null,
+		sprint: {id: null},
+		saksi: {id: null},
+		petugas1: {user_id: null},
+		petugas2: {user_id: null}
+	},
+}
+
 export default {
 	name: 'FormPengaman',
 	components: {
@@ -146,10 +161,24 @@ export default {
 	},
 	props: {
 		state: String,
-		data: Object
+		doc_id: Number
+	},
+	data() {
+		return {
+			data: JSON.parse(JSON.stringify(default_data)),
+		}
 	},
 	methods: {
-		validateData() {
+		async getData() {
+			this.data = await api.getDocumentById('pengaman', this.doc_id)
+			if (this.data.penindakan.petugas2 == null) {
+				this.data.penindakan.petugas2 = {user_id: null}
+			}
+			this.$nextTick(function () {
+				this.renderData()
+			})
+		},
+		renderData() {
 			this.$refs.selectSprint.getSprint(this.data.penindakan.sprint.id, true)
 			this.$refs.selectSaksi.getEntitas(this.data.penindakan.saksi.id, true)
 			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
@@ -158,10 +187,8 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					console.log('form pengaman - save data')
 					let response = await api.storeDoc('pengaman', this.data)
-					let doc_id = response.main.data.id
-					this.$emit('submit-data', doc_id)
+					this.$emit('update:doc_id', response.main.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BA Pelekatan Tanda Pengaman berhasil disimpan')
 				} catch (error) {
@@ -169,8 +196,7 @@ export default {
 				}
 			} else if (this.state == 'edit') {
 				try {
-					await api.updateDoc('pengaman', this.data.main.data.id, this.data)
-					this.$emit('submit-data')
+					await api.updateDoc('pengaman', this.doc_id, this.data)
 					this.alert('Data BA Pelekatan Tanda Pengaman berhasil diubah')
 				} catch (error) {
 					console.log('form pengaman - update data - error', JSON.parse(JSON.stringify(response)))
@@ -178,20 +204,29 @@ export default {
 			}
 		},
 		alert(text, color, time) {
-			console.log('form pengaman - alert')
 			this.$refs.alert.show_alert(text, color, time)
 		},
 		validatorRequired(val) { return validators.required(val) },
 		validatorNumber(val) { return validators.number(val) },
 	},
-	watch: {
-		data: function(val) {
-			this.validateData()
+	// watch: {
+	// 	data: function(val) {
+	// 		this.validateData()
+	// 	}
+	// },
+		async mounted() {
+		if (this.state == 'edit') {
+			await this.getData()
 		}
-	},
+	}
 }
 </script>
 
 <style>
-
+.row+.row {
+	margin-top:0;
+}
+.v-text-field__details {
+	display: none;
+}
 </style>
