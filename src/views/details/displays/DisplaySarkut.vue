@@ -84,10 +84,7 @@
 export default {
 	name: 'DisplaySarkut',
 	props: {
-		doc: {
-			type: Object,
-			default: null
-		}
+		data_objek: Object
 	},
 	computed: {
 		disp_nama_sarkut() {
@@ -117,7 +114,7 @@ export default {
 	},
 	data() {
 		return {
-			data: this.doc.objek.data
+			data: this.data_objek.data
 		}
 	},
 }

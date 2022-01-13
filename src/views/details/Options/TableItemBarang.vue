@@ -6,7 +6,7 @@
 				<MyTableData
 					class="mt-3"
 					:fields="fields_barang"
-					:items="list_barang_table"
+					:items.sync="list_barang_table"
 					:editData="editBarang"
 					:deleteData="confirmDeleteBarang"
 				>
@@ -40,8 +40,10 @@
 		<!-- Modal konfirmasi delete -->
 		<MyModalDelete
 			v-if="modal_delete_props.show"
-			:type="modal_delete_props.type"
-			:url.sync="modal_delete_props.url"
+			target="item"
+			:doc_type="doc_type"
+			:doc_id="doc_id"
+			:item_id="modal_delete_props.item_id"
 			@close-modal="closeModalDelete"
 			@delete-data="deleteData"
 		>
@@ -55,7 +57,7 @@
 <script>
 import api from '../../../router/api2.js'
 import MyModalDelete from '../../components/ModalDelete.vue'
-import MyFormItemBarang from '../../details/FormItemBarang.vue'
+import MyFormItemBarang from './FormItemBarang.vue'
 import MyTableData from '../../components/TableData.vue'
 
 export default {
@@ -69,7 +71,7 @@ export default {
 		state: String,
 		doc_type: String,
 		doc_id: Number,
-		detail: Object
+		data_objek: Object
 	},
 	computed: {
 		fields_barang() {
@@ -106,8 +108,7 @@ export default {
 				url: null,
 				text: null
 			},
-			// list_barang: [],
-			list_barang: this.detail.item,
+			list_barang: this.data_objek.item,
 			show_modal_barang: false,
 			item_state: 'insert',
 			item_to_edit: null
@@ -115,8 +116,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getItemBarangByDocId(this.doc_type, this.doc_id)
-			this.list_barang = response.data.data
+			let response = await api.getObjek(this.doc_type, this.doc_id)
+			this.list_barang = response.data.item
 		},
 		inputNewBarang() {
 			this.show_modal_barang = true
@@ -133,29 +134,24 @@ export default {
 			this.$emit('submit-data')
 		},
 		confirmDeleteBarang(item) {
-			let API_BARANG_DETAIL_ID = process.env.VUE_APP_BASEAPI 
-				+ '/' + this.doc_type 
-				+ '/' + this.doc_id 
-				+ '/barang/item/' + item.id
-			
 			let text = "Apakah Anda yakin untuk menghapus data barang " 
 				+ item.uraian_barang.bold()
 				+ "?"
 
-			this.modal_delete_props.type = 'item barang'
-			this.modal_delete_props.url = API_BARANG_DETAIL_ID
 			this.modal_delete_props.text = text
+			this.modal_delete_props.item_id = item.id
 			this.modal_delete_props.show = true
 		},
 		deleteData(type) {
+			this.getData()
 			this.closeModalDelete()
 
-			if (type == 'item barang') {
-				this.getData()
-				this.$emit('edit-item')
-			} else {
-				this.$emit('delete-data')
-			}
+			// if (type == 'item barang') {
+			// 	this.getData()
+			// 	this.$emit('edit-item')
+			// } else {
+			// 	this.$emit('delete-data')
+			// }
 		},
 		closeModalDelete() {
 			this.modal_delete_props.type = null
@@ -164,11 +160,6 @@ export default {
 			this.modal_delete_props.show = false
 		},
 	},
-	mounted() {
-		console.log('table item - mounted 1', JSON.parse(JSON.stringify(this.detail)))
-		console.log('table item - mounted 2', this.state)
-		this.getData()
-	}
 }
 </script>
 
