@@ -42,7 +42,7 @@
 export default {
 	name: 'DisplayDokumen',
 	props: {
-		doc: Object
+		data_objek: Object
 	},
 	computed: {
 		disp_jenis() {
@@ -57,7 +57,7 @@ export default {
 	},
 	data() {
 		return {
-			data: this.doc.objek.data
+			data: this.data_objek.data
 		}
 	},
 }

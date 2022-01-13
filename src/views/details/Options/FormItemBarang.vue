@@ -63,8 +63,8 @@
 <script>
 import axios from "axios"
 
-import MyAlert from '../components/AlertSubmit.vue'
-import validators from '../../helpers/validator.js'
+import validators from '../../../helpers/validator.js'
+import MyAlert from '../../components/AlertSubmit.vue'
 
 const data_default = {
 	uraian_barang: null,
