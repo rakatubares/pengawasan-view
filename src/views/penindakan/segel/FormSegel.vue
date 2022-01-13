@@ -7,18 +7,16 @@
 					<MySelectSprint
 						ref="selectSprint"
 						:id.sync="data.penindakan.sprint.id"
-					>
-					</MySelectSprint>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="3" sm="12">
-					<CInput
+					<CSelect
 						label="Jenis Segel"
-						description="Jenis segel yang digunakan (kertas, kunci, timah, lak, segel elektronik, dll)"
+						description="Jenis segel yang digunakan"
+						:options="['Kertas', 'Kunci', 'Timah', 'Lakban', 'Segel Elektronik', 'Lainnya']"
 						:value.sync="data.main.data.jenis_segel"
-						:is-valid="validatorRequired"
-						invalid-feedback="Jenis segel wajib diisi"
 					/>
 				</CCol>
 				<CCol md="3" sm="12">
@@ -54,8 +52,7 @@
 						description="Nama lengkap pengangkut / kuasa barang / sarana pengangkut atau pemilik / yang menguasai bangunan atau tempat lain yang menyaksikan penyegelan"
 						:showAlamat="true"
 						:id.sync="data.penindakan.saksi.id"
-					>
-					</MySelectEntitas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -67,8 +64,7 @@
 						:id.sync="data.penindakan.petugas1.user_id"
 						role="p2vue.penindakan"
 						:currentUser="true"
-					>
-					</MySelectPetugas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -79,8 +75,7 @@
 						description="Nama Pejabat Bea dan Cukai yang melakukan penyegelan"
 						:id.sync="data.penindakan.petugas2.user_id"
 						role="p2vue.penindakan"
-					>
-					</MySelectPetugas>
+					/>
 				</CCol>
 			</CRow>
 
@@ -103,9 +98,6 @@
 </template>
 
 <script>
-// import axios from "axios"
-
-// import api from '../../../router/api.js'
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
@@ -113,19 +105,24 @@ import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
-// const API = process.env.VUE_APP_BASEAPI + '/segel'
-
-// const data_default = {
-// 	sprint: {id: null},
-// 	tgl_sprint: null,
-// 	jenis_segel: null,
-// 	jumlah_segel: null,
-// 	nomor_segel: null,
-// 	lokasi_segel: null,
-// 	saksi: {id: null},
-// 	petugas1: {user_id: null},
-// 	petugas2: {user_id: null},
-// }
+const default_data = {
+	main: {
+		type: 'data',
+		data: {
+			jenis_segel: 'kertas',
+			jumlah_segel: null,
+			satuan_segel: null,
+			tempat_segel: null,
+		}
+	},
+	penindakan: {
+		lokasi_penindakan: null,
+		sprint: {id: null},
+		saksi: {id: null},
+		petugas1: {user_id: null},
+		petugas2: {user_id: null}
+	},
+}
 
 export default {
 	name: 'FormSegel',
@@ -136,64 +133,25 @@ export default {
 		MySelectSprint
 	},
 	props: {
-		// state: {
-		// 	Type: String,
-		// 	default: 'insert'
-		// },
-		// id: Number
 		state: String,
-		data: Object
+		doc_id: Number
 	},
-	// data() {
-	// 	return {
-	// 		data: JSON.parse(JSON.stringify(data_default)),
-	// 	}
-	// },
+	data() {
+		return {
+			data: JSON.parse(JSON.stringify(default_data)),
+		}
+	},
 	methods: {
-		// getData() {
-		// 	if (this.state == 'edit') {
-		// 		axios
-		// 			.get(api.getSegelById(this.id))
-		// 			.then(
-		// 				(response) => {
-		// 					this.data = response.data.data
-
-		// 					// Show reference
-		// 					this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
-		// 					this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
-		// 					this.$refs.selectPetugas1.getPetugas(this.data.petugas1.user_id, true)
-		// 					if (response.data.data.petugas2 != null) {
-		// 						this.$refs.selectPetugas2.getPetugas(this.data.petugas2.user_id, true)	
-		// 					} else {
-		// 						this.data.petugas2 = {user_id: null}
-		// 					}
-		// 				}
-		// 			)
-		// 	}
-		// },
-		// saveData() {
-		// 	let submit_method
-		// 	let submit_url
-		// 	submit_method = this.state == 'insert' ? 'post' : 'put'
-		// 	submit_url = this.state == 'insert' ? 
-		// 		api.getSegel() : 
-		// 		api.getSegelById(this.id)
-
-		// 	axios({
-		// 		method: submit_method,
-		// 		url: submit_url,
-		// 		data: this.data,
-		// 	})
-		// 		.then((response) => {
-		// 			this.$emit('save-data', this.state)
-		// 			this.$emit('update:state', 'edit')
-		// 			if (submit_method == 'post') {
-		// 				this.$emit('update:id', response.data.id)
-		// 			}
-		// 			this.alert('Data header berhasil disimpan')
-		// 		})
-		// },
-		validateData() {
+		async getData() {
+			this.data = await api.getDocumentById('segel', this.doc_id)
+			if (this.data.penindakan.petugas2 == null) {
+				this.data.penindakan.petugas2 = {user_id: null}
+			}
+			this.$nextTick(function () {
+				this.renderData()
+			})
+		},
+		renderData() {
 			this.$refs.selectSprint.getSprint(this.data.penindakan.sprint.id, true)
 			this.$refs.selectSaksi.getEntitas(this.data.penindakan.saksi.id, true)
 			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
@@ -203,8 +161,7 @@ export default {
 			if (this.state == 'insert') {
 				try {
 					let response = await api.storeDoc('segel', this.data)
-					let doc_id = response.main.data.id
-					this.$emit('submit-data', doc_id)
+					this.$emit('update:doc_id', response.main.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BA Segel berhasil disimpan')
 				} catch (error) {
@@ -212,8 +169,7 @@ export default {
 				}
 			} else if (this.state == 'edit') {
 				try {
-					await api.updateDoc('segel', this.data.main.data.id, this.data)
-					this.$emit('submit-data')
+					await api.updateDoc('segel', this.doc_id, this.data)
 					this.alert('Data BA Segel berhasil diubah')
 				} catch (error) {
 					console.log('form segel - update data - error', JSON.parse(JSON.stringify(response)))
@@ -226,14 +182,11 @@ export default {
 		validatorRequired(val) { return validators.required(val) },
 		validatorNumber(val) { return validators.number(val) },
 	},
-	watch: {
-		data: function(val) {
-			this.validateData()
+	async mounted() {
+		if (this.state == 'edit') {
+			await this.getData()
 		}
-	},
-	// mounted() {
-	// 	this.getData(true)
-	// }
+	}
 }
 </script>
 
