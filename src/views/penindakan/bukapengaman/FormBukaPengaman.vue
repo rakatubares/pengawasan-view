@@ -105,12 +105,19 @@
 			</CRow>
 			<CRow>
 				<CCol md="3" sm="12">
-					<CInput
+					<!-- <CInput
 						label="Jenis Tanda Pengaman"
 						description="Jenis tanda pengaman yang digunakan (kertas, kunci, timah, lak, segel elektronik, dll)"
 						:value.sync="data.main.data.jenis_pengaman"
 						:is-valid="validatorRequired"
 						invalid-feedback="Jenis tanda pengaman wajib diisi"
+						:disabled="data_source == 'Load Data'"
+					/> -->
+					<CSelect
+						label="Jenis Tanda Pengaman"
+						description="Jenis tanda pengaman yang digunakan"
+						:options="['Kertas', 'Kunci', 'Timah', 'Lak', 'Segel Elektronik', 'Lainnya']"
+						:value.sync="data.main.data.jenis_pengaman"
 						:disabled="data_source == 'Load Data'"
 					/>
 				</CCol>
@@ -143,6 +150,15 @@
 				</CCol>
 			</CRow>
 			<CRow>
+				<CCol md="6" sm="12">
+					<CTextarea
+						label="Dasar Pengamanan"
+						:value.sync="data.main.data.dasar_pengamanan"
+						:disabled="data_source == 'Load Data'"
+					/>
+				</CCol>
+			</CRow>
+			<CRow>
 				<CCol md="12">
 					<MySelectEntitas
 						ref="selectSaksi"
@@ -150,8 +166,7 @@
 						description="Nama terang pengangkut / pemilik / kuasa / saksi yang menyaksikan pembukaan tanda pengaman"
 						:showAlamat="true"
 						:id.sync="data.main.data.saksi.id"
-					>
-					</MySelectEntitas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -163,8 +178,7 @@
 						:id.sync="data.main.data.petugas1.user_id"
 						role="p2vue.penindakan"
 						:currentUser="true"
-					>
-					</MySelectPetugas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -175,8 +189,7 @@
 						description="Nama Pejabat Bea dan Cukai yang melakukan pembukaan tanda pengaman"
 						:id.sync="data.main.data.petugas2.user_id"
 						role="p2vue.penindakan"
-					>
-					</MySelectPetugas>
+					/>
 				</CCol>
 			</CRow>
 
@@ -201,12 +214,34 @@
 <script>
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
+
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
+
+const default_data = {
+	main: {
+		data: {
+			tanggal_pengaman: null,
+			jenis_pengaman: 'Kertas',
+			jumlah_pengaman: null,
+			satuan_pengaman: null,
+			tempat_pengaman: null,
+			dasar_pengamanan: null,
+			sprint: {id: null},
+			saksi: {id: null},
+			petugas1: {user_id: null},
+			petugas2: {user_id: null}
+		}
+	},
+	dokumen: {
+		pengaman: {id: null}
+	}
+}
+
 export default {
 	name: 'FormBukaPengaman',
 	components: {
@@ -218,18 +253,44 @@ export default {
 	},
 	props: {
 		state: String,
-		data: Object,
+		doc_id: Number,
 	},
 	data() {
 		return {
+			data: JSON.parse(JSON.stringify(default_data)),
 			data_source: 'Input Data',
 			pengaman_search_value: null,
 			pengaman_search_items: [],
 			pengaman_search_query: null,
+			pengaman_search_exception: null
 		}
 	},
 	methods: {
-		validateData() {
+		async getData() {
+			this.data = await api.getDocumentById('bukapengaman', this.doc_id)
+			if (this.data.main.data.petugas2 == null) {
+				this.data.main.data.petugas2 = {user_id: null}
+			}
+			if (this.data.dokumen.pengaman != null) {
+				// Display current BA pengaman
+				let search_data = {
+					's': this.data.dokumen.pengaman.no_dok_lengkap,
+					'e': this.data.dokumen.pengaman.id
+				}
+				let pengaman_items = await api.searchDoc('pengaman', search_data)
+				this.pengaman_search_items = pengaman_items.data.data
+				this.pengaman_search_value = this.pengaman_search_items[0]
+				
+				// Set filter exception
+				this.pengaman_search_exception = this.data.dokumen.pengaman.id
+				this.$emit('update:state', 'edit-header')
+				this.data_source = 'Load Data'
+			}
+			this.$nextTick(function () {
+				this.renderData()
+			})
+		},
+		renderData() {
 			this.$refs.selectSprint.getSprint(this.data.main.data.sprint.id, true)
 			this.$refs.selectSaksi.getEntitas(this.data.main.data.saksi.id, true)
 			this.$refs.selectPetugas1.getPetugas(this.data.main.data.petugas1.user_id, true)
@@ -239,21 +300,21 @@ export default {
 			if (this.state == 'insert') {
 				try {
 					let response = await api.storeDoc('bukapengaman', this.data)
-					let doc_id = response.main.data.id
-					this.$emit('submit-data', doc_id)
-					if (this.data.dokumen.pengaman.id == null) {
-						this.$emit('update:state', 'edit')	
+					this.$emit('update:doc_id', response.main.data.id)
+
+					if ('pengaman' in this.data.dokumen) {
+						this.$emit('update:state', 'edit-header')	
 					} else {
-						this.$emit('update:state', 'edit-header')
+						this.$emit('update:state', 'edit')
 					}
+
 					this.alert('Data BA Buka Tanda Pengaman berhasil disimpan')
 				} catch (error) {
 					console.log('form buka pengaman - save data - error', JSON.parse(JSON.stringify(error)))
 				}
 			} else if (this.state == 'edit') {
 				try {
-					await api.updateDoc('bukapengaman', this.data.main.data.id, this.data)
-					this.$emit('submit-data')
+					await api.updateDoc('bukapengaman', this.doc_id, this.data)
 					this.alert('Data BA Buka Tanda Pengaman berhasil diubah')
 				} catch (error) {
 					console.log('form buka pengaman - update data - error', JSON.parse(JSON.stringify(response)))
@@ -278,6 +339,7 @@ export default {
 			this.data.main.data.jumlah_pengaman = null
 			this.data.main.data.satuan_pengaman = null
 			this.data.main.data.tempat_pengaman = null
+			this.data.main.data.dasar_pengamanan = null
 			this.data.dokumen.pengaman.id = null
 			this.pengaman_search_value = null
 		},
@@ -285,6 +347,7 @@ export default {
 			if (id != null) {
 				// Get data pengaman
 				let pengaman = await api.getDocumentById('pengaman', id)
+
 				// Change current data according to pengaman
 				this.data.main.data.nomor_pengaman = pengaman.main.data.nomor_pengaman
 				this.data.main.data.tanggal_pengaman = pengaman.penindakan.tanggal_penindakan
@@ -292,14 +355,16 @@ export default {
 				this.data.main.data.jumlah_pengaman = pengaman.main.data.jumlah_pengaman
 				this.data.main.data.satuan_pengaman = pengaman.main.data.satuan_pengaman
 				this.data.main.data.tempat_pengaman = pengaman.main.data.tempat_pengaman
+				this.data.main.data.dasar_pengamanan = pengaman.main.data.alasan_pengamanan
+				
 				// Specify pengaman id
 				this.data.dokumen.pengaman.id = id
 			}
 		}
 	},
 	watch: {
-		data: function(val) {
-			this.validateData()
+		data: function() {
+			this.renderData()
 		},
 		async pengaman_search_query (val) {
 			let data = {'s': val}
@@ -307,6 +372,11 @@ export default {
 			this.pengaman_search_items = responses.data.data
 		}
 	},
+	async mounted() {
+		if (['edit', 'edit-header'].includes(this.state)) {
+			await this.getData()
+		}
+	}
 }
 </script>
 
