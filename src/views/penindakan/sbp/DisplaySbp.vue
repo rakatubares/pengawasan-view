@@ -77,7 +77,7 @@
 					</CCol>
 				</CRow>
 				<MyDisplayEntitas
-					title="Saksi"
+					title="Pemilik/Saksi"
 					:data.sync="data_sbp.penindakan.saksi"
 				/>
 				<MyDisplayPegawai
