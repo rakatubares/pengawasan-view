@@ -19,7 +19,7 @@
 								@click="createDoc"
 								class="mr-1"
 							>
-								+ Buat BA Baru
+								+ Buat Baru
 							</CButton>
 						</div>
 					</template>
