@@ -14,7 +14,7 @@ export default [
 			},
 			{
 				_name: 'CSidebarNavItem',
-				name: 'Periksa',
+				name: 'BA Periksa',
 				to: '/riksa',
 				icon: 'cil-file'
 			},
