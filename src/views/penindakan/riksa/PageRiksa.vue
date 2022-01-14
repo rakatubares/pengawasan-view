@@ -19,7 +19,7 @@
 								@click="createDoc"
 								class="mr-1"
 							>
-								+ Buat BA Pemeriksaan
+								+ Buat Baru
 							</CButton>
 						</div>
 					</template>
@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import api from '../../../router/api.js'
 import api2 from '../../../router/api2.js'
 import MyModalRiksa from './ModalRiksa.vue'
 import MyModalDelete from '../../components/ModalDelete.vue'
