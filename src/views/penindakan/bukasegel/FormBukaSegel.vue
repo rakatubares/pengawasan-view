@@ -7,8 +7,7 @@
 					<MySelectSprint
 						ref="selectSprint"
 						:id.sync="data.main.data.sprint.id"
-					>
-					</MySelectSprint>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -105,12 +104,11 @@
 			</CRow>
 			<CRow>
 				<CCol md="3" sm="12">
-					<CInput
+					<CSelect
 						label="Jenis Segel"
-						description="Jenis segel yang digunakan (kertas, kunci, timah, lak, segel elektronik, dll)"
+						description="Jenis segel yang digunakan"
+						:options="['Kertas', 'Kunci', 'Timah', 'Lak', 'Segel Elektronik', 'Lainnya']"
 						:value.sync="data.main.data.jenis_segel"
-						:is-valid="validatorRequired"
-						invalid-feedback="Jenis segel wajib diisi"
 						:disabled="data_source == 'Load Segel'"
 					/>
 				</CCol>
@@ -150,8 +148,7 @@
 						description="Nama terang pengangkut / pemilik / kuasa / saksi yang menyaksikan pembukaan segel"
 						:showAlamat="true"
 						:id.sync="data.main.data.saksi.id"
-					>
-					</MySelectEntitas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -163,8 +160,7 @@
 						:id.sync="data.main.data.petugas1.user_id"
 						role="p2vue.penindakan"
 						:currentUser="true"
-					>
-					</MySelectPetugas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -175,8 +171,7 @@
 						description="Nama Pejabat Bea dan Cukai yang melakukan pembukaan segel"
 						:id.sync="data.main.data.petugas2.user_id"
 						role="p2vue.penindakan"
-					>
-					</MySelectPetugas>
+					/>
 				</CCol>
 			</CRow>
 
@@ -209,6 +204,25 @@ import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
+const default_data = {
+	main: {
+		data: {
+			tanggal_segel: null,
+			jenis_segel: 'Kertas',
+			jumlah_segel: null,
+			satuan_segel: null,
+			tempat_segel: null,
+			sprint: {id: null},
+			saksi: {id: null},
+			petugas1: {user_id: null},
+			petugas2: {user_id: null}
+		}
+	},
+	dokumen: {
+		segel: {id: null}
+	}
+}
+
 export default {
 	name: 'FormBukaSegel',
 	components: {
@@ -220,18 +234,45 @@ export default {
 	},
 	props: {
 		state: String,
-		data: Object,
+		doc_id: Number,
 	},
 	data() {
 		return {
+			data: JSON.parse(JSON.stringify(default_data)),
 			data_source: 'Input Data',
 			segel_search_value: null,
 			segel_search_items: [],
 			segel_search_query: null,
+			segel_search_exception: null
 		}
 	},
 	methods: {
-		validateData() {
+		async getData() {
+			this.data = await api.getDocumentById('bukasegel', this.doc_id)
+			if (this.data.main.data.petugas2 == null) {
+				this.data.main.data.petugas2 = {user_id: null}
+			}
+			if (this.data.dokumen.segel != null) {
+				// Display current BA segel
+				let search_data = {
+					's': this.data.dokumen.segel.no_dok_lengkap,
+					'e': this.data.dokumen.segel.id
+				}
+				let segel_items = await api.searchDoc('segel', search_data)
+				this.segel_search_items = segel_items.data.data
+				this.segel_search_value = this.segel_search_items[0]
+
+				// Set filter exception
+				this.segel_search_exception = this.data.dokumen.segel.id
+
+				this.$emit('update:state', 'edit-header')
+				this.data_source = 'Load Segel'
+			}
+			this.$nextTick(function () {
+				this.renderData()
+			})
+		},
+		renderData() {
 			this.$refs.selectSprint.getSprint(this.data.main.data.sprint.id, true)
 			this.$refs.selectSaksi.getEntitas(this.data.main.data.saksi.id, true)
 			this.$refs.selectPetugas1.getPetugas(this.data.main.data.petugas1.user_id, true)
@@ -241,24 +282,24 @@ export default {
 			if (this.state == 'insert') {
 				try {
 					let response = await api.storeDoc('bukasegel', this.data)
-					let doc_id = response.main.data.id
-					this.$emit('submit-data', doc_id)
-					if (this.data.dokumen.segel.id == null) {
-						this.$emit('update:state', 'edit')	
-					} else {
+					this.$emit('update:doc_id', response.main.data.id)
+
+					if ('segel' in response.dokumen) {
 						this.$emit('update:state', 'edit-header')
+					} else {
+						this.$emit('update:state', 'edit')
 					}
+
 					this.alert('Data BA Buka Segel berhasil disimpan')
 				} catch (error) {
 					console.log('form buka segel - save data - error', JSON.parse(JSON.stringify(error)))
 				}
-			} else if (this.state == 'edit') {
+			} else if (['edit', 'edit-header'].includes(this.state)) {
 				try {
-					await api.updateDoc('bukasegel', this.data.main.data.id, this.data)
-					this.$emit('submit-data')
+					await api.updateDoc('bukasegel', this.doc_id, this.data)
 					this.alert('Data BA Buka Segel berhasil diubah')
 				} catch (error) {
-					console.log('form buka segel - update data - error', JSON.parse(JSON.stringify(response)))
+					console.log('form buka segel - update data - error', JSON.parse(JSON.stringify(error)))
 				}
 			}
 		},
@@ -269,7 +310,8 @@ export default {
 		validatorNumber(val) { return validators.number(val) },
 		toggleSource(val) {
 			if (val == 'input') {
-				this.data_source = 'Input Data'	
+				this.data_source = 'Input Data'
+				this.data.main.data.jenis_segel = 'Kertas'
 			} else {
 				this.data_source = 'Load Segel'	
 			}
@@ -304,19 +346,19 @@ export default {
 	},
 	watch: {
 		data: function(val) {
-			this.validateData()
+			this.renderData()
 		},
 		async segel_search_query (val) {
-			console.log('form buka segel - search', val)
-			let data = {'s': val}
+			let data = {'s': val, 'e': this.segel_search_exception}
 			let responses = await api.searchDoc('segel', data)
 			this.segel_search_items = responses.data.data
-			console.log('form buka segel - search', val)
-		}
+		},
 	},
-	// mounted() {
-	// 	this.getData(true)
-	// }
+	async mounted() {
+		if (['edit', 'edit-header'].includes(this.state)) {
+			await this.getData()
+		}
+	}
 }
 </script>
 
