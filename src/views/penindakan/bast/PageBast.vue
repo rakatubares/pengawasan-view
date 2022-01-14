@@ -37,22 +37,24 @@
 		</MyModalBast>
 
 		<!-- Modal konfirmasi delete SBP -->
-		<!-- <MyModalDelete
+		<MyModalDelete
 			v-if="modal_delete_props.show"
-			:url.sync="modal_delete_props.url"
+			:doc_type="modal_delete_props.doc_type"
+			:doc_id="modal_delete_props.doc_id"
 			@close-modal="closeModalDelete"
-			@delete-data="closeModalDelete(); getData()"
+			@delete-data="closeModalDelete"
 		>
 			<template #text>
 				<span v-html="modal_delete_props.text"></span>
 			</template>
-		</MyModalDelete> -->
+		</MyModalDelete>
 	</div>
 </template>
 
 <script>
 import api from '../../../router/api2.js'
 import MyModalBast from './ModalBast.vue'
+import MyModalDelete from '../../components/ModalDelete.vue'
 import MyTableData from '../../components/TableData.vue'
 
 const API = process.env.VUE_APP_BASEAPI
@@ -79,6 +81,7 @@ export default {
 	name: 'PageBast',
 	components: {
 		MyModalBast,
+		MyModalDelete,
 		MyTableData,
 	},
 	data() {
@@ -98,31 +101,14 @@ export default {
 				state: null,
 				doc_id: null
 			},
-			// modal_props: {
-			// 	show: false,
-			// 	state: 'insert',
-			// 	tabs: JSON.parse(JSON.stringify(tabs_default)),
-			// 	doc_id: null,
-			// 	header_form: false,
-			// 	header_display: false
-			// },
-			// modal_delete_props: {
-			// 	show: false,
-			// 	url: null,
-			// 	text: null
-			// }
+			modal_delete_props: {
+				show: false,
+				url: null,
+				text: null
+			}
 		}
 	},
 	methods: {
-		// getData() {
-		// 	axios
-		// 		.get(API + '/bast')
-		// 		.then(
-		// 			(response) => {
-		// 				this.list_doc = response.data.data
-		// 			}
-		// 		)
-		// },
 		async getDataTable() {
 			this.list_table = await api.getListDocuments('bast')
 		},
@@ -150,8 +136,8 @@ export default {
 		deleteDoc(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
-				+ " a.n. " 
-				+ item.nama_saksi.bold() 
+				+ " dalam rangka " 
+				+ item.dalam_rangka.bold() 
 				+ "?"
 			
 			this.modal_delete_props.doc_type = this.doc_type
