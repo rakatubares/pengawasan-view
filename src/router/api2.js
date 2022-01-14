@@ -109,6 +109,22 @@ class API {
 		return await this.delApi(`/${doc_type}/${doc_id}`)
 	}
 
+	async storeLphp(sbp_id, data) {
+		return await this.postApi(`/sbp/${sbp_id}/lphp`, data)
+	}
+
+	async publishLphp(sbp_id) {
+		return await this.putApi(`/sbp/${sbp_id}/lphp/publish`)
+	}
+
+	async storeLp(sbp_id, data) {
+		return await this.postApi(`/sbp/${sbp_id}/lp`, data)
+	}
+
+	async publishLp(sbp_id) {
+		return await this.putApi(`/sbp/${sbp_id}/lp/publish`)
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| API for details
@@ -137,8 +153,12 @@ class API {
 		return await this.putApi(`/${doc_type}/${doc_id}/${detail_type}/${detail_id}`, data)
 	}
 
-	upsertLinkedDoc(doc_type, doc_id, data) {
-		return this.postApi(`/${doc_type}/${doc_id}/storelinked`, data)
+	async getLinkedDoc(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/linked`)
+	}
+
+	async storeLinkedDoc(doc_type, doc_id, data) {
+		return await this.postApi(`/${doc_type}/${doc_id}/storelinked`, data)
 	}
 }
 

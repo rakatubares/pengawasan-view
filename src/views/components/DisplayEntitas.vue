@@ -53,6 +53,22 @@
 				{{ data.pekerjaan }}
 			</CCol>
 		</CRow>
+		<CRow class="mb-1">
+			<CCol md="3" class="py-1">
+				<b>No Telepon</b>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ data.nomor_telepon }}
+			</CCol>
+		</CRow>
+		<CRow class="mb-1">
+			<CCol md="3" class="py-1">
+				<b>Email</b>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ data.email }}
+			</CCol>
+		</CRow>
 	</div>
 </template>
 
@@ -65,6 +81,8 @@ const data_default = {
 	tanggal_lahir: null,
 	alamat: null,
 	pekerjaan: null,
+	nomor_telepon: null,
+	email: null,
 }
 
 export default {
@@ -74,8 +92,11 @@ export default {
 			type: String,
 			default: 'Entitas'
 		},
-		data: Object
-	}
+		data: {
+			type: Object,
+			default() {return JSON.parse(JSON.stringify(data_default))}
+		}
+	},
 }
 </script>
 
