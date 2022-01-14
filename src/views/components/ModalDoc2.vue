@@ -78,11 +78,9 @@ export default {
 			this.tabs_list[1].visibility = false
 			this.tabs_list[2].visibility = false
 			this.$emit('close-modal')
-		}
-	},
-	watch: {
-		modal_state: function (val) {
-			switch (val) {
+		},
+		changeTabsProps() {
+			switch (this.state) {
 				case 'show':
 					this.tabs_list[1].visibility = true
 					this.tabs_list[2].visibility = true
@@ -97,19 +95,28 @@ export default {
 					this.tabs_list[1].visibility = true
 					this.tabs_list[2].visibility = true
 					break;
+
+				case 'edit-header':
+					this.tabs_list[1].visibility = true
+					this.tabs_list[2].visibility = true
+					break;
 			
 				default:
 					break;
 			}
 			this.$refs.modal_tabs.getNavs(this.current_tab)
+		}
+	},
+	watch: {
+		state: function () {
+			this.changeTabsProps()
 		},
 		current_tab: function (val) {
 			this.$emit('change-tab', val)
 		}
 	},
 	mounted() {
-		// Change state on mounted to trigger watcher
-		this.modal_state = this.state
+		this.changeTabsProps()
 	}
 }
 </script>
