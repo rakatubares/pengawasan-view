@@ -30,8 +30,7 @@
 						description="Nama terang pemilik/kuasa barang atau sarana pengangkut yang menyaksikan pemeriksaan"
 						:showAlamat="true"
 						:id.sync="data.penindakan.saksi.id"
-					>
-					</MySelectEntitas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -43,8 +42,7 @@
 						:id.sync="data.penindakan.petugas1.user_id"
 						role="p2vue.penindakan"
 						:currentUser="true"
-					>
-					</MySelectPetugas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -55,8 +53,7 @@
 						description="Nama Pejabat Bea dan Cukai yang melakukan penyegelan"
 						:id.sync="data.penindakan.petugas2.user_id"
 						role="p2vue.penindakan"
-					>
-					</MySelectPetugas>
+					/>
 				</CCol>
 			</CRow>
 
@@ -86,6 +83,15 @@ import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
+const default_data = {
+	penindakan: {
+		sprint: {id: null},
+		saksi: {id: null},
+		petugas1: {user_id: null},
+		petugas2: {user_id: null}
+	},
+}
+
 export default {
 	name: 'FormRiksa',
 	components: {
@@ -96,10 +102,24 @@ export default {
 	},
 	props: {
 		state: String,
-		data: Object
+		doc_id: Number
+	},
+	data() {
+		return {
+			data: JSON.parse(JSON.stringify(default_data)),
+		}
 	},
 	methods: {
-		validateData() {
+		async getData() {
+			this.data = await api.getDocumentById('riksa', this.doc_id)
+			if (this.data.penindakan.petugas2 == null) {
+				this.data.penindakan.petugas2 = {user_id: null}
+			}
+			this.$nextTick(function () {
+				this.renderData()
+			})
+		},
+		renderData() {
 			this.$refs.selectSprint.getSprint(this.data.penindakan.sprint.id, true)
 			this.$refs.selectSaksi.getEntitas(this.data.penindakan.saksi.id, true)
 			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
@@ -109,8 +129,7 @@ export default {
 			if (this.state == 'insert') {
 				try {
 					let response = await api.storeDoc('riksa', this.data)
-					let doc_id = response.main.data.id
-					this.$emit('submit-data', doc_id)
+					this.$emit('update:doc_id', response.main.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BA Pemeriksaan berhasil disimpan')
 				} catch (error) {
@@ -118,8 +137,7 @@ export default {
 				}
 			} else if (this.state == 'edit') {
 				try {
-					await api.updateDoc('riksa', this.data.main.data.id, this.data)
-					this.$emit('submit-data')
+					await api.updateDoc('riksa', this.doc_id, this.data)
 					this.alert('Data BA Pemeriksaan berhasil diubah')
 				} catch (error) {
 					console.log('form riksa - update data - error', JSON.parse(JSON.stringify(error)))
@@ -131,11 +149,11 @@ export default {
 		},
 		validatorRequired(val) { return validators.required(val) },
 	},
-	watch: {
-		data: function(val) {
-			this.validateData()
+	async mounted() {
+		if (this.state == 'edit') {
+			await this.getData()
 		}
-	},
+	}
 }
 </script>
 
