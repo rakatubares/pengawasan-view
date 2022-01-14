@@ -56,6 +56,7 @@ import api from '../../../router/api2.js'
 import MyModalDelete from '../../components/ModalDelete.vue'
 import MyModalPengaman from './ModalPengaman.vue'
 import MyTableData from '../../components/TableData.vue'
+
 const tabs_default = {
 	current: 0,
 	list: [
@@ -73,6 +74,7 @@ const tabs_default = {
 		}
 	]
 }
+
 export default {
 	name: 'PagePengaman',
 	components: {
