@@ -68,6 +68,12 @@ class API {
 		return doc
 	}
 
+	async getBasicDataById(doc_type, doc_id) {
+		let response = await this.getApi(`/${doc_type}/${doc_id}/basic`)
+		let doc = response.data.data
+		return doc
+	}
+
 	async getObjek(doc_type, doc_id) {
 		let response = await this.getApi(`/${doc_type}/${doc_id}/objek`)
 		let objek = response.data
@@ -103,6 +109,22 @@ class API {
 		return await this.delApi(`/${doc_type}/${doc_id}`)
 	}
 
+	async storeLphp(sbp_id, data) {
+		return await this.postApi(`/sbp/${sbp_id}/lphp`, data)
+	}
+
+	async publishLphp(sbp_id) {
+		return await this.putApi(`/sbp/${sbp_id}/lphp/publish`)
+	}
+
+	async storeLp(sbp_id, data) {
+		return await this.postApi(`/sbp/${sbp_id}/lp`, data)
+	}
+
+	async publishLp(sbp_id) {
+		return await this.putApi(`/sbp/${sbp_id}/lp/publish`)
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| API for details
@@ -119,6 +141,10 @@ class API {
 		return await this.getApi(`/${doc_type}/${doc_id}/barang/item`)
 	}
 
+	async delItemBarang(doc_type, doc_id, item_id) {
+		await this.delApi(`/${doc_type}/${doc_id}/barang/item/${item_id}`)
+	}
+
 	async insertDetail(doc_type, doc_id, detail_type, data) {
 		return await this.postApi(`/${doc_type}/${doc_id}/${detail_type}`, data)
 	}
@@ -127,8 +153,12 @@ class API {
 		return await this.putApi(`/${doc_type}/${doc_id}/${detail_type}/${detail_id}`, data)
 	}
 
-	upsertLinkedDoc(doc_type, doc_id, data) {
-		return this.postApi(`/${doc_type}/${doc_id}/storelinked`, data)
+	async getLinkedDoc(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/linked`)
+	}
+
+	async storeLinkedDoc(doc_type, doc_id, data) {
+		return await this.postApi(`/${doc_type}/${doc_id}/storelinked`, data)
 	}
 }
 

@@ -58,10 +58,7 @@
 export default {
 	name: 'DisplayBadan',
 	props: {
-		doc: {
-			type: Object,
-			default: null
-		}
+		data_objek: Object
 	},
 	computed: {
 		disp_nama() {
@@ -82,7 +79,7 @@ export default {
 	},
 	data() {
 		return {
-			data: this.doc.objek.data
+			data: this.data_objek.data
 		}
 	},
 }

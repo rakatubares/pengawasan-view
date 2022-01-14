@@ -15,8 +15,9 @@
 							<CSelect
 								placeholder="pilih objek penindakan"
 								:options.sync="options_objek_penindakan"
-								:value.sync="data.objek.type"
+								:value.sync="active_form"
 								:is-valid="validatorRequired"
+								@update:value="$emit('change-value', active_form)"
 								invalid-feedback="Objek penindakan harus dipilih"
 							/>
 						</CCol>
@@ -24,163 +25,75 @@
 				</CForm>
 
 				<MyFormSarkut
-					v-if="data.objek.type == 'sarkut'"
+					v-if="active_form == 'sarkut'"
+					:doc_type="doc_type"
+					:doc_id="doc_id"
 					:data.sync="data"
-					@submit-data="$emit('submit-data')"
-				>
-				</MyFormSarkut>
+					@update:data="$emit('change-data')"
+				/>
 				<MyFormBarang
-					v-if="data.objek.type == 'barang'"
+					v-if="active_form == 'barang'"
+					:doc_type="doc_type"
+					:doc_id="doc_id"
 					:data.sync="data"
-					@submit-data="$emit('submit-data')"
-				>
-				</MyFormBarang>
+					@update:data="$emit('change-data')"
+				/>
 				<MyFormBangunan
-					v-if="data.objek.type == 'bangunan'"
+					v-if="active_form == 'bangunan'"
+					:doc_type="doc_type"
+					:doc_id="doc_id"
 					:data.sync="data"
-					@submit-data="$emit('submit-data')"
-				>
-				</MyFormBangunan>
+					@update:data="$emit('change-data')"
+				/>
 				<MyFormBadan
-					v-if="data.objek.type == 'orang'"
+					v-if="active_form == 'orang'"
+					:doc_type="doc_type"
+					:doc_id="doc_id"
 					:data.sync="data"
-					@submit-data="$emit('submit-data')"
-				>
-				</MyFormBadan>
+					@update:data="$emit('change-data')"
+				/>
+				<MyFormDokumen
+					v-if="active_form == 'dokumen'"
+					:doc_type="doc_type"
+					:doc_id="doc_id"
+					:data.sync="data"
+					@update:data="$emit('change-data')"
+				/>
 			</CCol>
 		</CRow>
-
-		<!-- Penindakan yg dilakukan -->
-		<CRow 
-			v-if="tindakan.show.main"
-		>
-			<CCol sm="12">
-				<CForm class="form-tindak pt-3">
-					<CRow>
-						<CCol sm="12">
-							<h4>Tindakan yang Dilakukan</h4>
-						</CCol>
-					</CRow>
-					<CRow v-if="tindakan.show.riksa">
-						<CCol class="col-3" md="1">
-							<CSwitch 
-								class="mx-1" 
-								color="success" 
-								variant="3d" 
-								v-bind="labelIcon" 
-								:checked.sync="tindakan.data.riksa"
-							/>
-						</CCol>
-						<CCol class="col-9" md="11">
-							Pemeriksaan
-						</CCol>
-					</CRow>
-					<CRow v-if="tindakan.show.tegah">
-						<CCol class="col-3" md="1">
-							<CSwitch 
-								class="mx-1" 
-								color="success" 
-								variant="3d" 
-								v-bind="labelIcon" 
-								:checked.sync="tindakan.data.tegah"
-							/>
-						</CCol>
-						<CCol class="col-9" md="11">
-							Penegahan
-						</CCol>
-					</CRow>
-					<CRow v-if="tindakan.show.segel">
-						<CCol class="col-3" md="1">
-							<CSwitch 
-								class="mx-1" 
-								color="success" 
-								variant="3d" 
-								v-bind="labelIcon" 
-								:checked.sync="tindakan.data.segel"
-							/>
-						</CCol>
-						<CCol class="col-9" md="2">
-							Penyegelan
-						</CCol>
-					</CRow>
-					<CRow v-if="tindakan.data.segel">
-						<CCol class="col-12">
-							<CRow>
-								<CCol class="col-12" md="3">
-									<CSelect
-										label="Jenis Segel"
-										:options="['Kertas', 'Kunci', 'Timah', 'Lakban', 'Segel Elektronik', 'Lainnya']"
-										:value.sync="tindakan.data.data_segel.jenis"
-									/>	
-								</CCol>
-								<CCol class="col-12" md="2">
-									<CInput
-										label="Jumlah Segel"
-										:value.sync="tindakan.data.data_segel.jumlah"
-									/>	
-								</CCol>
-								<CCol class="col-12" md="3">
-									<CInput
-										label="Satuan"
-										:value.sync="tindakan.data.data_segel.satuan"
-									/>	
-								</CCol>
-							</CRow>
-							<CRow>
-								<CCol class="col-12">
-									<CInput
-										label="Tempat Segel"
-										:value.sync="tindakan.data.data_segel.tempat"
-									/>	
-								</CCol>
-							</CRow>
-						</CCol>
-					</CRow>
-				</CForm>
-
-				<!-- Button simpan -->
-				<CRow>
-					<CCol sm="12">
-						<CButton
-							color="success"
-							@click="saveLinkedDoc()"
-						>
-							Simpan
-						</CButton>
-					</CCol>
-				</CRow>
-			</CCol>
-		</CRow>
-
-		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
 <script>
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
-import MyAlert from '../../components/AlertSubmit.vue'
-import MyFormBadan from '../FormDetailBadan.vue'
-import MyFormBangunan from '../FormDetailBangunan.vue'
+import MyFormBadan from './FormDetailBadan.vue'
+import MyFormBangunan from './FormDetailBangunan.vue'
 import MyFormBarang from './FormDetailBarang.vue'
-import MyFormSarkut from '../FormDetailSarkut.vue'
+import MyFormDokumen from './FormDetailDokumen.vue'
+import MyFormSarkut from './FormDetailSarkut.vue'
+
+const data_default = {
+	type: null,
+	data: null
+}
 
 const objek_penindakan_default = [
 	{ value: 'sarkut', label: 'Sarana Pengangkut', disabled: false },
 	{ value: 'barang', label: 'Barang', disabled: false },
 	{ value: 'bangunan', label: 'Bangunan / Tempat', disabled: false },
-	{ value: 'orang', label: 'Badan / Orang', disabled: false }
+	{ value: 'orang', label: 'Badan / Orang', disabled: false },
+	{ value: 'dokumen', label: 'Dokumen', disabled: false },
 ]
 
 export default {
 	name: 'FormDetail',
 	components: {
-		MyAlert,
 		MyFormBadan,
 		MyFormBangunan,
 		MyFormBarang,
-		MyFormSarkut
+		MyFormDokumen,
+		MyFormSarkut,
 	},
 	props: {
 		available_details: {
@@ -189,14 +102,15 @@ export default {
 				return ['sarkut', 'barang', 'bangunan', 'orang']
 			} 
 		},
-		data: Object
+		doc_type: String,
+		doc_id: Number
 	},
 	computed: {
 		options_objek_penindakan() {
-			let options = JSON.parse(JSON.stringify(objek_penindakan_default))
-			for (const idx in options) {
-				if (!(this.available_details.includes(options[idx]['value']))) {
-					options[idx]['disabled'] = true
+			let options = []
+			for (const idx in objek_penindakan_default) {
+				if ((this.available_details.includes(objek_penindakan_default[idx]['value']))) {
+					options.push(objek_penindakan_default[idx])
 				}
 			}
 			return options
@@ -204,85 +118,24 @@ export default {
 	},
 	data() {
 		return {
-			console,
-			active_detail: null,
 			detail_state: 'insert',
-			tindakan: {
-				show: {
-					main: false,
-					riksa: false,
-					tegah: false,
-					segel: false,
-				},
-				data: {
-					riksa: false,
-					tegah: false,
-					segel: false,
-					data_segel: {
-						jenis: 'Kertas',
-						jumlah: null,
-						satuan: null,
-						tempat: null
-					}
-				}
-			},
-			labelIcon: {
-				labelOn: '\u2713',
-				labelOff: '\u2715'
-			},
-		}
-	},
-	watch: {
-		data: function (val) {
-			if (this.data.main.type == 'sbp') {
-				console.log('form detail - objek type', val.objek.type)
-				switch (val.objek.type) {
-					case 'sarkut':
-						this.tindakan.show.main = true
-						this.tindakan.show.riksa = true
-						this.tindakan.show.tegah = true
-						this.tindakan.show.segel = true
-						break;
-
-					case 'barang':
-						this.tindakan.show.main = true
-						this.tindakan.show.riksa = true
-						this.tindakan.show.tegah = true
-						this.tindakan.show.segel = true
-						break;
-
-					case 'bangunan':
-						this.tindakan.show.main = true
-						this.tindakan.show.riksa = true
-						this.tindakan.show.tegah = false
-						this.tindakan.show.segel = true
-						this.tindakan.data.tegah = false
-						break;
-				
-					default:
-						this.tindakan.show.main = false
-						this.tindakan.show.riksa = false
-						this.tindakan.show.tegah = false
-						this.tindakan.show.segel = false
-						this.tindakan.data.riksa = false
-						this.tindakan.data.tegah = false
-						this.tindakan.data.segel = false
-						break;
-				}	
-			}
+			active_form: null,
+			data: JSON.parse(JSON.stringify(data_default)),
 		}
 	},
 	methods: {
+		async getData() {
+			this.data = await api.getObjek(this.doc_type, this.doc_id)
+			this.active_form = this.data.type
+			if (this.data.type != null) {
+				this.$emit('change-data')
+			}
+		},
 		validatorRequired(val) { return validators.required(val) },
-		async saveLinkedDoc() {
-			await api.upsertLinkedDoc(this.data.main.type, this.data.main.data.id, this.tindakan.data)
-			this.$emit('submit-data')
-			this.alert('Data dokumen terkait berhasil disimpan')
-		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
-		},
 	},
+	async mounted() {
+		await this.getData()
+	}
 }
 </script>
 
