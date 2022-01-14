@@ -332,5 +332,7 @@ export default {
 </script>
 
 <style>
-
+.v-input__append-outer {
+	margin: 0 !important;
+}
 </style>

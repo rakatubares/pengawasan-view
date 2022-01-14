@@ -8,8 +8,7 @@
 					<MySelectSprint
 						ref="selectSprint"
 						:id.sync="data.penindakan.sprint.id"
-					>
-					</MySelectSprint>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -147,8 +146,7 @@
 						label="Nama Pengangkut/Pemilik/Kuasa/Saksi"
 						description="Nama terang Pengangkut/Pemilik/Kuasa/Saksi yang menyaksikan penindakan"
 						:id.sync="data.penindakan.saksi.id"
-					>
-					</MySelectEntitas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -160,8 +158,7 @@
 						:id.sync="data.penindakan.petugas1.user_id"
 						role="p2vue.penindakan"
 						:currentUser="true"
-					>
-					</MySelectPetugas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -172,8 +169,7 @@
 						description="Nama Petugas Bea dan Cukai yang melakukan penindakan"
 						:id.sync="data.penindakan.petugas2.user_id"
 						role="p2vue.penindakan"
-					>
-					</MySelectPetugas>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -186,8 +182,7 @@
 						:id_pejabat.sync="data.dokumen.lptp.atasan.user_id"
 						:jabatan.sync="data.dokumen.lptp.jabatan_atasan.kode"
 						:plh.sync="data.dokumen.lptp.plh"
-					>
-					</MySelectPejabat>
+					/>
 				</CCol>
 			</CRow>
 
@@ -211,12 +206,10 @@
 
 <script>
 import _ from 'lodash'
-import axios from "axios"
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
-import api from '../../../router/api.js'
-import api2 from '../../../router/api2.js'
+import api from '../../../router/api2.js'
 import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
@@ -224,6 +217,39 @@ import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
+
+const default_data = {
+	main: {
+		type: 'sbp',
+		data: {
+			uraian_penindakan: null,
+			alasan_penindakan: null,
+			jenis_pelanggaran: 'kepabeanan',
+			wkt_mulai_penindakan: null,
+			wkt_selesai_penindakan: null,
+			hal_terjadi: null,
+		}
+	},
+	penindakan: {
+		lokasi_penindakan: null,
+		sprint: {id: null},
+		saksi: {id: null},
+		petugas1: {user_id: null},
+		petugas2: {user_id: null}
+	},
+	dokumen: {
+		lptp: {
+			jabatan_atasan: {
+				kode: 'bd.0503',
+				jabatan: null
+			},
+			plh: false,
+			atasan: {
+				user_id: null
+			}
+		},
+	}
+}
 
 const custom_validations_default = {
 	tgl_sprint: {
@@ -254,16 +280,26 @@ export default {
 	},
 	props: {
 		state: String,
-		data: Object
+		doc_id: Number
 	},
 	data() {
 		return {
+			data: JSON.parse(JSON.stringify(default_data)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 			jenis_pelanggaran_options: [ ...jenis_pelanggaran ],
 		}
 	},
 	methods: {
-		validateData() {
+		async getData() {
+			this.data = await api.getDocumentById('sbp', this.doc_id)
+			if (this.data.penindakan.petugas2 == null) {
+				this.data.penindakan.petugas2 = {user_id: null}
+			}
+			this.$nextTick(function () {
+				this.renderData()
+			})
+		},
+		renderData() {
 			this.validatorDatetime(this.data.main.data.wkt_mulai_penindakan, 'DD-MM-YYYY HH:mm', 'validasi.wkt_mulai_penindakan', 'Waktu mulai penindakan wajib diisi')
 			this.validatorDatetime(this.data.main.data.wkt_selesai_penindakan, 'DD-MM-YYYY HH:mm', 'validasi.wkt_selesai_penindakan', 'Waktu selesai penindakan wajib diisi')
 			this.validatorSequence(
@@ -284,9 +320,8 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					let response = await api2.storeDoc('sbp', this.data)
-					let doc_id = response.main.data.id
-					this.$emit('submit-data', doc_id)
+					let response = await api.storeDoc('sbp', this.data)
+					this.$emit('update:doc_id', response.main.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data SBP berhasil disimpan')
 				} catch (error) {
@@ -294,8 +329,7 @@ export default {
 				}
 			} else if (this.state == 'edit') {
 				try {
-					await api2.updateDoc('sbp', this.data.main.data.id, this.data)
-					this.$emit('submit-data')
+					await api.updateDoc('sbp', this.data.main.data.id, this.data)
 					this.alert('Data SBP berhasil diubah')
 				} catch (error) {
 					console.log('form sbp - update data - error', JSON.parse(JSON.stringify(response)))
@@ -324,11 +358,16 @@ export default {
 			}
 		}
 	},
-	watch: {
-		data: function(val) {
-			this.validateData()
+	// watch: {
+	// 	data: function(val) {
+	// 		this.validateData()
+	// 	}
+	// },
+	async mounted() {
+		if (this.state == 'edit') {
+			await this.getData()
 		}
-	},
+	}
 }
 </script>
 

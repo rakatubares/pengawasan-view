@@ -57,10 +57,10 @@
 </template>
 
 <script>
-import api from '../../router/api2.js'
-import validators from '../../helpers/validator.js'
-import MyAlert from '../components/AlertSubmit.vue'
-import MySelectEntitas from '../components/SelectEntitas.vue'
+import api from '../../../router/api2.js'
+import validators from '../../../helpers/validator.js'
+import MyAlert from '../../components/AlertSubmit.vue'
+import MySelectEntitas from '../../components/SelectEntitas.vue'
 
 const data_default = {
 	alamat: null,
@@ -75,6 +75,8 @@ export default {
 		MySelectEntitas
 	},
 	props: {
+		doc_type: String,
+		doc_id: Number,
 		data: Object
 	},
 	data() {
@@ -86,7 +88,7 @@ export default {
 	watch: {
 		data: {
 			handler: function(val) {
-				this.parseData(val.objek.data)
+				this.parseData(val.data)
 			}
 		}
 	},
@@ -94,18 +96,17 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					let response = await api.insertDetail(this.data.main.type, this.data.main.data.id, 'bangunan', this.data_objek)
-					this.parseData(response.data.data)
+					let response = await api.insertDetail(this.doc_type, this.doc_id, 'bangunan', this.data_objek)
 					this.state = 'edit'
-					this.$emit('submit-data')
+					this.$emit('update:data', response.data)
 					this.alert('Data bangunan berhasil disimpan')
 				} catch (error) {
 					console.log(error)
 				}
 			} else {
-				api.updateDetail(this.data.main.type, this.data.main.data.id, 'bangunan', this.data_objek.id, this.data_objek)
+				let response = await api.updateDetail(this.doc_type, this.doc_id, 'sarkut', this.data_objek.id, this.data_objek)
 				this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
-				this.$emit('submit-data')
+				this.$emit('update:data', response.data)
 				this.alert('Data bangunan berhasil diubah')
 			}
 		},
@@ -124,9 +125,9 @@ export default {
 		validatorRequired(val) { return validators.required(val) },
 	},
 	mounted() {
-		if (this.data.objek.type == 'bangunan') {
-			if (this.data.objek.data != null) {
-				this.parseData(this.data.objek.data)
+		if (this.data.type == 'bangunan') {
+			if (this.data.data != null) {
+				this.parseData(this.data.data)
 				this.state = 'edit'
 			} else {
 				this.data_objek = JSON.parse(JSON.stringify(data_default))

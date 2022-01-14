@@ -19,7 +19,7 @@
 								@click="createDoc"
 								class="mr-1"
 							>
-								+ Buat SBP
+								+ Buat Baru
 							</CButton>
 						</div>
 					</template>
@@ -117,7 +117,6 @@ export default {
 			this.modal_props.show = true
 		},
 		editDoc(id) {
-			console.log('page sbp - edit doc', id)
 			this.modal_props.state = 'edit'
 			this.modal_props.doc_id = id
 			this.modal_props.show = true
