@@ -198,7 +198,7 @@ class PdfLp extends Pdf {
 					this.pdf.setFont('Helvetica', 'normal')
 					this.pdf.addPage()
 					// Header
-					this.headerLampiran(this.data.dokumen.lptp.no_dok_lengkap)
+					this.headerLampiran(this.data.dokumen.lp.no_dok_lengkap)
 					// Tabel barang
 					this.tabelBarang()
 				}
