@@ -175,7 +175,9 @@ export default {
 		renderData() {
 			this.validatorDatetime(this.data.tanggal_dokumen, 'DD-MM-YYYY HH:mm', 'validasi.tanggal_lphp', 'Tanggal LPHP wajib diisi')
 			this.$refs.selectSbp.getData(this.data.id_sbp, true)
+			this.$refs.selectPenyusun.selected_jabatan = this.data.penyusun.jabatan.kode
 			this.$refs.selectPenyusun.getPetugas(this.data.penyusun.user.user_id, true)
+			this.$refs.selectAtasan.selected_jabatan = this.data.atasan.jabatan.kode
 			this.$refs.selectAtasan.getPetugas(this.data.atasan.user.user_id, true)
 		},
 		async saveData() {
