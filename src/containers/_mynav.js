@@ -20,6 +20,12 @@ export default [
 			},
 			{
 				_name: 'CSidebarNavItem',
+				name: 'LPHP',
+				to: '/lphp',
+				icon: 'cil-file'
+			},
+			{
+				_name: 'CSidebarNavItem',
 				name: 'BA Periksa',
 				to: '/riksa',
 				icon: 'cil-file'

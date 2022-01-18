@@ -13,12 +13,11 @@ const Homepage = () => import('@/views/Homepage')
 const PageBast = () => import('@/views/penindakan/bast/PageBast')
 const PageBukaPengaman = () => import('@/views/penindakan/bukapengaman/PageBukaPengaman')
 const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
+const PageLphp = () => import('@/views/penindakan/lphp/PageLphp')
 const PagePengaman = () => import('@/views/penindakan/pengaman/PagePengaman')
 const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
-// const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
-// const PageTegah = () => import('@/views/penindakan/tegah/PageTegah')
 
 Vue.use(Router)
 
@@ -46,6 +45,11 @@ function configRoutes () {
 					path: 'sbp',
 					name: 'SBP',
 					component: PageSbp
+				},
+				{
+					path: 'lphp',
+					name: 'LPHP',
+					component: PageLphp
 				},
 				{
 					path: 'riksa',
