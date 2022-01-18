@@ -68,10 +68,18 @@ class API {
 		return doc
 	}
 
+	async getDisplayDataById(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/display`)
+	}
+
 	async getBasicDataById(doc_type, doc_id) {
 		let response = await this.getApi(`/${doc_type}/${doc_id}/basic`)
 		let doc = response.data.data
 		return doc
+	}
+
+	async getFormDataById(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/form`)
 	}
 
 	async getObjek(doc_type, doc_id) {
@@ -139,6 +147,10 @@ class API {
 
 	async getItemBarangByDocId(doc_type, doc_id) {
 		return await this.getApi(`/${doc_type}/${doc_id}/barang/item`)
+	}
+
+	async delItemBarang(doc_type, doc_id, item_id) {
+		await this.delApi(`/${doc_type}/${doc_id}/barang/item/${item_id}`)
 	}
 
 	async insertDetail(doc_type, doc_id, detail_type, data) {
