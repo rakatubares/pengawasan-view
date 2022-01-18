@@ -13,6 +13,7 @@ const Homepage = () => import('@/views/Homepage')
 const PageBast = () => import('@/views/penindakan/bast/PageBast')
 const PageBukaPengaman = () => import('@/views/penindakan/bukapengaman/PageBukaPengaman')
 const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
+const PageLp = () => import('@/views/penindakan/lp/PageLp')
 const PageLphp = () => import('@/views/penindakan/lphp/PageLphp')
 const PagePengaman = () => import('@/views/penindakan/pengaman/PagePengaman')
 const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
@@ -50,6 +51,11 @@ function configRoutes () {
 					path: 'lphp',
 					name: 'LPHP',
 					component: PageLphp
+				},
+				{
+					path: 'lp',
+					name: 'LP',
+					component: PageLp
 				},
 				{
 					path: 'riksa',

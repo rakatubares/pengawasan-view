@@ -26,6 +26,12 @@ export default [
 			},
 			{
 				_name: 'CSidebarNavItem',
+				name: 'LP',
+				to: '/lp',
+				icon: 'cil-file'
+			},
+			{
+				_name: 'CSidebarNavItem',
 				name: 'BA Periksa',
 				to: '/riksa',
 				icon: 'cil-file'
