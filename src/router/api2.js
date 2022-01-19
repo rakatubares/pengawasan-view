@@ -68,10 +68,18 @@ class API {
 		return doc
 	}
 
+	async getDisplayDataById(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/display`)
+	}
+
 	async getBasicDataById(doc_type, doc_id) {
 		let response = await this.getApi(`/${doc_type}/${doc_id}/basic`)
 		let doc = response.data.data
 		return doc
+	}
+
+	async getFormDataById(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/form`)
 	}
 
 	async getObjek(doc_type, doc_id) {
