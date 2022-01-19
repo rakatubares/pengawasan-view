@@ -13,12 +13,12 @@
 					v-if="modal_state == 'show'"
 					:doc_id.sync="doc_id"
 				/>
-				<!-- <MyFormLphp
+				<MyFormLp
 					ref="form_lp"
 					v-if="['insert','edit'].includes(modal_state)"
 					:state.sync="modal_state"
 					:doc_id.sync="doc_id"
-				/> -->
+				/>
 			</template>
 			<template #tab-object>
 				<MyDisplayDetail 
@@ -43,7 +43,7 @@
 import MyDisplayDetail from '../../details/displays/DisplayDetail.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
 import MyDisplayLp from './DisplayLp.vue'
-// import MyFormLphp from './FormLphp.vue'
+import MyFormLp from './FormLp.vue'
 import MyModalDoc from '../../components/ModalDoc2.vue'
 
 export default {
@@ -52,7 +52,7 @@ export default {
 		MyDisplayDetail,
 		MyDisplayPdf,
 		MyDisplayLp,
-		// MyFormLphp,
+		MyFormLp,
 		MyModalDoc
 	},
 	props: {
