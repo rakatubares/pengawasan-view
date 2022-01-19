@@ -1,7 +1,6 @@
 <template>
 	<div class="wrapper">
 		<MyModalDoc
-			ref="modal_doc"
 			title="Data BA Serah terima"
 			:state.sync="modal_state"
 			@close-modal="closeModal"
@@ -33,8 +32,8 @@
 			</template>
 			<template #tab-pdf>
 				<MyDisplayPdf 
-					ref="display_pdf"
 					v-if="['show','edit'].includes(modal_state)"
+					:state.sync="modal_state"
 					:doc_type="doc_type" 
 					:doc_id.sync="doc_id"
 				/>
@@ -79,7 +78,6 @@ export default {
 	},
 	watch: {
 		modal_state: function(val) {
-			this.$refs.modal_doc.modal_state = val
 			this.$emit('update:state', val)
 		}
 	},
