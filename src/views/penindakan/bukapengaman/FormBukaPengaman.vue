@@ -320,7 +320,8 @@ export default {
 		validatorNumber(val) { return validators.number(val) },
 		toggleSource(val) {
 			if (val == 'input') {
-				this.data_source = 'Input Data'	
+				this.data_source = 'Input Data'
+				this.data.main.data.jenis_pengaman = 'Kertas'
 			} else {
 				this.data_source = 'Load Data'	
 			}
@@ -359,7 +360,7 @@ export default {
 			this.renderData()
 		},
 		async pengaman_search_query (val) {
-			let data = {'s': val}
+			let data = {'s': val, 'e': this.pengaman_search_exception}
 			let responses = await api.searchDoc('pengaman', data)
 			this.pengaman_search_items = responses.data.data
 		}
