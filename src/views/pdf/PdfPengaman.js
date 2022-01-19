@@ -23,7 +23,7 @@ const props = {
 		cln4: 50,
 		txt4: 53,
 		ttd:125,
-		lamp: 140
+		lamp: 130
 	}
 }
 

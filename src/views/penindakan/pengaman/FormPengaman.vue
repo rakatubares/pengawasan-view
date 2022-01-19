@@ -209,12 +209,7 @@ export default {
 		validatorRequired(val) { return validators.required(val) },
 		validatorNumber(val) { return validators.number(val) },
 	},
-	// watch: {
-	// 	data: function(val) {
-	// 		this.validateData()
-	// 	}
-	// },
-		async mounted() {
+	async mounted() {
 		if (this.state == 'edit') {
 			await this.getData()
 		}
