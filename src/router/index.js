@@ -64,7 +64,7 @@ function configRoutes () {
 				},
 				{
 					path: 'segel',
-					name: 'Segel',
+					name: 'BA Segel',
 					component: PageSegel
 				},
 				{

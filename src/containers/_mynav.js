@@ -38,7 +38,7 @@ export default [
 			},
 			{
 				_name: 'CSidebarNavItem',
-				name: 'Segel',
+				name: 'BA Segel',
 				to: '/segel',
 				icon: 'cil-file'
 			},
