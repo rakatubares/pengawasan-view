@@ -27,7 +27,7 @@
 			</CCol>
 		</CRow>
 		<CRow
-			v-if="[100, 101].includes(status_pdf)"
+			v-if="show_publish_button"
 		>
 			<CCol col="12">
 				<CButton
@@ -56,6 +56,7 @@ export default {
 		MyAlert
 	},
 	props: {
+		state: String,
 		doc_type: String,
 		doc_id: Number,
 	},
@@ -69,9 +70,20 @@ export default {
 			active_pdf: this.doc_type
 		}
 	},
+	computed: {
+		show_publish_button() {
+			let show = false
+			if (this.status_pdf == 100) {
+				show = true
+			}
+
+			return show
+		}
+	},
 	methods: {
 		async getData() {
 			this.data = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.list_pdf = [this.doc_type]
 			for (const key in this.data.dokumen) {
 				if (!this.list_pdf.includes(key)) {
 					this.list_pdf.push(key)
@@ -103,6 +115,7 @@ export default {
 		async publishDoc() {
 			await api.publishDoc(this.doc_type, this.doc_id)
 			await this.getPdf()
+			this.$emit('update:state', 'show')
 		}
 	},
 	mounted() {
