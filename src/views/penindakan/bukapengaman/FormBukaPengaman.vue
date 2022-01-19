@@ -105,14 +105,6 @@
 			</CRow>
 			<CRow>
 				<CCol md="3" sm="12">
-					<!-- <CInput
-						label="Jenis Tanda Pengaman"
-						description="Jenis tanda pengaman yang digunakan (kertas, kunci, timah, lak, segel elektronik, dll)"
-						:value.sync="data.main.data.jenis_pengaman"
-						:is-valid="validatorRequired"
-						invalid-feedback="Jenis tanda pengaman wajib diisi"
-						:disabled="data_source == 'Load Data'"
-					/> -->
 					<CSelect
 						label="Jenis Tanda Pengaman"
 						description="Jenis tanda pengaman yang digunakan"
