@@ -33,8 +33,8 @@
 			</template>
 			<template #tab-pdf>
 				<MyDisplayPdf 
-					ref="display_pdf"
 					v-if="['show','edit'].includes(modal_state)"
+					:state.sync="modal_state"
 					:doc_type="doc_type" 
 					:doc_id.sync="doc_id"
 				/>
