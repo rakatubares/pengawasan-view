@@ -62,6 +62,7 @@ export default {
 		MyAlert
 	},
 	props: {
+		state: String,
 		doc_type: String,
 		doc_id: Number,
 	},
@@ -80,12 +81,6 @@ export default {
 			let show = false
 			if (this.status_pdf == 100) {
 				show = true
-			} else if ((this.status_pdf == 102) && (this.active_pdf == 'lphp')) {
-				show = true
-			} else if ((this.status_pdf == 103) && (this.active_pdf == 'lp')) {
-				show = true
-			} else {
-				show = false
 			}
 
 			return show
@@ -154,25 +149,9 @@ export default {
 			this.show_pdf = true
 		},
 		async publishDoc() {
-			switch (this.status_pdf) {
-				case 100:
-					await api.publishDoc(this.doc_type, this.doc_id)		
-					break;
-
-				case 102:
-					await api.publishLphp(this.doc_id)
-					this.$emit('publish-refresh', this.doc_id)
-					break;
-
-				case 103:
-					await api.publishLp(this.doc_id)
-					this.$emit('publish-refresh', this.doc_id)
-					break;
-			
-				default:
-					break;
-			}
+			await api.publishDoc(this.doc_type, this.doc_id)	
 			await this.getPdf()
+			this.$emit('update:state', 'show')
 		}
 	},
 	mounted() {

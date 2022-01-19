@@ -68,10 +68,18 @@ class API {
 		return doc
 	}
 
+	async getDisplayDataById(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/display`)
+	}
+
 	async getBasicDataById(doc_type, doc_id) {
 		let response = await this.getApi(`/${doc_type}/${doc_id}/basic`)
 		let doc = response.data.data
 		return doc
+	}
+
+	async getFormDataById(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/form`)
 	}
 
 	async getObjek(doc_type, doc_id) {
@@ -107,22 +115,6 @@ class API {
 
 	async deleteDoc(doc_type, doc_id) {
 		return await this.delApi(`/${doc_type}/${doc_id}`)
-	}
-
-	async storeLphp(sbp_id, data) {
-		return await this.postApi(`/sbp/${sbp_id}/lphp`, data)
-	}
-
-	async publishLphp(sbp_id) {
-		return await this.putApi(`/sbp/${sbp_id}/lphp/publish`)
-	}
-
-	async storeLp(sbp_id, data) {
-		return await this.postApi(`/sbp/${sbp_id}/lp`, data)
-	}
-
-	async publishLp(sbp_id) {
-		return await this.putApi(`/sbp/${sbp_id}/lp/publish`)
 	}
 
 	/*
