@@ -94,11 +94,15 @@
 				</CCol>
 			</CRow>
 		</CForm>
+
+		<!-- Alert -->
+		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
 <script>
 import api from '../../../router/api2.js'
+import MyAlert from '../../components/AlertSubmit.vue'
 
 const default_data = {
 	show: {
@@ -121,6 +125,9 @@ const default_data = {
 
 export default {
 	name: "FormTindakan",
+	components: {
+		MyAlert
+	},
 	props: {
 		active_details: String,
 		doc_type: String,
@@ -172,6 +179,10 @@ export default {
 		async saveLinkedDoc() {
 			let docs = await api.storeLinkedDoc(this.doc_type, this.doc_id, this.data_tindakan.data)
 			this.renderData(docs)
+			this.alert('Data tindakan berhasil disimpan')
+		},
+		alert(text, color, time) {
+			this.$refs.alert.show_alert(text, color, time)
 		},
 		renderData(docs) {
 			let linked_docs = docs.data.data

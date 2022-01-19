@@ -358,11 +358,6 @@ export default {
 			}
 		}
 	},
-	// watch: {
-	// 	data: function(val) {
-	// 		this.validateData()
-	// 	}
-	// },
 	async mounted() {
 		if (this.state == 'edit') {
 			await this.getData()
