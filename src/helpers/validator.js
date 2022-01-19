@@ -9,8 +9,18 @@ validators.number = (val) => {
 	return (!Number.isNaN(Number(val))) && (Number(val) > 0)
 }
 
+validators.phone = (val) => {
+	const re = /^[\+|0][0-9]{1,}$/
+	return re.test(val)
+}
+
 validators.integer = (val) => {
 	return Number(val) === parseInt(val, 10)
+}
+
+validators.email = (val) => {
+	const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+	return re.test(val)
 }
 
 validators.date = (val) => {
