@@ -35,8 +35,8 @@
 			@close-modal="closeModal"
 		/>
 
-		<!-- Modal konfirmasi delete SBP -->
-		<!-- <MyModalDelete
+		<!-- Modal konfirmasi delete LP -->
+		<MyModalDelete
 			v-if="modal_delete_props.show"
 			:doc_type="modal_delete_props.doc_type"
 			:doc_id="modal_delete_props.doc_id"
@@ -46,13 +46,13 @@
 			<template #text>
 				<span v-html="modal_delete_props.text"></span>
 			</template>
-		</MyModalDelete> -->
+		</MyModalDelete>
 	</div>
 </template>
 
 <script>
 import api2 from '../../../router/api2.js'
-// import MyModalDelete from '../../components/ModalDelete.vue'
+import MyModalDelete from '../../components/ModalDelete.vue'
 import MyModalLp from './ModalLp.vue'
 import MyTableData from '../../components/TableData.vue'
 
@@ -77,7 +77,7 @@ const tabs_default = {
 export default {
 	name: 'PageLp',
 	components: {
-		// MyModalDelete,
+		MyModalDelete,
 		MyModalLp,
 		MyTableData,
 	},
@@ -132,9 +132,7 @@ export default {
 			this.modal_props.show = false
 		},
 		deleteDoc(item) {
-			let text = "Apakah Anda yakin untuk menghapus data " 
-				+ item.no_dok_lengkap.bold() 
-				+ " nomor SBP " 
+			let text = "Apakah Anda yakin untuk menghapus draft LP atas SBP nomor "
 				+ item.no_sbp.bold() 
 				+ "?"
 			
