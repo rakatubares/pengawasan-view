@@ -17,15 +17,23 @@
 						<b>No SBP</b>
 					</CCol>
 					<CCol md="9" class="py-1">
-						{{ disp_no_sbp }}
+						{{ disp_sbp }}
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
-						<b>Tgl SBP</b>
+						<b>No LPTP</b>
 					</CCol>
 					<CCol md="9" class="py-1">
-						{{ disp_tgl_sbp }}
+						{{ disp_lptp }}
+					</CCol>
+				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3" class="py-1">
+						<b>Uraian Penindakan</b>
+					</CCol>
+					<CCol md="9" class="py-1">
+						{{ disp_uraian }}
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
@@ -86,8 +94,27 @@ export default {
 	computed: {
 		disp_no_lphp() { return this.data_lphp.no_dok_lengkap || '-' },
 		disp_tgl_lphp() { return this.data_lphp.tanggal_dokumen || '-' },
-		disp_no_sbp() { return this.data_lphp.no_sbp || '-' },
-		disp_tgl_sbp() { return this.data_lphp.tanggal_sbp || '-' },
+		disp_sbp() {
+			let txt_no_sbp = this.data_lphp.no_sbp || '-'
+			let txt_tgl_sbp = ''
+			if (this.data_lphp.tanggal_sbp != null) {
+				txt_tgl_sbp = ' tanggal ' + this.data_lphp.tanggal_sbp
+			} else {
+				txt_tgl_sbp = ''
+			}
+			return txt_no_sbp + txt_tgl_sbp
+		},
+		disp_lptp() {
+			let txt_no_lptp = this.data_lphp.no_lptp || '-'
+			let txt_tgl_lptp = ''
+			if (this.data_lphp.tanggal_lptp != null) {
+				txt_tgl_lptp = ' tanggal ' + this.data_lphp.tanggal_lptp
+			} else {
+				txt_tgl_lptp = ''
+			}
+			return txt_no_lptp + txt_tgl_lptp
+		},
+		disp_uraian() { return this.data_lphp.uraian_penindakan || '-' },
 		disp_analisa() { return this.data_lphp.analisa || '-' },
 		disp_catatan() { return this.data_lphp.catatan || '-' }
 	},
