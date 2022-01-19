@@ -32,54 +32,6 @@
 					title="Petugas 2"
 					:data.sync="data_riksa.penindakan.petugas2"
 				/>
-				<!-- <CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>Nama Pemilik/Saksi</b>
-					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_nama_saksi }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>Alamat</b>
-					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_alamat_saksi }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>Pekerjaan</b>
-					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_pekerjaan_saksi }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>Identitas</b>
-					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_identitas }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>Petugas 1</b>
-					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_petugas1 }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>Petugas 2</b>
-					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_petugas2 }}
-					</CCol>
-				</CRow> -->
 			</CCol>
 		</CRow>
 	</div>
@@ -121,18 +73,6 @@ export default {
 		disp_tgl_ba_riksa() { return this.data_riksa.penindakan.tanggal_penindakan || '-' },
 		disp_sprint() { return ((this.data_riksa.penindakan.sprint.nomor_sprint || '') + ' tanggal ' + (this.data_riksa.penindakan.sprint.tanggal_sprint || '')) },
 		disp_lokasi() { return this.data_riksa.penindakan.lokasi_penindakan || '-' },
-		// disp_nama_saksi() { return this.data.penindakan.saksi.nama || '-' },
-		// disp_alamat_saksi() { return this.data.penindakan.saksi.alamat || '-' },
-		// disp_pekerjaan_saksi() { return this.data.penindakan.saksi.pekerjaan || '-' },
-		// disp_identitas() { return (this.data.penindakan.saksi.jenis_identitas || '') + ' ' + (this.data.penindakan.saksi.nomor_identitas || '-') },
-		// disp_petugas1() { return this.data.penindakan.petugas1.name || '-' },
-		// disp_petugas2() { 
-		// 	if (this.data.penindakan.petugas2 != null) {
-		// 		return this.data.penindakan.petugas2.name
-		// 	} else {
-		// 		return '-'
-		// 	}
-		// },
 	},
 	methods: {
 		async getData() {

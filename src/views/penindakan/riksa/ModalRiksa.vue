@@ -1,7 +1,6 @@
 <template>
 	<div class="wrapper">
 		<MyModalDoc
-			ref="modal_doc"
 			title="Data BA Pemeriksaan"
 			:state.sync="modal_state"
 			@close-modal="closeModal"
@@ -33,6 +32,7 @@
 			<template #tab-pdf>
 				<MyDisplayPdf 
 					v-if="['show','edit'].includes(modal_state)"
+					:state.sync="modal_state"
 					:doc_type="doc_type" 
 					:doc_id.sync="doc_id"
 				/>
@@ -49,41 +49,6 @@ import MyFormDetail from '../../details/Options/FormDetail.vue'
 import MyFormRiksa from './FormRiksa.vue'
 import MyModalDoc from '../../components/ModalDoc2.vue'
 
-// const data_default = {
-// 	main: {
-// 		data: {
-// 			id: null,
-// 			no_dok_lengkap: null,
-// 		}
-// 	},
-// 	penindakan: {
-// 		tanggal_penindakan: null,
-// 		lokasi_penindakan: null,
-// 		sprint: {
-// 			id: null,
-// 			nomor_sprint: null,
-// 			tanggal_sprint: null
-// 		},
-// 		saksi: {
-// 			id: null,
-// 			nama: null
-// 		},
-// 		petugas1: {
-// 			user_id: null,
-// 			name: null,
-// 			nip: null
-// 		},
-// 		petugas2: {
-// 			user_id: null,
-// 			name: null,
-// 			nip: null
-// 		}
-// 	},
-// 	objek: {
-// 		type: null,
-// 		data: null
-// 	},
-// }
 export default {
 	name: 'ModalRiksa',
 	components: {
