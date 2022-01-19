@@ -37,7 +37,7 @@ function configRoutes () {
 				},
 				{
 					path: 'bukasegel',
-					name: 'BukaSegel',
+					name: 'BA Buka Segel',
 					component: PageBukaSegel
 				},
 				{
