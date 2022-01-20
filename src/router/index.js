@@ -10,6 +10,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
+const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
 
 Vue.use(Router)
@@ -35,8 +36,13 @@ function configRoutes () {
 					component: Homepage
 				},
 				{
+					path: 'segel',
+					name: 'BA Segel',
+					component: PageSegel
+				},
+				{
 					path: 'titip',
-					name: 'Penitipan',
+					name: 'BA Penitipan',
 					component: PageTitip
 				},
 			]
@@ -65,6 +71,7 @@ router.beforeEach(async (to, from, next) => {
 			cookies = Cookie.parse(document.cookie)
 			token = cookies[token_name]
 		} else {
+			// Store user info
 			Store.getters.sso.getUserInfo()
 				.then((e) => {
 					if (!e.data) {
@@ -74,6 +81,9 @@ router.beforeEach(async (to, from, next) => {
 						Store.commit('set', ['userInfo', e.data])
 					}
 				})
+
+			// Store token
+			Store.commit('set', ['token', token])
 		}
 	} else {
 		console.log('DEVELOPMENT - NO SSO')

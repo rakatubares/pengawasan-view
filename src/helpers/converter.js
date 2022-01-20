@@ -98,9 +98,9 @@ converters.sarkut = (data) => {
 
 		let flight = converters.string(data.no_flight_trayek)
 
-		let jml_kapasitas = converters.string_format(converters.string(data.kapasitas), '{} ')
+		let jumlah_kapasitas = converters.string_format(converters.string(data.jumlah_kapasitas), '{} ')
 		let satuan_kapasitas = converters.string(data.satuan_kapasitas)
-		let kapasitas = jml_kapasitas + satuan_kapasitas
+		let kapasitas = jumlah_kapasitas + satuan_kapasitas
 
 		let pilot = converters.string(data.pilot.nama)
 
@@ -204,16 +204,16 @@ converters.badan = (data) => {
 	}
 
 	if (data != null) {
-		let nama = converters.string(data.entitas.nama)
+		let nama = converters.string(data.nama)
 		
-		let tgl_lahir = converters.string(data.entitas.tanggal_lahir)
+		let tgl_lahir = converters.string(data.tanggal_lahir)
 		
-		let warga_negara = converters.string(data.entitas.warga_negara)
+		let warga_negara = converters.string(data.warga_negara)
 		
-		let alamat = converters.string(data.entitas.alamat).replace('\n', ' ')
+		let alamat = converters.string(data.alamat).replace('\n', ' ')
 
-		let jns_identitas = converters.string_format(converters.string(data.entitas.jenis_identitas), '{} ')
-		let no_identitas = converters.string(data.entitas.nomor_identitas)
+		let jns_identitas = converters.string_format(converters.string(data.jenis_identitas), '{} ')
+		let no_identitas = converters.string(data.nomor_identitas)
 		let identitas = jns_identitas + no_identitas
 
 		parsedData = {

@@ -14,7 +14,13 @@ export default [
 			},
 			{
 				_name: 'CSidebarNavItem',
-				name: 'Penitipan',
+				name: 'BA Segel',
+				to: '/segel',
+				icon: 'cil-file'
+			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'BA Penitipan',
 				to: '/titip',
 				icon: 'cil-file'
 			},

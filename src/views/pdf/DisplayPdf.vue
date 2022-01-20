@@ -1,0 +1,129 @@
+<template>
+	<div class="wrapper">
+		<CRow>
+			<CCol>
+				<CButton 
+					v-for="doc_type in list_pdf"
+					:key="doc_type"
+					class="mt-3 mx-1"
+					shape="pill"
+					variant="outline"
+					color="info"
+					@click="changePdf(doc_type)"
+					:pressed="active_pdf == doc_type"
+				>
+					{{ doc_type }}
+				</CButton>
+			</CCol>
+		</CRow>
+		<CRow class="mb-2">
+			<CCol col="12">
+				<object
+					v-if="show_pdf"
+					:data="src_pdf" 
+					width="100%" 
+					height="600px"
+				></object>
+			</CCol>
+		</CRow>
+		<CRow
+			v-if="show_publish_button"
+		>
+			<CCol col="12">
+				<CButton
+					color="success"
+					shape="pill"
+					@click="publishDoc"
+				>
+					Terbitkan
+				</CButton>
+			</CCol>
+		</CRow>
+
+		<!-- Alert -->
+		<MyAlert ref="alert"></MyAlert>
+	</div>
+</template>
+
+<script>
+import api from '../../router/api2.js'
+import PdfSegel from '../pdf/PdfSegel.js'
+import MyAlert from '../components/AlertSubmit.vue'
+
+export default {
+	name: "DisplayPdf",
+	components: {
+		MyAlert
+	},
+	props: {
+		state: String,
+		doc_type: String,
+		doc_id: Number,
+	},
+	data() {
+		return {
+			data: null,
+			show_pdf: false,
+			src_pdf: null,
+			status_pdf: null,
+			list_pdf: [this.doc_type],
+			active_pdf: this.doc_type
+		}
+	},
+	computed: {
+		show_publish_button() {
+			let show = false
+			if (this.status_pdf == 100) {
+				show = true
+			}
+
+			return show
+		}
+	},
+	methods: {
+		async getData() {
+			this.data = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.list_pdf = [this.doc_type]
+			for (const key in this.data.dokumen) {
+				if (!this.list_pdf.includes(key)) {
+					this.list_pdf.push(key)
+				}
+			}
+			this.status_pdf = this.data.dokumen[this.doc_type]['kode_status']
+		},
+		async getPdf() {
+			await this.getData()
+			
+			switch (this.active_pdf) {
+				case 'segel':
+					let pdfSegel = new PdfSegel(this.data)
+					this.src_pdf = pdfSegel.generatePdf()
+					break;
+			
+				default:
+					break;
+			}
+
+			this.show_pdf = true
+		},
+		changePdf(doc_type) {
+			this.active_pdf = doc_type
+			this.show_pdf = false
+			this.getPdf()
+			this.show_pdf = true
+		},
+		async publishDoc() {
+			await api.publishDoc(this.doc_type, this.doc_id)
+			await this.getPdf()
+			this.$emit('update:state', 'show')
+		}
+	},
+	mounted() {
+		this.getPdf()
+	}
+}
+</script>
+
+<style>
+
+</style>
