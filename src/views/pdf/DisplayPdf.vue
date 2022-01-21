@@ -47,7 +47,8 @@
 
 <script>
 import api from '../../router/api2.js'
-import PdfSegel from '../pdf/PdfSegel.js'
+import PdfSegel from './PdfSegel.js'
+import PdfTitip from './PdfTitip.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -98,6 +99,11 @@ export default {
 				case 'segel':
 					let pdfSegel = new PdfSegel(this.data)
 					this.src_pdf = pdfSegel.generatePdf()
+					break;
+
+				case 'titip':
+					let pdfTitip = new PdfTitip(this.data)
+					this.src_pdf = pdfTitip.generatePdf()
 					break;
 			
 				default:

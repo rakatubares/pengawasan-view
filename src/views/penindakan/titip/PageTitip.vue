@@ -16,10 +16,10 @@
 						<div class="card-header-actions">
 							<CButton 
 								color="primary" 
-								@click="createNewDoc()"
+								@click="createDoc"
 								class="mr-1"
 							>
-								+ Buat BA Penitipan
+								+ Buat Baru
 							</CButton>
 						</div>
 					</template>
@@ -28,7 +28,13 @@
 		</CRow>
 
 		<!-- Modal input BA Penitipan -->
-		<MyModalTabs
+		<MyModalTitip
+			v-if="modal_props.show"
+			:state="modal_props.state"
+			:id.sync="modal_props.doc_id"
+			@close-modal="closeModal"
+		/>
+		<!-- <MyModalTabs
 			ref="modal_tabs"
 			title="Data BA Penitipan"
 			v-if="modal_props.show"
@@ -82,47 +88,52 @@
 					></MyPdfTitip>
 				</CTab>
 			</template>
-		</MyModalTabs>
+		</MyModalTabs> -->
 
-		<!-- Modal konfirmasi delete SBP -->
-		<MyModalDelete
+		<!-- Modal konfirmasi delete BA Penitipan -->
+		<!-- <MyModalDelete
 			v-if="modal_delete_props.show"
 			:url.sync="modal_delete_props.url"
 			@close-modal="closeModalDelete"
-			@delete-data="closeModalDelete(); getDataTable()"
+			@delete-data="closeModalDelete"
 		>
 			<template #text>
 				<span v-html="modal_delete_props.text"></span>
 			</template>
-		</MyModalDelete>
+		</MyModalDelete> -->
 	</div>
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 
-import api from '../../../router/api.js'
-import MyDisplayDetail from '../../details/DisplayDetail.vue'
-import MyDisplayTitip from '../titip/DisplayTitip.vue'
-import MyFormTitip from '../titip/FormTitip.vue'
-import MyModalDelete from '../../components/ModalDelete.vue'
-import MyModalTabs from '../../components/ModalTabs.vue'
-import MyPdfTitip from '../titip/PdfTitip.vue'
+// import api from '../../../router/api.js'
+import api from '../../../router/api2.js'
+// import MyDisplayDetail from '../../details/DisplayDetail.vue'
+// import MyDisplayTitip from '../titip/DisplayTitip.vue'
+// import MyFormTitip from '../titip/FormTitip.vue'
+// import MyModalDelete from '../../components/ModalDelete.vue'
+// import MyModalTabs from '../../components/ModalTabs.vue'
+// import MyPdfTitip from '../titip/PdfTitip.vue'
+// import MyTableData from '../../components/TableData.vue'
+
+// import MyModalDelete from '../../components/ModalDelete.vue'
+import MyModalTitip from './ModalTitip.vue'
 import MyTableData from '../../components/TableData.vue'
 
 const tabs_default = {
 	current: 0,
 	list: [
 		{
-			title: 'Header',
+			title: 'Uraian',
 			visibility: true
 		}, 
 		{
-			title: 'Detail',
+			title: 'Objek',
 			visibility: false
 		}, 
 		{
-			title: 'Form BA Penitipan',
+			title: 'Print',
 			visibility: false
 		}
 	]
@@ -131,19 +142,19 @@ const tabs_default = {
 export default {
 	name: 'PageTitip',
 	components: {
-		MyDisplayDetail,
-		MyDisplayTitip,
-		MyFormTitip,
-		MyModalDelete,
-		MyModalTabs,
-		MyPdfTitip,
+		// MyDisplayDetail,
+		// MyDisplayTitip,
+		// MyFormTitip,
+		// MyModalDelete,
+		// MyModalTabs,
+		MyModalTitip,
 		MyTableData
 	},
 	data() {
 		return {
 			fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Penitipan' },
-				{ key: 'tgl_dok', label: 'Tgl BA' },
+				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
 				{ key: 'nama_penerima', label: 'Pemilik/Penerima' },
 				{ key: 'petugas1', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
@@ -151,97 +162,127 @@ export default {
 			],
 			list_table: [],
 			doc_type: 'titip',
-			available_details: ['sarkut', 'barang', 'bangunan'],
 			modal_props: {
 				show: false,
-				state: 'insert',
-				tabs: JSON.parse(JSON.stringify(tabs_default)),
-				doc_id: null,
-				header_form: false,
-				header_display: false
+				state: null,
+				doc_id: null
 			},
-			modal_delete_props: {
-				show: false,
-				url: null,
-				text: null
-			}
+			// modal_delete_props: {
+			// 	show: false,
+			// 	url: null,
+			// 	text: null
+			// }
 		}
 	},
 	methods: {
-		getDataTable() {
-			axios
-				.get(api.getPenitipan())
-				.then(
-					(response) => {
-						this.list_table = response.data.data
-					}
-				)
+		async getDataTable() {
+			this.list_table = await api.getListDocuments('titip')
 		},
-		showDoc(id) {
-			this.modal_props.state = 'display'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
-			this.modal_props.doc_id = id
-			this.modal_props.header_form = false
-			this.modal_props.header_display = true
-			this.modal_props.show = true
-		},
-		createNewDoc() {
+		// showDoc(id) {
+		// 	this.modal_props.state = 'display'
+		// 	this.modal_props.tabs.list[1]['visibility'] = true
+		// 	this.modal_props.tabs.list[2]['visibility'] = true
+		// 	this.modal_props.doc_id = id
+		// 	this.modal_props.header_form = false
+		// 	this.modal_props.header_display = true
+		// 	this.modal_props.show = true
+		// },
+		// createNewDoc() {
+		// 	this.modal_props.state = 'insert'
+		// 	this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
+		// 	this.modal_props.doc_id = null
+		// 	this.modal_props.header_form = true
+		// 	this.modal_props.header_display = false
+		// 	this.modal_props.show = true
+		// },
+		// editDoc(id) {
+		// 	this.modal_props.state = 'edit'
+		// 	this.modal_props.tabs.list[1]['visibility'] = true
+		// 	this.modal_props.tabs.list[2]['visibility'] = true
+		// 	this.modal_props.doc_id = id
+		// 	this.modal_props.header_form = true
+		// 	this.modal_props.header_display = false
+		// 	this.modal_props.show = true
+		// },
+		// closeModalInput() {
+		// 	this.getDataTable()
+		// 	this.modal_props.show = false
+		// 	this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
+		// 	this.modal_props.doc_id = null
+		// 	this.modal_props.header_form = false
+		// 	this.modal_props.header_display = false
+		// },
+		// saveData(state) {
+		// 	if (state == 'insert') {
+		// 		this.displayTab(1)
+		// 		this.displayTab(2)
+		// 		this.$refs.modal_tabs.getNavs(0)
+		// 	} else {
+		// 		this.refreshPdf()
+		// 	}
+		// },
+		// deleteDoc(item) {
+		// 	let text = "Apakah Anda yakin untuk menghapus data " 
+		// 		+ item.no_dok_lengkap.bold() 
+		// 		+ " a.n. " 
+		// 		+ item.nama_penerima.bold() 
+		// 		+ "?"
+			
+		// 	this.modal_delete_props.url = api.getPenitipanById(item.id)
+		// 	this.modal_delete_props.text = text
+		// 	this.modal_delete_props.show = true
+		// },
+		// closeModalDelete() {
+		// 	this.modal_delete_props.url = null
+		// 	this.modal_delete_props.text = null
+		// 	this.modal_delete_props.show = false
+		// },
+		// displayTab(tab_index) {
+		// 	this.modal_props.tabs.list[tab_index]['visibility'] = true
+		// },
+		// refreshPdf() {
+		// 	this.$refs.pdf_doc.showPdf()
+		// }
+		createDoc() {
 			this.modal_props.state = 'insert'
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
 			this.modal_props.doc_id = null
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
 			this.modal_props.show = true
 		},
 		editDoc(id) {
 			this.modal_props.state = 'edit'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
 			this.modal_props.doc_id = id
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
 			this.modal_props.show = true
 		},
-		closeModalInput() {
-			this.getDataTable()
-			this.modal_props.show = false
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-			this.modal_props.doc_id = null
-			this.modal_props.header_form = false
-			this.modal_props.header_display = false
+		showDoc(id) {
+			this.modal_props.state = 'show'
+			this.modal_props.doc_id = id
+			this.modal_props.show = true
 		},
-		saveData(state) {
-			if (state == 'insert') {
-				this.displayTab(1)
-				this.displayTab(2)
-				this.$refs.modal_tabs.getNavs(0)
-			} else {
-				this.refreshPdf()
-			}
+		closeModal() {
+			this.getDataTable()
+			this.modal_props.state = null
+			this.modal_props.doc_id = null
+			this.modal_props.show = false
 		},
 		deleteDoc(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
 				+ " a.n. " 
-				+ item.nama_penerima.bold() 
+				+ item.nama_saksi.bold() 
 				+ "?"
 			
-			this.modal_delete_props.url = api.getPenitipanById(item.id)
+			this.modal_delete_props.doc_type = this.doc_type
+			this.modal_delete_props.doc_id = item.id
 			this.modal_delete_props.text = text
 			this.modal_delete_props.show = true
 		},
 		closeModalDelete() {
-			this.modal_delete_props.url = null
+			this.getDataTable()
+			this.modal_delete_props.doc_type = null
+			this.modal_delete_props.doc_id = null
 			this.modal_delete_props.text = null
 			this.modal_delete_props.show = false
 		},
-		displayTab(tab_index) {
-			this.modal_props.tabs.list[tab_index]['visibility'] = true
-		},
-		refreshPdf() {
-			this.$refs.pdf_doc.showPdf()
-		}
 	},
 	created() {
 		this.getDataTable()
