@@ -1,6 +1,6 @@
 <template>
 	<div class="wrapper">
-		<CRow>
+		<CRow v-if="show_button">
 			<CCol>
 				<CButton 
 					v-for="doc_type in list_pdf"
@@ -47,6 +47,7 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfContoh from './PdfContoh.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -58,6 +59,10 @@ export default {
 		state: String,
 		doc_type: String,
 		doc_id: Number,
+		show_button: {
+			type: Boolean,
+			default: true
+		}
 	},
 	data() {
 		return {
@@ -94,6 +99,10 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
+				case 'contoh':
+					let pdfContoh = new PdfContoh(this.data)
+					this.src_pdf = pdfContoh.generatePdf()
+					break;
 
 				default:
 					break;
