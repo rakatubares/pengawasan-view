@@ -253,17 +253,10 @@ export default {
 				this.data.main.data.petugas2 = {user_id: null}
 			}
 			if (this.data.dokumen.segel != null) {
-				// Display current BA segel
-				let search_data = {
-					's': this.data.dokumen.segel.no_dok_lengkap,
-					'e': this.data.dokumen.segel.id
-				}
-				let segel_items = await api.searchDoc('segel', search_data)
-				this.segel_search_items = segel_items.data.data
-				this.segel_search_value = this.segel_search_items[0]
-
-				// Set filter exception
+				// Get data segel
 				this.segel_search_exception = this.data.dokumen.segel.id
+				await this.search_segel(this.data.dokumen.segel.no_dok_lengkap)
+				this.segel_search_value = this.segel_search_items[0]
 
 				this.$emit('update:state', 'edit-header')
 				this.data_source = 'Load Segel'
@@ -342,6 +335,11 @@ export default {
 				// Specify segel id
 				this.data.dokumen.segel.id = id
 			}
+		},
+		async search_segel(search) {
+			let data = {'src': search, 'sta': [200, 205], 'exc': this.segel_search_exception}
+			let responses = await api.searchDoc('segel', data)
+			this.segel_search_items = responses.data.data
 		}
 	},
 	watch: {
@@ -349,9 +347,7 @@ export default {
 			this.renderData()
 		},
 		async segel_search_query (val) {
-			let data = {'s': val, 'e': this.segel_search_exception}
-			let responses = await api.searchDoc('segel', data)
-			this.segel_search_items = responses.data.data
+			await this.search_segel(val)
 		},
 	},
 	async mounted() {
