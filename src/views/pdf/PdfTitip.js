@@ -114,7 +114,12 @@ class PdfTitip extends Pdf {
 		this.pdf.text('Pemilik/kuasanya', this.props.ind.alp, ln_nip_1)
 
 		// Saksi
-		this.pdf.text(this.data.dokumen.titip.saksi.nama, this.props.ind.alp, ln_nama_2)
+		if (this.data.dokumen.titip.saksi != null) {
+			var txt_nama_saksi = this.data.dokumen.titip.saksi.nama
+		} else {
+			var txt_nama_saksi = '...........................................'
+		}
+		this.pdf.text(txt_nama_saksi, this.props.ind.alp, ln_nama_2)
 		this.pdf.text('Saksi', this.props.ind.alp, ln_nip_2)
 
 		// Pejabat
