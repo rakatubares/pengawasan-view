@@ -58,6 +58,7 @@ import PdfRiksa from './PdfRiksa.js'
 import PdfSbp from './PdfSbp.js'
 import PdfSegel from './PdfSegel.js'
 import PdfTegah from './PdfTegah.js'
+import PdfTitip from './PdfTitip.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -149,6 +150,11 @@ export default {
 					let pdfTegah = new PdfTegah(this.data)
 					this.src_pdf = pdfTegah.generatePdf()
 					break;
+				
+				case 'titip':
+					let pdfTitip = new PdfTitip(this.data)
+					this.src_pdf = pdfTitip.generatePdf()
+					break;
 
 				case 'pengaman':
 					let pdfPengaman = new PdfPengaman(this.data)
@@ -158,7 +164,6 @@ export default {
 				case 'bast':
 					let pdfBast = new PdfBast(this.data)
 					this.src_pdf = pdfBast.generatePdf()
-					break;
 			
 				default:
 					break;

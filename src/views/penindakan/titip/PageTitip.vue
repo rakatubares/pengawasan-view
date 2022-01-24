@@ -16,10 +16,10 @@
 						<div class="card-header-actions">
 							<CButton 
 								color="primary" 
-								@click="createNewDoc()"
+								@click="createDoc"
 								class="mr-1"
 							>
-								+ Buat BA Penitipan
+								+ Buat Baru
 							</CButton>
 						</div>
 					</template>
@@ -28,68 +28,20 @@
 		</CRow>
 
 		<!-- Modal input BA Penitipan -->
-		<MyModalTabs
-			ref="modal_tabs"
-			title="Data BA Penitipan"
+		<MyModalTitip
 			v-if="modal_props.show"
-			:tabs_list.sync="modal_props.tabs.list"
-			:current_tab.sync="modal_props.tabs.current"
-			@close-modal="closeModalInput"
-		>
-			<template #tab-header>
-				<CTab :title="modal_props.tabs.list[0]['title']">
-					<MyFormTitip
-						ref="form_segel"
-						v-if="modal_props.header_form"
-						:id.sync="modal_props.doc_id"
-						:state.sync="modal_props.state"
-						@save-data="saveData"
-					>
-					</MyFormTitip>
-					<MyDisplayTitip
-						v-if="modal_props.header_display"
-						:id.sync="modal_props.doc_id"
-					>
-					</MyDisplayTitip>
-				</CTab>
-			</template>
+			:state="modal_props.state"
+			:id.sync="modal_props.doc_id"
+			@close-modal="closeModal"
+		/>
 
-			<template #tab-detail>
-				<CTab
-					v-if="modal_props.tabs.list[1]['visibility']"
-					:title="modal_props.tabs.list[1]['title']" 
-				>
-					<MyDisplayDetail
-						:available_details="available_details"
-						:state="modal_props.state"
-						:doc_type="doc_type"
-						:doc_id.sync="modal_props.doc_id"
-						@edit-data="refreshPdf"
-					>
-					</MyDisplayDetail>
-				</CTab>
-			</template>
-
-			<template #tab-form>
-				<CTab 
-					v-if="modal_props.tabs.list[2]['visibility']"
-					:title="modal_props.tabs.list[2]['title']" 
-				>
-					<MyPdfTitip
-						ref="pdf_doc"
-						:id.sync="modal_props.doc_id"
-						@publish-doc="showDoc"
-					></MyPdfTitip>
-				</CTab>
-			</template>
-		</MyModalTabs>
-
-		<!-- Modal konfirmasi delete SBP -->
+		<!-- Modal konfirmasi delete BA Penitipan -->
 		<MyModalDelete
 			v-if="modal_delete_props.show"
-			:url.sync="modal_delete_props.url"
+			:doc_type.sync="modal_delete_props.doc_type"
+			:doc_id.sync="modal_delete_props.doc_id"
 			@close-modal="closeModalDelete"
-			@delete-data="closeModalDelete(); getDataTable()"
+			@delete-data="closeModalDelete"
 		>
 			<template #text>
 				<span v-html="modal_delete_props.text"></span>
@@ -99,30 +51,24 @@
 </template>
 
 <script>
-import axios from 'axios'
-
-import api from '../../../router/api.js'
-import MyDisplayDetail from '../../details/DisplayDetail.vue'
-import MyDisplayTitip from '../titip/DisplayTitip.vue'
-import MyFormTitip from '../titip/FormTitip.vue'
+import api from '../../../router/api2.js'
 import MyModalDelete from '../../components/ModalDelete.vue'
-import MyModalTabs from '../../components/ModalTabs.vue'
-import MyPdfTitip from '../titip/PdfTitip.vue'
+import MyModalTitip from './ModalTitip.vue'
 import MyTableData from '../../components/TableData.vue'
 
 const tabs_default = {
 	current: 0,
 	list: [
 		{
-			title: 'Header',
+			title: 'Uraian',
 			visibility: true
 		}, 
 		{
-			title: 'Detail',
+			title: 'Objek',
 			visibility: false
 		}, 
 		{
-			title: 'Form BA Penitipan',
+			title: 'Print',
 			visibility: false
 		}
 	]
@@ -131,19 +77,15 @@ const tabs_default = {
 export default {
 	name: 'PageTitip',
 	components: {
-		MyDisplayDetail,
-		MyDisplayTitip,
-		MyFormTitip,
 		MyModalDelete,
-		MyModalTabs,
-		MyPdfTitip,
+		MyModalTitip,
 		MyTableData
 	},
 	data() {
 		return {
 			fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Penitipan' },
-				{ key: 'tgl_dok', label: 'Tgl BA' },
+				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
 				{ key: 'nama_penerima', label: 'Pemilik/Penerima' },
 				{ key: 'petugas1', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
@@ -151,14 +93,10 @@ export default {
 			],
 			list_table: [],
 			doc_type: 'titip',
-			available_details: ['sarkut', 'barang', 'bangunan'],
 			modal_props: {
 				show: false,
-				state: 'insert',
-				tabs: JSON.parse(JSON.stringify(tabs_default)),
-				doc_id: null,
-				header_form: false,
-				header_display: false
+				state: null,
+				doc_id: null
 			},
 			modal_delete_props: {
 				show: false,
@@ -168,57 +106,29 @@ export default {
 		}
 	},
 	methods: {
-		getDataTable() {
-			axios
-				.get(api.getPenitipan())
-				.then(
-					(response) => {
-						this.list_table = response.data.data
-					}
-				)
+		async getDataTable() {
+			this.list_table = await api.getListDocuments('titip')
 		},
-		showDoc(id) {
-			this.modal_props.state = 'display'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
-			this.modal_props.doc_id = id
-			this.modal_props.header_form = false
-			this.modal_props.header_display = true
-			this.modal_props.show = true
-		},
-		createNewDoc() {
+		createDoc() {
 			this.modal_props.state = 'insert'
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
 			this.modal_props.doc_id = null
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
 			this.modal_props.show = true
 		},
 		editDoc(id) {
 			this.modal_props.state = 'edit'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
 			this.modal_props.doc_id = id
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
 			this.modal_props.show = true
 		},
-		closeModalInput() {
-			this.getDataTable()
-			this.modal_props.show = false
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-			this.modal_props.doc_id = null
-			this.modal_props.header_form = false
-			this.modal_props.header_display = false
+		showDoc(id) {
+			this.modal_props.state = 'show'
+			this.modal_props.doc_id = id
+			this.modal_props.show = true
 		},
-		saveData(state) {
-			if (state == 'insert') {
-				this.displayTab(1)
-				this.displayTab(2)
-				this.$refs.modal_tabs.getNavs(0)
-			} else {
-				this.refreshPdf()
-			}
+		closeModal() {
+			this.getDataTable()
+			this.modal_props.state = null
+			this.modal_props.doc_id = null
+			this.modal_props.show = false
 		},
 		deleteDoc(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
@@ -227,21 +137,18 @@ export default {
 				+ item.nama_penerima.bold() 
 				+ "?"
 			
-			this.modal_delete_props.url = api.getPenitipanById(item.id)
+			this.modal_delete_props.doc_type = this.doc_type
+			this.modal_delete_props.doc_id = item.id
 			this.modal_delete_props.text = text
 			this.modal_delete_props.show = true
 		},
 		closeModalDelete() {
-			this.modal_delete_props.url = null
+			this.getDataTable()
+			this.modal_delete_props.doc_type = null
+			this.modal_delete_props.doc_id = null
 			this.modal_delete_props.text = null
 			this.modal_delete_props.show = false
 		},
-		displayTab(tab_index) {
-			this.modal_props.tabs.list[tab_index]['visibility'] = true
-		},
-		refreshPdf() {
-			this.$refs.pdf_doc.showPdf()
-		}
 	},
 	created() {
 		this.getDataTable()

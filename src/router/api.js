@@ -25,29 +25,9 @@ api.getBangunanById = (doc_type, doc_id) => {return base_url + '/' + doc_type + 
 api.getBadanById = (doc_type, doc_id) => {return base_url + '/' + doc_type + '/' + doc_id + '/badan'}
 
 // API for documents
-api.sbp = () => {return base_url + '/sbp'}
-api.sbpId = (id) => {return api.sbp() + '/' + id}
-api.sbpComplete = (id) => {return api.sbpId(id) + '/complete'}
-api.publishSbp = (id) => {return api.sbpId(id) + '/publish'}
-
-api.getSegel = () => {return base_url + '/segel'}
-api.getSegelById = (id) => {return base_url + '/segel/' + id}
-api.getSegelComplete = (id) => {return base_url + '/segel/' + id + '/complete'}
-api.publishSegel = (id) => {return base_url + '/segel/' + id + '/publish'}
-
-api.bukaSegel = () => {return base_url + '/bukasegel'}
-api.bukaSegelId = (id) => {return api.bukaSegel() + '/' + id}
-api.bukaSegelComplete = (id) => {return api.bukaSegelId(id) + '/complete'}
-api.publishBukaSegel = (id) => {return api.bukaSegelId(id) + '/publish'}
-
 api.getPenitipan = () => {return base_url + '/titip'}
 api.getPenitipanById = (id) => {return api.getPenitipan() + '/' + id}
 api.getPenitipanComplete = (id) => {return api.getPenitipanById(id) + '/complete'}
 api.publishPenitipan = (id) => {return api.getPenitipanById(id) + '/publish'}
-
-api.getPenegahan = () => {return base_url + '/tegah'}
-api.getPenegahanById = (id) => {return api.getPenegahan() + '/' + id}
-api.getPenegahanComplete = (id) => {return api.getPenegahanById(id) + '/complete'}
-api.publishPenegahan = (id) => {return api.getPenegahanById(id) + '/publish'}
 
 export default api

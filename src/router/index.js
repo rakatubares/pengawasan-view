@@ -19,6 +19,7 @@ const PagePengaman = () => import('@/views/penindakan/pengaman/PagePengaman')
 const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
+const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
 
 Vue.use(Router)
 
@@ -73,6 +74,11 @@ function configRoutes () {
 					component: PageBukaSegel
 				},
 				{
+					path: 'titip',
+					name: 'BA Penitipan',
+					component: PageTitip
+				},
+				{
 					path: 'pengaman',
 					name: 'BA Tanda Pengaman',
 					component: PagePengaman
@@ -87,11 +93,6 @@ function configRoutes () {
 					name: 'BAST',
 					component: PageBast
 				}
-				// {
-				// 	path: 'titip',
-				// 	name: 'Penitipan',
-				// 	component: PageTitip
-				// },
 				// {
 				// 	path: 'tegah',
 				// 	name: 'Penegahan',
