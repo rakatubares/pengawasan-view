@@ -72,12 +72,12 @@ export default [
 				to: '/bast',
 				icon: 'cil-file'
 			},
-			// {
-			// 	_name: 'CSidebarNavItem',
-			// 	name: 'Penegahan',
-			// 	to: '/tegah',
-			// 	icon: 'cil-file'
-			// },
+			{
+				_name: 'CSidebarNavItem',
+				name: 'BA Contoh Barang',
+				to: '/contoh',
+				icon: 'cil-file'
+			},
 		]
 	}
 ]

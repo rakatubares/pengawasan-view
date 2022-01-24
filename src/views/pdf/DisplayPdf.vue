@@ -1,6 +1,6 @@
 <template>
 	<div class="wrapper">
-		<CRow>
+		<CRow v-if="show_button">
 			<CCol>
 				<CButton 
 					v-for="doc_type in list_pdf"
@@ -50,6 +50,7 @@ import api from '../../router/api2.js'
 import PdfBast from './PdfBast.js'
 import PdfBukaPengaman from './PdfBukaPengaman.js'
 import PdfBukaSegel from './PdfBukaSegel.js'
+import PdfContoh from './PdfContoh.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLptp from './PdfLptp.js'
@@ -70,6 +71,10 @@ export default {
 		state: String,
 		doc_type: String,
 		doc_id: Number,
+		show_button: {
+			type: Boolean,
+			default: true
+		}
 	},
 	data() {
 		return {
@@ -114,6 +119,11 @@ export default {
 				case 'bukasegel':
 					let pdfBukaSegel = new PdfBukaSegel(this.data)
 					this.src_pdf = pdfBukaSegel.generatePdf()
+					break;
+
+				case 'contoh':
+					let pdfContoh = new PdfContoh(this.data)
+					this.src_pdf = pdfContoh.generatePdf()
 					break;
 
 				case 'lp':
