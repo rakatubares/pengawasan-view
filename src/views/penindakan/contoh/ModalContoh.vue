@@ -12,11 +12,11 @@
 					v-if="modal_state == 'show'"
 					:doc_id.sync="doc_id"
 				/>
-				<!-- <MyFormBukaSegel
-					v-if="['insert','edit','edit-header'].includes(modal_state)"
+				<MyFormContoh
+					v-if="['insert','edit'].includes(modal_state)"
 					:state.sync="modal_state"
 					:doc_id.sync="doc_id"
-				/> -->
+				/>
 			</template>
 			<template #tab-object>
 				<MyDisplayDetail 
@@ -24,12 +24,12 @@
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
-				<!-- <MyFormDetail 
+				<MyFormDetail 
 					v-if="modal_state == 'edit'"
-					:available_details="['sarkut', 'barang', 'bangunan']"
+					:available_details="['barang']"
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
-				/> -->
+				/>
 			</template>
 			<template #tab-pdf>
 				<MyDisplayPdf 
@@ -48,6 +48,7 @@
 import MyDisplayContoh from './DisplayContoh.vue'
 import MyDisplayDetail from '../../details/displays/DisplayDetail.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
+import MyFormContoh from './FormContoh.vue'
 import MyFormDetail from '../../details/Options/FormDetail.vue'
 import MyModalDoc from '../../components/ModalDoc2.vue'
 
@@ -57,8 +58,8 @@ export default {
 		MyDisplayContoh,
 		MyDisplayDetail,
 		MyDisplayPdf,
+		MyFormContoh,
 		MyFormDetail,
-		// MyFormBukaSegel,
 		MyModalDoc,
 	},
 	props: {
