@@ -1,6 +1,6 @@
 <template>
 	<div class="wrapper" data-app>
-		<!-- Display table data for SBP list -->
+		<!-- Display table data for BA Contoh Barang list -->
 		<CRow>
 			<CCol>
 				<MyTableData
@@ -36,7 +36,7 @@
 		/>
 
 		<!-- Modal konfirmasi delete SBP -->
-		<!-- <MyModalDelete
+		<MyModalDelete
 			v-if="modal_delete_props.show"
 			:doc_type="modal_delete_props.doc_type"
 			:doc_id="modal_delete_props.doc_id"
@@ -46,13 +46,13 @@
 			<template #text>
 				<span v-html="modal_delete_props.text"></span>
 			</template>
-		</MyModalDelete> -->
+		</MyModalDelete>
 	</div>
 </template>
 
 <script>
 import api from '../../../router/api2.js'
-// import MyModalDelete from '../../components/ModalDelete.vue'
+import MyModalDelete from '../../components/ModalDelete.vue'
 import MyModalContoh from './ModalContoh.vue'
 import MyTableData from '../../components/TableData.vue'
 
@@ -77,7 +77,7 @@ const tabs_default = {
 export default {
 	name: 'PageContoh',
 	components: {
-		// MyModalDelete,
+		MyModalDelete,
 		MyModalContoh,
 		MyTableData,
 	},
@@ -98,12 +98,12 @@ export default {
 				state: null,
 				doc_id: null
 			},
-			// modal_delete_props: {
-			// 	show: false,
-			// 	doc_type: null,
-			// 	doc_id: null,
-			// 	text: null
-			// },
+			modal_delete_props: {
+				show: false,
+				doc_type: null,
+				doc_id: null,
+				text: null
+			},
 		}
 	},
 	methods: {
@@ -147,7 +147,6 @@ export default {
 				+ item.nama_saksi.bold() 
 				+ "?"
 			
-			// this.modal_delete_props.url = api.sbpId(item.id)
 			this.modal_delete_props.doc_type = this.doc_type,
 			this.modal_delete_props.doc_id = item.id
 			this.modal_delete_props.text = text
