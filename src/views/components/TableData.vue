@@ -18,6 +18,13 @@
 				:dark="dark"
 				pagination
 			>
+				<template v-for="field in custom_fields" v-slot:[field]="slotProps">
+					<slot :name="field">
+						<td :key="`${field} ${slotProps.item.id}`" v-html="slotProps.item[field]">
+						</td>
+					</slot>
+				</template>
+
 				<template #status="{item}">
 					<td>
 						<CBadge :color="item.status.color">{{item.status.short_status}}</CBadge>
@@ -79,6 +86,7 @@ export default {
 				return ['username', 'registered', 'role', 'status', 'actions']
 			}
 		},
+		custom_fields: Array,
 		caption: {
 			type: String,
 			default: 'Table'

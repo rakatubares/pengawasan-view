@@ -47,6 +47,7 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfReekspor from './PdfReekspor.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -94,6 +95,10 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
+				case 'reekspor':
+					let pdfReekspor = new PdfReekspor(this.data)
+					this.src_pdf = pdfReekspor.generatePdf()
+					break;
 
 				default:
 					break;
