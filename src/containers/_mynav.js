@@ -78,6 +78,12 @@ export default [
 				to: '/contoh',
 				icon: 'cil-file'
 			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'BA Reekspor',
+				to: '/reekspor',
+				icon: 'cil-file'
+			},
 		]
 	}
 ]

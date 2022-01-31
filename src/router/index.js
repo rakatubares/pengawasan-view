@@ -17,6 +17,7 @@ const PageContoh = () => import('@/views/penindakan/contoh/PageContoh')
 const PageLp = () => import('@/views/penindakan/lp/PageLp')
 const PageLphp = () => import('@/views/penindakan/lphp/PageLphp')
 const PagePengaman = () => import('@/views/penindakan/pengaman/PagePengaman')
+const PageReekspor = () => import('@/views/penindakan/reekspor/PageReekspor')
 const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
@@ -98,6 +99,11 @@ function configRoutes () {
 					path: 'contoh',
 					name: 'BA Contoh Barang',
 					component: PageContoh
+				},
+				{
+					path: 'reekspor',
+					name: 'BA Pengawasan Reekspor',
+					component: PageReekspor
 				},
 			]
 		},
