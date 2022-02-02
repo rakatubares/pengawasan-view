@@ -151,7 +151,9 @@ export default {
 		}
 	},
 	async mounted() {
-		await this.getData()
+		if (this.doc_id != null) {
+			await this.getData()	
+		}
 	}
 }
 </script>

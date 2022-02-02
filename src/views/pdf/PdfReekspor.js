@@ -64,19 +64,30 @@ class PdfReekspor extends Pdf {
 		this.ln += this.props.font.height*2
 
 		// Petugas 2
+		if (this.data.dokumen.reekspor.petugas2 != null) {
+			let petugas2 = this.data.dokumen.reekspor.petugas2
+			var petugas2_name = petugas2.name
+			var petugas2_pangkat = petugas2.pangkat
+			var petugas2_nip = petugas2.nip
+		} else {
+			var petugas2_name = ''
+			var petugas2_pangkat = ''
+			var petugas2_nip = ''
+		}
+
 		this.pdf.text('2.', this.props.ind.alp, this.ln)
 		this.pdf.text('Nama', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.dokumen.reekspor.petugas2.name, this.props.ind.txt, this.ln)
+		this.pdf.text(petugas2_name, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Pangkat', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.dokumen.reekspor.petugas2.pangkat, this.props.ind.txt, this.ln)
+		this.pdf.text(petugas2_pangkat, this.props.ind.txt, this.ln)
 
 		this.pdf.text('NIP', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(this.data.dokumen.reekspor.petugas2.nip, this.props.ind.txt2, this.ln)
+		this.pdf.text(petugas2_nip, this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height*2
 
 		// Dasar hukum
@@ -104,43 +115,51 @@ class PdfReekspor extends Pdf {
 		this.ln += this.props.font.height
 
 		// MAWB
+		let txt_nomor_mawb = this.data.dokumen.reekspor.nomor_mawb || ''
 		this.pdf.text('MAWB', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		this.pdf.text(this.data.dokumen.reekspor.nomor_mawb, this.props.ind.txt3, this.ln)
+		this.pdf.text(txt_nomor_mawb, this.props.ind.txt3, this.ln)
 
+		let txt_tanggal_mawb = this.data.dokumen.reekspor.tanggal_mawb || ''
 		this.pdf.text('Tanggal', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln4, this.ln)
-		this.pdf.text(this.data.dokumen.reekspor.tanggal_mawb, this.props.ind.txt4, this.ln)
+		this.pdf.text(txt_tanggal_mawb, this.props.ind.txt4, this.ln)
 		this.ln += this.props.font.height
 
 		// HAWB
+		let txt_nomor_hawb = this.data.dokumen.reekspor.nomor_hawb || ''
 		this.pdf.text('HAWB', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		this.pdf.text(this.data.dokumen.reekspor.nomor_hawb, this.props.ind.txt3, this.ln)
+		this.pdf.text(txt_nomor_hawb, this.props.ind.txt3, this.ln)
 
+		let txt_tanggal_hawb = this.data.dokumen.reekspor.tanggal_hawb || ''
 		this.pdf.text('Tanggal', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln4, this.ln)
-		this.pdf.text(this.data.dokumen.reekspor.tanggal_hawb, this.props.ind.txt4, this.ln)
+		this.pdf.text(txt_tanggal_hawb, this.props.ind.txt4, this.ln)
 		this.ln += this.props.font.height
 
 		// Pesawat
+		let txt_nama_sarkut = this.data.dokumen.reekspor.nama_sarkut || ''
 		this.pdf.text('Dimuat di pesawat', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		this.pdf.text(this.data.dokumen.reekspor.nama_sarkut, this.props.ind.txt3, this.ln)
+		this.pdf.text(txt_nama_sarkut, this.props.ind.txt3, this.ln)
 		this.ln += this.props.font.height
 
+		let txt_nomor_flight = this.data.dokumen.reekspor.nomor_flight || ''
 		this.pdf.text('Nomor penerbangan', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		this.pdf.text(this.data.dokumen.reekspor.nomor_flight, this.props.ind.txt3, this.ln)
+		this.pdf.text(txt_nomor_flight, this.props.ind.txt3, this.ln)
 
+		let txt_tanggal_flight = this.data.dokumen.reekspor.tanggal_flight || ''
 		this.pdf.text('Tanggal', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln4, this.ln)
-		this.pdf.text(this.data.dokumen.reekspor.tanggal_flight, this.props.ind.txt4, this.ln)
+		this.pdf.text(txt_tanggal_flight, this.props.ind.txt4, this.ln)
 		this.ln += this.props.font.height
 
+		let txt_nomor_reg_sarkut = this.data.dokumen.reekspor.nomor_reg_sarkut || ''
 		this.pdf.text('Nomor register', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		this.pdf.text(this.data.dokumen.reekspor.nomor_reg_sarkut, this.props.ind.txt3, this.ln)
+		this.pdf.text(txt_nomor_reg_sarkut, this.props.ind.txt3, this.ln)
 		this.ln += this.props.font.height*2
 	
 		////// URAIAN BOTTOM //////
