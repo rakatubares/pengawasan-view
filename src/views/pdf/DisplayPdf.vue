@@ -61,6 +61,8 @@ import PdfSbp from './PdfSbp.js'
 import PdfSegel from './PdfSegel.js'
 import PdfTegah from './PdfTegah.js'
 import PdfTitip from './PdfTitip.js'
+import PdfTolak1 from './PdfTolak1.js'
+import PdfTolak2 from './PdfTolak2.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -170,6 +172,16 @@ export default {
 				case 'titip':
 					let pdfTitip = new PdfTitip(this.data)
 					this.src_pdf = pdfTitip.generatePdf()
+					break;
+
+				case 'tolak1':
+					let pdfTolak1 = new PdfTolak1(this.data)
+					this.src_pdf = pdfTolak1.generatePdf()
+					break;
+
+				case 'tolak2':
+					let pdfTolak2 = new PdfTolak2(this.data)
+					this.src_pdf = pdfTolak2.generatePdf()
 					break;
 
 				case 'pengaman':
