@@ -68,7 +68,15 @@ class Pdf {
 		this.pdf.setFontSize(this.props.font.size)
 	
 		this.pdf.text(doc_title, 105, this.ln, 'center')
-		this.pdf.line(this.props.title_line.start, this.ln+0.5, this.props.title_line.end, this.ln+0.5)
+		if (Array.isArray(doc_title) && (doc_title.length > 1)) {
+			for (const key in this.props.title_line) {
+				let ln = this.ln + (this.props.font.height*key) + 0.5
+				this.pdf.line(this.props.title_line[key]['start'], ln, this.props.title_line[key]['end'], ln)	
+			}
+			this.ln += this.props.font.height*(doc_title.length - 1)
+		} else {
+			this.pdf.line(this.props.title_line.start, this.ln+0.5, this.props.title_line.end, this.ln+0.5)
+		}
 		
 		this.pdf.setFont('Helvetica', 'normal')
 		this.ln += this.props.font.height
