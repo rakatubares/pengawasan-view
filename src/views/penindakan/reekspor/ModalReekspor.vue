@@ -9,22 +9,31 @@
 		>
 			<template #tabs>
 				<CTab :title="tabs_list[0]['title']">
-					<MyDisplayReekspor
-						v-if="modal_state == 'show'"
-						:doc_id.sync="doc_id"
-					/>
+					<!-- <div v-if="current_tab == 0"> -->
+						<MyFormReekspor
+							v-if="['insert','edit'].includes(modal_state)"
+							:state.sync="modal_state"
+							:doc_id.sync="doc_id"
+						/>
+						<MyDisplayReekspor
+							v-else
+							:doc_id.sync="doc_id"
+						/>
+					<!-- </div> -->
 				</CTab>
 				<CTab 
 					v-if="tabs_list[1]['visibility']"
 					:title="tabs_list[1]['title']"
 				>
-					<MyDisplayPdf 
-						v-if="['show','edit'].includes(modal_state)"
-						:state.sync="modal_state"
-						:doc_type="doc_type" 
-						:doc_id.sync="doc_id"
-						:show_button="false"
-					/>
+					<div v-if="current_tab == 1">
+						<MyDisplayPdf 
+							v-if="['show','edit'].includes(modal_state)"
+							:state.sync="modal_state"
+							:doc_type="doc_type" 
+							:doc_id.sync="doc_id"
+							:show_button="false"
+						/>
+					</div>
 				</CTab>
 			</template>
 		</MyModalTabs>
@@ -35,8 +44,7 @@
 import MyDisplayReekspor from './DisplayReekspor.vue'
 import MyDisplayDetail from '../../details/displays/DisplayDetail.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
-// import MyFormContoh from './FormContoh.vue'
-import MyFormDetail from '../../details/Options/FormDetail.vue'
+import MyFormReekspor from './FormReekspor.vue'
 import MyModalDoc from '../../components/ModalDoc2.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 
@@ -57,8 +65,7 @@ export default {
 		MyDisplayReekspor,
 		MyDisplayDetail,
 		MyDisplayPdf,
-		// MyFormContoh,
-		MyFormDetail,
+		MyFormReekspor,
 		MyModalDoc,
 		MyModalTabs,
 	},
@@ -88,16 +95,21 @@ export default {
 				case 'show':
 					this.tabs_list[1].visibility = true
 					break;
+
+				case 'edit':
+					this.tabs_list[1].visibility = true
+					break;
 			
 				default:
 					this.tabs_list[1].visibility = false
 					break;
 			}
+			this.$refs.modal_tabs.getNavs(this.current_tab)
 		}
 	},
 	mounted() {
 		this.modal_state = this.state
-		console.log('modal reekspor - state', this.modal_state)
+		console.log('modal reeskpor - state', this.modal_state)
 	}
 }
 </script>

@@ -156,7 +156,7 @@ export default {
 			}
 		},
 		deleteDoc(item) {
-			let text = "Apakah Anda yakin untuk menghapus data BA Reekspor atas" 
+			let text = "Apakah Anda yakin untuk menghapus data BA Reekspor atas " 
 				+ item.dok_asal.bold() 
 				+ " tanggal "
 				+ item.tanggal_dok_asal.bold() 
