@@ -118,7 +118,7 @@ class PdfTolak2 extends Pdf {
 		////// TTD //////
 		let txt_saksi = 'Saksi,'
 		let txt_pejabat = 'Pejabat Bea dan Cukai,'
-		this.ttd(txt_saksi, txt_pejabat)
+		this.ttd(txt_saksi, txt_pejabat, this.data.dokumen.tolak2.saksi, this.data.dokumen.tolak2.petugas1, this.data.dokumen.tolak2.petugas2)
 
 		////// KETERANGAN //////
 		this.ln + this.props.font.height

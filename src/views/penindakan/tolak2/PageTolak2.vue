@@ -3,14 +3,14 @@
 		<MyPageDoc 
 			ref="page_doc"
 			:doc_type="doc_type"
-			table_title="Daftar BA Penolakan SBP"
+			table_title="Daftar BA Penolakan Tanda Tangan terhadap BA Penolakan SBP"
 			:table_fields="table_fields"
 			:custom_fields="custom_fields"
 			:compute_list="computeList"
 			:modal_data_props.sync="modal_data_props"
 		>
 			<template #modal-data>
-				<MyModalTolak1 
+				<MyModalTolak2
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
@@ -23,28 +23,29 @@
 </template>
 
 <script>
-import MyModalTolak1 from './ModalTolak1.vue'
+import MyModalTolak2 from './ModalTolak2.vue'
 import MyPageDoc from '../../components/PageDoc.vue'
 
 export default {
-	name: 'PageTolak1',
+	name: 'PageTolak2',
 	components: {
-		MyModalTolak1,
+		MyModalTolak2,
 		MyPageDoc,
 	},
 	data() {
 		return {
-			doc_type: 'tolak1',
+			doc_type: 'tolak2',
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Penolakan SBP' },
 				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
+				{ key: 'tolak1', label: 'BA Penolakan SBP' },
 				{ key: 'sbp', label: 'SBP' },
-				{ key: 'nama_saksi', label: 'Saksi/Pemilik' },
+				{ key: 'pemilik', label: 'Pemilik/Kuasa' },
 				{ key: 'petugas', label: 'Petugas' },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
 			],
-			custom_fields: ['sbp', 'petugas'],
+			custom_fields: ['tolak1', 'sbp', 'petugas'],
 			modal_data_props: {
 				show: false,
 				state: null,
@@ -57,6 +58,7 @@ export default {
 			return list.map(item => {
 				return {
 					...item,
+					tolak1: item.nomor_tolak1 + '</br>' + item.tanggal_tolak1,
 					sbp: item.nomor_sbp + '</br>' + item.tanggal_sbp,
 					petugas: item.petugas1 + '</br>' + item.petugas2,
 				}
