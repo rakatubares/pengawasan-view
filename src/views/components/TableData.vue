@@ -18,6 +18,13 @@
 				:dark="dark"
 				pagination
 			>
+				<template v-for="field in custom_fields" v-slot:[field]="slotProps">
+					<slot :name="field">
+						<td :key="`${field} ${slotProps.item.id}`" v-html="slotProps.item[field]">
+						</td>
+					</slot>
+				</template>
+
 				<template #status="{item}">
 					<td>
 						<CBadge :color="item.status.color">{{item.status.short_status}}</CBadge>
@@ -79,6 +86,7 @@ export default {
 				return ['username', 'registered', 'role', 'status', 'actions']
 			}
 		},
+		custom_fields: Array,
 		caption: {
 			type: String,
 			default: 'Table'
@@ -116,7 +124,7 @@ export default {
 				if ((type == 'edit') || (type == 'delete')) {
 					btn = [100].includes(item.status.kode_status)
 				} else if (type == 'show') {
-					btn = [101, 102, 103, 200, 201, 202, 203].includes(item.status.kode_status)
+					btn = [101, 102, 200, 201, 202].includes(item.status.kode_status)
 				} else {
 					btn = false
 				}

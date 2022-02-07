@@ -11,6 +11,7 @@ const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
+const PageTolak1 = () => import('@/views/penindakan/tolak1/PageTolak1')
 
 Vue.use(Router)
 
@@ -38,6 +39,11 @@ function configRoutes () {
 					path: 'sbp',
 					name: 'SBP',
 					component: PageSbp
+				},
+				{
+					path: 'tolak1',
+					name: 'BA Penolakan SBP',
+					component: PageTolak1
 				},
 			]
 		},

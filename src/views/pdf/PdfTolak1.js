@@ -80,7 +80,7 @@ class PdfTolak1 extends Pdf {
 
 		this.pdf.text('Agama', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		// this.pdf.text(this.data.penindakan.saksi.jenis_kelamin, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.penindakan.saksi.agama, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Kewarganegaraan', this.props.ind.alp, this.ln)

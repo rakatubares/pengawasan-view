@@ -18,6 +18,12 @@ export default [
 				to: '/sbp',
 				icon: 'cil-file'
 			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'BA Penolakan SBP',
+				to: '/tolak1',
+				icon: 'cil-file'
+			},
 		]
 	}
 ]
