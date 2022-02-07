@@ -197,6 +197,7 @@ export default {
 				default:
 					break;
 			}
+			console.log('display pdf', this.active_pdf, this.src_pdf)
 
 			this.show_pdf = true
 		},

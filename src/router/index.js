@@ -22,6 +22,8 @@ const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
+const PageTolak1 = () => import('@/views/penindakan/tolak1/PageTolak1')
+const PageTolak2 = () => import('@/views/penindakan/tolak2/PageTolak2')
 
 Vue.use(Router)
 
@@ -44,6 +46,16 @@ function configRoutes () {
 					path: 'homepage',
 					name: 'Homepage',
 					component: Homepage
+				},
+				{
+					path: 'tolak1',
+					name: 'BA Penolakan SBP',
+					component: PageTolak1
+				},
+				{
+					path: 'tolak2',
+					name: 'BA Penolakan TTD BA Penolakan SBP',
+					component: PageTolak2
 				},
 				{
 					path: 'sbp',
