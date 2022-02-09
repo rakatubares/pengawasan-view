@@ -82,7 +82,8 @@ export default {
 		table_fields: Array,
 		custom_fields: Array,
 		compute_list: Function,
-		modal_data_props: Object
+		modal_data_props: Object,
+		construct_delete_text: Function,
 	},
 	data() {
 		return {
@@ -132,17 +133,23 @@ export default {
 			this.$emit('update:modal_data_props', modal_data_props)
 		},
 		deleteDoc(item) {
-			let text = "Apakah Anda yakin untuk menghapus data " 
-				+ item.no_dok_lengkap.bold() 
-				+ " a.n. " 
-				+ item.nama_saksi.bold() 
-				+ "?"
-			
-			// this.modal_delete_props.url = api.sbpId(item.id)
+			let text = this.constructDeleteText(item)
 			this.modal_delete_props.doc_type = this.doc_type,
 			this.modal_delete_props.doc_id = item.id
 			this.modal_delete_props.text = text
 			this.modal_delete_props.show = true
+		},
+		constructDeleteText(item) {
+			if (this.construct_delete_text == null) {
+				var text = "Apakah Anda yakin untuk menghapus data " 
+					+ item.no_dok_lengkap.bold() 
+					+ " a.n. " 
+					+ item.nama_saksi.bold() 
+					+ "?"
+			} else {
+				var text = this.construct_delete_text(item)
+			}
+			return text
 		},
 		closeModalDelete() {
 			this.getDataTable()

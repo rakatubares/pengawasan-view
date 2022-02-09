@@ -8,13 +8,14 @@
 			:custom_fields="custom_fields"
 			:compute_list="computeList"
 			:modal_data_props.sync="modal_data_props"
+			:construct_delete_text="constructDeleteText"
 		>
 			<template #modal-data>
 				<MyModalTolak1 
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
-					:doc_id.sync="modal_data_props.doc_id"
+					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -68,6 +69,15 @@ export default {
 			this.modal_data_props.doc_id = null
 			this.modal_data_props.show = false
 		},
+		constructDeleteText(item) {
+			let text = "Apakah Anda yakin untuk menghapus data BA Penolakan atas SBP nomor " 
+				+ item.nomor_sbp.bold() 
+				+ ' tanggal ' + item.tanggal_sbp.bold() 
+				+ " a.n. " + item.nama_saksi.bold() 
+				+ "?"
+
+			return text
+		}
 	}
 }
 </script>
