@@ -28,7 +28,6 @@
 							</v-list-item-content>
 						</template>
 					</v-autocomplete>
-					<!-- <small class="form-text text-muted w-100">{{ description }}</small> -->
 				</div>
 			</CCol>
 			<CCol md="3" sm="12">
@@ -56,7 +55,7 @@ export default {
 	name: 'SelectSbp',
 	props: {
 		id: Number,
-		status: Number,
+		filter: Object,
 	},
 	data() {
 		return {
@@ -92,7 +91,7 @@ export default {
 	},
 	watch: {
 		async search (val) {
-			let data = {'src': val, 'sta': this.status, 'exc': this.exception}
+			let data = {'src': val, 'flt': this.filter, 'exc': this.exception}
 			let responses = await api.searchDoc('sbp', data)
 			this.items = responses.data.data
 		},

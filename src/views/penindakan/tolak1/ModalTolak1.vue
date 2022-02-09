@@ -9,12 +9,13 @@
 		>
 			<template #tabs>
 				<CTab :title="tabs_list[0]['title']">
-					<!-- <MyFormReekspor
+					<MyFormTolak1
 						v-if="['insert','edit'].includes(modal_state)"
 						:state.sync="modal_state"
 						:doc_id.sync="doc_id"
-					/> -->
+					/>
 					<MyDisplayTolak1
+						v-else-if="modal_state == 'show'"
 						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
 					/>
@@ -41,6 +42,7 @@
 import MyDisplayDetail from '../../details/displays/DisplayDetail.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
 import MyDisplayTolak1 from './DisplayTolak1.vue'
+import MyFormTolak1 from './FormTolak1.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 
 export default {
@@ -49,15 +51,17 @@ export default {
 		MyDisplayDetail,
 		MyDisplayPdf,
 		MyDisplayTolak1,
+		MyFormTolak1,
 		MyModalTabs,
 	},
 	props: {
 		state: String,
 		doc_type: String,
-		doc_id: Number
+		id: Number
 	},
 	data() {
 		return {
+			doc_id: this.id,
 			modal_state: null,
 			tabs_list: [
 				{
@@ -96,11 +100,12 @@ export default {
 			}
 			this.$refs.modal_tabs.getNavs(this.current_tab)
 		},
+		doc_id: function (val) {
+			console.log('modal tolak 1 - doc id', val)
+		}
 	},
 	mounted() {
 		this.modal_state = this.state
-		console.log('modal tolak 1 - state', this.modal_state)
-		console.log('modal tolak 1 - tabs_list', JSON.parse(JSON.stringify(this.tabs_list)))
 	}
 }
 </script>

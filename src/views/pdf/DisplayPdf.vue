@@ -197,7 +197,6 @@ export default {
 				default:
 					break;
 			}
-			console.log('display pdf', this.active_pdf, this.src_pdf)
 
 			this.show_pdf = true
 		},
@@ -214,6 +213,7 @@ export default {
 		}
 	},
 	mounted() {
+		console.log('display pdf - doc id', this.doc_id)
 		this.getPdf()
 	}
 }
