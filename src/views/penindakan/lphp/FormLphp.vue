@@ -7,7 +7,7 @@
 					<MySelectSbp
 						ref="selectSbp"
 						:id.sync="data.id_sbp"
-						:status="200"
+						:filter="filter_sbp"
 					/>
 				</CCol>
 			</CRow>
@@ -161,7 +161,10 @@ export default {
 			sbp_search_value: null,
 			sbp_search_items: [],
 			sbp_search_query: null,
-			sbp_search_exception: null
+			sbp_search_exception: null,
+			filter_sbp: {
+				kode_status: 200
+			}
 		}
 	},
 	methods: {

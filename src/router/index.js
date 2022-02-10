@@ -48,6 +48,11 @@ function configRoutes () {
 					component: Homepage
 				},
 				{
+					path: 'sbp',
+					name: 'SBP',
+					component: PageSbp
+				},
+				{
 					path: 'tolak1',
 					name: 'BA Penolakan SBP',
 					component: PageTolak1
@@ -56,11 +61,6 @@ function configRoutes () {
 					path: 'tolak2',
 					name: 'BA Penolakan TTD BA Penolakan SBP',
 					component: PageTolak2
-				},
-				{
-					path: 'sbp',
-					name: 'SBP',
-					component: PageSbp
 				},
 				{
 					path: 'lphp',
