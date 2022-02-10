@@ -36,6 +36,12 @@ export default [
 				to: '/lphp',
 				icon: 'cil-file'
 			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'LP',
+				to: '/lp',
+				icon: 'cil-file'
+			},
 		]
 	}
 ]

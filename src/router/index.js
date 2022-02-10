@@ -10,6 +10,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
+const PageLp = () => import('@/views/penindakan/lp/PageLp')
 const PageLphp = () => import('@/views/penindakan/lphp/PageLphp')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageTolak1 = () => import('@/views/penindakan/tolak1/PageTolak1')
@@ -56,6 +57,11 @@ function configRoutes () {
 					path: 'lphp',
 					name: 'LPHP',
 					component: PageLphp
+				},
+				{
+					path: 'lp',
+					name: 'LP',
+					component: PageLp
 				},
 			]
 		},
