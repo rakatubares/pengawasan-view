@@ -99,9 +99,6 @@ export default {
 					break;
 			}
 			this.$refs.modal_tabs.getNavs(this.current_tab)
-		},
-		doc_id: function (val) {
-			console.log('modal tolak 1 - doc id', val)
 		}
 	},
 	mounted() {
