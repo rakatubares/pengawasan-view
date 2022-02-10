@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-tolak1">
+	<div class="wrapper form-tolak2">
 		<CForm class="pt-3">
 			<CRow>
 				<CCol sm="12">
@@ -11,10 +11,10 @@
 			</CRow>
 			<CRow>
 				<CCol md="12">
-					<MySelectSbp
-						ref="selectSbp"
-						:id.sync="data.id_sbp"
-						:filter="filter_sbp"
+					<MySelectTolak1
+						ref="selectTolak1"
+						:id.sync="data.id_tolak1"
+						:filter="filter_tolak1"
 					/>
 				</CCol>
 			</CRow>
@@ -26,6 +26,16 @@
 						:value.sync="data.alasan"
 						:is-valid="validatorRequired"
 						invalid-feedback="Alasan penolakan wajib diisi"
+					/>
+				</CCol>
+			</CRow>
+			<CRow>
+				<CCol md="12">
+					<MySelectEntitas
+						ref="selectSaksi"
+						label="Saksi"
+						description="Nama saksi yang menyaksikan penolakan tanda tangan"
+						:id.sync="data.saksi.id"
 					/>
 				</CCol>
 			</CRow>
@@ -73,24 +83,27 @@
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
+import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
-import MySelectSbp from '../sbp/SelectSbp.vue'
+import MySelectTolak1 from '../tolak1/SelectTolak1.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
 const default_data = {
 	sprint: {id: null},
-	id_sbp: null,
+	id_tolak1: null,
 	alasan: null,
+	saksi: {id: null},
 	petugas1: {user_id: null},
 	petugas2: {user_id: null}
 }
 
 export default {
-	name: 'FormTolak1',
+	name: 'FormTolak2',
 	components: {
 		MyAlert,
+		MySelectEntitas,
 		MySelectPetugas,
-		MySelectSbp,
+		MySelectTolak1,
 		MySelectSprint,
 	},
 	props: {
@@ -99,10 +112,10 @@ export default {
 	},
 	data() {
 		return {
-			doc_type: 'tolak1',
+			doc_type: 'tolak2',
 			data: JSON.parse(JSON.stringify(default_data)),
-			filter_sbp: {
-				kode_status: [102, 103, 200, 202, 203],
+			filter_tolak1: {
+				kode_status: 200,
 				status_tolak: null
 			}
 		}
@@ -121,7 +134,8 @@ export default {
 		},
 		renderData() {
 			this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
-			this.$refs.selectSbp.getData(this.data.id_sbp, true)
+			this.$refs.selectTolak1.getData(this.data.id_tolak1, true)
+			this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
 			this.$refs.selectPetugas1.getPetugas(this.data.petugas1.user_id, true)
 			this.$refs.selectPetugas2.getPetugas(this.data.petugas2.user_id, true)
 		},
@@ -131,16 +145,16 @@ export default {
 					let response = await api.storeDoc(this.doc_type, this.data)
 					this.$emit('update:doc_id', response.id)
 					this.$emit('update:state', 'edit')
-					this.alert('Data BA Penolakan SBP berhasil disimpan')
+					this.alert('Data BA Penolakan terhadap BA Penolakan TTD SBP berhasil disimpan')
 				} catch (error) {
-					console.log('form tolak1 - save data - error', error)
+					console.log('form tolak2 - save data - error', error)
 				}
 			} else if (this.state == 'edit') {
 				try {
 					await api.updateDoc(this.doc_type, this.data.id, this.data)
-					this.alert('Data BA Penolakan SBP berhasil diubah')
+					this.alert('Data BA Penolakan terhadap BA Penolakan TTD SBP berhasil diubah')
 				} catch (error) {
-					console.log('form tolak1 - update data - error', error)
+					console.log('form tolak2 - update data - error', error)
 				}
 			}
 		},
@@ -148,15 +162,6 @@ export default {
 			this.$refs.alert.show_alert(text, color, time)
 		},
 		validatorRequired(val) { return validators.required(val) },
-		async changeValueSbp(id) {
-			if (id != null) {
-				// Get data SBP
-				let sbp = await api.getDocumentById('sbp', id)
-				
-				// Change current data according to SBP
-				this.data.id_sbp = sbp.main.data.id
-			}
-		}
 	},
 	async mounted() {
 		if (this.state == 'edit') {
@@ -167,11 +172,11 @@ export default {
 </script>
 
 <style>
-.form-tolak1 .row+.row {
+.form-tolak2 .row+.row {
 	margin-top:0;
 }
 
-.form-tolak1 .v-text-field__details {
+.form-tolak2 .v-text-field__details {
 	display: none;
 }
 </style>

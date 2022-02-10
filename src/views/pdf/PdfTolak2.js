@@ -127,7 +127,7 @@ class PdfTolak2 extends Pdf {
 		this.pdf.text('*Coret yang tidak perlu', this.props.ind.alp, this.ln)
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.tolak1.kode_status)) {
+		if ([100].includes(this.data.dokumen.tolak2.kode_status)) {
 			this.watermark()
 		}
 

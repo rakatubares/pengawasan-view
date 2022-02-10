@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper form-sbp">
 
 		<!-- Form SBP header -->
 		<CForm class="pt-3">
@@ -367,11 +367,11 @@ export default {
 </script>
 
 <style>
-.row+.row {
+.form-sbp .row+.row {
 	margin-top:0;
 }
 
-.v-text-field__details {
+.form-sbp .v-text-field__details {
 	display: none;
 }
 </style>
