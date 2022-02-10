@@ -7,7 +7,7 @@
 					<MySelectSbp
 						ref="selectSbp"
 						:id.sync="data.id_sbp"
-						:status="202"
+						:filter="filter_sbp"
 					/>
 				</CCol>
 			</CRow>
@@ -139,6 +139,9 @@ export default {
 		return {
 			data: JSON.parse(JSON.stringify(default_data)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
+			filter_sbp: {
+				kode_status: 202
+			}
 		}
 	},
 	methods: {
