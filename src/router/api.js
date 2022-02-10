@@ -26,4 +26,9 @@ api.getSegelById = (id) => {return base_url + '/segel/' + id}
 api.getSegelComplete = (id) => {return base_url + '/segel/' + id + '/complete'}
 api.publishSegel = (id) => {return base_url + '/segel/' + id + '/publish'}
 
+api.bukaSegel = () => {return base_url + '/bukasegel'}
+api.bukaSegelId = (id) => {return api.bukaSegel() + '/' + id}
+api.bukaSegelComplete = (id) => {return api.bukaSegelId(id) + '/complete'}
+api.publishBukaSegel = (id) => {return api.bukaSegelId(id) + '/publish'}
+
 export default api

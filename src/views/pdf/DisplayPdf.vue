@@ -47,8 +47,9 @@
 
 <script>
 import api from '../../router/api2.js'
-import PdfSegel from '../pdf/PdfSegel.js'
 import MyAlert from '../components/AlertSubmit.vue'
+import PdfBukaSegel from './PdfBukaSegel.js'
+import PdfSegel from './PdfSegel.js'
 
 export default {
 	name: "DisplayPdf",
@@ -95,6 +96,11 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
+				case 'bukasegel':
+					let pdfBukaSegel = new PdfBukaSegel(this.data)
+					this.src_pdf = pdfBukaSegel.generatePdf()
+					break;
+
 				case 'segel':
 					let pdfSegel = new PdfSegel(this.data)
 					this.src_pdf = pdfSegel.generatePdf()

@@ -18,6 +18,12 @@ export default [
 				to: '/segel',
 				icon: 'cil-file'
 			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'BA Buka Segel',
+				to: '/bukasegel',
+				icon: 'cil-file'
+			},
 		]
 	}
 ]
