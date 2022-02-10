@@ -30,6 +30,12 @@ export default [
 				to: '/tolak2',
 				icon: 'cil-file'
 			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'LPHP',
+				to: '/lphp',
+				icon: 'cil-file'
+			},
 		]
 	}
 ]
