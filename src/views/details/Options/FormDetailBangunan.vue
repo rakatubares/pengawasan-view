@@ -104,7 +104,7 @@ export default {
 					console.log(error)
 				}
 			} else {
-				let response = await api.updateDetail(this.doc_type, this.doc_id, 'sarkut', this.data_objek.id, this.data_objek)
+				let response = await api.updateDetail(this.doc_type, this.doc_id, 'bangunan', this.data_objek.id, this.data_objek)
 				this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
 				this.$emit('update:data', response.data)
 				this.alert('Data bangunan berhasil diubah')
