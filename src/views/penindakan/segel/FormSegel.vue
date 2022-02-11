@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper form-segel">
 		<!-- Form BA Segel header -->
 		<CForm class="pt-3">
 			<CRow>
@@ -16,14 +16,14 @@
 						label="Jenis Segel"
 						description="Jenis segel yang digunakan"
 						:options="['Kertas', 'Kunci', 'Timah', 'Lakban', 'Segel Elektronik', 'Lainnya']"
-						:value.sync="data.main.data.jenis_segel"
+						:value.sync="data.jenis_segel"
 					/>
 				</CCol>
 				<CCol md="3" sm="12">
 					<CInput
 						label="Jumlah Segel"
 						description="Jumlah segel yang digunakan"
-						:value.sync="data.main.data.jumlah_segel"
+						:value.sync="data.jumlah_segel"
 						:is-valid="validatorNumber"
 						invalid-feedback="Jumlah segel wajib diisi"
 					/>
@@ -31,7 +31,7 @@
 				<CCol md="3" sm="12">
 					<CInput
 						label="Satuan"
-						:value.sync="data.main.data.satuan_segel"
+						:value.sync="data.satuan_segel"
 					/>
 				</CCol>
 			</CRow>
@@ -40,7 +40,7 @@
 					<CInput
 						label="Tempat Segel"
 						description="Bagian / lokasi tempat segel ditempatkan / dilekatkan"
-						:value.sync="data.main.data.tempat_segel"
+						:value.sync="data.tempat_segel"
 					/>
 				</CCol>
 			</CRow>
@@ -106,15 +106,10 @@ import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
 const default_data = {
-	main: {
-		type: 'data',
-		data: {
-			jenis_segel: 'kertas',
-			jumlah_segel: null,
-			satuan_segel: null,
-			tempat_segel: null,
-		}
-	},
+	jenis_segel: 'kertas',
+	jumlah_segel: null,
+	satuan_segel: null,
+	tempat_segel: null,
 	penindakan: {
 		lokasi_penindakan: null,
 		sprint: {id: null},
@@ -143,10 +138,13 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.data = await api.getDocumentById('segel', this.doc_id)
+			let response = await api.getFormDataById('segel', this.doc_id)
+			this.data = response.data.data
+
 			if (this.data.penindakan.petugas2 == null) {
 				this.data.penindakan.petugas2 = {user_id: null}
 			}
+			
 			this.$nextTick(function () {
 				this.renderData()
 			})
@@ -161,18 +159,18 @@ export default {
 			if (this.state == 'insert') {
 				try {
 					let response = await api.storeDoc('segel', this.data)
-					this.$emit('update:doc_id', response.main.data.id)
+					this.$emit('update:doc_id', response.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BA Segel berhasil disimpan')
 				} catch (error) {
-					console.log('form segel - save data - error', JSON.parse(JSON.stringify(error)))
+					console.log('form segel - save data - error', error)
 				}
 			} else if (this.state == 'edit') {
 				try {
 					await api.updateDoc('segel', this.doc_id, this.data)
 					this.alert('Data BA Segel berhasil diubah')
 				} catch (error) {
-					console.log('form segel - update data - error', JSON.parse(JSON.stringify(response)))
+					console.log('form segel - update data - error', error)
 				}
 			}
 		},
@@ -191,10 +189,10 @@ export default {
 </script>
 
 <style>
-.row+.row {
+.form-segel .row+.row {
 	margin-top:0;
 }
-.v-text-field__details {
+.form-segel .v-text-field__details {
 	display: none;
 }
 </style>

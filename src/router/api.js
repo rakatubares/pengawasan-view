@@ -26,4 +26,9 @@ api.getPenitipanById = (id) => {return api.getPenitipan() + '/' + id}
 api.getPenitipanComplete = (id) => {return api.getPenitipanById(id) + '/complete'}
 api.publishPenitipan = (id) => {return api.getPenitipanById(id) + '/publish'}
 
+api.bukaSegel = () => {return base_url + '/bukasegel'}
+api.bukaSegelId = (id) => {return api.bukaSegel() + '/' + id}
+api.bukaSegelComplete = (id) => {return api.bukaSegelId(id) + '/complete'}
+api.publishBukaSegel = (id) => {return api.bukaSegelId(id) + '/publish'}
+
 export default api

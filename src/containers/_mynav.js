@@ -20,6 +20,12 @@ export default [
 			},
 			{
 				_name: 'CSidebarNavItem',
+				name: 'BA Buka Segel',
+				to: '/bukasegel',
+				icon: 'cil-file'
+			},
+			{
+				_name: 'CSidebarNavItem',
 				name: 'BA Penitipan',
 				to: '/titip',
 				icon: 'cil-file'
