@@ -10,6 +10,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
+<<<<<<< HEAD
 const PageBast = () => import('@/views/penindakan/bast/PageBast')
 const PageBukaPengaman = () => import('@/views/penindakan/bukapengaman/PageBukaPengaman')
 const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
@@ -24,6 +25,9 @@ const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
 const PageTolak1 = () => import('@/views/penindakan/tolak1/PageTolak1')
 const PageTolak2 = () => import('@/views/penindakan/tolak2/PageTolak2')
+=======
+const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
+>>>>>>> penindakan/riksa
 
 Vue.use(Router)
 
@@ -47,6 +51,7 @@ function configRoutes () {
 					name: 'Homepage',
 					component: Homepage
 				},
+<<<<<<< HEAD
 				{
 					path: 'sbp',
 					name: 'SBP',
@@ -72,11 +77,14 @@ function configRoutes () {
 					name: 'LP',
 					component: PageLp
 				},
+=======
+>>>>>>> penindakan/riksa
 				{
 					path: 'riksa',
 					name: 'Periksa',
 					component: PageRiksa
 				},
+<<<<<<< HEAD
 				{
 					path: 'segel',
 					name: 'BA Segel',
@@ -117,6 +125,8 @@ function configRoutes () {
 					name: 'BA Pengawasan Reekspor',
 					component: PageReekspor
 				},
+=======
+>>>>>>> penindakan/riksa
 			]
 		},
 	]

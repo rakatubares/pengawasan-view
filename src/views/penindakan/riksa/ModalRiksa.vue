@@ -6,25 +6,25 @@
 			@close-modal="closeModal"
 		>
 			<template #tab-uraian>
-				<MyDisplayRiksa
-					v-if="modal_state == 'show'"
-					:doc_id.sync="doc_id"
-				/>
 				<MyFormRiksa
 					v-if="['insert','edit'].includes(modal_state)"
 					:state.sync="modal_state"
 					:doc_id.sync="doc_id"
 				/>
-			</template>
-			<template #tab-object>
-				<MyDisplayDetail 
-					v-if="modal_state == 'show'"
-					:doc_type="doc_type"
+				<MyDisplayRiksa
+					v-else-if="modal_state == 'show'"
 					:doc_id.sync="doc_id"
 				/>
+			</template>
+			<template #tab-object>
 				<MyFormDetail 
 					v-if="modal_state == 'edit'"
 					:available_details="['sarkut', 'barang', 'bangunan']"
+					:doc_type="doc_type"
+					:doc_id.sync="doc_id"
+				/>
+				<MyDisplayDetail 
+					v-else-if="modal_state == 'show'"
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
