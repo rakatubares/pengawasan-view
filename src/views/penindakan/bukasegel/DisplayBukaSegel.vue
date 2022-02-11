@@ -72,54 +72,6 @@
 					title="Petugas 2"
 					:data.sync="data_buka_segel.petugas2"
 				/>
-				<!-- <CRow class="mb-1">
-					<CCol md="3">
-						<b>Nama Pemilik/Saksi</b>
-					</CCol>
-					<CCol md="9">
-						{{ disp_nama_saksi }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3">
-						<b>Alamat</b>
-					</CCol>
-					<CCol md="9">
-						{{ disp_alamat_saksi }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3">
-						<b>Pekerjaan</b>
-					</CCol>
-					<CCol md="9">
-						{{ disp_pekerjaan_saksi }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3">
-						<b>Identitas</b>
-					</CCol>
-					<CCol md="9">
-						{{ disp_identitas }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3">
-						<b>Petugas 1</b>
-					</CCol>
-					<CCol md="9">
-						{{ disp_petugas1 }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3">
-						<b>Petugas 2</b>
-					</CCol>
-					<CCol md="9">
-						{{ disp_petugas2 }}
-					</CCol>
-				</CRow> -->
 			</CCol>
 		</CRow>
 	</div>
@@ -167,22 +119,11 @@ export default {
 		disp_nomor_segel() { return this.data_buka_segel.nomor_segel || '-' },
 		disp_tanggal_segel() { return this.data_buka_segel.tanggal_segel || '-' },
 		disp_tempat_segel() { return this.data_buka_segel.tempat_segel || '-' },
-		// disp_nama_saksi() { return this.data.main.data.saksi.nama || '-' },
-		// disp_alamat_saksi() { return this.data.main.data.saksi.alamat || '-' },
-		// disp_pekerjaan_saksi() { return this.data.main.data.saksi.pekerjaan || '-' },
-		// disp_identitas() { return (this.data.main.data.saksi.jenis_identitas || '') + ' ' + (this.data.main.data.saksi.nomor_identitas || '-') },
-		// disp_petugas1() { return this.data.main.data.petugas1.name || '-' },
-		// disp_petugas2() { 
-		// 	if (this.data.main.data.petugas2 != null) {
-		// 		return this.data.main.data.petugas2.name
-		// 	} else {
-		// 		return '-'
-		// 	}
-		// },
 	},
 	methods: {
 		async getData() {
-			this.data_buka_segel = await api.getBasicDataById('bukasegel', this.doc_id)
+			let response = await api.getDisplayDataById('bukasegel', this.doc_id)
+			this.data_buka_segel = response.data.data
 		}
 	},
 	async mounted() {
