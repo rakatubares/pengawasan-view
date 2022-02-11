@@ -31,10 +31,10 @@
 		</CRow>
 		<CRow class="mb-1">
 			<CCol md="3" class="py-1">
-				<b>Tanggal Lahir</b>
+				<b>Tempat / Tanggal Lahir</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.tanggal_lahir }}
+				{{ `${data.tempat_lahir} / ${data.tanggal_lahir}` }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -43,6 +43,14 @@
 			</CCol>
 			<CCol md="9" class="py-1">
 				{{ data.alamat }}
+			</CCol>
+		</CRow>
+		<CRow class="mb-1">
+			<CCol md="3" class="py-1">
+				<b>Agama</b>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ data.agama }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -78,7 +86,9 @@ const data_default = {
 	warga_negara: null,
 	jenis_identitas: null,
 	nomor_identitas: null,
+	tempat_lahir: null,
 	tanggal_lahir: null,
+	agama: null,
 	alamat: null,
 	pekerjaan: null,
 	nomor_telepon: null,
