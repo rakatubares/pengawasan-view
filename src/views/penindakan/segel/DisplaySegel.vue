@@ -114,7 +114,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.data_segel = await api.getBasicDataById('segel', this.doc_id)
+			let response = await api.getDisplayDataById('segel', this.doc_id)
+			this.data_segel = response.data.data
 		}
 	},
 	async mounted() {
