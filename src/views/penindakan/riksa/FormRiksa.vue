@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper form-riksa">
 		<!-- Form BA Pemeriksaan -->
 		<CForm class="pt-3">
 			<CRow>
@@ -111,10 +111,13 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.data = await api.getDocumentById('riksa', this.doc_id)
+			let response = await api.getFormDataById('riksa', this.doc_id)
+			this.data = response.data.data
+
 			if (this.data.penindakan.petugas2 == null) {
 				this.data.penindakan.petugas2 = {user_id: null}
 			}
+
 			this.$nextTick(function () {
 				this.renderData()
 			})
@@ -129,18 +132,18 @@ export default {
 			if (this.state == 'insert') {
 				try {
 					let response = await api.storeDoc('riksa', this.data)
-					this.$emit('update:doc_id', response.main.data.id)
+					this.$emit('update:doc_id', response.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BA Pemeriksaan berhasil disimpan')
 				} catch (error) {
-					console.log('form riksa - save data - error', JSON.parse(JSON.stringify(error)))
+					console.log('form riksa - save data - error', error)
 				}
 			} else if (this.state == 'edit') {
 				try {
 					await api.updateDoc('riksa', this.doc_id, this.data)
 					this.alert('Data BA Pemeriksaan berhasil diubah')
 				} catch (error) {
-					console.log('form riksa - update data - error', JSON.parse(JSON.stringify(error)))
+					console.log('form riksa - update data - error', error)
 				}
 			}
 		},
@@ -158,10 +161,11 @@ export default {
 </script>
 
 <style>
-.row+.row {
+.form-riksa .row+.row {
 	margin-top:0;
 }
-.v-text-field__details {
+
+.form-riksa .v-text-field__details {
 	display: none;
 }
 </style>

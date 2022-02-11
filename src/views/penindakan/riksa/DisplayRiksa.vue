@@ -76,7 +76,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.data_riksa = await api.getBasicDataById('riksa', this.doc_id)
+			let response = await api.getDisplayDataById('riksa', this.doc_id)
+			this.data_riksa = response.data.data
 		}
 	},
 	async mounted() {
