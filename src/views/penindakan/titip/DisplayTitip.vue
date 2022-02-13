@@ -108,6 +108,13 @@ export default {
 		async getData() {
 			let response = await api.getDisplayDataById('titip', this.doc_id)
 			this.data_titip = response.data.data
+
+			if (this.data_titip.saksi == null) {
+				this.data_titip.saksi = {id: null}
+			}
+			if (this.data_titip.petugas2 == null) {
+				this.data_titip.petugas2 = {user_id: null}
+			}
 		}
 	},
 	async mounted() {

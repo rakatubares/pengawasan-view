@@ -18,7 +18,7 @@
 			</template>
 			<template #tab-object>
 				<MyDisplayDetail 
-					v-if="['insert','edit'].includes(modal_state)"
+					v-if="['show','edit'].includes(modal_state)"
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
