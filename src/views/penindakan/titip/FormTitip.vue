@@ -202,19 +202,18 @@ export default {
 			if (this.state == 'insert') {
 				try {
 					let response = await api.storeDoc('titip', this.data)
-					console.log('form titip - save data', JSON.parse(JSON.stringify(response)))
 					this.$emit('update:doc_id', response.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BA Penitipan berhasil disimpan')
 				} catch (error) {
-					console.log('form titip - save data - error', JSON.parse(JSON.stringify(error)))
+					console.log('form titip - save data - error', error)
 				}
 			} else if (this.state == 'edit') {
 				try {
 					await api.updateDoc('titip', this.doc_id, this.data)
 					this.alert('Data BA Penitipan berhasil diubah')
 				} catch (error) {
-					console.log('form titip - update data - error', JSON.parse(JSON.stringify(response)))
+					console.log('form titip - update data - error', response)
 				}
 			}
 		},
