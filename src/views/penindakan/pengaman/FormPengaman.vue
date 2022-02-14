@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper form-pengaman">
 		<!-- Form BA Tanda Pengaman header -->
 		<CForm class="pt-3">
 			<CRow>
@@ -16,14 +16,14 @@
 						label="Jenis Tanda Pengaman"
 						description="Jenis tanda pengaman yang digunakan"
 						:options="['Kertas', 'Kunci', 'Timah', 'Lak', 'Segel Elektronik', 'Lainnya']"
-						:value.sync="data.main.data.jenis_pengaman"
+						:value.sync="data.jenis_pengaman"
 					/>
 				</CCol>
 				<CCol md="3" sm="12">
 					<CInput
 						label="Jumlah Tanda Pengaman"
 						description="Jumlah tanda pengaman yang digunakan"
-						:value.sync="data.main.data.jumlah_pengaman"
+						:value.sync="data.jumlah_pengaman"
 						:is-valid="validatorNumber"
 						invalid-feedback="Jumlah tanda pengaman wajib diisi"
 					/>
@@ -31,7 +31,7 @@
 				<CCol md="3" sm="12">
 					<CInput
 						label="Satuan"
-						:value.sync="data.main.data.satuan_pengaman"
+						:value.sync="data.satuan_pengaman"
 					/>
 				</CCol>
 			</CRow>
@@ -40,7 +40,7 @@
 					<CInput
 						label="Tempat Tanda Pengaman"
 						description="Bagian / lokasi tempat tanda pengaman ditempatkan / dilekatkan"
-						:value.sync="data.main.data.tempat_pengaman"
+						:value.sync="data.tempat_pengaman"
 					/>
 				</CCol>
 			</CRow>
@@ -58,7 +58,7 @@
 					<CTextarea
 						label="Alasan Pengaman"
 						description="Alasan dilakukan pengamanan"
-						:value.sync="data.main.data.alasan_pengamanan"
+						:value.sync="data.alasan_pengamanan"
 					/>
 				</CCol>
 			</CRow>
@@ -66,7 +66,7 @@
 				<CCol sm="12">
 					<CTextarea
 						label="Keterangan"
-						:value.sync="data.main.data.keterangan"
+						:value.sync="data.keterangan"
 					/>
 				</CCol>
 			</CRow>
@@ -132,16 +132,12 @@ import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
 const default_data = {
-	main: {
-		data: {
-			jenis_pengaman: 'Kertas',
-			jumlah_pengaman: null,
-			satuan_pengaman: null,
-			tempat_pengaman: null,
-			alasan_pengamanan: null,
-			keterangan: null,
-		}
-	},
+	jenis_pengaman: 'Kertas',
+	jumlah_pengaman: null,
+	satuan_pengaman: null,
+	tempat_pengaman: null,
+	alasan_pengamanan: null,
+	keterangan: null,
 	penindakan: {
 		lokasi_penindakan: null,
 		sprint: {id: null},
@@ -170,7 +166,7 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.data = await api.getDocumentById('pengaman', this.doc_id)
+			this.data = await api.getFormDataById('pengaman', this.doc_id)
 			if (this.data.penindakan.petugas2 == null) {
 				this.data.penindakan.petugas2 = {user_id: null}
 			}
@@ -188,18 +184,18 @@ export default {
 			if (this.state == 'insert') {
 				try {
 					let response = await api.storeDoc('pengaman', this.data)
-					this.$emit('update:doc_id', response.main.data.id)
+					this.$emit('update:doc_id', response.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BA Pelekatan Tanda Pengaman berhasil disimpan')
 				} catch (error) {
-					console.log('form pengaman - save data - error', JSON.parse(JSON.stringify(error)))
+					console.log('form pengaman - save data - error', error)
 				}
 			} else if (this.state == 'edit') {
 				try {
 					await api.updateDoc('pengaman', this.doc_id, this.data)
 					this.alert('Data BA Pelekatan Tanda Pengaman berhasil diubah')
 				} catch (error) {
-					console.log('form pengaman - update data - error', JSON.parse(JSON.stringify(response)))
+					console.log('form pengaman - update data - error', error)
 				}
 			}
 		},
@@ -218,10 +214,10 @@ export default {
 </script>
 
 <style>
-.row+.row {
+.form-pengaman .row+.row {
 	margin-top:0;
 }
-.v-text-field__details {
+.form-pengaman .v-text-field__details {
 	display: none;
 }
 </style>
