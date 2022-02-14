@@ -1,12 +1,12 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper form-buka-pengaman">
 		<!-- Form BA Buka Tanda Pengaman header -->
 		<CForm class="pt-3">
 			<CRow>
 				<CCol md="12">
 					<MySelectSprint
 						ref="selectSprint"
-						:id.sync="data.main.data.sprint.id"
+						:id.sync="data.sprint.id"
 					>
 					</MySelectSprint>
 				</CCol>
@@ -18,7 +18,7 @@
 						v-if="data_source == 'Input Data'"
 						label="Nomor Tanda Pengaman"
 						description="Nomor tanda pengaman yang digunakan dalam pembukaan tanda pengaman"
-						:value.sync="data.main.data.nomor_pengaman"
+						:value.sync="data.nomor_pengaman"
 						:is-valid="validatorRequired"
 						invalid-feedback="Nomor tanda pengaman wajib diisi"
 					>
@@ -84,7 +84,7 @@
 					<div class="form-group">
 						<label class="w-100">Tanggal</label>
 						<date-picker
-							v-model="data.main.data.tanggal_pengaman"
+							v-model="data.tanggal_pengaman"
 							format="DD-MM-YYYY" 
 							value-type="format"
 							type="date"
@@ -109,7 +109,7 @@
 						label="Jenis Tanda Pengaman"
 						description="Jenis tanda pengaman yang digunakan"
 						:options="['Kertas', 'Kunci', 'Timah', 'Lak', 'Segel Elektronik', 'Lainnya']"
-						:value.sync="data.main.data.jenis_pengaman"
+						:value.sync="data.jenis_pengaman"
 						:disabled="data_source == 'Load Data'"
 					/>
 				</CCol>
@@ -117,7 +117,7 @@
 					<CInput
 						label="Jumlah"
 						description="Jumlah tanda pengaman yang digunakan"
-						:value.sync="data.main.data.jumlah_pengaman"
+						:value.sync="data.jumlah_pengaman"
 						:is-valid="validatorNumber"
 						invalid-feedback="Jumlah tanda pengaman wajib diisi"
 						:disabled="data_source == 'Load Data'"
@@ -126,7 +126,7 @@
 				<CCol md="3" sm="12">
 					<CInput
 						label="Satuan"
-						:value.sync="data.main.data.satuan_pengaman"
+						:value.sync="data.satuan_pengaman"
 						:disabled="data_source == 'Load Data'"
 					/>
 				</CCol>
@@ -136,7 +136,7 @@
 					<CInput
 						label="Tempat Tanda Pengaman"
 						description="Bagian / lokasi tempat tanda pengaman ditempatkan / dilekatkan"
-						:value.sync="data.main.data.tempat_pengaman"
+						:value.sync="data.tempat_pengaman"
 						:disabled="data_source == 'Load Data'"
 					/>
 				</CCol>
@@ -145,7 +145,7 @@
 				<CCol md="6" sm="12">
 					<CTextarea
 						label="Dasar Pengamanan"
-						:value.sync="data.main.data.dasar_pengamanan"
+						:value.sync="data.dasar_pengamanan"
 						:disabled="data_source == 'Load Data'"
 					/>
 				</CCol>
@@ -157,7 +157,7 @@
 						label="Nama Saksi"
 						description="Nama terang pengangkut / pemilik / kuasa / saksi yang menyaksikan pembukaan tanda pengaman"
 						:showAlamat="true"
-						:id.sync="data.main.data.saksi.id"
+						:id.sync="data.saksi.id"
 					/>
 				</CCol>
 			</CRow>
@@ -167,7 +167,7 @@
 						ref="selectPetugas1"
 						label="Nama Petugas 1"
 						description="Nama Pejabat Bea dan Cukai yang melakukan pembukaan tanda pengaman"
-						:id.sync="data.main.data.petugas1.user_id"
+						:id.sync="data.petugas1.user_id"
 						role="p2vue.penindakan"
 						:currentUser="true"
 					/>
@@ -179,7 +179,7 @@
 						ref="selectPetugas2"
 						label="Nama Petugas 2"
 						description="Nama Pejabat Bea dan Cukai yang melakukan pembukaan tanda pengaman"
-						:id.sync="data.main.data.petugas2.user_id"
+						:id.sync="data.petugas2.user_id"
 						role="p2vue.penindakan"
 					/>
 				</CCol>
@@ -215,23 +215,17 @@ import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
 const default_data = {
-	main: {
-		data: {
-			tanggal_pengaman: null,
-			jenis_pengaman: 'Kertas',
-			jumlah_pengaman: null,
-			satuan_pengaman: null,
-			tempat_pengaman: null,
-			dasar_pengamanan: null,
-			sprint: {id: null},
-			saksi: {id: null},
-			petugas1: {user_id: null},
-			petugas2: {user_id: null}
-		}
-	},
-	dokumen: {
-		pengaman: {id: null}
-	}
+	tanggal_pengaman: null,
+	jenis_pengaman: 'Kertas',
+	jumlah_pengaman: null,
+	satuan_pengaman: null,
+	tempat_pengaman: null,
+	dasar_pengamanan: null,
+	sprint: {id: null},
+	saksi: {id: null},
+	petugas1: {user_id: null},
+	petugas2: {user_id: null},
+	pengaman: {id: null}
 }
 
 export default {
@@ -259,42 +253,45 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.data = await api.getDocumentById('bukapengaman', this.doc_id)
-			if (this.data.main.data.petugas2 == null) {
-				this.data.main.data.petugas2 = {user_id: null}
+			let response = await api.getFormDataById('bukapengaman', this.doc_id)
+			this.data = response.data.data
+
+			if (this.data.petugas2 == null) {
+				this.data.petugas2 = {user_id: null}
 			}
-			if (this.data.dokumen.pengaman != null) {
+			if (this.data.pengaman != null) {
 				// Display current BA pengaman
 				let search_data = {
-					's': this.data.dokumen.pengaman.no_dok_lengkap,
-					'e': this.data.dokumen.pengaman.id
+					's': this.data.pengaman.no_dok_lengkap,
+					'e': this.data.pengaman.id
 				}
 				let pengaman_items = await api.searchDoc('pengaman', search_data)
 				this.pengaman_search_items = pengaman_items.data.data
 				this.pengaman_search_value = this.pengaman_search_items[0]
 				
 				// Set filter exception
-				this.pengaman_search_exception = this.data.dokumen.pengaman.id
+				this.pengaman_search_exception = this.data.pengaman.id
 				this.$emit('update:state', 'edit-header')
 				this.data_source = 'Load Data'
 			}
+
 			this.$nextTick(function () {
 				this.renderData()
 			})
 		},
 		renderData() {
-			this.$refs.selectSprint.getSprint(this.data.main.data.sprint.id, true)
-			this.$refs.selectSaksi.getEntitas(this.data.main.data.saksi.id, true)
-			this.$refs.selectPetugas1.getPetugas(this.data.main.data.petugas1.user_id, true)
-			this.$refs.selectPetugas2.getPetugas(this.data.main.data.petugas2.user_id, true)
+			this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
+			this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
+			this.$refs.selectPetugas1.getPetugas(this.data.petugas1.user_id, true)
+			this.$refs.selectPetugas2.getPetugas(this.data.petugas2.user_id, true)
 		},
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
 					let response = await api.storeDoc('bukapengaman', this.data)
-					this.$emit('update:doc_id', response.main.data.id)
+					this.$emit('update:doc_id', response.id)
 
-					if ('pengaman' in this.data.dokumen) {
+					if (response.pengaman != null) {
 						this.$emit('update:state', 'edit-header')	
 					} else {
 						this.$emit('update:state', 'edit')
@@ -302,14 +299,20 @@ export default {
 
 					this.alert('Data BA Buka Tanda Pengaman berhasil disimpan')
 				} catch (error) {
-					console.log('form buka pengaman - save data - error', JSON.parse(JSON.stringify(error)))
+					console.log('form buka pengaman - save data - error', error)
 				}
-			} else if (this.state == 'edit') {
+			} else if (['edit', 'edit-header'].includes(this.state)) {
 				try {
-					await api.updateDoc('bukapengaman', this.doc_id, this.data)
+					let response = await api.updateDoc('bukapengaman', this.doc_id, this.data)
+					if (response.pengaman != null) {
+						this.$emit('update:state', 'edit-header')
+					} else {
+						this.$emit('update:state', 'edit')
+					}
+
 					this.alert('Data BA Buka Tanda Pengaman berhasil diubah')
 				} catch (error) {
-					console.log('form buka pengaman - update data - error', JSON.parse(JSON.stringify(response)))
+					console.log('form buka pengaman - update data - error', error)
 				}
 			}
 		},
@@ -319,22 +322,23 @@ export default {
 		validatorRequired(val) { return validators.required(val) },
 		validatorNumber(val) { return validators.number(val) },
 		toggleSource(val) {
+			// Nullify related data
+			this.data.nomor_pengaman = null
+			this.data.tanggal_pengaman = null
+			this.data.jenis_pengaman = null
+			this.data.jumlah_pengaman = null
+			this.data.satuan_pengaman = null
+			this.data.tempat_pengaman = null
+			this.data.dasar_pengamanan = null
+			this.data.pengaman = {id: null}
+			this.pengaman_search_value = null
+
 			if (val == 'input') {
 				this.data_source = 'Input Data'
-				this.data.main.data.jenis_pengaman = 'Kertas'
+				this.data.jenis_pengaman = 'Kertas'
 			} else {
 				this.data_source = 'Load Data'	
 			}
-			// Nullify related data
-			this.data.main.data.nomor_pengaman = null
-			this.data.main.data.tanggal_pengaman = null
-			this.data.main.data.jenis_pengaman = null
-			this.data.main.data.jumlah_pengaman = null
-			this.data.main.data.satuan_pengaman = null
-			this.data.main.data.tempat_pengaman = null
-			this.data.main.data.dasar_pengamanan = null
-			this.data.dokumen.pengaman.id = null
-			this.pengaman_search_value = null
 		},
 		async changeValuePengaman(id) {
 			if (id != null) {
@@ -342,16 +346,16 @@ export default {
 				let pengaman = await api.getDocumentById('pengaman', id)
 
 				// Change current data according to pengaman
-				this.data.main.data.nomor_pengaman = pengaman.main.data.nomor_pengaman
-				this.data.main.data.tanggal_pengaman = pengaman.penindakan.tanggal_penindakan
-				this.data.main.data.jenis_pengaman = pengaman.main.data.jenis_pengaman
-				this.data.main.data.jumlah_pengaman = pengaman.main.data.jumlah_pengaman
-				this.data.main.data.satuan_pengaman = pengaman.main.data.satuan_pengaman
-				this.data.main.data.tempat_pengaman = pengaman.main.data.tempat_pengaman
-				this.data.main.data.dasar_pengamanan = pengaman.main.data.alasan_pengamanan
+				this.data.nomor_pengaman = pengaman.main.data.nomor_pengaman
+				this.data.tanggal_pengaman = pengaman.penindakan.tanggal_penindakan
+				this.data.jenis_pengaman = pengaman.main.data.jenis_pengaman
+				this.data.jumlah_pengaman = pengaman.main.data.jumlah_pengaman
+				this.data.satuan_pengaman = pengaman.main.data.satuan_pengaman
+				this.data.tempat_pengaman = pengaman.main.data.tempat_pengaman
+				this.data.dasar_pengamanan = pengaman.main.data.alasan_pengamanan
 				
 				// Specify pengaman id
-				this.data.dokumen.pengaman.id = id
+				this.data.pengaman.id = id
 			}
 		}
 	},
@@ -374,18 +378,18 @@ export default {
 </script>
 
 <style>
-.row+.row {
+.form-buka-pengaman .row+.row {
 	margin-top:0;
 }
-.v-text-field__details {
+.form-buka-pengaman .v-text-field__details {
 	display: none;
 }
 /* V-AUTOCOMPLETE */
-.v-input__slot {
+.form-buka-pengaman .v-input__slot {
 	min-height: 34px !important;
 	font-size: 14px;
 }
-.v-input__prepend-outer {
+.form-buka-pengaman .v-input__prepend-outer {
 	margin: 0 !important;
 } 
 </style>
