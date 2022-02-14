@@ -132,7 +132,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.data_buka_pengaman = await api.getBasicDataById('bukapengaman', this.doc_id)
+			let response = await api.getDisplayDataById('bukapengaman', this.doc_id)
+			this.data_buka_pengaman = response.data.data
 		}
 	},
 	async mounted() {
