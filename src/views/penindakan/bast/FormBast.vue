@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper form-bast">
 		<!-- Form BAST header -->
 		<CForm class="pt-3">
 			<CRow>
@@ -177,7 +177,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.data = await api.getBasicDataById('bast', this.doc_id)
+			let response = await api.getFormDataById('bast', this.doc_id)
+			this.data = response.data.data
 
 			this.$nextTick(function () {
 				this.renderData()
@@ -225,12 +226,10 @@ export default {
 			this.data[position]['type'] = type
 		},
 		async saveData() {
-			console.log('form bast - save data', JSON.parse(JSON.stringify(this.data)))
-
 			if (this.state == 'insert') {
 				try {
 					let response = await api.storeDoc('bast', this.data)
-					// let doc_id = response.id
+					console.log('form bast - save data response', JSON.parse(JSON.stringify(response)))
 					this.$emit('update:doc_id', response.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BAST berhasil disimpan')
@@ -261,11 +260,11 @@ export default {
 </script>
 
 <style>
-.row+.row {
+.form-bast .row+.row {
 	margin-top:0;
 }
 
-.v-text-field__details {
+.form-bast .v-text-field__details {
 	display: none;
 }
 </style>

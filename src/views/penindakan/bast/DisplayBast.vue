@@ -108,7 +108,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.data_bast = await api.getBasicDataById('bast', this.doc_id)
+			let response = await api.getDisplayDataById('bast', this.doc_id)
+			this.data_bast = response.data.data
 		}
 	},
 	async mounted() {
