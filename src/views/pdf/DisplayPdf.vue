@@ -47,6 +47,7 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfBukaPengaman from './PdfBukaPengaman.js'
 import PdfPengaman from './PdfPengaman.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
@@ -95,6 +96,11 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
+				case 'bukapengaman':
+					let pdfBukaPengaman = new PdfBukaPengaman(this.data)
+					this.src_pdf = pdfBukaPengaman.generatePdf()
+					break;
+
 				case 'pengaman':
 					let pdfPengaman = new PdfPengaman(this.data)
 					this.src_pdf = pdfPengaman.generatePdf()

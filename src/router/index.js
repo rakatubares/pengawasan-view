@@ -11,6 +11,7 @@ const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
 const PagePengaman = () => import('@/views/penindakan/pengaman/PagePengaman')
+const PageBukaPengaman = () => import('@/views/penindakan/bukapengaman/PageBukaPengaman')
 
 Vue.use(Router)
 
@@ -38,6 +39,11 @@ function configRoutes () {
 					path: 'pengaman',
 					name: 'BA Tanda Pengaman',
 					component: PagePengaman
+				},
+				{
+					path: 'bukapengaman',
+					name: 'BA Pembukaan Tanda Pengaman',
+					component: PageBukaPengaman
 				},
 			]
 		},
