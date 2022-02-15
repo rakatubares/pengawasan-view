@@ -51,6 +51,7 @@ import PdfBast from './PdfBast.js'
 import PdfBukaPengaman from './PdfBukaPengaman.js'
 import PdfBukaSegel from './PdfBukaSegel.js'
 import PdfContoh from './PdfContoh.js'
+import PdfLap from './PdfLap.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLptp from './PdfLptp.js'
@@ -127,6 +128,11 @@ export default {
 				case 'contoh':
 					let pdfContoh = new PdfContoh(this.data)
 					this.src_pdf = pdfContoh.generatePdf()
+					break;
+
+				case 'lap':
+					let pdfLap = new PdfLap(this.data)
+					this.src_pdf = pdfLap.generatePdf()
 					break;
 
 				case 'lp':
