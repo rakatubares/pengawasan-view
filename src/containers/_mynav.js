@@ -8,6 +8,16 @@ export default [
 				to: '/dashboard',
 				icon: 'chart'
 			},
+			{
+				_name: 'CSidebarNavTitle',
+				_children: ['Penindakan']
+			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'LAP',
+				to: '/lap',
+				icon: 'cil-file'
+			},
 		]
 	}
 ]
