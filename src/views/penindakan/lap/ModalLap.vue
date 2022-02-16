@@ -9,13 +9,13 @@
 		>
 			<template #tabs>
 				<CTab :title="tabs_list[0]['title']">
-					<!-- <MyFormTolak1
+					<MyFormLap
 						v-if="['insert','edit'].includes(modal_state)"
 						:state.sync="modal_state"
 						:doc_id.sync="doc_id"
-					/> -->
+					/>
 					<MyDisplayLap
-						v-if="modal_state == 'show'"
+						v-else-if="modal_state == 'show'"
 						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
 					/>
@@ -41,7 +41,7 @@
 <script>
 import MyDisplayLap from './DisplayLap.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
-// import MyFormTolak1 from './FormTolak1.vue'
+import MyFormLap from './FormLap.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 
 export default {
@@ -49,6 +49,7 @@ export default {
 	components: {
 		MyDisplayLap,
 		MyDisplayPdf,
+		MyFormLap,
 		MyModalTabs,
 	},
 	props: {
