@@ -194,7 +194,7 @@ const default_data = {
 	skema_penindakan: null,
 	keterangan_skema_penindakan: null,
 	flag_layak_patroli: null,
-	keterangan_layak_patroli: null,
+	keterangan_patroli: null,
 	kesimpulan: null,
 }
 

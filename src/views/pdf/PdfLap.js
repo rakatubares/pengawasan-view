@@ -20,13 +20,13 @@ const props = {
 		lbl: 27,
 		chk1: 55,
 		ops1: 62.5,
-		chk2: 105,
-		ops2: 112.5,
+		chk2: 95,
+		ops2: 102.5,
 		cln3: 75,
 		txt3: 78,
 		lbl3: 40,
-		cln4: 125,
-		txt4: 128, 
+		cln4: 115,
+		txt4: 118, 
 		ttd:125,
 		lamp: 140
 	}
@@ -48,7 +48,7 @@ class PdfLap extends Pdf {
 		this.pdf.text(':', this.props.ind.cln, this.ln)
 		this.pdf.text(this.data.dokumen.lap.nomor_sumber, this.props.ind.txt, this.ln)
 		this.pdf.text('Tanggal :', this.props.ind.lbl2, this.ln)
-		this.pdf.text(this.data.dokumen.lap.tanggal_dokumen, this.props.ind.txt2, this.ln)
+		this.pdf.text(this.data.dokumen.lap.tanggal_sumber, this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Kategori Dugaan Pelanggaran', this.props.ind.alp, this.ln)
@@ -161,7 +161,8 @@ class PdfLap extends Pdf {
 		this.pdf.text('Kesimpulan:', this.props.ind.alp, this.ln)
 		let arr_kesimpulan = converters.array_text(this.data.dokumen.lap.kesimpulan, 100)
 		this.pdf.text(arr_kesimpulan, this.props.ind.lbl3, this.ln)
-		this.ln += this.props.font.height*(arr_kesimpulan.length + 1)
+		let height_kesimpulan = arr_kesimpulan.length > 0 ? arr_kesimpulan.length : 1
+		this.ln += this.props.font.height*(height_kesimpulan + 1)
 
 		////// TTD //////
 		let ln_tgl_ttd = this.ln
@@ -180,6 +181,11 @@ class PdfLap extends Pdf {
 		this.pdf.text(this.data.dokumen.lap.penerbit.user.name, this.props.ind.ttd, ln_ttd_nama)
 		this.pdf.text('NIP. ' + this.data.dokumen.lap.penerbit.user.nip, this.props.ind.ttd, ln_ttd_nip)
 
+		////// WATERMARK //////
+		if ([100].includes(this.data.dokumen.lap.kode_status)) {
+			this.watermark()
+		}
+
 		return this.pdf.output('datauristring')
 	}
 
@@ -197,7 +203,8 @@ class PdfLap extends Pdf {
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
 		let arr_ket = converters.array_text(ket, 75)
 		this.pdf.text(arr_ket, this.props.ind.txt3, this.ln)
-		this.ln += this.props.font.height*arr_ket.length
+		let height = arr_ket.length > 0 ? arr_ket.length : 1
+		this.ln += this.props.font.height*height
 	}
 
 	constructSkema(id_skema, lbl) {
@@ -236,7 +243,7 @@ class PdfLap extends Pdf {
 				? this.data.dokumen.lap.keterangan_patroli 
 				: ''
 			: ''
-		let arr_ket_patroli = converters.array_text(txt_ket_patroli, 45)
+		let arr_ket_patroli = converters.array_text(txt_ket_patroli, 50)
 		this.pdf.text(arr_ket_patroli, this.props.ind.txt4, this.ln)
 		let height = arr_ket_patroli.length > 0 ? arr_ket_patroli.length : 1
 		this.ln += this.props.font.height*height
