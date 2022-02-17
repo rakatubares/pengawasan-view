@@ -168,6 +168,18 @@ class API {
 	async storeLinkedDoc(doc_type, doc_id, data) {
 		return await this.postApi(`/${doc_type}/${doc_id}/storelinked`, data)
 	}
+
+	async getEntitasById(id) {
+		return await this.getApi(`/entitas/${id}`)
+	}
+
+	async saveEntitas(data) {
+		return await this.postApi(`/entitas`, data)
+	}
+
+	async searchEntitas(data) {
+		return await this.postApi('/entitas/search', data)
+	}
 }
 
 export default new API
