@@ -47,16 +47,14 @@
 					label="Jenis Identitas"
 					:value.sync="entitas.jenis_identitas"
 					disabled
-				>
-				</CInput>
+				/>
 			</CCol>
 			<CCol md="5" sm="7">
 				<CInput
 					label="Nomor Identitas"
 					:value.sync="entitas.nomor_identitas"
 					disabled
-				>
-				</CInput>
+				/>
 			</CCol>
 		</CRow>
 		<CRow v-if="showTanggalLahir">
@@ -65,8 +63,7 @@
 					label="Tanggal Lahir"
 					:value.sync="entitas.tanggal_lahir"
 					disabled
-				>
-				</CInput>
+				/>
 			</CCol>
 		</CRow>
 		<CRow v-if="showWargaNegara">
@@ -75,8 +72,7 @@
 					label="Kewarganegaraan"
 					:value.sync="entitas.warga_negara"
 					disabled
-				>
-				</CInput>
+				/>
 			</CCol>
 		</CRow>
 		<CRow v-if="showPekerjaan">
@@ -85,8 +81,7 @@
 					label="Pekerjaan"
 					:value.sync="entitas.pekerjaan"
 					disabled
-				>
-				</CInput>
+				/>
 			</CCol>
 		</CRow>
 		<CRow v-if="showAlamat">
@@ -95,8 +90,7 @@
 					label="Alamat"
 					:value.sync="entitas.alamat"
 					disabled
-				>
-				</CTextarea>
+				/>
 			</CCol>
 		</CRow>
 
@@ -116,16 +110,14 @@
 							:value.sync="new_entitas.nama"
 							:is-valid="validatorRequired"
 							invalid-feedback="Nama entitas wajib diisi"
-						>
-						</CInput>
+						/>
 					</CCol>
 				</CRow>
 				<CRow>
 					<CCol sm="6">
-						<CSelect
-							label="Jenis Kelamin"
-							:value.sync="new_entitas.jenis_kelamin"
-							:options="['Laki-laki', 'Perempuan']"
+						<CInput
+							label="Tempat Lahir"
+							:value.sync="new_entitas.tempat_lahir"
 						/>
 					</CCol>
 					<CCol sm="6">
@@ -151,12 +143,26 @@
 					</CCol>
 				</CRow>
 				<CRow>
+					<CCol sm="6">
+						<CSelect
+							label="Jenis Kelamin"
+							:value.sync="new_entitas.jenis_kelamin"
+							:options="['Laki-laki', 'Perempuan']"
+						/>
+					</CCol>
+					<CCol sm="6">
+						<CInput
+							label="Agama"
+							:value.sync="new_entitas.agama"
+						/>
+					</CCol>
+				</CRow>
+				<CRow>
 					<CCol sm="12">
 						<CInput
 							label="Kewarganegaraan"
 							:value.sync="new_entitas.warga_negara"
-						>
-						</CInput>
+						/>
 					</CCol>
 				</CRow>
 				<CRow>
@@ -166,8 +172,7 @@
 							:value.sync="new_entitas.jenis_identitas"
 							:is-valid="validatorRequired"
 							invalid-feedback="Jenis identitas wajib diisi"
-						>
-						</CInput>
+						/>
 					</CCol>
 					<CCol md="5" sm="12">
 						<CInput
@@ -175,8 +180,7 @@
 							:value.sync="new_entitas.nomor_identitas"
 							:is-valid="validatorRequired"
 							invalid-feedback="Nomor identitas wajib diisi"
-						>
-						</CInput>
+						/>
 					</CCol>
 				</CRow>
 				<CRow>
@@ -184,8 +188,7 @@
 						<CInput
 							label="Pekerjaan"
 							:value.sync="new_entitas.pekerjaan"
-						>
-						</CInput>
+						/>
 					</CCol>
 				</CRow>
 				<CRow>
@@ -193,8 +196,26 @@
 						<CTextarea
 							label="Alamat"
 							:value.sync="new_entitas.alamat"
-						>
-						</CTextarea>
+						/>
+					</CCol>
+				</CRow>
+				<CRow>
+					<CCol sm="6">
+						<CInput
+							label="No Telepon"
+							:value.sync="new_entitas.nomor_telepon"
+							:is-valid="validatorPhone"
+							invalid-feedback="Nomor telepon tidak valid"
+						/>
+					</CCol>
+					<CCol sm="6">
+						<CInput
+							id='input-email'
+							label="Email"
+							:value.sync="new_entitas.email"
+							:is-valid="validatorEmail"
+							invalid-feedback="Email tidak valid"
+						/>
 					</CCol>
 				</CRow>
 			</CForm>
@@ -221,19 +242,19 @@
 </template>
 
 <script>
-import axios from 'axios'
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import MyAlert from '../components/AlertSubmit.vue'
-import api from '../../router/api.js'
+import api from '../../router/api2.js'
 import validators from '../../helpers/validator.js'
 
 const default_entitas = {
 	id: null,
 	nama: null,
 	jenis_identitas: null,
-	nomor_identitas: null
+	nomor_identitas: null,
+	jenis_kelamin: 'Laki-laki'
 }
 
 export default {
@@ -279,7 +300,7 @@ export default {
 	watch: {
 		async search (val) {
 			let data = {'s': val}
-			let response = await axios.post(api.searchEntitas(), data)
+			let response = await api.searchEntitas(data)
 			this.items = response.data.data
 		}
 	},
@@ -288,19 +309,14 @@ export default {
 			this.getEntitas(id)
 			this.$emit('update:id', id)
 		},
-		getEntitas(id, mounted=false) {
+		async getEntitas(id, mounted=false) {
 			if (id != null) {
-				axios
-					.get(api.getEntitasById(id))
-					.then(
-						(response) => {
-							this.entitas = response.data.data
-							if (mounted == true) {
-								this.items = [response.data.data]
-								this.value = this.items[0]
-							}
-						}
-					)
+				let response = await api.getEntitasById(id)
+				this.entitas = response.data.data
+				if (mounted == true) {
+					this.items = [this.entitas]
+					this.value = this.items[0]
+				}
 			} else {
 				this.entitas = JSON.parse(JSON.stringify(default_entitas))
 			}
@@ -309,28 +325,32 @@ export default {
 			this.show_modal = true
 		},
 		closeModalEntitas() {
+			this.new_entitas = JSON.parse(JSON.stringify(default_entitas)),
 			this.show_modal = false
 		},
-		saveEntitas() {
-			axios
-				.post(api.getEntitas(), this.new_entitas)
-				.then(
-					(response) => {
-						this.alert('Entitas berhasil disimpan')
-						this.$emit('update:id', response.data.id)
-						this.getEntitas(response.data.id, true)
-						this.closeModalEntitas()
-					}
-				)
+		async saveEntitas() {
+			try {
+				let response = await api.saveEntitas(this.new_entitas)	
+				this.alert('Entitas berhasil disimpan')
+				this.$emit('update:id', response.data.id)
+				this.getEntitas(response.data.id, true)
+				this.closeModalEntitas()
+			} catch (error) {
+				console.log('form entitas - save data - error', error)
+			}
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
 		},
 		validatorRequired(val) { return validators.required(val) },
+		validatorPhone(val) { return validators.phone(val) },
+		validatorEmail(val) { return validators.email(val) }
 	}
 }
 </script>
 
 <style>
-
+.v-input__append-outer {
+	margin: 0 !important;
+}
 </style>

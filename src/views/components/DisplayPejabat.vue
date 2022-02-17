@@ -7,10 +7,18 @@
 		</CRow>
 		<CRow class="mb-1">
 			<CCol md="3" class="py-1">
+				<b>Jabatan</b>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ disp_jabatan }}
+			</CCol>
+		</CRow>
+		<CRow class="mb-1">
+			<CCol md="3" class="py-1">
 				<b>Nama</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.name }}
+				{{ data.user.name }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -18,7 +26,7 @@
 				<b>NIP</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.nip }}
+				{{ data.user.nip }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -26,29 +34,46 @@
 				<b>Pangkat</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.pangkat }}
+				{{ data.user.pangkat }}
 			</CCol>
 		</CRow>
 	</div>
 </template>
 
 <script>
-const data_default = {
-	name: null,
-	nip: null,
-	pangkat: null,
+const default_data = {
+	jabatan: {jabatan: null},
+	plh: null,
+	user: {
+		name: null,
+		nip: null,
+		pangkat: null,
+	},
 }
 
 export default {
-	name: 'DisplayPegawai',
+	name: 'DisplayPejabat',
 	props: {
 		title: {
 			type: String,
-			default: 'Pegawai'
+			default: 'Pejabat'
 		},
 		data: {
 			type: Object,
-			default() {return JSON.parse(JSON.stringify(data_default))}
+			default() {return JSON.parse(JSON.stringify(default_data))}
+		}
+	},
+	computed: {
+		disp_jabatan() {
+			let jabatan = null
+
+			if (this.data.plh == 0) {
+				jabatan = this.data.jabatan.jabatan	
+			} else {
+				jabatan = 'Plh. ' + this.data.jabatan.jabatan
+			}
+
+			return jabatan
 		}
 	}
 }

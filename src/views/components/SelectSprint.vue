@@ -267,7 +267,6 @@ export default {
 		}
 	},
 	mounted() {
-		console.log('select sprint - mounted', this.id)
 		this.getJabatan()
 	}
 }

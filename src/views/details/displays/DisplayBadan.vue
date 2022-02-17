@@ -49,6 +49,22 @@
 						&nbsp;{{disp_identitas}}
 					</CCol>
 				</CRow>
+				<CRow class="mt-2 ml-1">
+					<CCol md="3">
+						<b>Nomor Telepon</b>
+					</CCol>
+					<CCol md="9">
+						&nbsp;{{disp_telepon}}
+					</CCol>
+				</CRow>
+				<CRow class="mt-2 ml-1">
+					<CCol md="3">
+						<b>Email</b>
+					</CCol>
+					<CCol md="9">
+						&nbsp;{{disp_email}}
+					</CCol>
+				</CRow>
 			</CCol>
 		</CRow>
 	</div>
@@ -58,10 +74,7 @@
 export default {
 	name: 'DisplayBadan',
 	props: {
-		doc: {
-			type: Object,
-			default: null
-		}
+		data_objek: Object
 	},
 	computed: {
 		disp_nama() {
@@ -79,10 +92,16 @@ export default {
 		disp_identitas() {
 			return (this.data.jenis_identitas || '') + ' ' + (this.data.nomor_identitas || '-')
 		},
+		disp_telepon() {
+			return this.data.nomor_telepon || '-'
+		},
+		disp_email() {
+			return this.data.email || '-'
+		},
 	},
 	data() {
 		return {
-			data: this.doc.objek.data
+			data: this.data_objek.data
 		}
 	},
 }

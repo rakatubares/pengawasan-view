@@ -27,7 +27,7 @@
 			</CCol>
 		</CRow>
 		<CRow
-			v-if="[100, 101].includes(status_pdf)"
+			v-if="show_publish_button"
 		>
 			<CCol col="12">
 				<CButton
@@ -47,11 +47,6 @@
 
 <script>
 import api from '../../router/api2.js'
-import PdfLptp from '../pdf/PdfLptp.js'
-import PdfRiksa from '../pdf/PdfRiksa.js'
-import PdfSbp from '../pdf/PdfSbp.js'
-import PdfSegel from '../pdf/PdfSegel.js'
-import PdfTegah from '../pdf/PdfTegah.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -60,6 +55,7 @@ export default {
 		MyAlert
 	},
 	props: {
+		state: String,
 		doc_type: String,
 		doc_id: Number,
 	},
@@ -73,9 +69,20 @@ export default {
 			active_pdf: this.doc_type
 		}
 	},
+	computed: {
+		show_publish_button() {
+			let show = false
+			if (this.status_pdf == 100) {
+				show = true
+			}
+
+			return show
+		}
+	},
 	methods: {
 		async getData() {
 			this.data = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.list_pdf = [this.doc_type]
 			for (const key in this.data.dokumen) {
 				if (!this.list_pdf.includes(key)) {
 					this.list_pdf.push(key)
@@ -87,31 +94,7 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
-				case 'sbp':
-					let pdfSbp = new PdfSbp(this.data)
-					this.src_pdf = pdfSbp.generatePdf()
-					break;
 
-				case 'segel':
-					let pdfSegel = new PdfSegel(this.data)
-					this.src_pdf = pdfSegel.generatePdf()
-					break;
-
-				case 'tegah':
-					let pdfTegah = new PdfTegah(this.data)
-					this.src_pdf = pdfTegah.generatePdf()
-					break;
-
-				case 'riksa':
-					let pdfRiksa = new PdfRiksa(this.data)
-					this.src_pdf = pdfRiksa.generatePdf()
-					break;
-
-				case 'lptp':
-					let pdfLptp = new PdfLptp(this.data)
-					this.src_pdf = pdfLptp.generatePdf()
-					break;
-			
 				default:
 					break;
 			}
@@ -127,6 +110,7 @@ export default {
 		async publishDoc() {
 			await api.publishDoc(this.doc_type, this.doc_id)
 			await this.getPdf()
+			this.$emit('update:state', 'show')
 		}
 	},
 	mounted() {

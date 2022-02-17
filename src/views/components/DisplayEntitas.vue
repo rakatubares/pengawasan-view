@@ -31,10 +31,10 @@
 		</CRow>
 		<CRow class="mb-1">
 			<CCol md="3" class="py-1">
-				<b>Tanggal Lahir</b>
+				<b>Tempat / Tanggal Lahir</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.tanggal_lahir }}
+				{{ `${data.tempat_lahir} / ${data.tanggal_lahir}` }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -47,10 +47,34 @@
 		</CRow>
 		<CRow class="mb-1">
 			<CCol md="3" class="py-1">
+				<b>Agama</b>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ data.agama }}
+			</CCol>
+		</CRow>
+		<CRow class="mb-1">
+			<CCol md="3" class="py-1">
 				<b>Pekerjaan</b>
 			</CCol>
 			<CCol md="9" class="py-1">
 				{{ data.pekerjaan }}
+			</CCol>
+		</CRow>
+		<CRow class="mb-1">
+			<CCol md="3" class="py-1">
+				<b>No Telepon</b>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ data.nomor_telepon }}
+			</CCol>
+		</CRow>
+		<CRow class="mb-1">
+			<CCol md="3" class="py-1">
+				<b>Email</b>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ data.email }}
 			</CCol>
 		</CRow>
 	</div>
@@ -62,9 +86,13 @@ const data_default = {
 	warga_negara: null,
 	jenis_identitas: null,
 	nomor_identitas: null,
+	tempat_lahir: null,
 	tanggal_lahir: null,
+	agama: null,
 	alamat: null,
 	pekerjaan: null,
+	nomor_telepon: null,
+	email: null,
 }
 
 export default {
@@ -74,8 +102,11 @@ export default {
 			type: String,
 			default: 'Entitas'
 		},
-		data: Object
-	}
+		data: {
+			type: Object,
+			default() {return JSON.parse(JSON.stringify(data_default))}
+		}
+	},
 }
 </script>
 
