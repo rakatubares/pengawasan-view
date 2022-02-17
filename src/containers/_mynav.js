@@ -38,6 +38,12 @@ export default [
 							},
 							{
 								_name: 'CSidebarNavItem',
+								name: 'BA Reekspor',
+								to: '/reekspor',
+								icon: 'cil-file'
+							},
+							{
+								_name: 'CSidebarNavItem',
 								name: 'BAST',
 								to: '/bast',
 								icon: 'cil-file'
