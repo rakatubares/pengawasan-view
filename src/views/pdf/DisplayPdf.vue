@@ -52,6 +52,7 @@ import PdfBukaPengaman from './PdfBukaPengaman.js'
 import PdfBukaSegel from './PdfBukaSegel.js'
 import PdfContoh from './PdfContoh.js'
 import PdfLap from './PdfLap.js'
+import PdfLi from './PdfLi.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLptp from './PdfLptp.js'
@@ -133,6 +134,11 @@ export default {
 				case 'lap':
 					let pdfLap = new PdfLap(this.data)
 					this.src_pdf = pdfLap.generatePdf()
+					break;
+
+				case 'li':
+					let pdfLi = new PdfLi(this.data)
+					this.src_pdf = pdfLi.generatePdf()
 					break;
 
 				case 'lp':
