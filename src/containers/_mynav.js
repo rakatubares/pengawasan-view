@@ -26,6 +26,12 @@ export default [
 						_children: [
 							{
 								_name: 'CSidebarNavItem',
+								name: 'BA Periksa',
+								to: '/riksa',
+								icon: 'cil-file'
+							},
+							{
+								_name: 'CSidebarNavItem',
 								name: 'BA Tanda Pengaman',
 								to: '/pengaman',
 								icon: 'cil-file'
