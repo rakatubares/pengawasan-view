@@ -44,6 +44,12 @@ export default [
 							},
 							{
 								_name: 'CSidebarNavItem',
+								name: 'BA Penitipan',
+								to: '/titip',
+								icon: 'cil-file'
+							},
+							{
+								_name: 'CSidebarNavItem',
 								name: 'BA Tanda Pengaman',
 								to: '/pengaman',
 								icon: 'cil-file'
