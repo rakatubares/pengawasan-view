@@ -32,6 +32,18 @@ export default [
 							},
 							{
 								_name: 'CSidebarNavItem',
+								name: 'BA Segel',
+								to: '/segel',
+								icon: 'cil-file'
+							},
+							{
+								_name: 'CSidebarNavItem',
+								name: 'BA Buka Segel',
+								to: '/bukasegel',
+								icon: 'cil-file'
+							},
+							{
+								_name: 'CSidebarNavItem',
 								name: 'BA Tanda Pengaman',
 								to: '/pengaman',
 								icon: 'cil-file'
