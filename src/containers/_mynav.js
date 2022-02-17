@@ -9,8 +9,24 @@ export default [
 				icon: 'chart'
 			},
 			{
-				_name: 'CSidebarNavTitle',
-				_children: ['Penindakan']
+				_name: 'CSidebarNavDropdown',
+				name: 'PENINDAKAN',
+				icon: 'cil-clone',
+				_children: [
+					{
+						_name: 'CSidebarNavDropdown',
+						name: 'Berita Acara',
+						icon: 'cil-list',
+						_children: [
+							{
+								_name: 'CSidebarNavItem',
+								name: 'BAST',
+								to: '/bast',
+								icon: 'cil-file'
+							}
+						]
+					}
+				]
 			},
 			{
 				_name: 'CSidebarNavItem',
