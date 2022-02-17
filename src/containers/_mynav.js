@@ -26,6 +26,18 @@ export default [
 						_children: [
 							{
 								_name: 'CSidebarNavItem',
+								name: 'BA Tanda Pengaman',
+								to: '/pengaman',
+								icon: 'cil-file'
+							},
+							{
+								_name: 'CSidebarNavItem',
+								name: 'BA Pembukaan TP',
+								to: '/bukapengaman',
+								icon: 'cil-file'
+							},
+							{
+								_name: 'CSidebarNavItem',
 								name: 'BAST',
 								to: '/bast',
 								icon: 'cil-file'
