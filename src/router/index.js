@@ -10,6 +10,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
+const PageLi = () => import('@/views/penindakan/li/PageLi')
 
 Vue.use(Router)
 
@@ -32,6 +33,11 @@ function configRoutes () {
 					path: 'homepage',
 					name: 'Homepage',
 					component: Homepage
+				},
+				{
+					path: 'li',
+					name: 'LI-1',
+					component: PageLi
 				},
 			]
 		},

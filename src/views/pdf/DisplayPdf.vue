@@ -47,6 +47,7 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfLi from './PdfLi.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -94,6 +95,10 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
+				case 'li':
+					let pdfLi = new PdfLi(this.data)
+					this.src_pdf = pdfLi.generatePdf()
+					break;
 
 				default:
 					break;

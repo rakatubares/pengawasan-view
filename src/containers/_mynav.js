@@ -8,6 +8,19 @@ export default [
 				to: '/dashboard',
 				icon: 'chart'
 			},
+			{
+				_name: 'CSidebarNavDropdown',
+				name: 'PENINDAKAN',
+				icon: 'cil-clone',
+				_children: [
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LI-1',
+						to: '/li',
+						icon: 'cil-file'
+					},
+				]
+			}
 		]
 	}
 ]
