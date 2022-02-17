@@ -9,21 +9,24 @@ export default [
 				icon: 'chart'
 			},
 			{
-				_name: 'CSidebarNavTitle',
-				_children: ['Penindakan']
-			},
-			{
-				_name: 'CSidebarNavItem',
-				name: 'BA Tanda Pengaman',
-				to: '/pengaman',
-				icon: 'cil-file'
-			},
-			{
-				_name: 'CSidebarNavItem',
-				name: 'BA Pembukaan TP',
-				to: '/bukapengaman',
-				icon: 'cil-file'
-			},
+				_name: 'CSidebarNavDropdown',
+				name: 'PENINDAKAN',
+				icon: 'cil-clone',
+				_children: [
+					{
+						_name: 'CSidebarNavItem',
+						name: 'BA Tanda Pengaman',
+						to: '/pengaman',
+						icon: 'cil-file'
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'BA Pembukaan TP',
+						to: '/bukapengaman',
+						icon: 'cil-file'
+					},
+				]
+			}
 		]
 	}
 ]
