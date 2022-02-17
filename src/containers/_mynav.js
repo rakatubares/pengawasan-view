@@ -9,15 +9,18 @@ export default [
 				icon: 'chart'
 			},
 			{
-				_name: 'CSidebarNavTitle',
-				_children: ['Penindakan']
-			},
-			{
-				_name: 'CSidebarNavItem',
-				name: 'LAP',
-				to: '/lap',
-				icon: 'cil-file'
-			},
+				_name: 'CSidebarNavDropdown',
+				name: 'PENINDAKAN',
+				icon: 'cil-clone',
+				_children: [
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LAP',
+						to: '/lap',
+						icon: 'cil-file'
+					},
+				]
+			}
 		]
 	}
 ]
