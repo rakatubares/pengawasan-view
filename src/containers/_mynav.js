@@ -14,6 +14,12 @@ export default [
 				icon: 'cil-clone',
 				_children: [
 					{
+						_name: 'CSidebarNavItem',
+						name: 'LAP',
+						to: '/lap',
+						icon: 'cil-file'
+					},
+					{
 						_name: 'CSidebarNavDropdown',
 						name: 'Berita Acara',
 						icon: 'cil-list',
