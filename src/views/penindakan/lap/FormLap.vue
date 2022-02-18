@@ -35,22 +35,79 @@
 				</CCol>
 			</CRow>
 			<CRow>
-				<CCol md="3" sm="12">
-					<CSelect
-						label="Jenis Sumber"
-						description="Jenis sumber informasi"
-						:options="['NHI', 'LI-1', 'Lainnya']"
-						:value.sync="data.jenis_sumber"
-					/>
-				</CCol>
-				<CCol md="6" sm="12">
+				<CCol md="9" sm="12">
+					<!-- Load data LI -->
+					<div v-if="data.jenis_sumber == 'LI-1'" class="form-group">
+						<label>Sumber informasi</label>
+						<v-autocomplete
+							v-model="li_search_value"
+							outlined
+							dense
+							:items.sync="li_search_items"
+							:search-input.sync="li_search_query"
+							item-text="no_dok_lengkap"
+							item-value="id"
+							@change="changeValueLi"
+						>
+							<template v-slot:prepend>
+								<CDropdown
+									:togglerText.sync="data.jenis_sumber"
+									color="primary"
+								>
+									<CDropdownItem @click="toggleSource('NHI')">
+										NHI
+									</CDropdownItem>
+									<CDropdownItem @click="toggleSource('LI-1')">
+										LI-1
+									</CDropdownItem>
+									<CDropdownItem @click="toggleSource('Lainnya')">
+										Lainnya
+									</CDropdownItem>
+								</CDropdown>
+							</template>
+							<template v-slot:no-data>
+								<v-list-item>
+									<v-list-item-title>
+										Data LI-1 tidak ditemukan
+									</v-list-item-title>
+								</v-list-item>
+							</template>
+							<template v-slot:item="{ item }">
+								<v-list-item-content>
+									<h3><v-list-item-title v-text="item.no_dok_lengkap"></v-list-item-title></h3>
+									<v-list-item-subtitle v-text="item.tanggal_dokumen"></v-list-item-subtitle>
+								</v-list-item-content>
+							</template>
+						</v-autocomplete>
+						<small class="form-text text-muted w-100">Nomor NHI / LI-1 / Informasi lain</small>
+					</div>
+
+					<!-- Input LI -->
 					<CInput
+						v-else
 						label="Sumber informasi"
 						description="Nomor NHI / LI-1 / Informasi lain"
 						:value.sync="data.nomor_sumber"
 						:is-valid="validatorRequired"
 						invalid-feedback="Sumber informasi wajib diisi"
-					/>
+					>
+						<template #prepend>
+							<CDropdown
+								:togglerText.sync="data.jenis_sumber"
+								color="primary"
+							>
+								<CDropdownItem @click="toggleSource('NHI')">
+									NHI
+								</CDropdownItem>
+								<CDropdownItem @click="toggleSource('LI-1')">
+									LI-1
+								</CDropdownItem>
+								<CDropdownItem @click="toggleSource('Lainnya')">
+									Lainnya
+								</CDropdownItem>
+							</CDropdown>
+						</template>
+					</CInput>
 				</CCol>
 				<CCol md="3" sm="12">
 					<div class="form-group">
@@ -65,17 +122,28 @@
 							"
 						>
 							<template v-slot:input="slotProps">
-								<input
-									class="form-control" 
-									type="text" 
-									v-bind="slotProps.props" 
-									v-on="slotProps.events"
-									v-bind:class="{
-										'is-valid': validasi.tanggal_sumber.state,
-										'is-invalid': !validasi.tanggal_sumber.state
-									}"
-								/>
-								<div class="invalid-feedback pb-1">{{validasi.tanggal_sumber.text}}</div>
+								<div v-if="data.jenis_sumber == 'LI-1'">
+									<input
+										class="form-control" 
+										type="text" 
+										v-bind="slotProps.props" 
+										v-on="slotProps.events"
+										disabled
+									/>
+								</div>
+								<div v-else>
+									<input
+										class="form-control" 
+										type="text" 
+										v-bind="slotProps.props" 
+										v-on="slotProps.events"
+										v-bind:class="{
+											'is-valid': validasi.tanggal_sumber.state,
+											'is-invalid': !validasi.tanggal_sumber.state
+										}"
+									/>
+									<div class="invalid-feedback pb-1">{{validasi.tanggal_sumber.text}}</div>
+								</div>
 							</template>
 							<i slot="icon-calendar"></i>
 							<i slot="icon-clear"></i>
@@ -354,6 +422,7 @@ import MySelectPejabat from '../../components/SelectPejabat.vue'
 const default_data = {
 	tanggal_dokumen: null,
 	jenis_sumber: 'NHI',
+	sumber_id: null,
 	nomor_sumber: null,
 	tanggal_sumber: null,
 	dugaan_pelanggaran: {id: 1},
@@ -418,6 +487,10 @@ export default {
 			doc_type: 'lap',
 			data: JSON.parse(JSON.stringify(default_data)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
+			li_search_query: null,
+			li_search_value: null,
+			li_search_items: [],
+			li_search_exception: null,
 			dugaan_pelanggaran_options: [],
 			skema_penindakan_options: [],
 			labelIcon: {
@@ -434,6 +507,12 @@ export default {
 			this.data.flag_layak_penindakan = this.data.flag_layak_penindakan == 1 ? true : false
 			if (this.data.skema_penindakan == null) {
 				this.data.skema_penindakan = {id: null}
+			}
+			if (this.data.sumber_id != null) {
+				this.li_search_exception = this.data.sumber_id
+				await this.search_li(this.data.nomor_sumber)
+				this.li_search_value = this.li_search_items[0]
+				this.data_source = this.data.jenis_sumber
 			}
 			
 			this.$nextTick(function () {
@@ -499,6 +578,33 @@ export default {
 				this.skema_penindakan_options.push(option)
 			});
 		},
+		toggleSource(val) {
+			// Nullify related data
+			this.data.jenis_sumber = val
+			this.data.nomor_sumber = null
+			this.data.tanggal_sumber = null
+			this.data.sumber_id = null
+			this.li_search_value = null
+		},
+		async changeValueLi(id) {
+			if (id != null) {
+				// Get data li
+				let response = await api.getDisplayDataById('li', id)
+				let li = response.data.data
+				
+				// Change current data according to li
+				this.data.nomor_sumber = li.no_dok_lengkap
+				this.data.tanggal_sumber = li.tanggal_dokumen
+				
+				// Specify sumber id
+				this.data.sumber_id = id
+			}
+		},
+		async search_li(search) {
+			let data = {'src': search, 'flt': {kode_status: 200}, 'exc': this.li_search_exception}
+			let responses = await api.searchDoc('li', data)
+			this.li_search_items = responses.data.data
+		},
 		togglePenindakan(val) {
 			if (val == true) {
 				this.data.skema_penindakan = {id: 1}
@@ -510,6 +616,14 @@ export default {
 			this.data.keterangan_skema_penindakan = null
 			this.data.keterangan_layak_patroli = null
 		}
+	},
+	watch: {
+		data: function(val) {
+			this.renderData()
+		},
+		async li_search_query (val) {
+			await this.search_li(val)
+		},
 	},
 	async mounted() {
 		this.getKategoriPelanggaran()
@@ -528,4 +642,18 @@ export default {
 .form-lap .v-text-field__details {
 	display: none;
 }
+
+.form-lap .input-group .form-control {
+	border-top-right-radius: 0.25rem !important;
+	border-bottom-right-radius: 0.25rem !important;
+}
+
+/* V-AUTOCOMPLETE */
+.form-lap .v-input__slot {
+	min-height: 34px !important;
+	font-size: 14px;
+}
+.form-lap .v-input__prepend-outer {
+	margin: 0 !important;
+} 
 </style>

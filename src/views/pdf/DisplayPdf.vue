@@ -135,7 +135,7 @@ export default {
 					let pdfLap = new PdfLap(this.data)
 					this.src_pdf = pdfLap.generatePdf()
 					break;
-
+					
 				case 'li':
 					let pdfLi = new PdfLi(this.data)
 					this.src_pdf = pdfLi.generatePdf()
