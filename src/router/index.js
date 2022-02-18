@@ -11,6 +11,7 @@ const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
 const PageLap = () => import('@/views/penindakan/lap/PageLap')
+const PageLi = () => import('@/views/penindakan/li/PageLi')
 
 Vue.use(Router)
 
@@ -38,6 +39,11 @@ function configRoutes () {
 					path: 'lap',
 					name: 'LAP',
 					component: PageLap
+				},
+				{
+					path: 'li',
+					name: 'LI-1',
+					component: PageLi
 				},
 			]
 		},
