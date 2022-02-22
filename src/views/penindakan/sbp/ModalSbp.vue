@@ -1,7 +1,7 @@
 <template>
 	<div class="wrapper">
 		<MyModalDoc
-			title="Data SBP"
+			:title="`Data ${tipe_surat}`"
 			:state.sync="modal_state"
 			@close-modal="closeModal"
 		>
@@ -9,12 +9,15 @@
 			<template #tab-uraian>
 				<MyDisplaySbp 
 					v-if="modal_state == 'show'"
+					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
 				<MyFormSbp 
 					ref="form_sbp"
-					v-if="['insert','edit'].includes(modal_state)"
+					v-else-if="['insert','edit'].includes(modal_state)"
 					:state.sync="modal_state"
+					:doc_type="doc_type"
+					:tipe_surat="tipe_surat"
 					:doc_id.sync="doc_id"
 				/>
 			</template>
@@ -25,7 +28,7 @@
 					:doc_id.sync="doc_id"
 				/>
 				<MyFormDetail 
-					v-if="modal_state == 'edit'"
+					v-else-if="modal_state == 'edit'"
 					ref="form_detail"
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
@@ -72,12 +75,13 @@ export default {
 		MyModalDoc,
 	},
 	props: {
+		doc_type: String,
+		tipe_surat: String,
 		state: String,
-		id: Number
+		id: Number,
 	},
 	data() {
 		return {
-			doc_type: 'sbp',
 			doc_id: this.id,
 			modal_state: this.state,
 			show_tindakan: false,

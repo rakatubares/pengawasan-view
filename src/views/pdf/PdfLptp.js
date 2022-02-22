@@ -29,17 +29,26 @@ const props = {
 }
 
 class PdfLptp extends Pdf {
-	constructor(data) {
+	constructor(
+		data, 
+		lptp_type='lptp', 
+		sbp_type='sbp',
+		jenis_dok='LAPORAN PELAKSANAAN TUGAS PENINDAKAN', 
+		title_line_indent={start: 62, end: 148}
+	) {
 		super(props);
-		this.jenis_dok = 'LAPORAN PELAKSANAAN TUGAS PENINDAKAN'
 		this.data = data
+		this.lptp_type = lptp_type
+		this.sbp_type = sbp_type
+		this.jenis_dok = jenis_dok
+		this.props.title_line = title_line_indent
 		this.prepareDocDate()
 		this.prepareSprintDate()
 	}
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen.lptp.no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen[this.lptp_type].no_dok_lengkap)
 
 		////// URAIAN TOP //////
 		this.pdf.text('1.', this.props.ind.num, this.ln)
@@ -58,8 +67,8 @@ class PdfLptp extends Pdf {
 		this.pdf.text(':', this.props.ind.cln, this.ln)
 		let txt_lokasi = converters.array_text(this.data.penindakan.lokasi_penindakan.replace('\n', ' '), 40)
 		this.pdf.text(txt_lokasi, this.props.ind.txt, this.ln)
-		let txt_tanggal_tempus = this.data.dokumen.sbp.wkt_mulai_penindakan.substring(0,10)
-		let txt_waktu_tempus = this.data.dokumen.sbp.wkt_mulai_penindakan.substring(11)
+		let txt_tanggal_tempus = this.data.dokumen[this.sbp_type].wkt_mulai_penindakan.substring(0,10)
+		let txt_waktu_tempus = this.data.dokumen[this.sbp_type].wkt_mulai_penindakan.substring(11)
 		this.pdf.text('Tempus', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
 		this.pdf.text(txt_tanggal_tempus, this.props.ind.txt2, this.ln)
@@ -74,7 +83,7 @@ class PdfLptp extends Pdf {
 		let lng_lbl_uraian = lbl_uraian.length
 		this.pdf.text(lbl_uraian, this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_uraian = converters.array_text(this.data.dokumen.sbp.uraian_penindakan, 90)
+		let txt_uraian = converters.array_text(this.data.dokumen[this.sbp_type].uraian_penindakan, 90)
 		let lng_txt_uraian = txt_uraian.length
 		this.pdf.text(txt_uraian, this.props.ind.txt, this.ln)
 		let lng_uraian = lng_txt_uraian > lng_lbl_uraian ? lng_txt_uraian : lng_lbl_uraian
@@ -241,7 +250,7 @@ class PdfLptp extends Pdf {
 		this.pdf.text('4.', this.props.ind.num, this.ln)
 		this.pdf.text('SB Penindakan', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.dokumen.sbp.no_dok_lengkap, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.dokumen[this.sbp_type].no_dok_lengkap, this.props.ind.txt, this.ln)
 		this.pdf.text('Tanggal', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
 		this.pdf.text(this.full_tgl_dok, this.props.ind.txt2, this.ln)
@@ -272,7 +281,7 @@ class PdfLptp extends Pdf {
 		this.pdf.text('6.', this.props.ind.num, this.ln)
 		this.pdf.text('Hal yang terjadi', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_hal_terjadi = converters.array_text(this.data.dokumen.sbp.hal_terjadi, 90)
+		let txt_hal_terjadi = converters.array_text(this.data.dokumen[this.sbp_type].hal_terjadi, 90)
 		this.pdf.text(txt_hal_terjadi, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height*((txt_hal_terjadi.length) > 0 ? txt_hal_terjadi.length : 1)
 
@@ -288,9 +297,9 @@ class PdfLptp extends Pdf {
 		let ln_ttd_nip = ln_ttd_nama + this.props.font.height
 		this.ln = ln_ttd_nip + this.props.font.height*3
 		
-		this.pdf.text(this.data.dokumen.lptp.jabatan_atasan.jabatan, this.props.ind.lbl, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.lptp.atasan.name, this.props.ind.lbl, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen.lptp.atasan.nip, this.props.ind.lbl, ln_ttd_nip)
+		this.pdf.text(this.data.dokumen[this.lptp_type].jabatan_atasan.jabatan, this.props.ind.lbl, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen[this.lptp_type].atasan.name, this.props.ind.lbl, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.dokumen[this.lptp_type].atasan.nip, this.props.ind.lbl, ln_ttd_nip)
 		
 		this.pdf.text('Petugas yang melakukan penindakan', this.props.ind.lbl2, ln_ttd_jabatan)
 		this.pdf.text(this.data.penindakan.petugas1.name, this.props.ind.lbl2, ln_ttd_nama)
@@ -308,7 +317,7 @@ class PdfLptp extends Pdf {
 					this.pdf.setFont('Helvetica', 'normal')
 					this.pdf.addPage()
 					// Header
-					this.headerLampiran(this.data.dokumen.lptp.no_dok_lengkap)
+					this.headerLampiran(this.data.dokumen[this.lptp_type].no_dok_lengkap)
 					// Tabel barang
 					this.tabelBarang()
 				}
@@ -316,7 +325,7 @@ class PdfLptp extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.lptp.kode_status)) {
+		if ([100].includes(this.data.dokumen[this.lptp_type].kode_status)) {
 			this.watermark()
 		}
 

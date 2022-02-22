@@ -118,6 +118,11 @@ export default {
 					this.src_pdf = pdfLptp.generatePdf()
 					break;
 
+				case 'lptpn':
+					let pdfLptpn = new PdfLptp(this.data, this.active_pdf, 'sbpn', 'LAPORAN PELAKSANAAN TUGAS PENINDAKAN NPP', {start: 58, end: 152})
+					this.src_pdf = pdfLptpn.generatePdf()
+					break;
+
 				case 'riksa':
 					let pdfRiksa = new PdfRiksa(this.data)
 					this.src_pdf = pdfRiksa.generatePdf()
@@ -126,6 +131,11 @@ export default {
 				case 'sbp':
 					let pdfSbp = new PdfSbp(this.data)
 					this.src_pdf = pdfSbp.generatePdf()
+					break;
+
+				case 'sbpn':
+					let pdfSbpn = new PdfSbp(this.data, this.active_pdf, 'SURAT BUKTI PENINDAKAN NPP', {start: 76, end: 134})
+					this.src_pdf = pdfSbpn.generatePdf()
 					break;
 
 				case 'segel':
@@ -167,7 +177,6 @@ export default {
 		}
 	},
 	mounted() {
-		console.log('display pdf - doc id', this.doc_id)
 		this.getPdf()
 	}
 }

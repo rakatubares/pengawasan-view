@@ -123,6 +123,7 @@ export default {
 		MyDisplayPegawai
 	},
 	props: {
+		doc_type: String,
 		doc_id: Number
 	},
 	data() {
@@ -144,7 +145,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.data_sbp = await api.getBasicDataById('sbp', this.doc_id)
+			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
+			this.data_sbp = response.data.data
 		}
 	},
 	async mounted() {

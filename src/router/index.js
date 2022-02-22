@@ -13,6 +13,7 @@ const Homepage = () => import('@/views/Homepage')
 const PageLp = () => import('@/views/penindakan/lp/PageLp')
 const PageLphp = () => import('@/views/penindakan/lphp/PageLphp')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
+const PageSbpN = () => import('@/views/penindakan/sbp/PageSbpN')
 const PageTolak1 = () => import('@/views/penindakan/tolak1/PageTolak1')
 const PageTolak2 = () => import('@/views/penindakan/tolak2/PageTolak2')
 
@@ -42,6 +43,11 @@ function configRoutes () {
 					path: 'sbp',
 					name: 'SBP',
 					component: PageSbp
+				},
+				{
+					path: 'sbpn',
+					name: 'SBP-N',
+					component: PageSbpN
 				},
 				{
 					path: 'tolak1',
