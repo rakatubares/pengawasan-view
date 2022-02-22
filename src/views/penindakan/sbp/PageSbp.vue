@@ -44,7 +44,7 @@ export default {
 	},
 	data() {
 		return {
-			table_title: `Daftar BA Penolakan ${this.tipe_surat}`,
+			table_title: `Daftar ${this.tipe_surat}`,
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
 				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },

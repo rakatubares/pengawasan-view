@@ -113,6 +113,11 @@ export default {
 					this.src_pdf = pdfLphp.generatePdf()
 					break;
 
+				case 'lphpn':
+					let pdfLphpn = new PdfLphp(this.data, this.active_pdf, 'lptpn', 'sbpn', 'LEMBAR PENENTUAN HASIL PENINDAKAN NPP')
+					this.src_pdf = pdfLphpn.generatePdf()
+					break;
+
 				case 'lptp':
 					let pdfLptp = new PdfLptp(this.data)
 					this.src_pdf = pdfLptp.generatePdf()

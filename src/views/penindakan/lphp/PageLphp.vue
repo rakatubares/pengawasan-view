@@ -1,159 +1,92 @@
 <template>
 	<div class="wrapper" data-app>
-		<!-- Display table data for SBP list -->
-		<CRow>
-			<CCol>
-				<MyTableData
-					state="list"
-					:fields="fields"
-					:items="list_table"
-					:editData="editDoc"
-					:deleteData="deleteDoc"
-					:showData="showDoc"
-				>
-					<template #header>
-						<CIcon name="cil-grid"/>Daftar LPHP
-						<div class="card-header-actions">
-							<CButton 
-								color="primary" 
-								@click="createDoc"
-								class="mr-1"
-							>
-								+ Buat Baru
-							</CButton>
-						</div>
-					</template>
-				</MyTableData>
-			</CCol>
-		</CRow>
-
-		<!-- Modal input SBP -->
-		<MyModalLphp
-			v-if="modal_props.show"
-			:state="modal_props.state"
-			:id.sync="modal_props.doc_id"
-			@close-modal="closeModal"
-		/>
-
-		<!-- Modal konfirmasi delete SBP -->
-		<MyModalDelete
-			v-if="modal_delete_props.show"
-			:doc_type="modal_delete_props.doc_type"
-			:doc_id="modal_delete_props.doc_id"
-			@close-modal="closeModalDelete"
-			@delete-data="closeModalDelete"
+		<MyPageDoc 
+			ref="page_doc"
+			:doc_type="doc_type"
+			:table_title="table_title"
+			:table_fields="table_fields"
+			:modal_data_props.sync="modal_data_props"
+			:construct_delete_text="constructDeleteText"
 		>
-			<template #text>
-				<span v-html="modal_delete_props.text"></span>
+			<template #modal-data>
+				<MyModalLphp 
+					v-if="modal_data_props.show"
+					:state.sync="modal_data_props.state"
+					:doc_type="doc_type"
+					:tipe_surat="tipe_surat"
+					:sbp_type="sbp_type"
+					:tipe_surat_sbp="tipe_surat_sbp"
+					:id.sync="modal_data_props.doc_id"
+					@close-modal="closeModal"
+				/>
 			</template>
-		</MyModalDelete>
+		</MyPageDoc>
 	</div>
 </template>
 
 <script>
-import api2 from '../../../router/api2.js'
-import MyModalDelete from '../../components/ModalDelete.vue'
 import MyModalLphp from './ModalLphp.vue'
-import MyTableData from '../../components/TableData.vue'
-
-const tabs_default = {
-	current: 0,
-	list: [
-		{
-			title: 'Uraian',
-			visibility: true
-		}, 
-		{
-			title: 'Objek',
-			visibility: false
-		}, 
-		{
-			title: 'Print',
-			visibility: false
-		}
-	]
-}
+import MyPageDoc from '../../components/PageDoc.vue'
 
 export default {
 	name: 'PageLphp',
 	components: {
-		MyModalDelete,
 		MyModalLphp,
-		MyTableData,
+		MyPageDoc,
+	},
+	props: {
+		doc_type: {
+			type: String,
+			default: 'lphp'
+		},
+		tipe_surat: {
+			type: String,
+			default: 'LPHP'
+		},
+		sbp_type: {
+			type: String,
+			dedfault: 'sbp'
+		},
+		tipe_surat_sbp: {
+			type: String,
+			default: 'SBP'
+		}
 	},
 	data() {
 		return {
-			fields: [
-				{ key: 'no_dok_lengkap', label: 'No LPHP' },
-				{ key: 'tanggal_dokumen', label: 'Tgl LPHP' },
-				{ key: 'no_sbp', label: 'No SBP' },
-				{ key: 'tanggal_sbp', label: 'tgl SBP' },
+			table_title: `Daftar ${this.tipe_surat}`,
+			table_fields: [
+				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
+				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
+				{ key: 'no_sbp', label: `No ${this.tipe_surat_sbp}` },
+				{ key: 'tanggal_sbp', label: `tgl ${this.tipe_surat_sbp}` },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
 			],
-			list_table: [],
-			doc_type: 'lphp',
-			modal_props: {
+			modal_data_props: {
 				show: false,
 				state: null,
 				doc_id: null
 			},
-			modal_delete_props: {
-				show: false,
-				doc_type: null,
-				doc_id: null,
-				text: null
-			},
 		}
 	},
 	methods: {
-		async getDataTable() {
-			this.list_table = await api2.getListDocuments('lphp')
-		},
-		createDoc() {
-			this.modal_props.state = 'insert'
-			this.modal_props.doc_id = null
-			this.modal_props.show = true
-		},
-		editDoc(id) {
-			this.modal_props.state = 'edit'
-			this.modal_props.doc_id = id
-			this.modal_props.show = true
-		},
-		showDoc(id) {
-			this.modal_props.state = 'show'
-			this.modal_props.doc_id = id
-			this.modal_props.show = true
-		},
 		closeModal() {
-			this.getDataTable()
-			this.modal_props.state = null
-			this.modal_props.doc_id = null
-			this.modal_props.show = false
+			this.$refs.page_doc.getDataTable()
+			this.modal_data_props.state = null
+			this.modal_data_props.doc_id = null
+			this.modal_data_props.show = false
 		},
-		deleteDoc(item) {
+		constructDeleteText(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
-				+ " nomor SBP " 
+				+ ` atas ` 
 				+ item.no_sbp.bold() 
 				+ "?"
-			
-			this.modal_delete_props.doc_type = this.doc_type
-			this.modal_delete_props.doc_id = item.id
-			this.modal_delete_props.text = text
-			this.modal_delete_props.show = true
-		},
-		closeModalDelete() {
-			this.getDataTable()
-			this.modal_delete_props.doc_type = null
-			this.modal_delete_props.doc_id = null
-			this.modal_delete_props.text = null
-			this.modal_delete_props.show = false
+
+			return text
 		},
 	},
-	created() {
-		this.getDataTable()
-	}
 }
 </script>
 

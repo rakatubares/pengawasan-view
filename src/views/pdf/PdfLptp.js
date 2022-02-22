@@ -248,7 +248,8 @@ class PdfLptp extends Pdf {
 
 		////// URAIAN BOTTOM //////
 		this.pdf.text('4.', this.props.ind.num, this.ln)
-		this.pdf.text('SB Penindakan', this.props.ind.lbl, this.ln)
+		let lbl_sbp = this.sbp_type == 'sbp' ? 'SB Penindakan' : 'SB Penindakan NPP'
+		this.pdf.text(lbl_sbp, this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
 		this.pdf.text(this.data.dokumen[this.sbp_type].no_dok_lengkap, this.props.ind.txt, this.ln)
 		this.pdf.text('Tanggal', this.props.ind.lbl2, this.ln)

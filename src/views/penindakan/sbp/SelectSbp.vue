@@ -3,7 +3,7 @@
 		<CRow>
 			<CCol md="8" sm="12">
 				<div class="form-group">
-					<label>Nomor SBP</label>
+					<label>{{`Nomor ${tipe_surat_sbp}`}}</label>
 					<v-autocomplete
 						v-model="value"
 						outlined
@@ -17,7 +17,7 @@
 						<template v-slot:no-data>
 							<v-list-item>
 								<v-list-item-title>
-									Data SBP tidak ditemukan
+									{{`Data ${tipe_surat_sbp} tidak ditemukan`}}
 								</v-list-item-title>
 							</v-list-item>
 						</template>
@@ -32,7 +32,7 @@
 			</CCol>
 			<CCol md="3" sm="12">
 				<CInput
-					label="Tanggal SBP"
+					:label="`Tanggal ${tipe_surat_sbp}`"
 					:value.sync="sbp.tanggal_dokumen"
 					disabled
 				>
@@ -54,6 +54,14 @@ const default_data = {
 export default {
 	name: 'SelectSbp',
 	props: {
+		sbp_type: {
+			type: String,
+			default: 'sbp'
+		},
+		tipe_surat_sbp: {
+			type: String,
+			default: 'SBP'
+		},
 		id: Number,
 		filter: Object,
 	},
@@ -73,11 +81,11 @@ export default {
 		},
 		async getData(id, mounted=false) {
 			if (id != null) {
-				let responses = await api.getBasicDataById('sbp', id)
+				let responses = await api.getDisplayDataById(this.sbp_type, id)
 				this.sbp = {
-					id: responses.id,
-					no_dok_lengkap: responses.no_dok_lengkap,
-					tanggal_dokumen: responses.penindakan.tanggal_penindakan
+					id: responses.data.data.id,
+					no_dok_lengkap: responses.data.data.no_dok_lengkap,
+					tanggal_dokumen: responses.data.data.penindakan.tanggal_penindakan
 				}
 				this.exception = this.sbp.id
 				if (mounted == true) {
@@ -92,7 +100,7 @@ export default {
 	watch: {
 		async search (val) {
 			let data = {'src': val, 'flt': this.filter, 'exc': this.exception}
-			let responses = await api.searchDoc('sbp', data)
+			let responses = await api.searchDoc(this.sbp_type, data)
 			this.items = responses.data.data
 		},
 	},

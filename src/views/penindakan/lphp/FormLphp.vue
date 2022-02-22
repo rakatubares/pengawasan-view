@@ -6,6 +6,8 @@
 				<CCol md="12">
 					<MySelectSbp
 						ref="selectSbp"
+						:sbp_type="sbp_type"
+						:tipe_surat_sbp="tipe_surat_sbp"
 						:id.sync="data.id_sbp"
 						:filter="filter_sbp"
 					/>
@@ -14,7 +16,7 @@
 			<CRow>
 				<CCol md="12">
 					<div class="form-group">
-						<label class="w-100">Tanggal LPHP</label>
+						<label class="w-100">{{`Tanggal ${tipe_surat}`}}</label>
 						<date-picker 
 							v-model="data.tanggal_dokumen"
 							format="DD-MM-YYYY"
@@ -152,6 +154,10 @@ export default {
 	},
 	props: {
 		state: String,
+		doc_type: String,
+		tipe_surat: String,
+		sbp_type: String,
+		tipe_surat_sbp: String,
 		doc_id: Number
 	},
 	data() {
@@ -169,7 +175,7 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getFormDataById('lphp', this.doc_id)
+			let response = await api.getFormDataById(this.doc_type, this.doc_id)
 			this.data = response.data.data
 			this.$nextTick(function () {
 				this.renderData()
@@ -186,19 +192,19 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					let response = await api.storeDoc('lphp', this.data)
+					let response = await api.storeDoc(this.doc_type, this.data)
 					this.$emit('update:doc_id', response.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data LPHP berhasil disimpan')
 				} catch (error) {
-					console.log('form lphp - save data - error', JSON.parse(JSON.stringify(error)))
+					console.log('form lphp - save data - error', error)
 				}
 			} else if (this.state == 'edit') {
 				try {
-					await api.updateDoc('lphp', this.data.id, this.data)
+					await api.updateDoc(this.doc_type, this.data.id, this.data)
 					this.alert('Data LPHP berhasil diubah')
 				} catch (error) {
-					console.log('form lphp - update data - error', JSON.parse(JSON.stringify(error)))
+					console.log('form lphp - update data - error', error)
 				}
 			}
 		},
@@ -215,7 +221,7 @@ export default {
 		async changeValueSbp(id) {
 			if (id != null) {
 				// Get data SBP
-				let sbp = await api.getDocumentById('sbp', id)
+				let sbp = await api.getDocumentById(this.sbp_type, id)
 				
 				// Change current data according to SBP
 				this.data.id_sbp = sbp.main.data.id
@@ -228,7 +234,7 @@ export default {
 	watch: {
 		async sbp_search_query (val) {
 			let data = {'src': val, 'sta': 200}
-			let responses = await api.searchDoc('sbp', data)
+			let responses = await api.searchDoc(this.sbp_type, data)
 			this.sbp_search_items = responses.data.data
 		},
 	},

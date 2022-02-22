@@ -2,7 +2,7 @@
 	<div class="wrapper">
 		<MyModalDoc
 			ref="modal_doc"
-			title="Data LPHP"
+			:title="`Data ${tipe_surat}`"
 			:state.sync="modal_state"
 			@close-modal="closeModal"
 		>
@@ -11,12 +11,16 @@
 			<template #tab-uraian>
 				<MyDisplayLphp 
 					v-if="modal_state == 'show'"
+					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
 				<MyFormLphp
-					ref="form_sbp"
-					v-if="['insert','edit'].includes(modal_state)"
+					v-else-if="['insert','edit'].includes(modal_state)"
 					:state.sync="modal_state"
+					:doc_type="doc_type"
+					:tipe_surat="tipe_surat"
+					:sbp_type="sbp_type"
+					:tipe_surat_sbp="tipe_surat_sbp"
 					:doc_id.sync="doc_id"
 				/>
 			</template>
@@ -57,11 +61,14 @@ export default {
 	},
 	props: {
 		state: String,
+		doc_type: String,
+		tipe_surat: String,
+		sbp_type: String,
+		tipe_surat_sbp: String,
 		id: Number
 	},
 	data() {
 		return {
-			doc_type: 'lphp',
 			doc_id: this.id,
 			modal_state: this.state,
 		}

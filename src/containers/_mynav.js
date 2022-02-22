@@ -82,6 +82,12 @@ export default [
 							},
 						]
 					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LPHP-N',
+						to: '/lphpn',
+						icon: 'cil-file'
+					},
 				]
 			}
 		]
