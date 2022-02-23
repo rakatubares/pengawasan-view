@@ -11,6 +11,7 @@ const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
 const PageLp = () => import('@/views/penindakan/lp/PageLp')
+const PageLpN = () => import('@/views/penindakan/lpn/PageLpN')
 const PageLphp = () => import('@/views/penindakan/lphp/PageLphp')
 const PageLphpN = () => import('@/views/penindakan/lphp/PageLphpN')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
@@ -74,6 +75,11 @@ function configRoutes () {
 					path: 'lp',
 					name: 'LP',
 					component: PageLp
+				},
+				{
+					path: 'lpn',
+					name: 'LP-N',
+					component: PageLpN
 				},
 			]
 		},

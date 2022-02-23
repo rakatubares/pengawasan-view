@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper display-lp">
+	<div class="wrapper display-lpn">
 		<CRow>
 			<CCol class="mt-3 mx-2" md="12">
 				<CRow>
@@ -14,50 +14,18 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
+						<b>Surat Perintah</b>
+					</CCol>
+					<CCol md="9" class="py-1">
+						{{ disp_sprint }}
+					</CCol>
+				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3" class="py-1">
 						<b>No SBP</b>
 					</CCol>
 					<CCol md="9" class="py-1">
 						{{ disp_sbp }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>No LPHP</b>
-					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_lphp }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>Uraian Penindakan</b>
-					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_uraian }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>Jenis Pelanggaran</b>
-					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_jenis }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>Pasal</b>
-					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_pasal }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>Modus</b>
-					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_modus }}
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
@@ -76,12 +44,51 @@
 						{{ disp_tempus }}
 					</CCol>
 				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3" class="py-1">
+						<b>Uraian Penindakan</b>
+					</CCol>
+					<CCol md="9" class="py-1">
+						{{ disp_uraian }}
+					</CCol>
+				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3" class="py-1">
+						<b>Hal yang Terjadi</b>
+					</CCol>
+					<CCol md="9" class="py-1">
+						{{ disp_hal_terjadi }}
+					</CCol>
+				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3" class="py-1">
+						<b>Analisa hasil penindakan</b>
+					</CCol>
+					<CCol md="9" class="py-1">
+						{{ disp_analisa }}
+					</CCol>
+				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3" class="py-1">
+						<b>Kesimpulan</b>
+					</CCol>
+					<CCol md="9" class="py-1">
+						{{ disp_kesimpulan }}
+					</CCol>
+				</CRow>
 				<MyDisplayEntitas
 					title="Pemilik/Saksi"
 					:data.sync="data_lp.saksi"
 				/>
+				<MyDisplayPegawai
+					title="Petugas"
+					:data.sync="data_lp.petugas"
+				/>
 				<MyDisplayPejabat
-					:data.sync="data_lp.pejabat"
+					:data.sync="data_lp.penyusun"
+				/>
+				<MyDisplayPejabat
+					:data.sync="data_lp.penerbit"
 				/>
 			</CCol>
 		</CRow>
@@ -91,6 +98,7 @@
 <script>
 import api from '../../../router/api2.js'
 import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
+import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
 
 const default_data = {
@@ -98,20 +106,23 @@ const default_data = {
 	tanggal_dokumen: null,
 	no_sbp: null,
 	tanggal_sbp: null,
-	no_lphp: null,
-	tanggal_lphp: null,
-	uraian_penindakan: null,
-	jenis_pelanggaran: null,
-	pasal: null,
-	modus: null,
 	locus: null,
 	tempus: null,
+	uraian_penindakan: null,
+	hal_terjadi: null,
+	analisa: null,
+	kesimpulan: null,
+	sprint: {
+		nomor_sprint: null,
+		tanggal_sprint: null
+	}
 }
 
 export default {
-	name: 'DisplayLp',
+	name: 'DisplayLpN',
 	components: {
 		MyDisplayEntitas,
+		MyDisplayPegawai,
 		MyDisplayPejabat,
 	},
 	props: {
@@ -126,6 +137,11 @@ export default {
 	computed: {
 		disp_no_lp() { return this.data_lp.no_dok_lengkap || '-' },
 		disp_tgl_lp() { return this.data_lp.tanggal_dokumen || '-' },
+		disp_sprint() { return (
+			(this.data_lp.sprint.nomor_sprint || '') 
+			+ ' tanggal ' + 
+			(this.data_lp.sprint.tanggal_sprint || '')
+		) },
 		disp_sbp() {
 			let txt_no_sbp = this.data_lp.no_sbp || '-'
 			let txt_tgl_sbp = ''
@@ -138,24 +154,13 @@ export default {
 
 			return txt_no_sbp + txt_tgl_sbp
 		},
-		disp_lphp() {
-			let txt_no_lphp = this.data_lp.no_lphp || '-'
-			let txt_tgl_lphp = ''
-
-			if (this.data_lp.tanggal_lphp != null) {
-				txt_tgl_lphp = ' tanggal ' + this.data_lp.tanggal_lphp
-			} else {
-				txt_tgl_lphp = ''
-			}
-
-			return txt_no_lphp + txt_tgl_lphp
-		},
-		disp_uraian() { return this.data_lp.uraian_penindakan || '-' },
-		disp_jenis() { return this.data_lp.jenis_pelanggaran || '-' },
-		disp_pasal() { return this.data_lp.pasal || '-' },
-		disp_modus() { return this.data_lp.modus || '-' },
 		disp_locus() { return this.data_lp.locus || '-' },
 		disp_tempus() { return this.data_lp.tempus || '-' },
+		disp_uraian() { return this.data_lp.uraian_penindakan || '-' },
+		disp_hal_terjadi() { return this.data_lp.hal_terjadi || '-' },
+		disp_analisa() { return this.data_lp.analisa || '-' },
+		disp_kesimpulan() { return this.data_lp.kesimpulan || '-' },
+		
 	},
 	methods: {
 		async getData() {
@@ -170,7 +175,7 @@ export default {
 </script>
 
 <style>
-.display-lp .row+.row {
+.display-lpn .row+.row {
 	margin-top:0;
 }
 </style>

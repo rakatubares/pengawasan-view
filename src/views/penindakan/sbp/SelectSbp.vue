@@ -33,10 +33,38 @@
 			<CCol md="3" sm="12">
 				<CInput
 					:label="`Tanggal ${tipe_surat_sbp}`"
-					:value.sync="sbp.tanggal_dokumen"
+					:value.sync="sbp.penindakan.tanggal_penindakan"
 					disabled
 				>
 				</CInput>
+			</CCol>
+			<CCol sm="12" v-if="show.jenis_pelanggaran">
+				<CInput
+					label="Jenis Pelanggaran"
+					:value.sync="sbp.jenis_pelanggaran"
+					disabled
+				/>
+			</CCol>
+			<CCol sm="12" v-if="show.uraian_penindakan">
+				<CTextarea
+					label="Uraian Penindakan"
+					:value.sync="sbp.uraian_penindakan"
+					disabled
+				/>
+			</CCol>
+			<CCol sm="12" v-if="show.alasan_penindakan">
+				<CTextarea
+					label="Alasan Penindakan"
+					:value.sync="sbp.alasan_penindakan"
+					disabled
+				/>
+			</CCol>
+			<CCol sm="12" v-if="show.hal_terjadi">
+				<CTextarea
+					label="Hal yang Terjadi"
+					:value.sync="sbp.hal_terjadi"
+					disabled
+				/>
 			</CCol>
 		</CRow>
 	</div>
@@ -48,7 +76,14 @@ import api from '../../../router/api2.js'
 const default_data = {
 	id: null,
 	no_dok_lengkap: null,
-	tanggal_dokumen: null
+	penindakan: {tanggal_penindakan: null}
+}
+
+const default_show = {
+	jenis_pelanggaran: false,
+	uraian_penindakan: false,
+	alasan_penindakan: false,
+	hal_terjadi: false
 }
 
 export default {
@@ -64,6 +99,7 @@ export default {
 		},
 		id: Number,
 		filter: Object,
+		show_elements: Array
 	},
 	data() {
 		return {
@@ -71,7 +107,8 @@ export default {
 			value: null,
 			search: null,
 			exception: null,
-			sbp: JSON.parse(JSON.stringify(default_data))
+			sbp: JSON.parse(JSON.stringify(default_data)),
+			show: JSON.parse(JSON.stringify(default_show)),
 		}
 	},
 	methods: {
@@ -82,11 +119,7 @@ export default {
 		async getData(id, mounted=false) {
 			if (id != null) {
 				let responses = await api.getDisplayDataById(this.sbp_type, id)
-				this.sbp = {
-					id: responses.data.data.id,
-					no_dok_lengkap: responses.data.data.no_dok_lengkap,
-					tanggal_dokumen: responses.data.data.penindakan.tanggal_penindakan
-				}
+				this.sbp = JSON.parse(JSON.stringify(responses.data.data))
 				this.exception = this.sbp.id
 				if (mounted == true) {
 					this.items = [this.sbp]
@@ -96,6 +129,13 @@ export default {
 				this.sbp = JSON.parse(JSON.stringify(default_data))
 			}
 		},
+		checkShow() {
+			if (this.show_elements != null) {
+				this.show_elements.forEach(element => {
+					this.show[element] = true
+				});
+			}
+		}
 	},
 	watch: {
 		async search (val) {
@@ -104,6 +144,9 @@ export default {
 			this.items = responses.data.data
 		},
 	},
+	mounted() {
+		this.checkShow()
+	}
 }
 </script>
 

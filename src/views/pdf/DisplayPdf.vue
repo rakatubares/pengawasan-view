@@ -49,6 +49,7 @@
 import api from '../../router/api2.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
+import PdfLpN from './PdfLpN.js'
 import PdfLptp from './PdfLptp.js'
 import PdfRiksa from './PdfRiksa.js'
 import PdfSbp from './PdfSbp.js'
@@ -106,6 +107,11 @@ export default {
 				case 'lp':
 					let pdfLp = new PdfLp(this.data)
 					this.src_pdf = pdfLp.generatePdf()
+					break;
+
+				case 'lpn':
+					let pdfLpN = new PdfLpN(this.data)
+					this.src_pdf = pdfLpN.generatePdf()
 					break;
 
 				case 'lphp':

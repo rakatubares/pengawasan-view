@@ -218,18 +218,6 @@ export default {
 			_.set(this, validasiName+'.state', valid)
 			_.set(this, validasiName+'.text', text)
 		},
-		async changeValueSbp(id) {
-			if (id != null) {
-				// Get data SBP
-				let sbp = await api.getDocumentById(this.sbp_type, id)
-				
-				// Change current data according to SBP
-				this.data.id_sbp = sbp.main.data.id
-				
-				// Specify SBP id
-				this.data.dokumen.sbp.id = id
-			}
-		}
 	},
 	watch: {
 		async sbp_search_query (val) {

@@ -9,13 +9,10 @@
 			:construct_delete_text="constructDeleteText"
 		>
 			<template #modal-data>
-				<MyModalLp 
+				<MyModalLpN 
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
-					:tipe_surat="tipe_surat"
-					:sbp_type="sbp_type"
-					:tipe_surat_sbp="tipe_surat_sbp"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>
@@ -25,41 +22,24 @@
 </template>
 
 <script>
-import MyModalLp from './ModalLp.vue'
+import MyModalLpN from './ModalLpN.vue'
 import MyPageDoc from '../../components/PageDoc.vue'
 
 export default {
-	name: 'PageLp',
+	name: 'PageLpN',
 	components: {
-		MyModalLp,
+		MyModalLpN,
 		MyPageDoc,
-	},
-	props: {
-		doc_type: {
-			type: String,
-			default: 'lp'
-		},
-		tipe_surat: {
-			type: String,
-			default: 'LP'
-		},
-		sbp_type: {
-			type: String,
-			dedfault: 'sbp'
-		},
-		tipe_surat_sbp: {
-			type: String,
-			default: 'SBP'
-		}
 	},
 	data() {
 		return {
+			doc_type: 'lpn',
 			table_title: `Daftar ${this.tipe_surat}`,
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
-				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
-				{ key: 'no_sbp', label: `No ${this.tipe_surat_sbp}` },
-				{ key: 'tanggal_sbp', label: `Tgl ${this.tipe_surat_sbp}` },
+				{ key: 'no_dok_lengkap', label: `No LP-N` },
+				{ key: 'tanggal_dokumen', label: `Tgl LP-N` },
+				{ key: 'no_sbp', label: `No SBP-N` },
+				{ key: 'tanggal_sbp', label: `Tgl SBP-N` },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
 			],
@@ -78,7 +58,7 @@ export default {
 			this.modal_data_props.show = false
 		},
 		constructDeleteText(item) {
-			let text = "Apakah Anda yakin untuk menghapus draft LP atas "
+			let text = "Apakah Anda yakin untuk menghapus draft LP-N atas "
 				+ item.no_sbp.bold() 
 				+ "?"
 			

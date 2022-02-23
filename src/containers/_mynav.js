@@ -88,6 +88,12 @@ export default [
 						to: '/lphpn',
 						icon: 'cil-file'
 					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LP-N',
+						to: '/lpn',
+						icon: 'cil-file'
+					},
 				]
 			}
 		]

@@ -1,29 +1,38 @@
 <template>
-	<div class="wrapper form-lp">
+	<div class="wrapper form-lpn">
 		<!-- Form LP -->
 		<CForm class="pt-3">
+			<CRow>
+				<CCol sm="12">
+					<MySelectSprint
+						ref="selectSprint"
+						:id.sync="data.sprint.id"
+					/>
+				</CCol>
+			</CRow>
 			<CRow>
 				<CCol md="12">
 					<MySelectSbp
 						ref="selectSbp"
-						:sbp_type="sbp_type"
-						:tipe_surat_sbp="tipe_surat_sbp"
+						sbp_type="sbpn"
+						tipe_surat_sbp="SBP-N"
 						:id.sync="data.id_sbp"
 						:filter="filter_sbp"
+						:show_elements="['jenis_pelanggaran', 'uraian_penindakan', 'alasan_penindakan', 'hal_terjadi']"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="12">
 					<div class="form-group">
-						<label class="w-100">{{`Tanggal ${tipe_surat}`}}</label>
+						<label class="w-100">Tanggal LP-N</label>
 						<date-picker 
 							v-model="data.tanggal_dokumen" 
 							format="DD-MM-YYYY"
 							value-type="format"
 							type="date"
 							@change="
-								validatorDatetime($event, 'DD-MM-YYYY', 'validasi.tanggal_lp', 'Tanggal LP wajib diisi')
+								validatorDatetime($event, 'DD-MM-YYYY', 'validasi.tanggal_lp', 'Tanggal LP-N wajib diisi')
 							"
 						>
 							<template v-slot:input="slotProps">
@@ -47,19 +56,23 @@
 			</CRow>
 			<CRow>
 				<CCol sm="12">
-					<CInput
-						label="Pasal"
-						description="Pasal yang diduga terkait pelanggaran"
-						:value.sync="data.pasal"
+					<CTextarea
+						label="Kesimpulan"
+						description="Catatan Pejabat penerbit LP-N"
+						:value.sync="data.kesimpulan"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
-				<CCol sm="12">
-					<CTextarea
-						label="Modus"
-						description="Uraian modus yang dilakukan terkait dengan pelanggaran"
-						:value.sync="data.modus"
+				<CCol md="12">
+					<MySelectPejabat
+						ref="selectPenyusun"
+						:label="{jabatan: 'Jabatan Penyusun', nama: 'Nama Penyusun'}"
+						:selectable_jabatan="['bd.0503', 'bd.0504']"
+						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
+						:id_pejabat.sync="data.penyusun.user.user_id"
+						:jabatan.sync="data.penyusun.jabatan.kode"
+						:plh.sync="data.penyusun.plh"
 					/>
 				</CCol>
 			</CRow>
@@ -67,12 +80,12 @@
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectPenerbit"
-						:label="{jabatan: 'Jabatan Penerbit', nama: 'Nama Pejabat'}"
-						:selectable_jabatan="['bd.0503', 'bd.0504']"
+						:label="{jabatan: 'Jabatan Penerbit', nama: 'Nama Penerbit'}"
+						:selectable_jabatan="['bd.05']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.pejabat.user.user_id"
-						:jabatan.sync="data.pejabat.jabatan.kode"
-						:plh.sync="data.pejabat.plh"
+						:id_pejabat.sync="data.penerbit.user.user_id"
+						:jabatan.sync="data.penerbit.jabatan.kode"
+						:plh.sync="data.penerbit.plh"
 					/>
 				</CCol>
 			</CRow>
@@ -106,13 +119,19 @@ import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectSbp from '../sbp/SelectSbp.vue'
+import MySelectSprint from '../../components/SelectSprint.vue'
 
 const default_data = {
+	sprint: {id: null},
 	tanggal_dokumen: null,
-	pasal: null,
-	modus: null,
-	pejabat: {
+	kesimpulan: null,
+	penyusun: {
 		jabatan: {kode: 'bd.0503'},
+		plh: false,
+		user: {user_id: null}
+	},
+	penerbit: {
+		jabatan: {kode: 'bd.05'},
 		plh: false,
 		user: {user_id: null}
 	},
@@ -121,24 +140,22 @@ const default_data = {
 const custom_validations_default = {
 	tanggal_lp: {
 		state: false,
-		text: 'Tanggal LP wajib diisi'
+		text: 'Tanggal LP-N wajib diisi'
 	},
 }
 
 export default {
-	name: 'FormLp',
+	name: 'FormLpN',
 	components: {
 		DatePicker,
 		MyAlert,
 		MySelectPejabat,
 		MySelectSbp,
+		MySelectSprint,
 	},
 	props: {
 		state: String,
 		doc_type: String,
-		tipe_surat: String,
-		sbp_type: String,
-		tipe_surat_sbp: String,
 		doc_id: Number
 	},
 	data() {
@@ -159,10 +176,13 @@ export default {
 			})
 		},
 		renderData() {
-			this.validatorDatetime(this.data.tanggal_dokumen, 'DD-MM-YYYY HH:mm', 'validasi.tanggal_lp', 'Tanggal LP wajib diisi')
+			this.validatorDatetime(this.data.tanggal_dokumen, 'DD-MM-YYYY HH:mm', 'validasi.tanggal_lp', 'Tanggal LP-N wajib diisi')
+			this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
 			this.$refs.selectSbp.getData(this.data.id_sbp, true)
-			this.$refs.selectPenerbit.selected_jabatan = this.data.pejabat.jabatan.kode
-			this.$refs.selectPenerbit.getPetugas(this.data.pejabat.user.user_id, true)
+			this.$refs.selectPenyusun.selected_jabatan = this.data.penyusun.jabatan.kode
+			this.$refs.selectPenyusun.getPetugas(this.data.penyusun.user.user_id, true)
+			this.$refs.selectPenerbit.selected_jabatan = this.data.penerbit.jabatan.kode
+			this.$refs.selectPenerbit.getPetugas(this.data.penerbit.user.user_id, true)
 		},
 		async saveData() {
 			if (this.state == 'insert') {
@@ -170,16 +190,16 @@ export default {
 					let response = await api.storeDoc(this.doc_type, this.data)
 					this.$emit('update:doc_id', response.id)
 					this.$emit('update:state', 'edit')
-					this.alert('Data LP berhasil disimpan')
+					this.alert('Data LP-N berhasil disimpan')
 				} catch (error) {
-					console.log('form lp - save data - error', error)
+					console.log('form lpn - save data - error', error)
 				}
 			} else if (this.state == 'edit') {
 				try {
 					await api.updateDoc(this.doc_type, this.data.id, this.data)
-					this.alert('Data LP berhasil diubah')
+					this.alert('Data LP-N berhasil diubah')
 				} catch (error) {
-					console.log('form lp - update data - error', error)
+					console.log('form lpn - update data - error', error)
 				}
 			}
 		},
@@ -203,20 +223,20 @@ export default {
 </script>
 
 <style>
-.form-lp .row+.row {
+.form-lpn .row+.row {
 	margin-top:0;
 }
 
-.form-lp .v-text-field__details {
+.form-lpn .v-text-field__details {
 	display: none;
 }
 
 /* V-AUTOCOMPLETE */
-.form-lp .v-input__slot {
+.form-lpn .v-input__slot {
 	min-height: 34px !important;
 	font-size: 14px;
 }
-.form-lp .v-input__prepend-outer {
+.form-lpn .v-input__prepend-outer {
 	margin: 0 !important;
 } 
 </style>
