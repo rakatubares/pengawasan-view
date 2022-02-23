@@ -29,23 +29,33 @@ const props = {
 }
 
 class PdfLphp extends Pdf {
-	constructor(data) {
+	constructor(
+		data,
+		lphp_type='lphp',
+		lptp_type='lptp',
+		sbp_type='sbp',
+		jenis_dok = 'LEMBAR PENENTUAN HASIL PENINDAKAN'
+	) {
 		super(props);
-		this.jenis_dok = 'LEMBAR PENENTUAN HASIL PENINDAKAN'
 		this.data = data
+		this.lphp_type = lphp_type
+		this.lptp_type = lptp_type
+		this.sbp_type = sbp_type
+		this.jenis_dok = jenis_dok
 		this.prepareDocDate()
 		this.prepareSprintDate()
 	}
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen.lphp.no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen[this.lphp_type].no_dok_lengkap)
 
 		////// URAIAN TOP //////
 		this.pdf.text('1.', this.props.ind.num, this.ln)
-		this.pdf.text('Nomor LPTP', this.props.ind.lbl, this.ln)
+		let lbl_lptp = this.lptp_type == 'lptp' ? 'Nomor LPTP' : 'Nomor LPTP-N'
+		this.pdf.text(lbl_lptp, this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.dokumen.lptp.no_dok_lengkap, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.dokumen[this.lptp_type].no_dok_lengkap, this.props.ind.txt, this.ln)
 		this.pdf.text('Tanggal', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
 		this.pdf.text(this.full_tgl_dok, this.props.ind.txt2, this.ln)
@@ -56,7 +66,7 @@ class PdfLphp extends Pdf {
 		let lng_lbl_uraian = lbl_uraian.length
 		this.pdf.text(lbl_uraian, this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_uraian = converters.array_text(this.data.dokumen.sbp.uraian_penindakan, 90)
+		let txt_uraian = converters.array_text(this.data.dokumen[this.sbp_type].uraian_penindakan, 90)
 		let lng_txt_uraian = txt_uraian.length
 		this.pdf.text(txt_uraian, this.props.ind.txt, this.ln)
 		let lng_uraian = lng_txt_uraian > lng_lbl_uraian ? lng_txt_uraian : lng_lbl_uraian
@@ -223,7 +233,7 @@ class PdfLphp extends Pdf {
 		this.pdf.text('3.', this.props.ind.num, this.ln)
 		this.pdf.text('SB Penindakan', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.dokumen.sbp.no_dok_lengkap, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.dokumen[this.sbp_type].no_dok_lengkap, this.props.ind.txt, this.ln)
 		this.pdf.text('Tanggal', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
 		this.pdf.text(this.full_tgl_dok, this.props.ind.txt2, this.ln)
@@ -232,7 +242,7 @@ class PdfLphp extends Pdf {
 		this.pdf.text('4.', this.props.ind.num, this.ln)
 		this.pdf.text('Analisa hasil penindakan', this.props.ind.lbl, this.ln)
 		this.ln += this.props.font.height
-		let txt_analisa = converters.array_text(this.data.dokumen.lphp.analisa, 120)
+		let txt_analisa = converters.array_text(this.data.dokumen[this.lphp_type].analisa, 120)
 		this.pdf.text(txt_analisa, this.props.ind.lbl, this.ln)
 		this.ln += this.props.font.height*3
 
@@ -242,22 +252,22 @@ class PdfLphp extends Pdf {
 		let ln_ttd_nama = ln_ttd_jabatan + this.props.font.height*5
 		let ln_ttd_nip = ln_ttd_nama + this.props.font.height
 		this.ln = ln_ttd_nip + this.props.font.height*3
-		let tgl_lphp = converters.fullDate(converters.date(this.data.dokumen.lphp.tanggal_dokumen, 'DD-MM-YYYY'))
+		let tgl_lphp = converters.fullDate(converters.date(this.data.dokumen[this.lphp_type].tanggal_dokumen, 'DD-MM-YYYY'))
 
 
-		this.pdf.text(this.data.dokumen.lphp.atasan.jabatan.jabatan, this.props.ind.lbl, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.lphp.atasan.user.name, this.props.ind.lbl, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen.lphp.atasan.user.nip, this.props.ind.lbl, ln_ttd_nip)
+		this.pdf.text(this.data.dokumen[this.lphp_type].atasan.jabatan.jabatan, this.props.ind.lbl, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen[this.lphp_type].atasan.user.name, this.props.ind.lbl, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.dokumen[this.lphp_type].atasan.user.nip, this.props.ind.lbl, ln_ttd_nip)
 		
 		this.pdf.text('Tangerang, ' + tgl_lphp, this.props.ind.lbl2, ln_tgl_ttd)
-		this.pdf.text(this.data.dokumen.lphp.penyusun.jabatan.jabatan, this.props.ind.lbl2, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.lphp.penyusun.user.name, this.props.ind.lbl2, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen.lphp.penyusun.user.nip, this.props.ind.lbl2, ln_ttd_nip)
+		this.pdf.text(this.data.dokumen[this.lphp_type].penyusun.jabatan.jabatan, this.props.ind.lbl2, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen[this.lphp_type].penyusun.user.name, this.props.ind.lbl2, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.dokumen[this.lphp_type].penyusun.user.nip, this.props.ind.lbl2, ln_ttd_nip)
 
 		////// KETERANGAN //////
 		this.pdf.text('Catatan:', this.props.ind.lbl, this.ln)
 		this.ln += this.props.font.height
-		let txt_catatan = converters.array_text(this.data.dokumen.lphp.catatan, 120)
+		let txt_catatan = converters.array_text(this.data.dokumen[this.lphp_type].catatan, 120)
 		this.pdf.text(txt_catatan, this.props.ind.lbl, this.ln)
 
 		////// LAMPIRAN //////
@@ -267,7 +277,7 @@ class PdfLphp extends Pdf {
 					this.pdf.setFont('Helvetica', 'normal')
 					this.pdf.addPage()
 					// Header
-					this.headerLampiran(this.data.dokumen.lphp.no_dok_lengkap)
+					this.headerLampiran(this.data.dokumen[this.lphp_type].no_dok_lengkap)
 					// Tabel barang
 					this.tabelBarang()
 				}
@@ -275,7 +285,7 @@ class PdfLphp extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.lphp.kode_status)) {
+		if ([100].includes(this.data.dokumen[this.lphp_type].kode_status)) {
 			this.watermark()
 		}
 

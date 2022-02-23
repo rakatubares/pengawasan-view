@@ -17,11 +17,14 @@ const PageContoh = () => import('@/views/penindakan/contoh/PageContoh')
 const PageLap = () => import('@/views/penindakan/lap/PageLap')
 const PageLi = () => import('@/views/penindakan/li/PageLi')
 const PageLp = () => import('@/views/penindakan/lp/PageLp')
+const PageLpN = () => import('@/views/penindakan/lpn/PageLpN')
 const PageLphp = () => import('@/views/penindakan/lphp/PageLphp')
+const PageLphpN = () => import('@/views/penindakan/lphp/PageLphpN')
 const PagePengaman = () => import('@/views/penindakan/pengaman/PagePengaman')
 const PageReekspor = () => import('@/views/penindakan/reekspor/PageReekspor')
 const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
+const PageSbpN = () => import('@/views/penindakan/sbp/PageSbpN')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
 const PageTolak1 = () => import('@/views/penindakan/tolak1/PageTolak1')
@@ -65,6 +68,11 @@ function configRoutes () {
 					component: PageSbp
 				},
 				{
+					path: 'sbpn',
+					name: 'SBP-N',
+					component: PageSbpN
+				},
+				{
 					path: 'tolak1',
 					name: 'BA Penolakan SBP',
 					component: PageTolak1
@@ -80,9 +88,19 @@ function configRoutes () {
 					component: PageLphp
 				},
 				{
+					path: 'lphpn',
+					name: 'LPHP-N',
+					component: PageLphpN
+				},
+				{
 					path: 'lp',
 					name: 'LP',
 					component: PageLp
+				},
+				{
+					path: 'lpn',
+					name: 'LP-N',
+					component: PageLpN
 				},
 				{
 					path: 'riksa',

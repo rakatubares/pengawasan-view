@@ -55,6 +55,7 @@ import PdfLap from './PdfLap.js'
 import PdfLi from './PdfLi.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
+import PdfLpN from './PdfLpN.js'
 import PdfLptp from './PdfLptp.js'
 import PdfPengaman from './PdfPengaman.js'
 import PdfReekspor from './PdfReekspor.js'
@@ -146,14 +147,29 @@ export default {
 					this.src_pdf = pdfLp.generatePdf()
 					break;
 
+				case 'lpn':
+					let pdfLpN = new PdfLpN(this.data)
+					this.src_pdf = pdfLpN.generatePdf()
+					break;
+
 				case 'lphp':
 					let pdfLphp = new PdfLphp(this.data)
 					this.src_pdf = pdfLphp.generatePdf()
 					break;
 
+				case 'lphpn':
+					let pdfLphpn = new PdfLphp(this.data, this.active_pdf, 'lptpn', 'sbpn', 'LEMBAR PENENTUAN HASIL PENINDAKAN NPP')
+					this.src_pdf = pdfLphpn.generatePdf()
+					break;
+
 				case 'lptp':
 					let pdfLptp = new PdfLptp(this.data)
 					this.src_pdf = pdfLptp.generatePdf()
+					break;
+
+				case 'lptpn':
+					let pdfLptpn = new PdfLptp(this.data, this.active_pdf, 'sbpn', 'LAPORAN PELAKSANAAN TUGAS PENINDAKAN NPP', {start: 58, end: 152})
+					this.src_pdf = pdfLptpn.generatePdf()
 					break;
 
 				case 'reekspor':
@@ -169,6 +185,11 @@ export default {
 				case 'sbp':
 					let pdfSbp = new PdfSbp(this.data)
 					this.src_pdf = pdfSbp.generatePdf()
+					break;
+
+				case 'sbpn':
+					let pdfSbpn = new PdfSbp(this.data, this.active_pdf, 'SURAT BUKTI PENINDAKAN NPP', {start: 76, end: 134})
+					this.src_pdf = pdfSbpn.generatePdf()
 					break;
 
 				case 'segel':
@@ -225,7 +246,6 @@ export default {
 		}
 	},
 	mounted() {
-		console.log('display pdf - doc id', this.doc_id)
 		this.getPdf()
 	}
 }

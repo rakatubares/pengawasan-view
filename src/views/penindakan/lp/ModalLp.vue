@@ -11,12 +11,16 @@
 			<template #tab-uraian>
 				<MyDisplayLp
 					v-if="modal_state == 'show'"
+					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
 				<MyFormLp
-					ref="form_lp"
-					v-if="['insert','edit'].includes(modal_state)"
+					v-else-if="['insert','edit'].includes(modal_state)"
 					:state.sync="modal_state"
+					:doc_type="doc_type"
+					:tipe_surat="tipe_surat"
+					:sbp_type="sbp_type"
+					:tipe_surat_sbp="tipe_surat_sbp"
 					:doc_id.sync="doc_id"
 				/>
 			</template>
@@ -57,11 +61,14 @@ export default {
 	},
 	props: {
 		state: String,
+		doc_type: String,
+		tipe_surat: String,
+		sbp_type: String,
+		tipe_surat_sbp: String,
 		id: Number
 	},
 	data() {
 		return {
-			doc_type: 'lp',
 			doc_id: this.id,
 			modal_state: this.state,
 		}

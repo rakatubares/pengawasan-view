@@ -84,6 +84,7 @@ export default {
 		MyDisplayPejabat
 	},
 	props: {
+		doc_type: String,
 		doc_id: Number
 	},
 	data() {
@@ -120,7 +121,7 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getDisplayDataById('lphp', this.doc_id)
+			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
 			this.data_lphp = response.data.data
 		}
 	},

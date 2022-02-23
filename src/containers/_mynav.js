@@ -125,6 +125,50 @@ export default [
 					},
 				]
 			},
+			{
+				_name: 'CSidebarNavDropdown',
+				name: 'NPP',
+				icon: 'cil-blur',
+				_children: [
+					{
+						_name: 'CSidebarNavDropdown',
+						name: 'SBP-N',
+						icon: 'cil-list',
+						_children: [
+							{
+								_name: 'CSidebarNavItem',
+								name: 'Input SBP-N',
+								to: '/sbpn',
+								icon: 'cil-file'
+							},
+							{
+								_name: 'CSidebarNavItem',
+								name: 'BA Penolakan SBP 1',
+								to: '/tolak1',
+								icon: 'cil-file'
+							},
+							{
+								_name: 'CSidebarNavItem',
+								name: 'BA Penolakan SBP 2',
+								to: '/tolak2',
+								icon: 'cil-file'
+							},
+						]
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LPHP-N',
+						to: '/lphpn',
+						icon: 'cil-file'
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LP-N',
+						to: '/lpn',
+						icon: 'cil-file'
+					},
+				]
+			}
 		]
 	}
 ]

@@ -27,7 +27,7 @@
 					<CTextarea
 						label="Uraian Penindakan"
 						description="Uraian / kronologis singkat terkait penindakan"
-						:value.sync="data.main.data.uraian_penindakan"
+						:value.sync="data.uraian_penindakan"
 					/>
 				</CCol>
 			</CRow>
@@ -36,7 +36,7 @@
 					<CTextarea
 						label="Alasan Penindakan"
 						description="Pertimbangan dan alasan dilakukannya penindakan"
-						:value.sync="data.main.data.alasan_penindakan"
+						:value.sync="data.alasan_penindakan"
 					/>
 				</CCol>
 			</CRow>
@@ -46,7 +46,7 @@
 						label="Jenis Pelanggaran"
 						description="Jenis dugaan pelanggaran"
 						:options="jenis_pelanggaran_options"
-						:value.sync="data.main.data.jenis_pelanggaran"
+						:value.sync="data.jenis_pelanggaran"
 					/>
 				</CCol>
 			</CRow>
@@ -55,7 +55,7 @@
 					<div class="form-group">
 						<label class="w-100">Waktu mulai penindakan</label>
 						<date-picker 
-							v-model="data.main.data.wkt_mulai_penindakan" 
+							v-model="data.wkt_mulai_penindakan" 
 							format="DD-MM-YYYY HH:mm" 
 							value-type="format"
 							type="datetime"
@@ -94,7 +94,7 @@
 					<div class="form-group">
 						<label class="w-100">Waktu selesai penindakan</label>
 						<date-picker 
-							v-model="data.main.data.wkt_selesai_penindakan" 
+							v-model="data.wkt_selesai_penindakan" 
 							format="DD-MM-YYYY HH:mm" 
 							value-type="format"
 							type="datetime"
@@ -135,7 +135,7 @@
 					<CTextarea
 						label="Hal yang terjadi"
 						description="Hal-hal lain yang perlu diterangkan pada saat proses penindakan"
-						:value.sync="data.main.data.hal_terjadi"
+						:value.sync="data.hal_terjadi"
 					/>
 				</CCol>
 			</CRow>
@@ -179,9 +179,9 @@
 						:label="{jabatan: 'Jabatan Atasan', nama: 'Nama Atasan'}"
 						:selectable_jabatan="['bd.0503', 'bd.0504']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.dokumen.lptp.atasan.user_id"
-						:jabatan.sync="data.dokumen.lptp.jabatan_atasan.kode"
-						:plh.sync="data.dokumen.lptp.plh"
+						:id_pejabat.sync="data.lptp.atasan.user_id"
+						:jabatan.sync="data.lptp.jabatan_atasan.kode"
+						:plh.sync="data.lptp.plh"
 					/>
 				</CCol>
 			</CRow>
@@ -219,17 +219,12 @@ import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
 const default_data = {
-	main: {
-		type: 'sbp',
-		data: {
-			uraian_penindakan: null,
-			alasan_penindakan: null,
-			jenis_pelanggaran: 'kepabeanan',
-			wkt_mulai_penindakan: null,
-			wkt_selesai_penindakan: null,
-			hal_terjadi: null,
-		}
-	},
+	uraian_penindakan: null,
+	alasan_penindakan: null,
+	jenis_pelanggaran: 'kepabeanan',
+	wkt_mulai_penindakan: null,
+	wkt_selesai_penindakan: null,
+	hal_terjadi: null,
 	penindakan: {
 		lokasi_penindakan: null,
 		sprint: {id: null},
@@ -237,18 +232,16 @@ const default_data = {
 		petugas1: {user_id: null},
 		petugas2: {user_id: null}
 	},
-	dokumen: {
-		lptp: {
-			jabatan_atasan: {
-				kode: 'bd.0503',
-				jabatan: null
-			},
-			plh: false,
-			atasan: {
-				user_id: null
-			}
+	lptp: {
+		jabatan_atasan: {
+			kode: 'bd.0503',
+			jabatan: null
 		},
-	}
+		plh: false,
+		atasan: {
+			user_id: null
+		}
+	},
 }
 
 const custom_validations_default = {
@@ -280,6 +273,8 @@ export default {
 	},
 	props: {
 		state: String,
+		doc_type: String,
+		tipe_surat: String,
 		doc_id: Number
 	},
 	data() {
@@ -291,20 +286,23 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.data = await api.getDocumentById('sbp', this.doc_id)
+			let response = await api.getFormDataById(this.doc_type, this.doc_id)
+			this.data = response.data.data
+
 			if (this.data.penindakan.petugas2 == null) {
 				this.data.penindakan.petugas2 = {user_id: null}
 			}
+			
 			this.$nextTick(function () {
 				this.renderData()
 			})
 		},
 		renderData() {
-			this.validatorDatetime(this.data.main.data.wkt_mulai_penindakan, 'DD-MM-YYYY HH:mm', 'validasi.wkt_mulai_penindakan', 'Waktu mulai penindakan wajib diisi')
-			this.validatorDatetime(this.data.main.data.wkt_selesai_penindakan, 'DD-MM-YYYY HH:mm', 'validasi.wkt_selesai_penindakan', 'Waktu selesai penindakan wajib diisi')
+			this.validatorDatetime(this.data.wkt_mulai_penindakan, 'DD-MM-YYYY HH:mm', 'validasi.wkt_mulai_penindakan', 'Waktu mulai penindakan wajib diisi')
+			this.validatorDatetime(this.data.wkt_selesai_penindakan, 'DD-MM-YYYY HH:mm', 'validasi.wkt_selesai_penindakan', 'Waktu selesai penindakan wajib diisi')
 			this.validatorSequence(
-				this.data.main.data.wkt_mulai_penindakan, 
-				this.data.main.data.wkt_selesai_penindakan, 
+				this.data.wkt_mulai_penindakan, 
+				this.data.wkt_selesai_penindakan, 
 				'validasi.wkt_mulai_penindakan',
 				'validasi.wkt_selesai_penindakan',
 				'Waktu mulai penindakan sebelum waktu selesai',
@@ -315,24 +313,24 @@ export default {
 			this.$refs.selectSaksi.getEntitas(this.data.penindakan.saksi.id, true)
 			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
 			this.$refs.selectPetugas2.getPetugas(this.data.penindakan.petugas2.user_id, true)
-			this.$refs.selectPejabat.getPetugas(this.data.dokumen.lptp.atasan.user_id, true)
+			this.$refs.selectPejabat.getPetugas(this.data.lptp.atasan.user_id, true)
 		},
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					let response = await api.storeDoc('sbp', this.data)
-					this.$emit('update:doc_id', response.main.data.id)
+					let response = await api.storeDoc(this.doc_type, this.data)
+					this.$emit('update:doc_id', response.id)
 					this.$emit('update:state', 'edit')
-					this.alert('Data SBP berhasil disimpan')
+					this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
 				} catch (error) {
-					console.log('form sbp - save data - error', JSON.parse(JSON.stringify(error)))
+					console.log(`form ${this.doc_type} - save data - error`, error)
 				}
 			} else if (this.state == 'edit') {
 				try {
-					await api.updateDoc('sbp', this.data.main.data.id, this.data)
-					this.alert('Data SBP berhasil diubah')
+					await api.updateDoc(this.doc_type, this.data.id, this.data)
+					this.alert(`Data ${this.tipe_surat} berhasil diubah`)
 				} catch (error) {
-					console.log('form sbp - update data - error', JSON.parse(JSON.stringify(response)))
+					console.log(`form ${this.doc_type} - update data - error`, error)
 				}
 			}
 		},

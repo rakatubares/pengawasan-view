@@ -1,6 +1,7 @@
 import {
 	cilBarcode,
 	cilBell,
+	cilBlur,
 	cilCalculator,
 	cilCalendar,
 	cilClone,
@@ -34,6 +35,7 @@ export const iconsSet = Object.assign(
 	{
 		cilBarcode,
 		cilBell,
+		cilBlur,
 		cilCalculator,
 		cilCalendar,
 		cilChartPie,
