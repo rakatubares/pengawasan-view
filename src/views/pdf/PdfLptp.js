@@ -21,10 +21,10 @@ const props = {
 		cln2: ind_start + 150,
 		txt2: ind_start + 153,
 		lbl3: ind_start + 12,
-		cln3: ind_start + 60,
-		txt3: ind_start + 63,
+		cln3: ind_start + 20,
+		txt3: ind_start + 23,
 		ttd:125,
-		lamp: 140
+		lamp: 130
 	}
 }
 
@@ -298,18 +298,25 @@ class PdfLptp extends Pdf {
 		let ln_ttd_nip = ln_ttd_nama + this.props.font.height
 		this.ln = ln_ttd_nip + this.props.font.height*3
 		
-		this.pdf.text(this.data.dokumen[this.lptp_type].jabatan_atasan.jabatan, this.props.ind.lbl, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen[this.lptp_type].atasan.name, this.props.ind.lbl, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen[this.lptp_type].atasan.nip, this.props.ind.lbl, ln_ttd_nip)
+		if (this.lptp_type == 'lptp') {
+			this.pdf.text(this.data.dokumen[this.lptp_type].atasan.jabatan.jabatan, this.props.ind.lbl, ln_ttd_jabatan)
+			this.pdf.text(this.data.dokumen[this.lptp_type].atasan.user.name, this.props.ind.lbl, ln_ttd_nama)
+			this.pdf.text('NIP. ' + this.data.dokumen[this.lptp_type].atasan.user.nip, this.props.ind.lbl, ln_ttd_nip)	
+		}
 		
 		this.pdf.text('Petugas yang melakukan penindakan', this.props.ind.lbl2, ln_ttd_jabatan)
 		this.pdf.text(this.data.penindakan.petugas1.name, this.props.ind.lbl2, ln_ttd_nama)
 		this.pdf.text('NIP. ' + this.data.penindakan.petugas1.nip, this.props.ind.lbl2, ln_ttd_nip)
 
 		////// KETERANGAN //////
-		this.pdf.text('Catatan:', this.props.ind.num, this.ln)
-		this.ln += this.props.font.height*2
-		this.pdf.text('Tembusan:', this.props.ind.num, this.ln)
+		this.pdf.text('Catatan', this.props.ind.num, this.ln)
+		this.pdf.text(':', this.props.ind.cln3, this.ln)
+		let txt_catatan = converters.array_text(this.data.dokumen[this.lptp_type].catatan, 100)
+		this.pdf.text(txt_catatan, this.props.ind.txt3, this.ln)
+		let height_catatan = txt_catatan.length > 0 ? txt_catatan.length : 1
+		this.ln += this.props.font.height*(height_catatan + 1)
+		this.pdf.text('Tembusan', this.props.ind.num, this.ln)
+		this.pdf.text(':', this.props.ind.cln3, this.ln)
 
 		////// LAMPIRAN //////
 		if (this.data.objek != null) {

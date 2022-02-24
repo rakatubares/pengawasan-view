@@ -22,6 +22,14 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
+						<b>LPTP</b>
+					</CCol>
+					<CCol md="9" class="py-1">
+						{{ disp_lptp }}
+					</CCol>
+				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3" class="py-1">
 						<b>Lokasi Penindakan</b>
 					</CCol>
 					<CCol md="9" class="py-1">
@@ -76,6 +84,14 @@
 						{{ disp_hal_terjadi }}
 					</CCol>
 				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3" class="py-1">
+						<b>Catatan LPTP</b>
+					</CCol>
+					<CCol md="9" class="py-1">
+						{{ disp_catatan }}
+					</CCol>
+				</CRow>
 				<MyDisplayEntitas
 					title="Pemilik/Saksi"
 					:data.sync="data_sbp.penindakan.saksi"
@@ -88,6 +104,11 @@
 					title="Pejabat 2"
 					:data.sync="data_sbp.penindakan.petugas2"
 				/>
+				<MyDisplayPejabat
+					v-if="doc_type == 'sbp'"
+					title="Atasan"
+					:data.sync="data_sbp.lptp.atasan"
+				/>
 			</CCol>
 		</CRow>
 	</div>
@@ -97,6 +118,7 @@
 import api from '../../../router/api2.js'
 import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
+import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
 
 const default_data = {
 	no_dok_lengkap: null,
@@ -113,6 +135,10 @@ const default_data = {
 			nomor_sprint: null,
 			tanggal_sprint: null
 		}
+	},
+	lptp: {
+		no_dok_lengkap: null,
+		catatan: null,
 	}
 }
 
@@ -120,7 +146,8 @@ export default {
 	name: 'DisplaySbp',
 	components: {
 		MyDisplayEntitas,
-		MyDisplayPegawai
+		MyDisplayPegawai,
+		MyDisplayPejabat,
 	},
 	props: {
 		doc_type: String,
@@ -135,6 +162,7 @@ export default {
 		disp_no_sbp() { return this.data_sbp.no_dok_lengkap || '-' },
 		disp_tgl_sbp() { return this.data_sbp.penindakan.tanggal_penindakan || '-' },
 		disp_sprint() { return ((this.data_sbp.penindakan.sprint.nomor_sprint || '') + ' tanggal ' + (this.data_sbp.penindakan.sprint.tanggal_sprint || '')) },
+		disp_lptp() { return this.data_sbp.lptp.no_dok_lengkap || '-' },
 		disp_lokasi() { return this.data_sbp.penindakan.lokasi_penindakan || '-' },
 		disp_uraian() { return this.data_sbp.uraian_penindakan || '-' },
 		disp_alasan() { return this.data_sbp.alasan_penindakan || '-' },
@@ -142,6 +170,7 @@ export default {
 		disp_waktu_mulai() { return this.data_sbp.wkt_mulai_penindakan || '-' },
 		disp_waktu_selesai() { return this.data_sbp.wkt_selesai_penindakan || '-' },
 		disp_hal_terjadi() { return this.data_sbp.hal_terjadi || '-' },
+		disp_catatan() { return this.data_sbp.lptp.catatan || '-' }
 	},
 	methods: {
 		async getData() {

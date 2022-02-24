@@ -51,11 +51,16 @@ class PdfSbp extends Pdf {
 		this.pdf.text(txt_sprint, 21, this.ln)
 		this.ln += this.props.font.height
 
-		let txt_perintah = 'Perintah yang dilaksanakan : '
-			+ 'Penghentian, pemeriksaan, penegahan, penyegelan, '
-			+ 'penghentian pembongkaran dan/atau penegahan di bidang HKI*.'
+		let txt_perintah = {
+			sbp: 'Perintah yang dilaksanakan : '
+				+ 'Penghentian, pemeriksaan, penegahan, penyegelan, '
+				+ 'penghentian pembongkaran dan/atau penegahan di bidang HKI*.',
+			sbpn: 'Perintah yang dilaksanakan : '
+				+ 'Penghentian, pemeriksaan, penegahan, penyegelan, '
+				+ 'dan/atau penghentian pembongkaran*.',
+		}
 		this.pdf.text('2.', this.props.ind.num, this.ln)
-		this.pdf.text(txt_perintah, 21, this.ln, {maxWidth: 180})
+		this.pdf.text(txt_perintah[this.sbp_type], 21, this.ln, {maxWidth: 180})
 		this.ln += this.props.font.height*2
 
 		this.pdf.text('3.', this.props.ind.num, this.ln)
@@ -143,14 +148,16 @@ class PdfSbp extends Pdf {
 		this.pdf.text('*Coret yang tidak perlu', this.props.ind.num, this.ln)
 		this.ln += this.props.font.height*1
 
-		this.pdf.setFontSize(this.props.font.size-1)
-		let ket = 'Yang dimaksud dengan "barang yang dikuasai negara" adalah '
-		ket += 'barang yang untuk sementara waktu penguasaannya berada pada negara '
-		ket += 'sampai dapat ditentukan status barang yang sebenarnya. '
-		ket += 'Perubahaan status ini dimaksudkan agar pejabat bea dan cukai '
-		ket += 'dapat memproses barang tersebut secara administrasi sampai dapat dibuktikan '
-		ket += 'bahwa telah terjadi kesalahan atau sama sekali tidak terjadi kesalahan.'
-		this.pdf.text(ket, this.props.ind.num, this.ln, {maxWidth: 185})
+		if (this.sbp_type == 'sbp') {
+			this.pdf.setFontSize(this.props.font.size-1)
+			let ket = 'Yang dimaksud dengan "barang yang dikuasai negara" adalah '
+				+ 'barang yang untuk sementara waktu penguasaannya berada pada negara '
+				+ 'sampai dapat ditentukan status barang yang sebenarnya. '
+				+ 'Perubahaan status ini dimaksudkan agar pejabat bea dan cukai '
+				+ 'dapat memproses barang tersebut secara administrasi sampai dapat dibuktikan '
+				+ 'bahwa telah terjadi kesalahan atau sama sekali tidak terjadi kesalahan.'
+			this.pdf.text(ket, this.props.ind.num, this.ln, {maxWidth: 185})	
+		}
 
 		////// LAMPIRAN //////
 		if (this.data.objek != null) {

@@ -34,7 +34,8 @@ class PdfLphp extends Pdf {
 		lphp_type='lphp',
 		lptp_type='lptp',
 		sbp_type='sbp',
-		jenis_dok = 'LEMBAR PENENTUAN HASIL PENINDAKAN'
+		jenis_dok = 'LEMBAR PENENTUAN HASIL PENINDAKAN',
+		title_line_indent={start: 67, end: 143}
 	) {
 		super(props);
 		this.data = data
@@ -42,6 +43,7 @@ class PdfLphp extends Pdf {
 		this.lptp_type = lptp_type
 		this.sbp_type = sbp_type
 		this.jenis_dok = jenis_dok
+		this.props.title_line = title_line_indent
 		this.prepareDocDate()
 		this.prepareSprintDate()
 	}

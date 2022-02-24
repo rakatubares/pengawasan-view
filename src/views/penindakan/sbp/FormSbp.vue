@@ -140,6 +140,15 @@
 				</CCol>
 			</CRow>
 			<CRow>
+				<CCol sm="12">
+					<CTextarea
+						label="Catatan LPTP"
+						description="Catatan atasan Pejabat Bea dan Cukai yang melaksanakan penindakan"
+						:value.sync="data.lptp.catatan"
+					/>
+				</CCol>
+			</CRow>
+			<CRow>
 				<CCol md="12">
 					<MySelectEntitas
 						ref="selectSaksi"
@@ -172,16 +181,16 @@
 					/>
 				</CCol>
 			</CRow>
-			<CRow>
+			<CRow v-if="doc_type == 'sbp'">
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectPejabat"
 						:label="{jabatan: 'Jabatan Atasan', nama: 'Nama Atasan'}"
 						:selectable_jabatan="['bd.0503', 'bd.0504']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.lptp.atasan.user_id"
-						:jabatan.sync="data.lptp.jabatan_atasan.kode"
-						:plh.sync="data.lptp.plh"
+						:id_pejabat.sync="data.lptp.atasan.user.user_id"
+						:jabatan.sync="data.lptp.atasan.jabatan.kode"
+						:plh.sync="data.lptp.atasan.plh"
 					/>
 				</CCol>
 			</CRow>
@@ -233,13 +242,16 @@ const default_data = {
 		petugas2: {user_id: null}
 	},
 	lptp: {
-		jabatan_atasan: {
-			kode: 'bd.0503',
-			jabatan: null
-		},
-		plh: false,
+		catatan: null,
 		atasan: {
-			user_id: null
+			jabatan: {
+				kode: 'bd.0503',
+				jabatan: null
+			},
+			plh: false,
+			user: {
+				user_id: null
+			}
 		}
 	},
 }
@@ -313,7 +325,9 @@ export default {
 			this.$refs.selectSaksi.getEntitas(this.data.penindakan.saksi.id, true)
 			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
 			this.$refs.selectPetugas2.getPetugas(this.data.penindakan.petugas2.user_id, true)
-			this.$refs.selectPejabat.getPetugas(this.data.lptp.atasan.user_id, true)
+			if (this.doc_type == 'sbp') {
+				this.$refs.selectPejabat.getPetugas(this.data.lptp.atasan.user.user_id, true)	
+			}
 		},
 		async saveData() {
 			if (this.state == 'insert') {
