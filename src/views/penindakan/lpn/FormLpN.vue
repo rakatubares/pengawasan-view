@@ -15,7 +15,6 @@
 					<MySelectSbp
 						ref="selectSbp"
 						sbp_type="sbpn"
-						tipe_surat_sbp="SBP-N"
 						:id.sync="data.id_sbp"
 						:filter="filter_sbp"
 						:show_elements="['jenis_pelanggaran', 'uraian_penindakan', 'alasan_penindakan', 'hal_terjadi']"

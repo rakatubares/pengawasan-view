@@ -15,7 +15,6 @@
 					:doc_type="doc_type"
 					:tipe_surat="tipe_surat"
 					:sbp_type="sbp_type"
-					:tipe_surat_sbp="tipe_surat_sbp"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>

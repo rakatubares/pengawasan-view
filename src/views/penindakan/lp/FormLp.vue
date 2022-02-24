@@ -7,7 +7,6 @@
 					<MySelectSbp
 						ref="selectSbp"
 						:sbp_type="sbp_type"
-						:tipe_surat_sbp="tipe_surat_sbp"
 						:id.sync="data.id_sbp"
 						:filter="filter_sbp"
 					/>
@@ -138,7 +137,6 @@ export default {
 		doc_type: String,
 		tipe_surat: String,
 		sbp_type: String,
-		tipe_surat_sbp: String,
 		doc_id: Number
 	},
 	data() {
