@@ -33,6 +33,7 @@ class PdfTolak1 extends Pdf {
 		super(props);
 		this.jenis_dok = ['BERITA ACARA', 'PENOLAKAN TANDA TANGAN SURAT BUKTI PENINDAKAN']
 		this.data = data
+		this.sbp_type = data.dokumen.tolak1.sbp_type
 		this.prepareDocDate()
 		this.prepareSprintDate()
 	}
@@ -54,7 +55,7 @@ class PdfTolak1 extends Pdf {
 		this.ln += this.props.font.height*arr_sprint.length
 
 		let txt_pernyataan = 'Kami yang bertanda tangan di bawah ini menyatakan bahwa setelah dibacakan Surat Bukti Penindakan '
-			+ this.data.dokumen.sbp.no_dok_lengkap
+			+ this.data.dokumen[this.sbp_type].no_dok_lengkap
 			+ ' tanggal ' + this.full_tgl_dok + '.'
 		let arr_pernyataan = converters.array_text(txt_pernyataan, 105)
 		this.pdf.text(arr_pernyataan, this.props.ind.alp, this.ln)

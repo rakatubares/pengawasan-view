@@ -15,7 +15,6 @@
 					:doc_type="doc_type"
 					:tipe_surat="tipe_surat"
 					:sbp_type="sbp_type"
-					:tipe_surat_sbp="tipe_surat_sbp"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>
@@ -47,10 +46,6 @@ export default {
 			type: String,
 			dedfault: 'sbp'
 		},
-		tipe_surat_sbp: {
-			type: String,
-			default: 'SBP'
-		}
 	},
 	data() {
 		return {
@@ -58,8 +53,8 @@ export default {
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
 				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
-				{ key: 'no_sbp', label: `No ${this.tipe_surat_sbp}` },
-				{ key: 'tanggal_sbp', label: `Tgl ${this.tipe_surat_sbp}` },
+				{ key: 'no_sbp', label: `No SBP` },
+				{ key: 'tanggal_sbp', label: `Tgl SBP` },
 				{ key: 'status', label: 'Status' },
 				{ key: 'actions', label: '' },
 			],

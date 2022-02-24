@@ -93,10 +93,6 @@ export default {
 			type: String,
 			default: 'sbp'
 		},
-		tipe_surat_sbp: {
-			type: String,
-			default: 'SBP'
-		},
 		id: Number,
 		filter: Object,
 		show_elements: Array
@@ -111,6 +107,25 @@ export default {
 			show: JSON.parse(JSON.stringify(default_show)),
 		}
 	},
+	computed: {
+		tipe_surat_sbp() {
+			let tipe_surat = ''
+			switch (this.sbp_type) {
+				case 'sbp':
+					tipe_surat = 'SBP'
+					break;
+			
+				case 'sbpn':
+					tipe_surat = 'SBP-N'
+					break;
+
+				default:
+					break;
+			}
+
+			return tipe_surat
+		}
+	},
 	methods: {
 		changeValue(id, mounted=false) {
 			this.getData(id, mounted)
@@ -121,12 +136,13 @@ export default {
 				let responses = await api.getDisplayDataById(this.sbp_type, id)
 				this.sbp = JSON.parse(JSON.stringify(responses.data.data))
 				this.exception = this.sbp.id
-				if (mounted == true) {
-					this.items = [this.sbp]
-					this.value = this.items[0]
-				}
 			} else {
 				this.sbp = JSON.parse(JSON.stringify(default_data))
+			}
+
+			if (mounted == true) {
+				this.items = [this.sbp]
+				this.value = this.items[0]
 			}
 		},
 		checkShow() {

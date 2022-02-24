@@ -10,9 +10,22 @@
 				</CCol>
 			</CRow>
 			<CRow>
+				<CCol md="3">
+					<label>Tipe SBP</label>
+					<CDropdown
+						:togglerText.sync="txt_sbp_type"
+						color="primary"
+					>
+						<CDropdownItem @click="toggleSbpType('sbp')">SBP Biasa</CDropdownItem>
+						<CDropdownItem @click="toggleSbpType('sbpn')">SBP NPP</CDropdownItem>
+					</CDropdown>
+				</CCol>
+			</CRow>
+			<CRow>
 				<CCol md="12">
 					<MySelectSbp
 						ref="selectSbp"
+						:sbp_type.sync="data.sbp_type"
 						:id.sync="data.id_sbp"
 						:filter="filter_sbp"
 					/>
@@ -79,6 +92,7 @@ import MySelectSprint from '../../components/SelectSprint.vue'
 
 const default_data = {
 	sprint: {id: null},
+	sbp_type: 'sbp',
 	id_sbp: null,
 	alasan: null,
 	petugas1: {user_id: null},
@@ -101,6 +115,7 @@ export default {
 		return {
 			doc_type: 'tolak1',
 			data: JSON.parse(JSON.stringify(default_data)),
+			txt_sbp_type: null,
 			filter_sbp: {
 				kode_status: [102, 103, 200, 202, 203],
 				status_tolak: null
@@ -148,20 +163,25 @@ export default {
 			this.$refs.alert.show_alert(text, color, time)
 		},
 		validatorRequired(val) { return validators.required(val) },
-		async changeValueSbp(id) {
-			if (id != null) {
-				// Get data SBP
-				let sbp = await api.getDocumentById('sbp', id)
-				
-				// Change current data according to SBP
-				this.data.id_sbp = sbp.main.data.id
+		toggleSbpType(val) {
+			if (this.data.sbp_type != val) {
+				this.$refs.selectSbp.getData(null, true)	
+				this.data.id_sbp = null
 			}
-		}
+
+			this.data.sbp_type = val
+			if (val == 'sbp') {
+				this.txt_sbp_type = 'SBP Biasa'
+			} else {
+				this.txt_sbp_type = 'SBP NPP'
+			}
+		},
 	},
 	async mounted() {
 		if (this.state == 'edit') {
 			await this.getData()
 		}
+		this.toggleSbpType(this.data.sbp_type)
 	}
 }
 </script>
