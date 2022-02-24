@@ -120,7 +120,14 @@ export default {
 					break;
 
 				case 'lphpn':
-					let pdfLphpn = new PdfLphp(this.data, this.active_pdf, 'lptpn', 'sbpn', 'LEMBAR PENENTUAN HASIL PENINDAKAN NPP')
+					let pdfLphpn = new PdfLphp(
+						this.data, 
+						this.active_pdf, 
+						'lptpn', 
+						'sbpn', 
+						'LEMBAR PENENTUAN HASIL PENINDAKAN NPP', 
+						{start: 63, end: 147}
+					)
 					this.src_pdf = pdfLphpn.generatePdf()
 					break;
 
@@ -130,7 +137,13 @@ export default {
 					break;
 
 				case 'lptpn':
-					let pdfLptpn = new PdfLptp(this.data, this.active_pdf, 'sbpn', 'LAPORAN PELAKSANAAN TUGAS PENINDAKAN NPP', {start: 58, end: 152})
+					let pdfLptpn = new PdfLptp(
+						this.data, 
+						this.active_pdf, 
+						'sbpn', 
+						'LAPORAN PELAKSANAAN TUGAS PENINDAKAN NPP', 
+						{start: 58, end: 152}
+					)
 					this.src_pdf = pdfLptpn.generatePdf()
 					break;
 
@@ -145,7 +158,12 @@ export default {
 					break;
 
 				case 'sbpn':
-					let pdfSbpn = new PdfSbp(this.data, this.active_pdf, 'SURAT BUKTI PENINDAKAN NPP', {start: 76, end: 134})
+					let pdfSbpn = new PdfSbp(
+						this.data, 
+						this.active_pdf, 
+						'SURAT BUKTI PENINDAKAN NPP', 
+						{start: 76, end: 134}
+					)
 					this.src_pdf = pdfSbpn.generatePdf()
 					break;
 
