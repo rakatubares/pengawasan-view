@@ -154,7 +154,7 @@ class Pdf {
 	 * @param {String} data_barang 
 	 * @param {Array} add_components 
 	 */
-	detailBarang(data_barang, add_components=[]) {
+	detailBarang(data_barang, add_components=[], doc_type=null) {
 		let data = converters.barang(data_barang)
 		let item_barang = data_barang != null ? data_barang.item : null
 	
@@ -178,7 +178,9 @@ class Pdf {
 					? item_barang[0]['jumlah_barang'] + ' '
 						+ item_barang[0]['satuan_barang'] + ' '
 						+ item_barang[0]['uraian_barang']
-					: 'LIHAT LAMPIRAN'
+					: (doc_type != 'riksa') && ('riksa' in this.data.dokumen)
+						? 'LIHAT LAMPIRAN BA PEMERIKSAAN'
+						: 'LIHAT LAMPIRAN'
 				: ''
 			: ''
 		let txt_barang = converters.array_text(barang, 65)
