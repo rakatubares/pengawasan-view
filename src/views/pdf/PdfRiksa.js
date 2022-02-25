@@ -61,7 +61,7 @@ class PdfRiksa extends Pdf {
 		this.detailSarkut(data_sarkut)
 
 		let data_barang = this.dataObjek(this.data.objek, 'barang')
-		this.detailBarang(data_barang)
+		this.detailBarang(data_barang, undefined, 'riksa')
 
 		let data_bangunan = this.dataObjek(this.data.objek, 'bangunan')
 		this.detailBangunan(data_bangunan)
