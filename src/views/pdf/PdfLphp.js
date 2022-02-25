@@ -111,14 +111,18 @@ class PdfLphp extends Pdf {
 			? this.data.objek.type == 'barang' 
 				? this.data.objek.data.item.length == 1
 					? this.data.objek.data.item[0].uraian_barang
-					: 'LIHAT LAMPIRAN'
+					: ('riksa' in this.data.dokumen)
+						? 'LIHAT LAMPIRAN BA PEMERIKSAAN'
+						: 'LIHAT LAMPIRAN'
 				: ''
 			: ''
 		let jumlah_barang = this.data.objek != null
 			? this.data.objek.type == 'barang' 
 				? this.data.objek.data.item.length == 1
 					? this.data.objek.data.item[0].jumlah_barang + ' ' + this.data.objek.data.item[0].satuan_barang
-					: 'LIHAT LAMPIRAN'
+					: ('riksa' in this.data.dokumen)
+						? 'LIHAT LAMPIRAN BA PEMERIKSAAN'
+						: 'LIHAT LAMPIRAN'
 				: ''
 			: ''
 
@@ -275,7 +279,7 @@ class PdfLphp extends Pdf {
 		////// LAMPIRAN //////
 		if (this.data.objek != null) {
 			if (this.data.objek.type == 'barang') {
-				if (this.data.objek.data.item.length > 1) {
+				if ((this.data.objek.data.item.length > 1) && !('riksa' in this.data.dokumen)) {
 					this.pdf.setFont('Helvetica', 'normal')
 					this.pdf.addPage()
 					// Header
