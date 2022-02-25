@@ -14,9 +14,9 @@ class Pdf {
 		this.tgl_dok = converters.date(tgl_dok, 'DD-MM-YYYY')
 		this.full_tgl_dok = this.tgl_dok != null ? converters.fullDate(this.tgl_dok) : ''
 		this.hr = this.tgl_dok != null ? converters.weekDay(this.tgl_dok) : ''
-		this.tgl = this.tgl_dok != null ? this.tgl_dok.getDate() : ''
+		this.tgl = this.tgl_dok != null ? converters.numTerbilang(this.tgl_dok.getDate()) : ''
 		this.bln = this.tgl_dok != null ? converters.monthName(this.tgl_dok) : ''
-		this.thn = this.tgl_dok != null ? this.tgl_dok.getFullYear() : ''
+		this.thn = this.tgl_dok != null ? converters.numTerbilang(this.tgl_dok.getFullYear()) : ''
 	}
 
 	prepareSprintDate(tgl_sprint=this.data.penindakan.sprint.tanggal_sprint) {
@@ -269,9 +269,11 @@ class Pdf {
 		saksi=this.data.penindakan.saksi, 
 		petugas1=this.data.penindakan.petugas1, 
 		petugas2=this.data.penindakan.petugas2, 
-		ln_tgl_hgt=1.5, ttd_hgt=6
+		ln_tgl_hgt=1.5, ttd_hgt=6,
+		start_ln=this.ln,
+		with_date=true
 	) {
-		let ln_tgl = this.ln + this.props.font.height*ln_tgl_hgt
+		let ln_tgl = start_ln + this.props.font.height*ln_tgl_hgt
 		let ln_jabatan_1 = ln_tgl + this.props.font.height
 		let ln_nama_1 = ln_jabatan_1 + this.props.font.height*ttd_hgt
 		let ln_nip_1 = ln_nama_1 + this.props.font.height
@@ -284,7 +286,9 @@ class Pdf {
 		this.pdf.text(saksi.nama, this.props.ind.alp, ln_nama_1)
 
 		// Pejabat
-		this.pdf.text('Tangerang, ' + this.full_tgl_dok, this.props.ind.ttd, ln_tgl)
+		if (with_date) {
+			this.pdf.text('Tangerang, ' + this.full_tgl_dok, this.props.ind.ttd, ln_tgl)	
+		}
 		this.pdf.text(txt_pejabat, this.props.ind.ttd, ln_jabatan_1)
 		this.pdf.text(petugas1.name, this.props.ind.ttd, ln_nama_1)
 		this.pdf.text('NIP ' + petugas1.nip, this.props.ind.ttd, ln_nip_1)
@@ -321,6 +325,8 @@ class Pdf {
 			{header: 'Jumlah', dataKey: 'jumlah'},
 		]
 	
+		let height = 0;
+		let tableMeta = null;
 		this.pdf.autoTable({
 			columns: tabelHead,
 			body: tabelData,
@@ -347,7 +353,15 @@ class Pdf {
 					halign: 'center'
 				},
 			},
+			didParseCell: function (HookData) {
+				if (!tableMeta) {
+					tableMeta = HookData.table;
+				}
+			}
 		})
+
+		height = tableMeta.finalY
+		return height
 	}
 
 	watermark() {
