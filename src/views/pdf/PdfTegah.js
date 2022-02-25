@@ -107,7 +107,7 @@ class PdfTegah extends Pdf {
 
 		////// LAMPIRAN //////
 		if (this.data.objek.type == 'barang') {
-			if (this.data.objek.data.item.length > 1) {
+			if ((this.data.objek.data.item.length > 1) && !('riksa' in this.data.dokumen)) {
 				this.pdf.setFont('Helvetica', 'normal')
 				this.pdf.addPage()
 				// Header
