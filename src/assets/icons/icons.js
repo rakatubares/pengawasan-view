@@ -4,9 +4,11 @@ import {
 	cilBlur,
 	cilCalculator,
 	cilCalendar,
+	cilClipboard,
 	cilClone,
 	cilCloudDownload,
 	cilChartPie,
+	cilCheckCircle,
 	cilChevronCircleLeftAlt,
 	cilChevronCircleRightAlt,
 	cilCursor,
@@ -26,6 +28,7 @@ import {
 	cilTrash,
 	cilUser,
 	cilUserFollow,
+	cilXCircle,
 } from '@coreui/icons'
 import { logo } from './logo'
 
@@ -39,8 +42,10 @@ export const iconsSet = Object.assign(
 		cilCalculator,
 		cilCalendar,
 		cilChartPie,
+		cilCheckCircle,
 		cilChevronCircleLeftAlt,
 		cilChevronCircleRightAlt,
+		cilClipboard,
 		cilClone,
 		cilCloudDownload,
 		cilCursor,
@@ -60,5 +65,6 @@ export const iconsSet = Object.assign(
 		cilTrash,
 		cilUser,
 		cilUserFollow,
+		cilXCircle,
 	},
 )
