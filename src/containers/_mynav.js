@@ -9,6 +9,10 @@ export default [
 				icon: 'chart'
 			},
 			{
+				_name: 'CSidebarNavTitle',
+				_children: ['Form']
+			},
+			{
 				_name: 'CSidebarNavDropdown',
 				name: 'PENINDAKAN',
 				icon: 'cil-clone',
@@ -168,7 +172,17 @@ export default [
 						icon: 'cil-file'
 					},
 				]
-			}
+			},
+			{
+				_name: 'CSidebarNavTitle',
+				_children: ['Monitoring']
+			},
+			{
+				_name: 'CSidebarNavItem',
+				name: 'Penarikan BHP',
+				to: '/bhp',
+				icon: 'cil-clipboard'
+			},
 		]
 	}
 ]

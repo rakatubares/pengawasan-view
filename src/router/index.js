@@ -11,6 +11,7 @@ const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
 const PageBast = () => import('@/views/penindakan/bast/PageBast')
+const PageBhp = () => import('@/views/monitoring/penarikan_bhp/PageBhp')
 const PageBukaPengaman = () => import('@/views/penindakan/bukapengaman/PageBukaPengaman')
 const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
 const PageContoh = () => import('@/views/penindakan/contoh/PageContoh')
@@ -51,6 +52,11 @@ function configRoutes () {
 					path: 'homepage',
 					name: 'Homepage',
 					component: Homepage
+				},
+				{
+					path: 'bhp',
+					name: 'Penarikan BHP',
+					component: PageBhp
 				},
 				{
 					path: 'lap',
