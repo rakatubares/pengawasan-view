@@ -3,14 +3,8 @@
 		<!-- Tabel item barang -->
 		<CRow>
 			<CCol>
-				<MyTableData
-					class="mt-3"
-					:fields="fields_barang"
-					:items.sync="list_barang_table"
-					:editData="editBarang"
-					:deleteData="confirmDeleteBarang"
-				>
-					<template #header>
+				<CCard>
+					<CCardHeader>
 						<CButton 
 							v-if="(state==='insert') || (state==='edit')"
 							color="primary" 
@@ -20,8 +14,50 @@
 							+ Tambah Barang
 						</CButton>
 						<div v-else ><b>Daftar Barang</b></div>
-					</template>
-				</MyTableData>
+					</CCardHeader>
+					<CCardBody>
+						<CDataTable
+							:items="list_barang_table"
+							:fields="fields"
+							:items-per-page="5"
+							pagination
+						>
+							<template #actions="{item}">
+								<slot name="buttons">
+									<td>
+										<CButton 
+											v-if="getButton('edit', item)"
+											class="m-1"
+											size="sm" 
+											color="success"
+											@click="editData(item.id)"
+										>
+											Edit
+										</CButton>
+										<CButton 
+											v-if="getButton('delete', item)"
+											class="m-1"
+											size="sm" 
+											color="danger"
+											@click="confirmDeleteBarang(item)"
+										>
+											Hapus
+										</CButton>
+										<CButton 
+											v-if="getButton('show', item)"
+											class="m-1"
+											size="sm" 
+											color="primary"
+											@click="showModalCarousel(item.id)"
+										>
+											Foto
+										</CButton>
+									</td>
+								</slot>
+							</template>
+						</CDataTable>
+					</CCardBody>
+				</CCard>
 			</CCol>
 		</CRow>
 
@@ -51,11 +87,20 @@
 				<span v-html="modal_delete_props.text"></span>
 			</template>
 		</MyModalDelete>
+
+		<MyModalCarousel
+			v-if="modal_carousel_props.show"
+			:doc_type="doc_type"
+			:doc_id="doc_id"
+			:item_id="modal_carousel_props.item_id"
+			@close-modal="closeModalCarousel"
+		/>
 	</div>
 </template>
 
 <script>
 import api from '../../../router/api2.js'
+import MyModalCarousel from '../../components/ModalCarousel.vue'
 import MyModalDelete from '../../components/ModalDelete.vue'
 import MyFormItemBarang from './FormItemBarang.vue'
 import MyTableData from '../../components/TableData.vue'
@@ -63,6 +108,7 @@ import MyTableData from '../../components/TableData.vue'
 export default {
 	name: 'TableItemBarang',
 	components: {
+		MyModalCarousel,
 		MyModalDelete,
 		MyFormItemBarang,
 		MyTableData
@@ -74,18 +120,6 @@ export default {
 		data_objek: Object
 	},
 	computed: {
-		fields_barang() {
-			let fields = [
-				{ key: 'uraian_barang', label: 'Uraian Barang' },
-				{ key: 'jumlah', label: 'Jumlah' },
-			]
-
-			if (['insert', 'edit'].includes(this.state)) {
-				fields.push({ key: 'actions', label: '' })
-			}
-
-			return fields
-		},
 		list_barang_table() {
 			let arr = this.list_barang
 			let data_barang = []
@@ -102,11 +136,20 @@ export default {
 	},
 	data() {
 		return {
+			fields: [
+				{ key: 'uraian_barang', label: 'Uraian Barang' },
+				{ key: 'jumlah', label: 'Jumlah' },
+				{ key: 'actions', label: '' }
+			],
 			modal_delete_props: {
 				type: null,
 				show: false,
 				url: null,
 				text: null
+			},
+			modal_carousel_props: {
+				show: false,
+				item_id: null
 			},
 			list_barang: this.data_objek.item,
 			show_modal_barang: false,
@@ -124,7 +167,7 @@ export default {
 			this.item_state = 'insert'
 			this.item_to_edit = null
 		},
-		editBarang(id) {
+		editData(id) {
 			this.show_modal_barang = true
 			this.item_state = 'edit'
 			this.item_to_edit = id
@@ -142,16 +185,9 @@ export default {
 			this.modal_delete_props.item_id = item.id
 			this.modal_delete_props.show = true
 		},
-		deleteData(type) {
+		deleteData() {
 			this.getData()
 			this.closeModalDelete()
-
-			// if (type == 'item barang') {
-			// 	this.getData()
-			// 	this.$emit('edit-item')
-			// } else {
-			// 	this.$emit('delete-data')
-			// }
 		},
 		closeModalDelete() {
 			this.modal_delete_props.type = null
@@ -159,6 +195,31 @@ export default {
 			this.modal_delete_props.text = null
 			this.modal_delete_props.show = false
 		},
+		showModalCarousel(id) {
+			this.modal_carousel_props.show = true
+			this.modal_carousel_props.item_id = id
+		},
+		closeModalCarousel() {
+			this.modal_carousel_props.show = false
+			this.modal_carousel_props.item_id = null
+		},
+		getButton(type, item) {
+			let btn = false
+
+			if (this.state == 'insert') {
+				if ((type == 'edit') || (type == 'delete')) {
+					btn = true
+				} else {
+					btn = false
+				}
+			} else if (this.state == 'show') {
+				if (type == 'show') {
+					btn = true
+				}
+			}
+
+			return btn
+		}
 	},
 }
 </script>
