@@ -35,6 +35,12 @@
 						/>
 					</CCol>
 				</CRow>
+
+				<!-- Upload image -->
+				<MyUploadImage 
+					v-if="render_image"
+					:images.sync="data.image_list"
+				/>
 			</CForm>
 
 			<template #footer>
@@ -65,17 +71,20 @@ import axios from "axios"
 
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
+import MyUploadImage from '../../components/UploadImage.vue'
 
 const data_default = {
 	uraian_barang: null,
 	jumlah_barang: null,
-	satuan_barang: null
+	satuan_barang: null,
+	image_list: []
 }
 
 export default {
 	name: 'FormItemBarang',
 	components: {
-		MyAlert
+		MyAlert,
+		MyUploadImage
 	},
 	props: {
 		show:{
@@ -96,7 +105,8 @@ export default {
 	},
 	data() {
 		return {
-			data: { ...data_default }
+			data: JSON.parse(JSON.stringify(data_default)),
+			render_image: false
 		}
 	},
 	methods: {
@@ -107,9 +117,16 @@ export default {
 					.then(
 						(response) => {
 							this.data = response.data.data
+							this.$nextTick(function () {
+								this.render_image = true
+							})
 						}
 					)
 					.catch((error) => {console.error(error)})
+			} else {
+				this.$nextTick(function () {
+					this.render_image = true
+				})
 			}
 		},
 		saveData() {
@@ -138,7 +155,7 @@ export default {
 		},
 		cancel() {
 			this.$emit('update:show', false)
-			this.data = { ...data_default }
+			this.data = JSON.parse(JSON.stringify(data_default))
 		},
 		validatorRequired(val) { return validators.required(val) },
 		validatorNumber(val) { return validators.number(val) },

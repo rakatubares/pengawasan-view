@@ -149,6 +149,10 @@ class API {
 		return await this.getApi(`/${doc_type}/${doc_id}/barang/item`)
 	}
 
+	async getItemBarang(doc_type, doc_id, item_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/barang/item/${item_id}`)
+	}
+
 	async delItemBarang(doc_type, doc_id, item_id) {
 		await this.delApi(`/${doc_type}/${doc_id}/barang/item/${item_id}`)
 	}

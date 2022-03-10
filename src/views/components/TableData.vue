@@ -126,6 +126,9 @@ export default {
 
 			return btn
 		}
+	},
+	mounted() {
+		console.log('table data - state', this.state)
 	}
 }
 </script>
