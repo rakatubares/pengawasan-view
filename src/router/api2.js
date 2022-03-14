@@ -168,6 +168,16 @@ class API {
 	async searchEntitas(data) {
 		return await this.postApi('/entitas/search', data)
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| API for references
+	|--------------------------------------------------------------------------
+	*/
+
+	async getGrupLokasi() {
+		return await this.getApi('/lokasi')
+	}
 }
 
 export default new API
