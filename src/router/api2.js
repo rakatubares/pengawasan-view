@@ -117,22 +117,6 @@ class API {
 		return await this.delApi(`/${doc_type}/${doc_id}`)
 	}
 
-	async storeLphp(sbp_id, data) {
-		return await this.postApi(`/sbp/${sbp_id}/lphp`, data)
-	}
-
-	async publishLphp(sbp_id) {
-		return await this.putApi(`/sbp/${sbp_id}/lphp/publish`)
-	}
-
-	async storeLp(sbp_id, data) {
-		return await this.postApi(`/sbp/${sbp_id}/lp`, data)
-	}
-
-	async publishLp(sbp_id) {
-		return await this.putApi(`/sbp/${sbp_id}/lp/publish`)
-	}
-
 	/*
 	|--------------------------------------------------------------------------
 	| API for details
@@ -147,6 +131,10 @@ class API {
 
 	async getItemBarangByDocId(doc_type, doc_id) {
 		return await this.getApi(`/${doc_type}/${doc_id}/barang/item`)
+	}
+
+	async getItemBarang(doc_type, doc_id, item_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/barang/item/${item_id}`)
 	}
 
 	async delItemBarang(doc_type, doc_id, item_id) {
@@ -167,6 +155,28 @@ class API {
 
 	async storeLinkedDoc(doc_type, doc_id, data) {
 		return await this.postApi(`/${doc_type}/${doc_id}/storelinked`, data)
+	}
+
+	async getEntitasById(id) {
+		return await this.getApi(`/entitas/${id}`)
+	}
+
+	async saveEntitas(data) {
+		return await this.postApi(`/entitas`, data)
+	}
+
+	async searchEntitas(data) {
+		return await this.postApi('/entitas/search', data)
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| API for references
+	|--------------------------------------------------------------------------
+	*/
+
+	async getGrupLokasi() {
+		return await this.getApi('/lokasi')
 	}
 }
 
