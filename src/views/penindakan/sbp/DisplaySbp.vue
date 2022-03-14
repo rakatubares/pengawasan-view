@@ -163,7 +163,11 @@ export default {
 		disp_tgl_sbp() { return this.data_sbp.penindakan.tanggal_penindakan || '-' },
 		disp_sprint() { return ((this.data_sbp.penindakan.sprint.nomor_sprint || '') + ' tanggal ' + (this.data_sbp.penindakan.sprint.tanggal_sprint || '')) },
 		disp_lptp() { return this.data_sbp.lptp.no_dok_lengkap || '-' },
-		disp_lokasi() { return this.data_sbp.penindakan.lokasi_penindakan || '-' },
+		disp_lokasi() {
+			var grup_lokasi = this.data_sbp.penindakan.grup_lokasi ? `(${this.data_sbp.penindakan.grup_lokasi.lokasi}) ` : ''
+			var lokasi = this.data_sbp.penindakan.lokasi_penindakan ? this.data_sbp.penindakan.lokasi_penindakan : '-'
+			return grup_lokasi+lokasi
+		},
 		disp_uraian() { return this.data_sbp.uraian_penindakan || '-' },
 		disp_alasan() { return this.data_sbp.alasan_penindakan || '-' },
 		disp_pelanggaran() { return this.data_sbp.jenis_pelanggaran || '-' },

@@ -13,12 +13,17 @@
 			</CRow>
 			<CRow>
 				<CCol sm="12">
-					<CInput
+					<!-- <CInput
 						label="Lokasi Penindakan"
 						description="Tempat / lokasi dilakukan penindakan"
 						:value.sync="data.penindakan.lokasi_penindakan"
 						:is-valid="validatorRequired"
 						invalid-feedback="Lokasi penindakan wajib diisi"
+					/> -->
+					<MySelectLokasi
+						:state.sync="state"
+						:grup_lokasi_id.sync="data.penindakan.grup_lokasi.id"
+						:lokasi.sync="data.penindakan.lokasi_penindakan"
 					/>
 				</CCol>
 			</CRow>
@@ -223,6 +228,7 @@ import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectLokasi from '../../components/SelectLokasi.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
@@ -235,6 +241,7 @@ const default_data = {
 	wkt_selesai_penindakan: null,
 	hal_terjadi: null,
 	penindakan: {
+		grup_lokasi: {id: null},
 		lokasi_penindakan: null,
 		sprint: {id: null},
 		saksi: {id: null},
@@ -279,6 +286,7 @@ export default {
 		DatePicker,
 		MyAlert,
 		MySelectEntitas,
+		MySelectLokasi,
 		MySelectPejabat,
 		MySelectPetugas,
 		MySelectSprint,
@@ -332,8 +340,8 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					let response = await api.storeDoc(this.doc_type, this.data)
-					this.$emit('update:doc_id', response.id)
+					this.data = await api.storeDoc(this.doc_type, this.data)
+					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
 				} catch (error) {
