@@ -13,17 +13,13 @@
 			</CRow>
 			<CRow>
 				<CCol sm="12">
-					<!-- <CInput
-						label="Lokasi Penindakan"
-						description="Tempat / lokasi dilakukan penindakan"
-						:value.sync="data.penindakan.lokasi_penindakan"
-						:is-valid="validatorRequired"
-						invalid-feedback="Lokasi penindakan wajib diisi"
-					/> -->
 					<MySelectLokasi
 						:state.sync="state"
 						:grup_lokasi_id.sync="data.penindakan.grup_lokasi.id"
 						:lokasi.sync="data.penindakan.lokasi_penindakan"
+						label="Lokasi Penindakan"
+						description="Tempat / lokasi dilakukan penindakan"
+						feedback="Lokasi penindakan wajib diisi"
 					/>
 				</CCol>
 			</CRow>
