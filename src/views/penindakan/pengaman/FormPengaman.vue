@@ -46,10 +46,13 @@
 			</CRow>
 			<CRow>
 				<CCol sm="12">
-					<CInput
+					<MySelectLokasi
+						:state.sync="state"
+						:grup_lokasi_id.sync="data.penindakan.grup_lokasi.id"
+						:lokasi.sync="data.penindakan.lokasi_penindakan"
 						label="Lokasi Pengamanan"
 						description="Tempat / lokasi dilakukan pengamanan"
-						:value.sync="data.penindakan.lokasi_penindakan"
+						feedback="Lokasi pengamanan wajib diisi"
 					/>
 				</CCol>
 			</CRow>
@@ -128,6 +131,7 @@ import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectLokasi from '../../components/SelectLokasi.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
@@ -139,6 +143,7 @@ const default_data = {
 	alasan_pengamanan: null,
 	keterangan: null,
 	penindakan: {
+		grup_lokasi: {id: null},
 		lokasi_penindakan: null,
 		sprint: {id: null},
 		saksi: {id: null},
@@ -152,6 +157,7 @@ export default {
 	components: {
 		MyAlert,
 		MySelectEntitas,
+		MySelectLokasi,
 		MySelectPetugas,
 		MySelectSprint
 	},
@@ -166,7 +172,9 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.data = await api.getFormDataById('pengaman', this.doc_id)
+			let response = await api.getFormDataById('pengaman', this.doc_id)
+			this.data = response.data.data
+			
 			if (this.data.penindakan.petugas2 == null) {
 				this.data.penindakan.petugas2 = {user_id: null}
 			}
@@ -183,8 +191,8 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					let response = await api.storeDoc('pengaman', this.data)
-					this.$emit('update:doc_id', response.id)
+					this.data = await api.storeDoc('pengaman', this.data)
+					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BA Pelekatan Tanda Pengaman berhasil disimpan')
 				} catch (error) {

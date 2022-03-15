@@ -137,7 +137,11 @@ export default {
 		disp_nomor_pengaman() { return this.data_pengaman.nomor_pengaman || '-'},
 		disp_tempat_pengaman() { return this.data_pengaman.tempat_pengaman || '-' },
 		disp_alasan_pengamanan() { return this.data_pengaman.alasan_pengamanan || '-' },
-		disp_lokasi_pengamanan() { return this.data_pengaman.penindakan.lokasi_penindakan || '-' },
+		disp_lokasi_pengamanan() { 
+			var grup_lokasi = this.data_pengaman.penindakan.grup_lokasi ? `(${this.data_pengaman.penindakan.grup_lokasi.lokasi}) ` : ''
+			var lokasi = this.data_pengaman.penindakan.lokasi_penindakan ? this.data_pengaman.penindakan.lokasi_penindakan : '-'
+			return grup_lokasi+lokasi
+		},
 		disp_keterangan() { return this.data_pengaman.keterangan || '-' },
 	},
 	methods: {
