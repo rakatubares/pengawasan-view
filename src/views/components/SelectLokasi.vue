@@ -11,10 +11,10 @@
 				</CCol>
 				<CCol md="9" sm="12">
 					<CInput
-						label="Lokasi Penindakan"
-						description="Tempat / lokasi dilakukan penindakan"
+						:label="label"
+						:description="description"
 						:is-valid="validatorRequired"
-						invalid-feedback="Lokasi penindakan wajib diisi"
+						:invalid-feedback="feedback"
 						:value.sync="val_lokasi"
 					/>
 				</CCol>
@@ -39,7 +39,10 @@ export default {
 	props: {
 		state: String,
 		grup_lokasi_id: Number,
-		lokasi: String
+		lokasi: String,
+		label: String,
+		description: String,
+		feedback: String
 	},
 	computed: {
 		val_grup_lokasi_id: {
