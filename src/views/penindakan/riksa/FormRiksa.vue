@@ -13,12 +13,13 @@
 			</CRow>
 			<CRow>
 				<CCol sm="12">
-					<CInput
+					<MySelectLokasi
+						:state.sync="state"
+						:grup_lokasi_id.sync="data.penindakan.grup_lokasi.id"
+						:lokasi.sync="data.penindakan.lokasi_penindakan"
 						label="Lokasi Pemeriksaan"
 						description="Tempat/lokasi/alamat di mana pemeriksaan dilakukan"
-						:value.sync="data.penindakan.lokasi_penindakan"
-						:is-valid="validatorRequired"
-						invalid-feedback="Lokasi pemeriksaan wajib diisi"
+						feedback="Lokasi pemeriksaan wajib diisi"
 					/>
 				</CCol>
 			</CRow>
@@ -80,11 +81,13 @@ import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectLokasi from '../../components/SelectLokasi.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
 const default_data = {
 	penindakan: {
+		grup_lokasi: {id: null},
 		sprint: {id: null},
 		saksi: {id: null},
 		petugas1: {user_id: null},
@@ -97,6 +100,7 @@ export default {
 	components: {
 		MyAlert,
 		MySelectEntitas,
+		MySelectLokasi,
 		MySelectPetugas,
 		MySelectSprint
 	},
@@ -131,8 +135,13 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					let response = await api.storeDoc('riksa', this.data)
-					this.$emit('update:doc_id', response.id)
+					this.data = await api.storeDoc('riksa', this.data)
+
+					if (this.data.penindakan.petugas2 == null) {
+						this.data.penindakan.petugas2 = {user_id: null}
+					}
+
+					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BA Pemeriksaan berhasil disimpan')
 				} catch (error) {
