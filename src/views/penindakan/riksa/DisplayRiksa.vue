@@ -20,6 +20,14 @@
 						{{ disp_sprint }}
 					</CCol>
 				</CRow>
+				<CRow class="mb-1">
+					<CCol md="3" class="py-1">
+						<b>Lokasi Pemeriksaan</b>
+					</CCol>
+					<CCol md="9" class="py-1">
+						{{ disp_lokasi }}
+					</CCol>
+				</CRow>
 				<MyDisplayEntitas
 					title="Pemilik/Saksi"
 					:data.sync="data_riksa.penindakan.saksi"
@@ -72,12 +80,20 @@ export default {
 		disp_no_ba_riksa() { return this.data_riksa.no_dok_lengkap || '-' },
 		disp_tgl_ba_riksa() { return this.data_riksa.penindakan.tanggal_penindakan || '-' },
 		disp_sprint() { return ((this.data_riksa.penindakan.sprint.nomor_sprint || '') + ' tanggal ' + (this.data_riksa.penindakan.sprint.tanggal_sprint || '')) },
-		disp_lokasi() { return this.data_riksa.penindakan.lokasi_penindakan || '-' },
+		disp_lokasi() {
+			var grup_lokasi = this.data_riksa.penindakan.grup_lokasi ? `(${this.data_riksa.penindakan.grup_lokasi.lokasi}) ` : ''
+			var lokasi = this.data_riksa.penindakan.lokasi_penindakan ? this.data_riksa.penindakan.lokasi_penindakan : '-'
+			return grup_lokasi+lokasi
+		},
 	},
 	methods: {
 		async getData() {
 			let response = await api.getDisplayDataById('riksa', this.doc_id)
 			this.data_riksa = response.data.data
+
+			if (this.data_riksa.penindakan.petugas2 == null) {
+				this.data_riksa.penindakan.petugas2 = {user_id: null}
+			}
 		}
 	},
 	async mounted() {
