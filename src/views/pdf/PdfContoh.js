@@ -63,7 +63,7 @@ class PdfContoh extends Pdf {
 				this.ln += this.props.font.height
 			} else if (this.data.objek.data.item.length > 1) {
 				this.data.objek.data.item.forEach(brg => {
-					let txt_barang = `${brg.jumlah_barang} ${brg.satuan_barang} ${brg.uraian_barang}`
+					let txt_barang = `${brg.jumlah_barang} ${brg.satuan.kode_satuan} ${brg.uraian_barang}`
 					let arr_barang = converters.array_text(txt_barang, 75)
 					this.pdf.text('-', this.props.ind.txt, this.ln)
 					this.pdf.text(arr_barang, this.props.ind.itm, this.ln)
@@ -71,7 +71,7 @@ class PdfContoh extends Pdf {
 				});	
 			} else if (this.data.objek.data.item.length == 1) {
 				let brg = this.data.objek.data.item[0]
-				let txt_barang = `${brg.jumlah_barang} ${brg.satuan_barang} ${brg.uraian_barang}`
+				let txt_barang = `${brg.jumlah_barang} ${brg.satuan.kode_satuan} ${brg.uraian_barang}`
 				let arr_barang = converters.array_text(txt_barang, 75)
 				this.pdf.text(arr_barang, this.props.ind.txt, this.ln)
 				this.ln += this.props.font.height*arr_barang.length
@@ -107,8 +107,10 @@ class PdfContoh extends Pdf {
 		this.pdf.text('Jenis/Nomor dan Tgl. Dokumen', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
 		let txt_dokumen = this.data.objek != null
-			? `${this.data.objek.data.dokumen.jns_dok} ${this.data.objek.data.dokumen.no_dok}`
-				+ ` tanggal ${this.data.objek.data.dokumen.tgl_dok}`
+			? this.data.objek.data.dokumen != null
+				? `${this.data.objek.data.dokumen.jns_dok} ${this.data.objek.data.dokumen.no_dok}`
+					+ ` tanggal ${this.data.objek.data.dokumen.tgl_dok}`
+				: ''
 			: ''
 		this.pdf.text(txt_dokumen, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
