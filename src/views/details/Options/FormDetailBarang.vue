@@ -14,11 +14,9 @@
 							/>
 						</CCol>
 						<CCol md="2">
-							<CInput
-								label="Satuan kemasan"
-								:value.sync="data_objek.satuan_kemasan"
-								:is-valid="validatorRequired"
-								invalid-feedback="Satuan kemasan wajib diisi"
+							<MySelectKemasan
+								ref="selectKemasan"
+								:id.sync="data_objek.kemasan.id"
 							/>
 						</CCol>
 					</CRow>
@@ -99,11 +97,12 @@ import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectKemasan from '../../components/SelectKemasan.vue'
 import MyTableItemBarang from './TableItemBarang.vue'
 
 const data_default = {
 	jumlah_kemasan: null,
-	satuan_kemasan: null,
+	kemasan: {id: null},
 	dokumen: {
 		jns_dok: null,
 		no_dok: null,
@@ -118,6 +117,7 @@ export default {
 		DatePicker,
 		MyAlert,
 		MySelectEntitas,
+		MySelectKemasan,
 		MyTableItemBarang,
 	},
 	props: {
@@ -166,6 +166,7 @@ export default {
 			}
 			this.data_objek = objek
 			this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
+			this.$refs.selectKemasan.getData(this.data_objek.kemasan.id)
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
