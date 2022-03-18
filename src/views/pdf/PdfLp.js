@@ -148,7 +148,7 @@ class PdfLp extends Pdf {
 		let jumlah_barang = this.data.objek != null
 			? this.data.objek.type == 'barang' 
 				? this.data.objek.data.item.length == 1
-					? this.data.objek.data.item[0].jumlah_barang + ' ' + this.data.objek.data.item[0].satuan_barang
+					? this.data.objek.data.item[0].jumlah_barang + ' ' + this.data.objek.data.item[0]['satuan']['kode_satuan']
 					: ('riksa' in this.data.dokumen)
 						? 'LIHAT LAMPIRAN BA PEMERIKSAAN'
 						: 'LIHAT LAMPIRAN'
