@@ -176,7 +176,7 @@ class Pdf {
 			? (item_barang.length > 0) 
 				? (item_barang.length == 1)
 					? item_barang[0]['jumlah_barang'] + ' '
-						+ item_barang[0]['satuan_barang'] + ' '
+						+ item_barang[0]['satuan']['kode_satuan'] + ' '
 						+ item_barang[0]['uraian_barang']
 					: (doc_type != 'riksa') && ('riksa' in this.data.dokumen)
 						? 'LIHAT LAMPIRAN BA PEMERIKSAAN'
