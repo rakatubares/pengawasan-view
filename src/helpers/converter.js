@@ -161,7 +161,7 @@ converters.barang = (data) => {
 
 	if (data != null) {
 		let jumlah_kemasan = converters.string_format(converters.string(data.jumlah_kemasan), '{} ')
-		let satuan_kemasan = converters.string(data.satuan_kemasan)
+		let satuan_kemasan = converters.string(data.kemasan.kode_kemasan)
 		let kemasan = jumlah_kemasan + satuan_kemasan
 
 		if (data.dokumen != null) {
@@ -259,7 +259,7 @@ converters.item_barang = (data) => {
 		let entry = {
 			no: (index+1).toString(),
 			uraian: data[index]['uraian_barang'],
-			jumlah: data[index]['jumlah_barang'] + ' ' + data[index]['satuan_barang']
+			jumlah: data[index]['jumlah_barang'] + ' ' + data[index]['satuan']['kode_satuan']
 		}
 
 		preparedData.push(entry)
