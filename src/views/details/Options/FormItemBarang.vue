@@ -27,14 +27,26 @@
 						/>
 					</CCol>
 					<CCol md="4">
-						<CInput
-							label="Satuan"
-							:value.sync="data.satuan_barang"
-							:is-valid="validatorRequired"
-							invalid-feedback="Satuan barang wajib diisi"
+						<MySelectSatuan
+							ref="select_satuan"
+							:id.sync="data.satuan.id"
 						/>
 					</CCol>
 				</CRow>
+				<CRow>
+					<CCol>
+						<MySelectKategoriBarang
+							ref="select_kategori"
+							:id.sync="data.kategori.id"
+						/>
+					</CCol>
+				</CRow>
+
+				<!-- Upload image -->
+				<MyUploadImage 
+					v-if="render_image"
+					:images.sync="data.image_list"
+				/>
 			</CForm>
 
 			<template #footer>
@@ -65,17 +77,25 @@ import axios from "axios"
 
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
+import MySelectKategoriBarang from '../../components/SelectKategoriBarang.vue'
+import MySelectSatuan from '../../components/SelectSatuan.vue'
+import MyUploadImage from '../../components/UploadImage.vue'
 
 const data_default = {
 	uraian_barang: null,
 	jumlah_barang: null,
-	satuan_barang: null
+	satuan: {id: null},
+	kategori: {id: null},
+	image_list: []
 }
 
 export default {
 	name: 'FormItemBarang',
 	components: {
-		MyAlert
+		MyAlert,
+		MySelectKategoriBarang,
+		MySelectSatuan,
+		MyUploadImage
 	},
 	props: {
 		show:{
@@ -96,7 +116,8 @@ export default {
 	},
 	data() {
 		return {
-			data: { ...data_default }
+			data: JSON.parse(JSON.stringify(data_default)),
+			render_image: false
 		}
 	},
 	methods: {
@@ -107,9 +128,23 @@ export default {
 					.then(
 						(response) => {
 							this.data = response.data.data
+
+							if (this.data.kategori == null) {
+								this.data.kategori = {id: null}
+							}
+
+							this.$nextTick(function () {
+								this.$refs.select_satuan.getData(this.data.satuan.id)
+								this.$refs.select_kategori.value = this.data.kategori.id
+								this.render_image = true
+							})
 						}
 					)
 					.catch((error) => {console.error(error)})
+			} else {
+				this.$nextTick(function () {
+					this.render_image = true
+				})
 			}
 		},
 		saveData() {
@@ -138,7 +173,7 @@ export default {
 		},
 		cancel() {
 			this.$emit('update:show', false)
-			this.data = { ...data_default }
+			this.data = JSON.parse(JSON.stringify(data_default))
 		},
 		validatorRequired(val) { return validators.required(val) },
 		validatorNumber(val) { return validators.number(val) },

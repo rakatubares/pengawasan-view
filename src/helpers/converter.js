@@ -79,6 +79,31 @@ converters.array_text = (txt, max_length) => {
 	return result
 }
 
+converters.numTerbilang = (val) => {
+	let abil = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"]
+	if (val < 12) {
+		return abil[val]
+	} else if (val < 20) {
+		return converters.numTerbilang(val - 10) + ' belas'
+	} else if (val < 100) {
+		return converters.numTerbilang(Math.floor(parseInt(val)/10)) + ' puluh ' + converters.numTerbilang(parseInt(val)%10)
+	} else if (val < 200) {
+		return 'seratus ' + converters.numTerbilang(parseInt(val)-100);
+	} else if (val < 1000){
+		return converters.numTerbilang(Math.floor(parseInt(val)/100)) + " ratus " + converters.numTerbilang(parseInt(val)%100);
+	} else if (val < 2000){
+		return "seribu " + converters.numTerbilang(parseInt(val)-1000);
+	} else if (val < 1000000){
+		return converters.numTerbilang(Math.floor(parseInt(val)/1000))+" ribu "+converters.numTerbilang(parseInt(val)%1000);
+	} else if (val < 1000000000){
+		return converters.numTerbilang(Math.floor(parseInt(val)/1000000))+" juta "+converters.numTerbilang(parseInt(val)%1000000);
+	} else if (val < 1000000000000){
+		return converters.numTerbilang(Math.floor(parseInt(val)/1000000000))+" milyar "+converters.numTerbilang(parseInt(val)%1000000000);
+	} else if (val < 1000000000000000){
+		return converters.numTerbilang(Math.floor(parseInt(val)/1000000000000))+" trilyun "+converters.numTerbilang(parseInt(val)%1000000000000);
+	}
+}
+
 // PDF display
 converters.sarkut = (data) => {
 	let parsedData = {
@@ -136,7 +161,7 @@ converters.barang = (data) => {
 
 	if (data != null) {
 		let jumlah_kemasan = converters.string_format(converters.string(data.jumlah_kemasan), '{} ')
-		let satuan_kemasan = converters.string(data.satuan_kemasan)
+		let satuan_kemasan = converters.string(data.kemasan.kode_kemasan)
 		let kemasan = jumlah_kemasan + satuan_kemasan
 
 		if (data.dokumen != null) {
@@ -234,7 +259,7 @@ converters.item_barang = (data) => {
 		let entry = {
 			no: (index+1).toString(),
 			uraian: data[index]['uraian_barang'],
-			jumlah: data[index]['jumlah_barang'] + ' ' + data[index]['satuan_barang']
+			jumlah: data[index]['jumlah_barang'] + ' ' + data[index]['satuan']['kode_satuan']
 		}
 
 		preparedData.push(entry)

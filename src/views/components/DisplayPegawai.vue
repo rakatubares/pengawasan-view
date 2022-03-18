@@ -10,7 +10,7 @@
 				<b>Nama</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.name }}
+				{{ data_pegawai.name }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -18,7 +18,7 @@
 				<b>NIP</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.nip }}
+				{{ data_pegawai.nip }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -26,7 +26,7 @@
 				<b>Pangkat</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.pangkat }}
+				{{ data_pegawai.pangkat }}
 			</CCol>
 		</CRow>
 	</div>
@@ -46,11 +46,20 @@ export default {
 			type: String,
 			default: 'Pegawai'
 		},
-		data: {
-			type: Object,
-			default() {return JSON.parse(JSON.stringify(data_default))}
+		data: Object
+	},
+	watch: {
+		data(val) { 
+			if (val != null) {
+				this.data_pegawai = JSON.parse(JSON.stringify(val))
+			}
+		 }
+	},
+	data() {
+		return {
+			data_pegawai: JSON.parse(JSON.stringify(data_default))
 		}
-	}
+	},
 }
 </script>
 
