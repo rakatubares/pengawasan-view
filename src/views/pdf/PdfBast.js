@@ -79,7 +79,7 @@ class PdfSegel extends Pdf {
 		// BARANG
 		let kemasan = this.data.objek != null
 			? this.data.objek.type == 'barang' 
-				? this.data.objek.data.jumlah_kemasan + ' ' + this.data.objek.data.satuan_kemasan
+				? this.data.objek.data.jumlah_kemasan + ' ' + this.data.objek.data['kemasan']['kode_kemasan']
 				: ''
 			: ''
 
@@ -106,7 +106,7 @@ class PdfSegel extends Pdf {
 		if (create_barang == true) {
 			this.data.objek.data.item.forEach(element => {
 				let txt_barang = element.jumlah_barang
-					+ ' ' + element.satuan_barang
+					+ ' ' + element.satuan.kode_satuan
 					+ ' ' + element.uraian_barang
 				let arr_barang = converters.array_text(txt_barang, 70)
 				
