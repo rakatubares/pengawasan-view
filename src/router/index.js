@@ -9,7 +9,8 @@ const TheContainer = () => import('@/containers/TheContainer')
 // Views
 const Homepage = () => import('@/views/Homepage')
 
-// Views - Penindakan
+// Views - Intelijen
+const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
 
 Vue.use(Router)
 
@@ -32,6 +33,11 @@ function configRoutes () {
 					path: 'homepage',
 					name: 'Homepage',
 					component: Homepage
+				},
+				{
+					path: 'lppi',
+					name: 'LPPI',
+					component: PageLppi
 				},
 			]
 		},

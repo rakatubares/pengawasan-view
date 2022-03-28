@@ -8,6 +8,23 @@ export default [
 				to: '/dashboard',
 				icon: 'chart'
 			},
+			{
+				_name: 'CSidebarNavTitle',
+				_children: ['Form']
+			},
+			{
+				_name: 'CSidebarNavDropdown',
+				name: 'INTELIJEN',
+				icon: 'cil-clone',
+				_children: [
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LPPI',
+						to: '/lppi',
+						icon: 'cil-file'
+					},
+				]
+			}
 		]
 	}
 ]
