@@ -14,7 +14,19 @@ export default [
 			},
 			{
 				_name: 'CSidebarNavDropdown',
-				name: 'PENINDAKAN',
+				name: 'INTELIJEN',
+				icon: 'cil-clone',
+				_children: [
+					{
+						name: 'LPPI',
+						to: '/lppi',
+						icon: 'cil-file'
+					},
+				]
+			},
+			{
+				_name: 'CSidebarNavDropdown',
+				name: 'INTELIJEN',
 				icon: 'cil-clone',
 				_children: [
 					{

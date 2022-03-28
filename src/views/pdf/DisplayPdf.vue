@@ -56,6 +56,7 @@ import PdfLi from './PdfLi.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLpN from './PdfLpN.js'
+import PdfLppi from './PdfLppi.js'
 import PdfLptp from './PdfLptp.js'
 import PdfPengaman from './PdfPengaman.js'
 import PdfReekspor from './PdfReekspor.js'
@@ -167,6 +168,11 @@ export default {
 						{start: 63, end: 147}
 					)
 					this.src_pdf = pdfLphpn.generatePdf()
+					break;
+
+				case 'lppi':
+					let pdfLppi = new PdfLppi(this.data)
+					this.src_pdf = pdfLppi.generatePdf()
 					break;
 
 				case 'lptp':

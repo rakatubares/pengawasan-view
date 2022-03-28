@@ -9,6 +9,9 @@ const TheContainer = () => import('@/containers/TheContainer')
 // Views
 const Homepage = () => import('@/views/Homepage')
 
+// Views - Intelijen
+const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
+
 // Views - Penindakan
 const PageBast = () => import('@/views/penindakan/bast/PageBast')
 const PageBhp = () => import('@/views/monitoring/penarikan_bhp/PageBhp')
@@ -107,6 +110,11 @@ function configRoutes () {
 					path: 'lpn',
 					name: 'LP-N',
 					component: PageLpN
+				},
+				{
+					path: 'lppi',
+					name: 'LPPI',
+					component: PageLppi
 				},
 				{
 					path: 'riksa',
