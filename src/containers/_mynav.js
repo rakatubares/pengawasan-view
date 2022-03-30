@@ -15,7 +15,7 @@ export default [
 			{
 				_name: 'CSidebarNavDropdown',
 				name: 'INTELIJEN',
-				icon: 'cil-clone',
+				icon: 'cil-zoom',
 				_children: [
 					{
 						_name: 'CSidebarNavItem',
