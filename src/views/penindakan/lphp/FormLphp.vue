@@ -190,8 +190,8 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					let response = await api.storeDoc(this.doc_type, this.data)
-					this.$emit('update:doc_id', response.id)
+					this.data = await api.storeDoc(this.doc_type, this.data)
+					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data LPHP berhasil disimpan')
 				} catch (error) {
