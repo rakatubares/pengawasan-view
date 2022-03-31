@@ -66,7 +66,7 @@ export default {
 	},
 	computed: {
 		disp_kemasan() {
-			let txt = (this.data.jumlah_kemasan || '-') + ' ' + (this.data.satuan_kemasan || '')
+			let txt = (this.data.jumlah_kemasan || '-') + ' ' + (this.data.kemasan.kode_kemasan || '')
 			return txt
 		},
 		disp_dokumen() {
