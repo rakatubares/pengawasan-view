@@ -5,8 +5,11 @@
 			:doc_type="doc_type"
 			:table_title="table_title"
 			:table_fields="table_fields"
+			:custom_fields="custom_fields"
+			:compute_list="computeList"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
+			:status_filter_options="status_filter_options"
 		>
 			<template #modal-data>
 				<MyModalSbp 
@@ -40,7 +43,10 @@ export default {
 		tipe_surat: {
 			type: String,
 			default: 'SBP'
-		}
+		},
+		custom_filters: [
+			{'status-filter': '<input type="date">'}
+		]
 	},
 	data() {
 		return {
@@ -49,18 +55,31 @@ export default {
 				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
 				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
 				{ key: 'nama_saksi', label: 'Saksi/Pemilik' },
-				{ key: 'petugas1', label: 'Petugas' },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
+				{ key: 'petugas', label: 'Petugas' },
 			],
+			custom_fields: ['petugas'],
 			modal_data_props: {
 				show: false,
 				state: null,
 				doc_id: null
 			},
+			status_filter_options: [
+				{ value: 'draft lphp', label: 'Draft LPHP' }, 
+				{ value: 'lphp', label: 'LPHP' }, 
+				{ value: 'draft lp', label: 'Draft LP' }, 
+				{ value: 'lp', label: 'LP' }, 
+			]
 		}
 	},
 	methods: {
+		computeList(list) {
+			return list.map(item => {
+				return {
+					...item,
+					petugas: item.petugas1 + '</br>' + item.petugas2,
+				}
+			})
+		},
 		closeModal() {
 			this.$refs.page_doc.getDataTable()
 			this.modal_data_props.state = null

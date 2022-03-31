@@ -40,8 +40,6 @@ export default {
 				{ key: 'tanggal_dokumen', label: `Tgl LP-N` },
 				{ key: 'no_sbp', label: `No SBP-N` },
 				{ key: 'tanggal_sbp', label: `Tgl SBP-N` },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
 			],
 			modal_data_props: {
 				show: false,

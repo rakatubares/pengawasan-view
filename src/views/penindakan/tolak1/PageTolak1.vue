@@ -42,8 +42,6 @@ export default {
 				{ key: 'sbp', label: 'SBP' },
 				{ key: 'nama_saksi', label: 'Saksi/Pemilik' },
 				{ key: 'petugas', label: 'Petugas' },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
 			],
 			custom_fields: ['sbp', 'petugas'],
 			modal_data_props: {
