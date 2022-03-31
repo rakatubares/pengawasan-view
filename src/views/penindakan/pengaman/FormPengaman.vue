@@ -192,6 +192,11 @@ export default {
 			if (this.state == 'insert') {
 				try {
 					this.data = await api.storeDoc('pengaman', this.data)
+
+					if (this.data.penindakan.petugas2 == null) {
+						this.data.penindakan.petugas2 = {user_id: null}
+					}
+					
 					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BA Pelekatan Tanda Pengaman berhasil disimpan')
