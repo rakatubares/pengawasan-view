@@ -55,8 +55,6 @@ export default {
 				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
 				{ key: 'no_sbp', label: `No SBP` },
 				{ key: 'tanggal_sbp', label: `Tgl SBP` },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
 			],
 			modal_data_props: {
 				show: false,
