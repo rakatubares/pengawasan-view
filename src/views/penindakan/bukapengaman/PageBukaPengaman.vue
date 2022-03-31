@@ -41,8 +41,6 @@ export default {
 				{ key: 'ba_pengaman', label: 'BA Tanda Pengaman' },
 				{ key: 'nama_saksi', label: 'Pemilik/Saksi' },
 				{ key: 'petugas', label: 'Petugas' },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
 			],
 			custom_fields: ['ba_pengaman', 'petugas'],
 			modal_data_props: {

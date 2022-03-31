@@ -9,6 +9,7 @@
 			:compute_list="computeList"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
+			:status_filter_options="status_filter_options"
 		>
 			<template #modal-data>
 				<MyModalPengaman
@@ -40,8 +41,6 @@ export default {
 				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
 				{ key: 'nama_saksi', label: 'Pemilik/Saksi' },
 				{ key: 'petugas', label: 'Petugas' },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
 			],
 			custom_fields: ['petugas'],
 			modal_data_props: {
@@ -49,6 +48,10 @@ export default {
 				state: null,
 				doc_id: null
 			},
+			status_filter_options: [
+				{ value: 'draft buka pengaman', label: 'Draft Buka Pengaman' }, 
+				{ value: 'buka pengaman', label: 'Buka Pengaman' }, 
+			]
 		}
 	},
 	methods: {
