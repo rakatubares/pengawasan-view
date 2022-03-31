@@ -117,22 +117,6 @@ class API {
 		return await this.delApi(`/${doc_type}/${doc_id}`)
 	}
 
-	async storeLphp(sbp_id, data) {
-		return await this.postApi(`/sbp/${sbp_id}/lphp`, data)
-	}
-
-	async publishLphp(sbp_id) {
-		return await this.putApi(`/sbp/${sbp_id}/lphp/publish`)
-	}
-
-	async storeLp(sbp_id, data) {
-		return await this.postApi(`/sbp/${sbp_id}/lp`, data)
-	}
-
-	async publishLp(sbp_id) {
-		return await this.putApi(`/sbp/${sbp_id}/lp/publish`)
-	}
-
 	/*
 	|--------------------------------------------------------------------------
 	| API for details
@@ -147,6 +131,10 @@ class API {
 
 	async getItemBarangByDocId(doc_type, doc_id) {
 		return await this.getApi(`/${doc_type}/${doc_id}/barang/item`)
+	}
+
+	async getItemBarang(doc_type, doc_id, item_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/barang/item/${item_id}`)
 	}
 
 	async delItemBarang(doc_type, doc_id, item_id) {
@@ -179,6 +167,44 @@ class API {
 
 	async searchEntitas(data) {
 		return await this.postApi('/entitas/search', data)
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| API for references
+	|--------------------------------------------------------------------------
+	*/
+
+	async getGrupLokasi() {
+		return await this.getApi('/lokasi')
+	}
+
+	async searchSatuan(data) {
+		return await this.postApi('/satuan/search', data)
+	}
+
+	async getSatuanById(id) {
+		return await this.getApi(`/satuan/${id}`)
+	}
+
+	async searchKemasan(data) {
+		return await this.postApi('/kemasan/search', data)
+	}
+
+	async getKemasanById(id) {
+		return await this.getApi(`/kemasan/${id}`)
+	}
+
+	async searchKategori(data) {
+		return await this.postApi('/kategori/search', data)
+	}
+
+	async getKategori() {
+		return await this.getApi(`/kategori`)
+	}
+
+	async getKategoriById(id) {
+		return await this.getApi(`/kategori/${id}`)
 	}
 }
 

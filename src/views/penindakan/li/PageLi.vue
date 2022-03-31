@@ -35,11 +35,9 @@ export default {
 		return {
 			doc_type: 'li',
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: 'No BA Penolakan SBP' },
+				{ key: 'no_dok_lengkap', label: 'No Lembar Informasi' },
 				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
 				{ key: 'sumber', label: 'Sumber Informasi' },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
 			],
 			modal_data_props: {
 				show: false,

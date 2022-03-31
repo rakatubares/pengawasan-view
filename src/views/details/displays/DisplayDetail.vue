@@ -8,7 +8,7 @@
 		<MyDisplayBarang 
 			v-if="active_detail == 'barang'"
 			:doc_type="doc_type"
-			:dco_id="doc_id"
+			:doc_id="doc_id"
 			:data_objek="data_objek.data"
 		/>
 		<MyDisplayBangunan

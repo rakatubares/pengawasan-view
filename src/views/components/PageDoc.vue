@@ -7,6 +7,7 @@
 					state="list"
 					:fields="table_fields"
 					:custom_fields="custom_fields"
+					:status_filter_options="status_filter_options"
 					:items="list_table"
 					:editData="editDoc"
 					:deleteData="deleteDoc"
@@ -82,17 +83,13 @@ export default {
 		table_fields: Array,
 		custom_fields: Array,
 		compute_list: Function,
+		status_filter_options: Array,
 		modal_data_props: Object,
 		construct_delete_text: Function,
 	},
 	data() {
 		return {
 			list_table: [],
-			// modal_props: {
-			// 	show: false,
-			// 	state: null,
-			// 	doc_id: null
-			// },
 			modal_delete_props: {
 				show: false,
 				doc_type: null,
