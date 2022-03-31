@@ -7,6 +7,7 @@
 			:table_fields="table_fields"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
+			:status_filter_options="status_filter_options"
 		>
 			<template #modal-data>
 				<MyModalLi 
@@ -35,17 +36,19 @@ export default {
 		return {
 			doc_type: 'li',
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: 'No BA Penolakan SBP' },
+				{ key: 'no_dok_lengkap', label: 'No Lembar Informasi' },
 				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
 				{ key: 'sumber', label: 'Sumber Informasi' },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
 			],
 			modal_data_props: {
 				show: false,
 				state: null,
 				doc_id: null
 			},
+			status_filter_options: [
+				{ value: 'draft lap', label: 'Draft LAP' }, 
+				{ value: 'lap', label: 'LAP' }, 
+			]
 		}
 	},
 	methods: {

@@ -40,8 +40,6 @@ export default {
 				{ key: 'no_dok_lengkap', label: 'No LAP' },
 				{ key: 'tanggal_dokumen', label: 'Tgl LAP' },
 				{ key: 'dokumen_sumber', label: 'Sumber Informasi' },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
 			],
 			custom_fields: ['dokumen_sumber'],
 			modal_data_props: {
