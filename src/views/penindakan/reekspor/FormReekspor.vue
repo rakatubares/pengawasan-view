@@ -315,8 +315,13 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					let response = await api.storeDoc('reekspor', this.data)
-					this.$emit('update:doc_id', response.id)
+					this.data = await api.storeDoc('reekspor', this.data)
+
+					if (this.data.petugas2 == null) {
+						this.data.petugas2 = {user_id: null}
+					}
+
+					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BA Reekspor berhasil disimpan')
 				} catch (error) {
