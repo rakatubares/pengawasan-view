@@ -1,158 +1,79 @@
 <template>
 	<div class="wrapper" data-app>
-		<!-- Display table data for BA Penitipan -->
-		<CRow>
-			<CCol>
-				<MyTableData
-					state="list"
-					:fields="fields"
-					:items="list_table"
-					:showData="showDoc"
-					:editData="editDoc"
-					:deleteData="deleteDoc"
-				>
-					<template #header>
-						<CIcon name="cil-grid"/>Daftar BA Penitipan
-						<div class="card-header-actions">
-							<CButton 
-								color="primary" 
-								@click="createDoc"
-								class="mr-1"
-							>
-								+ Buat Baru
-							</CButton>
-						</div>
-					</template>
-				</MyTableData>
-			</CCol>
-		</CRow>
-
-		<!-- Modal input BA Penitipan -->
-		<MyModalTitip
-			v-if="modal_props.show"
-			:state="modal_props.state"
-			:id.sync="modal_props.doc_id"
-			@close-modal="closeModal"
-		/>
-
-		<!-- Modal konfirmasi delete BA Penitipan -->
-		<MyModalDelete
-			v-if="modal_delete_props.show"
-			:doc_type.sync="modal_delete_props.doc_type"
-			:doc_id.sync="modal_delete_props.doc_id"
-			@close-modal="closeModalDelete"
-			@delete-data="closeModalDelete"
+		<MyPageDoc 
+			ref="page_doc"
+			:doc_type="doc_type"
+			table_title="Daftar BA Penitipan"
+			:table_fields="table_fields"
+			:custom_fields="custom_fields"
+			:compute_list="computeList"
+			:modal_data_props.sync="modal_data_props"
+			:construct_delete_text="constructDeleteText"
 		>
-			<template #text>
-				<span v-html="modal_delete_props.text"></span>
+			<template #modal-data>
+				<MyModalTitip 
+					v-if="modal_data_props.show"
+					:state.sync="modal_data_props.state"
+					:id.sync="modal_data_props.doc_id"
+					@close-modal="closeModal"
+				/>
 			</template>
-		</MyModalDelete>
+		</MyPageDoc>
 	</div>
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import MyModalDelete from '../../components/ModalDelete.vue'
 import MyModalTitip from './ModalTitip.vue'
-import MyTableData from '../../components/TableData.vue'
-
-const tabs_default = {
-	current: 0,
-	list: [
-		{
-			title: 'Uraian',
-			visibility: true
-		}, 
-		{
-			title: 'Objek',
-			visibility: false
-		}, 
-		{
-			title: 'Print',
-			visibility: false
-		}
-	]
-}
+import MyPageDoc from '../../components/PageDoc.vue'
 
 export default {
 	name: 'PageTitip',
 	components: {
-		MyModalDelete,
 		MyModalTitip,
-		MyTableData
+		MyPageDoc
 	},
 	data() {
 		return {
-			fields: [
+			doc_type: 'titip',
+			table_fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Penitipan' },
 				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
 				{ key: 'nama_penerima', label: 'Pemilik/Penerima' },
-				{ key: 'petugas1', label: 'Petugas' },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
+				{ key: 'petugas', label: 'Petugas' },
 			],
-			list_table: [],
-			doc_type: 'titip',
-			modal_props: {
+			custom_fields: ['petugas'],
+			modal_data_props: {
 				show: false,
 				state: null,
 				doc_id: null
 			},
-			modal_delete_props: {
-				show: false,
-				url: null,
-				text: null
-			}
 		}
 	},
 	methods: {
-		async getDataTable() {
-			this.list_table = await api.getListDocuments('titip')
-		},
-		createDoc() {
-			this.modal_props.state = 'insert'
-			this.modal_props.doc_id = null
-			this.modal_props.show = true
-		},
-		editDoc(id) {
-			this.modal_props.state = 'edit'
-			this.modal_props.doc_id = id
-			this.modal_props.show = true
-		},
-		showDoc(id) {
-			this.modal_props.state = 'show'
-			this.modal_props.doc_id = id
-			this.modal_props.show = true
+		computeList(list) {
+			return list.map(item => {
+				return {
+					...item,
+					petugas: item.petugas1 + '</br>' + item.petugas2,
+				}
+			})
 		},
 		closeModal() {
-			this.getDataTable()
-			this.modal_props.state = null
-			this.modal_props.doc_id = null
-			this.modal_props.show = false
+			this.$refs.page_doc.getDataTable()
+			this.modal_data_props.state = null
+			this.modal_data_props.doc_id = null
+			this.modal_data_props.show = false
 		},
-		deleteDoc(item) {
+		constructDeleteText(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
 				+ " a.n. " 
 				+ item.nama_penerima.bold() 
 				+ "?"
 			
-			this.modal_delete_props.doc_type = this.doc_type
-			this.modal_delete_props.doc_id = item.id
-			this.modal_delete_props.text = text
-			this.modal_delete_props.show = true
-		},
-		closeModalDelete() {
-			this.getDataTable()
-			this.modal_delete_props.doc_type = null
-			this.modal_delete_props.doc_id = null
-			this.modal_delete_props.text = null
-			this.modal_delete_props.show = false
+			return text
 		},
 	},
-	created() {
-		this.getDataTable()
-	}
 }
 </script>
 
