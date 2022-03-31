@@ -27,11 +27,17 @@
 						/>
 					</CCol>
 					<CCol md="4">
-						<CInput
-							label="Satuan"
-							:value.sync="data.satuan_barang"
-							:is-valid="validatorRequired"
-							invalid-feedback="Satuan barang wajib diisi"
+						<MySelectSatuan
+							ref="select_satuan"
+							:id.sync="data.satuan.id"
+						/>
+					</CCol>
+				</CRow>
+				<CRow>
+					<CCol>
+						<MySelectKategoriBarang
+							ref="select_kategori"
+							:id.sync="data.kategori.id"
 						/>
 					</CCol>
 				</CRow>
@@ -71,12 +77,15 @@ import axios from "axios"
 
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
+import MySelectKategoriBarang from '../../components/SelectKategoriBarang.vue'
+import MySelectSatuan from '../../components/SelectSatuan.vue'
 import MyUploadImage from '../../components/UploadImage.vue'
 
 const data_default = {
 	uraian_barang: null,
 	jumlah_barang: null,
-	satuan_barang: null,
+	satuan: {id: null},
+	kategori: {id: null},
 	image_list: []
 }
 
@@ -84,6 +93,8 @@ export default {
 	name: 'FormItemBarang',
 	components: {
 		MyAlert,
+		MySelectKategoriBarang,
+		MySelectSatuan,
 		MyUploadImage
 	},
 	props: {
@@ -117,7 +128,14 @@ export default {
 					.then(
 						(response) => {
 							this.data = response.data.data
+
+							if (this.data.kategori == null) {
+								this.data.kategori = {id: null}
+							}
+
 							this.$nextTick(function () {
+								this.$refs.select_satuan.getData(this.data.satuan.id)
+								this.$refs.select_kategori.value = this.data.kategori.id
 								this.render_image = true
 							})
 						}
