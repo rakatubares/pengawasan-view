@@ -127,7 +127,8 @@ export default {
 				let temp_barang = {
 					id: arr[idx]['id'],
 					uraian_barang: arr[idx]['uraian_barang'],
-					jumlah: (arr[idx]['jumlah_barang'] || '-') + ' ' + (arr[idx]['satuan_barang'] || '')
+					jumlah: (arr[idx]['jumlah_barang'] || '-') + ' ' + (arr[idx]['satuan']['kode_satuan'] || ''),
+					kategori: arr[idx]['kategori'] ? arr[idx]['kategori']['kategori'] : '-'
 				}
 				data_barang.push(temp_barang)
 			}
@@ -139,6 +140,7 @@ export default {
 			fields: [
 				{ key: 'uraian_barang', label: 'Uraian Barang' },
 				{ key: 'jumlah', label: 'Jumlah' },
+				{ key: 'kategori', label: 'Kategori' },
 				{ key: 'actions', label: '' }
 			],
 			modal_delete_props: {

@@ -12,12 +12,20 @@
 				:border="border"
 				:small="small"
 				:fixed="fixed"
-				:items="items"
-				:fields="fields"
+				:items="filteredItems"
+				:fields.sync="fields"
 				:items-per-page="small ? 10 : 5"
 				:dark="dark"
+				columnFilter
 				pagination
 			>
+				<template v-for="field in custom_fields" v-slot:[field]="slotProps">
+					<slot :name="field">
+						<td :key="`${field} ${slotProps.item.id}`" v-html="slotProps.item[field]">
+						</td>
+					</slot>
+				</template>
+
 				<template #status="{item}">
 					<td>
 						<CBadge :color="item.status.color">{{item.status.short_status}}</CBadge>
@@ -58,6 +66,14 @@
 						</td>
 					</slot>
 				</template>
+
+				<template #status-filter>
+					<CSelect
+						class="mb-0"
+						:options="mutable_status_options"
+						:value.sync="filtered_status"
+					/>
+				</template>
 				
 			</CDataTable>
 		</CCardBody>
@@ -73,16 +89,13 @@ export default {
 			default: 'edit'
 		},
 		items: Array,
-		fields: {
-			type: Array,
-			default () {
-				return ['username', 'registered', 'role', 'status', 'actions']
-			}
-		},
+		fields: Array,
+		custom_fields: Array,
 		caption: {
 			type: String,
 			default: 'Table'
 		},
+		status_filter_options: Array,
 		hover: Boolean,
 		striped: Boolean,
 		border: Boolean,
@@ -91,17 +104,58 @@ export default {
 		dark: Boolean,
 		editData: Function,
 		deleteData: Function,
-		showData: Function
+		showData: Function,
+	},
+	computed: {
+		filteredItems() {
+			return this.items.filter(item => {
+				if (this.filtered_status != null) {
+					const status = item.status.short_status
+					return status == this.filtered_status
+				} else {
+					return true
+				}
+			})
+		}
+	},
+	data() {
+		return {
+			filtered_status: null,
+			mutable_status_options: []
+		}
 	},
 	methods: {
-		getBadge(status) {
-			return status === 100 ? 'warning'
-				: status === 101 ? 'warning'
-				: status === 200 ? 'success'
-				: status === 210 ? 'warning'
-				: status === 211 ? 'success'
-				: status === 300 ? 'danger' 
-				: 'primary'
+		constructFields() {
+			let field_keys = this.fields.map(function(field) {return field.key})
+			
+			if (!field_keys.includes('status')) {
+				this.fields.push({ key: 'status', label: 'Status' })
+			}
+			if (!field_keys.includes('actions')) {
+				this.fields.push({ key: 'actions', label: '' , filter: false})
+			}
+		},
+		constructStatusFilter() {
+			if (this.status_filter_options != undefined) {
+				this.mutable_status_options = this.status_filter_options
+				let filter_values = this.mutable_status_options.map(function(filter) {return filter.value})
+
+				if (!filter_values.includes('terbit')) {
+					this.mutable_status_options.unshift({ value: 'terbit', label: 'Terbit' })
+				}
+				if (!filter_values.includes('draft')) {
+					this.mutable_status_options.unshift({ value: 'draft', label: 'Draft' })
+				}
+				if (!filter_values.includes(null)) {
+					this.mutable_status_options.unshift({ value: null, label: 'Semua' })
+				}	
+			} else {
+				this.mutable_status_options = [
+					{ value: null, label: 'Semua' },
+					{ value: 'draft', label: 'Draft' },
+					{ value: 'terbit', label: 'Terbit' }
+				]
+			}
 		},
 		getButton(type, item) {
 			let btn = false
@@ -128,7 +182,14 @@ export default {
 		}
 	},
 	mounted() {
-		console.log('table data - state', this.state)
+		this.constructFields()
+		this.constructStatusFilter()
 	}
 }
 </script>
+
+<style>
+.table-sm select {
+	height: calc(1.5em + 0.5rem)
+}
+</style>
