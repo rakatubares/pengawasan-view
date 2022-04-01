@@ -114,7 +114,12 @@ export default {
 			} else {
 				this.list_ikhtisar[val.index] = val.value
 			}
+
+			// refresh table
 			this.prepareTableData()
+
+			// emit to parent component
+			this.$emit('update-data', this.list_ikhtisar)
 		},
 		prepareTableData() {
 			if (this.list_ikhtisar != undefined) {
@@ -137,7 +142,12 @@ export default {
 		},
 		deleteData(idx) {
 			this.list_ikhtisar.splice(idx, 1)
+			
+			// refresh table
 			this.prepareTableData()
+
+			// emit to parent component
+			this.$emit('update-data', this.list_ikhtisar)
 		},
 	}
 }

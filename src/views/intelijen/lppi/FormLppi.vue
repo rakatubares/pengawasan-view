@@ -167,6 +167,7 @@
 				<CCol sm="12">
 					<MyTableIkhtisar
 						state="insert"
+						@update-data="updateIkhtisar"
 					/>
 				</CCol>
 			</CRow>
@@ -186,7 +187,7 @@
 					/>
 				</CCol>
 			</CRow>
-			<CRow>
+			<CRow class="mb-2">
 				<CCol sm="12" class="pb-0">
 					<label class="w-100">Tindak Lanjut</label>
 				</CCol>
@@ -271,7 +272,22 @@
 					/>
 				</CCol>
 			</CRow>
+
+			<!-- Button simpan -->
+			<CRow>
+				<CCol sm="12">
+					<CButton
+						color="success"
+						@click="saveData()"
+					>
+						Simpan
+					</CButton>
+				</CCol>
+			</CRow>
 		</CForm>
+
+		<!-- Alert -->
+		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
@@ -279,6 +295,8 @@
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
+import api from '../../../router/api2.js'
+import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MyTableIkhtisar from './TableIkhtisar.vue'
@@ -306,16 +324,22 @@ const default_data = {
 		jabatan: {kode: null},
 		plh: false,
 		user: {user_id: null},
-	}
+	},
+	ikhtisar: []
 }
 
 export default {
 	name: 'FormLppi',
 	components: {
 		DatePicker,
+		MyAlert,
 		MySelectPejabat,
 		MySelectPetugas,
 		MyTableIkhtisar,
+	},
+	props: {
+		state: String,
+		doc_id: Number,
 	},
 	watch: {
 		flag_info_internal(val) {
@@ -340,6 +364,35 @@ export default {
 			flag_info_internal: false,
 			flag_info_eksternal: false,
 		}
+	},
+	methods: {
+		updateIkhtisar(val) {
+			this.data.ikhtisar = val
+		},
+		async saveData() {
+			console.log('form lppi - save data', JSON.parse(JSON.stringify(this.data)))
+
+			if (this.state == 'insert') {
+				try {
+					this.data = await api.storeDoc('lppi', this.data)
+					this.$emit('update:doc_id', this.data.id)
+					this.$emit('update:state', 'edit')
+					this.alert(`Data LPPI berhasil disimpan`)
+				} catch (error) {
+					console.log(`form lppi - save data - error`, error)
+				}
+			} else if (this.state == 'edit') {
+				try {
+					await api.updateDoc('lppi', this.data.id, this.data)
+					this.alert(`Data LPPI berhasil diubah`)
+				} catch (error) {
+					console.log(`form lppi - update data - error`, error)
+				}
+			}
+		},
+		alert(text, color, time) {
+			this.$refs.alert.show_alert(text, color, time)
+		},
 	}
 }
 </script>
