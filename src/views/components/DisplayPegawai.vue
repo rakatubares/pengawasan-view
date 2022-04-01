@@ -50,6 +50,7 @@ export default {
 	},
 	watch: {
 		data(val) { 
+			// console.log('display -pegawai - watch data', JSON.parse(JSON.stringify))
 			if (val != null) {
 				this.data_pegawai = JSON.parse(JSON.stringify(val))
 			}
@@ -60,6 +61,11 @@ export default {
 			data_pegawai: JSON.parse(JSON.stringify(data_default))
 		}
 	},
+	mounted() {
+		if (this.data != null) {
+			this.data_pegawai = JSON.parse(JSON.stringify(this.data))
+		}
+	}
 }
 </script>
 
