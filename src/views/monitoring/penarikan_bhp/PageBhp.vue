@@ -10,9 +10,10 @@
 					</CCardHeader>
 					<CCardBody>
 						<CDataTable
-							:items="table_data"
+							:items="filteredItems"
 							:fields="table_fields"
 							:items-per-page="5"
+							columnFilter
 							pagination
 						>
 							<template #status_penarikan="{item}">
@@ -36,6 +37,18 @@
 										</CButton>
 									</td>
 								</slot>
+							</template>
+
+							<template #status_penarikan-filter>
+								<CSelect
+									class="mb-0"
+									:options="[
+										{ value: null, label: 'Semua' },
+										{ value: true, label: 'Sudah' },
+										{ value: false, label: 'Belum' }
+									]"
+									:value.sync="filtered_status"
+								/>
 							</template>
 						</CDataTable>
 					</CCardBody>
@@ -70,6 +83,22 @@ export default {
 			default: 'sbp/tarik'
 		},
 	},
+	computed: {
+		filteredItems() {
+			return this.table_data.filter(item => {
+				if (this.filtered_status != null) {
+					const status = item.status_penarikan
+					if (this.filtered_status == true) {
+						return status == 1	
+					} else {
+						return status == null
+					}
+				} else {
+					return true
+				}
+			})
+		}
+	},
 	data() {
 		return {
 			table_data: [],
@@ -81,8 +110,9 @@ export default {
 				{ key: 'status_penarikan', label: 'Status Penarikan' },
 				{ key: 'tanggal_penarikan', label: 'Tanggal Penarikan' },
 				{ key: 'petugas_penarikan', label: 'Petugas' },
-				{ key: 'actions', label: '' },
+				{ key: 'actions', label: '', filter: false },
 			],
+			filtered_status: null,
 			modal_data_props: {
 				show: false,
 				state: null,
