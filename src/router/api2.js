@@ -206,6 +206,14 @@ class API {
 	async getKategoriById(id) {
 		return await this.getApi(`/kategori/${id}`)
 	}
+
+	async getKlasifikasiKepercayaan() {
+		return await this.getApi(`/kepercayaan`)
+	}
+
+	async getKlasifikasiValiditas() {
+		return await this.getApi(`/validitas`)
+	}
 }
 
 export default new API
