@@ -49,8 +49,6 @@ export default {
 				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
 				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
 				{ key: 'disposisi', label: 'Disposisi' },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
 			],
 			modal_data_props: {
 				show: false,
