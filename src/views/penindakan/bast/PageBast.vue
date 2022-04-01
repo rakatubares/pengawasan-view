@@ -1,170 +1,68 @@
 <template>
 	<div class="wrapper" data-app>
-		<!-- Display table data for SBP list -->
-		<CRow>
-			<CCol>
-				<MyTableData
-					state="list"
-					:fields="fields"
-					:items="list_table"
-					:editData="editDoc"
-					:deleteData="deleteDoc"
-					:showData="showDoc"
-				>
-					<template #header>
-						<CIcon name="cil-grid"/>Daftar BAST
-						<div class="card-header-actions">
-							<CButton 
-								color="primary" 
-								class="mr-1"
-								@click="createDoc()"
-							>
-								+ Buat Baru
-							</CButton>
-						</div>
-					</template>
-				</MyTableData>
-			</CCol>
-		</CRow>
-
-		<!-- Modal data -->
-		<MyModalBast
-			v-if="modal_props.show"
-			:state="modal_props.state"
-			:id.sync="modal_props.doc_id"
-			@close-modal="closeModal"
+		<MyPageDoc 
+			ref="page_doc"
+			:doc_type="doc_type"
+			table_title="Daftar BAST"
+			:table_fields="table_fields"
+			:modal_data_props.sync="modal_data_props"
+			:construct_delete_text="constructDeleteText"
 		>
-		</MyModalBast>
-
-		<!-- Modal konfirmasi delete SBP -->
-		<MyModalDelete
-			v-if="modal_delete_props.show"
-			:doc_type="modal_delete_props.doc_type"
-			:doc_id="modal_delete_props.doc_id"
-			@close-modal="closeModalDelete"
-			@delete-data="closeModalDelete"
-		>
-			<template #text>
-				<span v-html="modal_delete_props.text"></span>
+			<template #modal-data>
+				<MyModalBast 
+					v-if="modal_data_props.show"
+					:state.sync="modal_data_props.state"
+					:id.sync="modal_data_props.doc_id"
+					@close-modal="closeModal"
+				/>
 			</template>
-		</MyModalDelete>
+		</MyPageDoc>
 	</div>
 </template>
 
 <script>
-import api from '../../../router/api2.js'
 import MyModalBast from './ModalBast.vue'
-import MyModalDelete from '../../components/ModalDelete.vue'
-import MyTableData from '../../components/TableData.vue'
-
-const API = process.env.VUE_APP_BASEAPI
-
-const tabs_default = {
-	current: 0,
-	list: [
-		{
-			title: 'Uraian',
-			visibility: true
-		}, 
-		{
-			title: 'Objek',
-			visibility: true
-		}, 
-		{
-			title: 'Print',
-			visibility: false
-		}
-	]
-}
+import MyPageDoc from '../../components/PageDoc.vue'
 
 export default {
 	name: 'PageBast',
 	components: {
 		MyModalBast,
-		MyModalDelete,
-		MyTableData,
+		MyPageDoc
 	},
 	data() {
 		return {
-			fields: [
+			doc_type: 'bast',
+			table_fields: [
 				{ key: 'no_dok_lengkap', label: 'No BAST' },
 				{ key: 'tanggal_dokumen', label: 'Tgl BAST' },
 				{ key: 'yang_menerima', label: 'Penerima' },
 				{ key: 'yang_menyerahkan', label: 'Yang Menyerahkan' },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
 			],
-			list_table: [],
-			doc_type: 'bast',
-			modal_props: {
+			modal_data_props: {
 				show: false,
 				state: null,
 				doc_id: null
 			},
-			modal_delete_props: {
-				show: false,
-				url: null,
-				text: null
-			}
 		}
 	},
 	methods: {
-		async getDataTable() {
-			this.list_table = await api.getListDocuments('bast')
-		},
-		createDoc() {
-			this.modal_props.state = 'insert'
-			this.modal_props.doc_id = null
-			this.modal_props.show = true
-		},
-		editDoc(id) {
-			this.modal_props.state = 'edit'
-			this.modal_props.doc_id = id
-			this.modal_props.show = true
-		},
-		showDoc(id) {
-			this.modal_props.state = 'show'
-			this.modal_props.doc_id = id
-			this.modal_props.show = true
-		},
 		closeModal() {
-			this.getDataTable()
-			this.modal_props.state = null
-			this.modal_props.doc_id = null
-			this.modal_props.show = false
+			this.$refs.page_doc.getDataTable()
+			this.modal_data_props.state = null
+			this.modal_data_props.doc_id = null
+			this.modal_data_props.show = false
 		},
-		deleteDoc(item) {
+		constructDeleteText(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
 				+ " dalam rangka " 
 				+ item.dalam_rangka.bold() 
 				+ "?"
 			
-			this.modal_delete_props.doc_type = this.doc_type
-			this.modal_delete_props.doc_id = item.id
-			this.modal_delete_props.text = text
-			this.modal_delete_props.show = true
+			return text
 		},
-		closeModalDelete() {
-			this.getDataTable()
-			this.modal_delete_props.doc_type = null
-			this.modal_delete_props.doc_id = null
-			this.modal_delete_props.text = null
-			this.modal_delete_props.show = false
-		},
-		publishDoc(id) {
-			this.showSbp(id)
-		},
-		displayTab(tab_index) {
-			this.modal_props.tabs.list[tab_index]['visibility'] = true
-		},
-		refreshPdf() {
-			this.$refs.pdf_sbp.showPdf()
-		}
 	},
-	created() {
-		this.getDataTable()
-	}
 }
 </script>
 

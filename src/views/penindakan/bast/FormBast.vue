@@ -228,9 +228,16 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					let response = await api.storeDoc('bast', this.data)
-					console.log('form bast - save data response', JSON.parse(JSON.stringify(response)))
-					this.$emit('update:doc_id', response.id)
+					this.data = await api.storeDoc('bast', this.data)
+
+					if (this.data.yang_menerima.type == 'pegawai') {
+						this.data.yang_menerima.data.id = this.data.yang_menerima.data.user_id
+					}
+					if (this.data.yang_menyerahkan.type == 'pegawai') {
+						this.data.yang_menyerahkan.data.id = this.data.yang_menyerahkan.data.user_id
+					}
+
+					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data BAST berhasil disimpan')
 				} catch (error) {
