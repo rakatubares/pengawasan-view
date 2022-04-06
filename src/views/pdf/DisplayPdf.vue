@@ -47,6 +47,7 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfRiksaBadan from './PdfRiksaBadan.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -94,6 +95,10 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
+				case 'riksabadan':
+					let pdfRiksaBadan = new PdfRiksaBadan(this.data)
+					this.src_pdf = pdfRiksaBadan.generatePdf()
+					break;
 
 				default:
 					break;
