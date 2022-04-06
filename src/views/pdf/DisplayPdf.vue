@@ -61,6 +61,7 @@ import PdfLptp from './PdfLptp.js'
 import PdfPengaman from './PdfPengaman.js'
 import PdfReekspor from './PdfReekspor.js'
 import PdfRiksa from './PdfRiksa.js'
+import PdfRiksaBadan from './PdfRiksaBadan.js'
 import PdfSbp from './PdfSbp.js'
 import PdfSegel from './PdfSegel.js'
 import PdfTegah from './PdfTegah.js'
@@ -199,6 +200,11 @@ export default {
 				case 'riksa':
 					let pdfRiksa = new PdfRiksa(this.data)
 					this.src_pdf = pdfRiksa.generatePdf()
+					break;
+				
+				case 'riksabadan':
+					let pdfRiksaBadan = new PdfRiksaBadan(this.data)
+					this.src_pdf = pdfRiksaBadan.generatePdf()
 					break;
 
 				case 'sbp':

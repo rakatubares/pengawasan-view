@@ -55,6 +55,12 @@ export default [
 							},
 							{
 								_name: 'CSidebarNavItem',
+								name: 'BA Periksa Badan',
+								to: '/riksabadan',
+								icon: 'cil-file'
+							},
+							{
+								_name: 'CSidebarNavItem',
 								name: 'BA Segel',
 								to: '/segel',
 								icon: 'cil-file'

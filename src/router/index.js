@@ -27,6 +27,7 @@ const PageLphpN = () => import('@/views/penindakan/lphp/PageLphpN')
 const PagePengaman = () => import('@/views/penindakan/pengaman/PagePengaman')
 const PageReekspor = () => import('@/views/penindakan/reekspor/PageReekspor')
 const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
+const PageRiksaBadan = () => import('@/views/penindakan/riksabadan/PageRiksaBadan')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageSbpN = () => import('@/views/penindakan/sbp/PageSbpN')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
@@ -160,6 +161,11 @@ function configRoutes () {
 					path: 'reekspor',
 					name: 'BA Pengawasan Reekspor',
 					component: PageReekspor
+				},
+				{
+					path: 'riksabadan',
+					name: 'BA Pemeriksaan Badan',
+					component: PageRiksaBadan
 				},
 			]
 		},
