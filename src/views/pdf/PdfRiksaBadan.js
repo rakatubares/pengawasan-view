@@ -247,12 +247,12 @@ class PdfRiksaBadan extends Pdf {
 
 		// Petugas 1
 		this.pdf.text(`Pejabat yang melakukan pemeriksaan,`, this.props.ind.ttd, ln_jabatan_1)
-		this.pdf.text(this.data.penindakan.petugas1.username, this.props.ind.ttd, ln_nama_1)
+		this.pdf.text(this.data.penindakan.petugas1.name, this.props.ind.ttd, ln_nama_1)
 		this.pdf.text(`NIP. ${this.data.penindakan.petugas1.nip}`, this.props.ind.ttd, ln_nip_1)
 
 		// Petugas 2
 		if (this.data.penindakan.petugas2 != null) {
-			var nm_petugas2 = this.data.penindakan.petugas2.username
+			var nm_petugas2 = this.data.penindakan.petugas2.name
 			var nip_petugas2 = `NIP. ${this.data.penindakan.petugas2.nip}`
 		} else {
 			var nm_petugas2 = ''
