@@ -66,13 +66,16 @@ class PdfRiksaBadan extends Pdf {
 
 		this.pdf.text('Tempat dan Tanggal Lahir', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_lahir = this.riksabadan.orang.tempat_lahir + ' ' + this.riksabadan.orang.tanggal_lahir
+		let tempat_lahir = this.riksabadan.orang.tempat_lahir != null ? this.riksabadan.orang.tempat_lahir : ''
+		let tanggal_lahir = this.riksabadan.orang.tanggal_lahir != null ? this.riksabadan.orang.tanggal_lahir : ''
+		let txt_lahir = `${tempat_lahir} / ${tanggal_lahir}`
 		this.pdf.text(txt_lahir, this.props.ind.val, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Kewarganegaraan', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.riksabadan.orang.warga_negara, this.props.ind.val, this.ln)
+		let txt_warga_negara = this.riksabadan.orang.warga_negara != null ? this.riksabadan.orang.warga_negara : '-'
+		this.pdf.text(txt_warga_negara, this.props.ind.val, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Alamat Tempat Tinggal', this.props.ind.sta, this.ln)
