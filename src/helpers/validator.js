@@ -5,6 +5,29 @@ validators.required = (val) => {
 	return val ? val.length >= 1 : false
 }
 
+validators.requiredLinked = (val, linkedVal) => {
+	let result = true
+	if (linkedVal != null) {
+		if (linkedVal.length >= 1) {
+			if (val != null) {
+				if (val.length >= 1) {
+					result = true
+				} else {
+					result = false
+				}	
+			} else {
+				result = false
+			}
+		} else {
+			result = true
+		}
+	} else {
+		result = true
+	}
+	
+	return result
+}
+
 validators.number = (val) => {
 	return (!Number.isNaN(Number(val))) && (Number(val) > 0)
 }
