@@ -54,7 +54,7 @@ export default {
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
 				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
-				{ key: 'nama_saksi', label: 'Saksi/Pemilik' },
+				{ key: 'nama_saksi', label: 'Saksi/Pemilik/Orang' },
 				{ key: 'petugas', label: 'Petugas' },
 			],
 			custom_fields: ['petugas'],
