@@ -95,7 +95,7 @@ export default {
 		renderTindakan() {
 			this.active_details = this.$refs.form_detail.data.type
 
-			if ((this.active_details != null) && (this.active_details != 'orang')) {
+			if (this.active_details != null) {
 				this.show_tindakan = true
 			} else {
 				this.show_tindakan = false

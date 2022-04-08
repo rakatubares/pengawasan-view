@@ -24,11 +24,6 @@ class Pdf {
 		this.full_tgl_sprint = converters.fullDate(this.tgl_sprint)
 	}
 
-	prepareSprintDate(tgl_sprint=this.data.penindakan.sprint.tanggal_sprint) {
-		this.tgl_sprint = converters.date(tgl_sprint, 'DD-MM-YYYY')
-		this.full_tgl_sprint = converters.fullDate(this.tgl_sprint)
-	}
-
 	/**
 	 * Generate kop surat
 	 */
