@@ -90,6 +90,16 @@ class PdfRiksaBadan extends Pdf {
 		this.pdf.text(arr_alamat_id, this.props.ind.val, this.ln)
 		this.ln += this.props.font.height*arr_alamat_id.length
 
+		this.pdf.text('Nomor KTP/Paspor', this.props.ind.sta, this.ln)
+		this.pdf.text(':', this.props.ind.cln, this.ln)
+		let txt_jenis_id = this.riksabadan.orang.jenis_identitas != null
+			? this.riksabadan.orang.jenis_identitas + ' '
+			: ''
+		let txt_nomor_id = this.riksabadan.orang.nomor_identitas || ''
+		let txt_id = txt_jenis_id + txt_nomor_id
+		this.pdf.text(txt_id, this.props.ind.val, this.ln)
+		this.ln += this.props.font.height
+
 		let lbl_pejabat_id = 'Tempat/Pejabat yang Mengeluarkan'
 		let arr_lbl_pejabat_id = converters.array_text(lbl_pejabat_id, 30)
 		this.pdf.text(arr_lbl_pejabat_id, this.props.ind.sta, this.ln)
