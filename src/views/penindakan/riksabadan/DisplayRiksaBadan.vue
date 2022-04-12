@@ -82,7 +82,7 @@
 				</CRow>
 				<MyDisplayEntitas
 					title="Saksi"
-					:data.sync="data_doc.penindakan.saksi"
+					:data.sync="data_doc.saksi"
 				/>
 				<MyDisplayPegawai
 					title="Pejabat 1"

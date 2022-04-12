@@ -61,7 +61,8 @@ class PdfRiksaBadan extends Pdf {
 
 		this.pdf.text('Alias', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text('-', this.props.ind.val, this.ln)
+		let txt_alias = this.riksabadan.orang.alias != null ? this.riksabadan.orang.alias : '-'
+		this.pdf.text(txt_alias, this.props.ind.val, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Tempat dan Tanggal Lahir', this.props.ind.sta, this.ln)
@@ -80,8 +81,10 @@ class PdfRiksaBadan extends Pdf {
 
 		this.pdf.text('Alamat Tempat Tinggal', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text('-', this.props.ind.val, this.ln)
-		this.ln += this.props.font.height
+		let txt_alamat_tinggal = this.riksabadan.orang.alamat_tinggal || '-'
+		let arr_alamat_tinggal = converters.array_text(txt_alamat_tinggal, 110)
+		this.pdf.text(arr_alamat_tinggal, this.props.ind.val, this.ln)
+		this.ln += this.props.font.height*arr_alamat_tinggal.length
 
 		this.pdf.text('Alamat KTP/Paspor', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
@@ -104,11 +107,22 @@ class PdfRiksaBadan extends Pdf {
 		let arr_lbl_pejabat_id = converters.array_text(lbl_pejabat_id, 30)
 		this.pdf.text(arr_lbl_pejabat_id, this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_pejabat_id = '-'
-		let arr_pejabat_id = converters.array_text(txt_pejabat_id, 20)
-		this.pdf.text('-', this.props.ind.val, this.ln)
-		let hgt_pejabat_id = Math.max(arr_lbl_pejabat_id.length, arr_pejabat_id.length)
-		this.ln += this.props.font.height*hgt_pejabat_id
+		let penerbit = this.riksabadan.orang.penerbit_identitas
+		let tempat_terbit = this.riksabadan.orang.tempat_identitas_terbit
+		if (
+			(penerbit != null) &&
+			(tempat_terbit != null)
+		) {
+			var txt_penerbit_id = `${(tempat_terbit)} / ${penerbit}`
+		} else if (penerbit != null) {
+			var txt_penerbit_id = penerbit
+		} else if (tempat_terbit != null) {
+			var txt_penerbit_id = tempat_terbit
+		} else {
+			var txt_penerbit_id = '-'
+		}
+		this.pdf.text(txt_penerbit_id, this.props.ind.val, this.ln)
+		this.ln += this.props.font.height*arr_lbl_pejabat_id.length
 
 		// Asal tujuan
 		this.pdf.text('Datang Dari', this.props.ind.sta, this.ln)
@@ -139,13 +153,15 @@ class PdfRiksaBadan extends Pdf {
 
 		// Sarkut
 		if (this.riksabadan.sarkut != null) {
-			var nama_sarkut = this.riksabadan.sarkut.nama_sarkut
+			let nama_sarkut = this.riksabadan.sarkut.nama_sarkut
+			let jenis_sarkut = this.riksabadan.sarkut.jenis_sarkut
+			var sarkut = jenis_sarkut != null ? `${nama_sarkut} (${jenis_sarkut})` : nama_sarkut
 			var no_flight_trayek = this.riksabadan.sarkut.no_flight_trayek != null ? this.riksabadan.sarkut.no_flight_trayek : '-'
 			var bendera = this.riksabadan.sarkut.bendera != null ? this.riksabadan.sarkut.bendera : '-'
 			var no_reg_polisi = this.riksabadan.sarkut.no_reg_polisi != null ? this.riksabadan.sarkut.no_reg_polisi : '-'
 			var nama_pilot = this.riksabadan.sarkut.pilot != null ? this.riksabadan.sarkut.pilot.nama : '-'
 		} else {
-			var nama_sarkut = '-'
+			var sarkut = '-'
 			var no_flight_trayek = '-'
 			var bendera = '-'
 			var no_reg_polisi = '-'
@@ -154,7 +170,7 @@ class PdfRiksaBadan extends Pdf {
 
 		this.pdf.text('Nama dan Jenis Sarkut', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(nama_sarkut, this.props.ind.val, this.ln)
+		this.pdf.text(sarkut, this.props.ind.val, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('No. Voy/Penerbangan/Trayek*', this.props.ind.sta, this.ln)
@@ -252,7 +268,7 @@ class PdfRiksaBadan extends Pdf {
 
 		// Saksi
 		this.pdf.text(`Saksi,`, this.props.ind.tab, ln_jabatan_2)
-		let txt_saksi = this.data.penindakan.saksi != null ? this.data.penindakan.saksi.nama : '-'
+		let txt_saksi = this.riksabadan.saksi != null ? this.riksabadan.saksi.nama : '-'
 		this.pdf.text(txt_saksi, this.props.ind.tab, ln_nama_2)
 
 		// Petugas 1
