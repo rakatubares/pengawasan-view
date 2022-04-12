@@ -6,11 +6,35 @@
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
-			<CCol md="3" class="py-1">
+			<CCol md="3" class="pt-1">
 				<b>Nama</b>
 			</CCol>
 			<CCol md="9" class="py-1">
 				{{ data.nama }}
+			</CCol>
+		</CRow>
+		<CRow class="mb-1">
+			<CCol md="3" class="py-1">
+				<b>Alias</b>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ data.alias }}
+			</CCol>
+		</CRow>
+		<CRow class="mb-1">
+			<CCol md="3" class="py-1">
+				<b>Jenis Kelamin</b>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ data.jenis_kelamin }}
+			</CCol>
+		</CRow>
+		<CRow class="mb-1">
+			<CCol md="3" class="py-1">
+				<b>Tempat / Tanggal Lahir</b>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ `${data.tempat_lahir} / ${data.tanggal_lahir}` }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -31,18 +55,34 @@
 		</CRow>
 		<CRow class="mb-1">
 			<CCol md="3" class="py-1">
-				<b>Tempat / Tanggal Lahir</b>
+				<b>Penerbit Identitas</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ `${data.tempat_lahir} / ${data.tanggal_lahir}` }}
+				{{ data.penerbit_identitas }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
 			<CCol md="3" class="py-1">
-				<b>Alamat</b>
+				<b>Tempat Terbit</b>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ data.tempat_identitas_terbit }}
+			</CCol>
+		</CRow>
+		<CRow class="mb-1">
+			<CCol md="3" class="py-1">
+				<b>Alamat Identitas</b>
 			</CCol>
 			<CCol md="9" class="py-1">
 				{{ data.alamat }}
+			</CCol>
+		</CRow>
+		<CRow class="mb-1">
+			<CCol md="3" class="py-1">
+				<b>Alamat Tinggal</b>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ data.alamat_tinggal }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -83,13 +123,18 @@
 <script>
 const data_default = {
 	nama: null,
-	warga_negara: null,
-	jenis_identitas: null,
-	nomor_identitas: null,
+	alias: null,
+	jenis_kelamin: null,
 	tempat_lahir: null,
 	tanggal_lahir: null,
+	warga_negara: null,
 	agama: null,
+	jenis_identitas: null,
+	nomor_identitas: null,
+	penerbit_identitas: null,
+	tempat_identitas_terbit: null,
 	alamat: null,
+	alamat_tinggal: null,
 	pekerjaan: null,
 	nomor_telepon: null,
 	email: null,
