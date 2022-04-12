@@ -166,7 +166,7 @@
 						ref="selectSaksi"
 						label="Nama Saksi"
 						description="Nama saksi yang menyaksikan pemeriksaan badan"
-						:id.sync="data.penindakan.saksi.id"
+						:id.sync="data.saksi.id"
 					/>
 				</CCol>
 			</CRow>
@@ -246,6 +246,7 @@ const default_data = {
 	},
 	uraian_pemeriksaan: null,
 	hasil_pemeriksaan: null,
+	saksi: {id: null},
 	penindakan: {
 		grup_lokasi: {id: null},
 		lokasi_penindakan: null,
@@ -319,8 +320,8 @@ export default {
 			}
 
 			// Data saksi
-			if (this.data.penindakan.saksi == null) {
-				this.data.penindakan.saksi = {id: null}
+			if (this.data.saksi == null) {
+				this.data.saksi = {id: null}
 			}
 
 			// Data petugas 2
@@ -333,7 +334,7 @@ export default {
 			this.$refs.selectOrang.getEntitas(this.data.orang.id, true)
 			this.$refs.selectPendamping.getEntitas(this.data.pendamping.id, true)
 			this.$refs.selectPilot.getEntitas(this.data.sarkut.pilot.id, true)
-			this.$refs.selectSaksi.getEntitas(this.data.penindakan.saksi.id, true)
+			this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
 			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
 			this.$refs.selectPetugas2.getPetugas(this.data.penindakan.petugas2.user_id, true)
 		},
