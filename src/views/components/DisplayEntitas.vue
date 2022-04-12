@@ -10,7 +10,7 @@
 				<b>Nama</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.nama }}
+				{{ data_entitas.nama }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -18,7 +18,7 @@
 				<b>Alias</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.alias }}
+				{{ data_entitas.alias }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -26,7 +26,7 @@
 				<b>Jenis Kelamin</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.jenis_kelamin }}
+				{{ data_entitas.jenis_kelamin }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -34,7 +34,7 @@
 				<b>Tempat / Tanggal Lahir</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ `${data.tempat_lahir} / ${data.tanggal_lahir}` }}
+				{{ `${data_entitas.tempat_lahir} / ${data_entitas.tanggal_lahir}` }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -42,7 +42,7 @@
 				<b>Warga Negara</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.warga_negara }}
+				{{ data_entitas.warga_negara }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -50,7 +50,7 @@
 				<b>Identitas</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.jenis_identitas + ' ' + data.nomor_identitas }}
+				{{ data_entitas.jenis_identitas + ' ' + data_entitas.nomor_identitas }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -58,7 +58,7 @@
 				<b>Penerbit Identitas</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.penerbit_identitas }}
+				{{ data_entitas.penerbit_identitas }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -66,7 +66,7 @@
 				<b>Tempat Terbit</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.tempat_identitas_terbit }}
+				{{ data_entitas.tempat_identitas_terbit }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -74,7 +74,7 @@
 				<b>Alamat Identitas</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.alamat }}
+				{{ data_entitas.alamat }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -82,7 +82,7 @@
 				<b>Alamat Tinggal</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.alamat_tinggal }}
+				{{ data_entitas.alamat_tinggal }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -90,7 +90,7 @@
 				<b>Agama</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.agama }}
+				{{ data_entitas.agama }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -98,7 +98,7 @@
 				<b>Pekerjaan</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.pekerjaan }}
+				{{ data_entitas.pekerjaan }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -106,7 +106,7 @@
 				<b>No Telepon</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.nomor_telepon }}
+				{{ data_entitas.nomor_telepon }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -114,14 +114,14 @@
 				<b>Email</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data.email }}
+				{{ data_entitas.email }}
 			</CCol>
 		</CRow>
 	</div>
 </template>
 
 <script>
-const data_default = {
+const default_data = {
 	nama: null,
 	alias: null,
 	jenis_kelamin: null,
@@ -147,11 +147,25 @@ export default {
 			type: String,
 			default: 'Entitas'
 		},
-		data: {
-			type: Object,
-			default() {return JSON.parse(JSON.stringify(data_default))}
+		data: Object
+	},
+	watch: {
+		data(val) {
+			if (val != null) {
+				this.data_entitas = JSON.parse(JSON.stringify(val))
+			}
 		}
 	},
+	data() {
+		return {
+			data_entitas: JSON.parse(JSON.stringify(default_data))
+		}
+	},
+	mounted() {
+		if (this.data != null) {
+			this.data_entitas = JSON.parse(JSON.stringify(this.data))
+		}
+	}
 }
 </script>
 
