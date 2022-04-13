@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper sep mt-4 pt-2">
+	<div class="wrapper sep mt-4 pt-2 form-tindakan">
 		<CForm>
 			<CRow>
 				<CCol sm="12">
@@ -240,6 +240,15 @@
 							/>
 						</CCol>
 					</CRow>
+					<CRow>
+						<CCol md="12">
+							<MySelectEntitas
+								ref="selectSaksi"
+								label="Nama saksi pemeriksaan badan"
+								:id.sync="data_tindakan.data.data_riksa_badan.saksi.id"
+							/>
+						</CCol>
+					</CRow>
 				</CCol>
 			</CRow>
 
@@ -309,6 +318,7 @@ const default_data = {
 			},
 			uraian_pemeriksaan: null,
 			hasil_pemeriksaan: null,
+			saksi: {id: null},
 		}
 	}
 }
@@ -431,12 +441,16 @@ export default {
 				if (data_riksa_badan.pendamping == null) {
 					data_riksa_badan.pendamping = JSON.parse(JSON.stringify(default_data.data.data_riksa_badan.pendamping))
 				}
+				if (data_riksa_badan.saksi == null) {
+					data_riksa_badan.saksi = JSON.parse(JSON.stringify(default_data.data.data_riksa_badan.saksi))
+				}
 				this.data_tindakan.data.data_riksa_badan = data_riksa_badan
 				
 				// Display entitas data
 				this.$nextTick(function () {
 					this.$refs.selectPendamping.getEntitas(this.data_tindakan.data.data_riksa_badan.pendamping.id, true)
 					this.$refs.selectPilot.getEntitas(this.data_tindakan.data.data_riksa_badan.sarkut.pilot.id, true)
+					this.$refs.selectSaksi.getEntitas(this.data_tindakan.data.data_riksa_badan.saksi.id, true)
 				})
 			} else {
 				this.data_tindakan.data.riksa_badan = false
@@ -458,6 +472,23 @@ div.sep {
 	border-color: #d8dbe0;
 }
 
+/* Custom autocomplete */
+.form-tindakan .v-select__slot > input {
+	font-size: 0.875rem;
+	font-weight: 400;
+	color: #768192;
+}
+.form-tindakan .v-input__slot {
+	min-height: calc(1.5em + 0.75rem) !important;
+}
+.form-tindakan .v-input__slot > fieldset {
+	border: 1px solid;
+}
+.form-tindakan .v-text-field__details {
+	display: none;
+}
+
+/* For additional input BA Periksa Badan */
 .form-riksa-badan .row+.row {
 	margin-top:0;
 }

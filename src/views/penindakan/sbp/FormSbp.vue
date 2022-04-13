@@ -153,8 +153,8 @@
 				<CCol md="12">
 					<MySelectEntitas
 						ref="selectSaksi"
-						label="Nama Pengangkut/Pemilik/Kuasa/Saksi"
-						description="Nama terang Pengangkut/Pemilik/Kuasa/Saksi yang menyaksikan penindakan"
+						label="Nama Pengangkut/Pemilik/Kuasa/Saksi/Orang yang Diperiksa"
+						description="Nama terang Pengangkut/Pemilik/Kuasa/Saksi yang menyaksikan penindakan/Orang yang Diperiksa"
 						:id.sync="data.penindakan.saksi.id"
 					/>
 				</CCol>
@@ -390,6 +390,20 @@ export default {
 <style>
 .form-sbp .row+.row {
 	margin-top:0;
+}
+
+.form-sbp .v-select__slot > input {
+	font-size: 0.875rem;
+	font-weight: 400;
+	color: #768192;
+}
+
+.form-sbp .v-input__slot {
+	min-height: calc(1.5em + 0.75rem) !important;
+}
+
+.form-sbp .v-input__slot > fieldset {
+	border: 1px solid;
 }
 
 .form-sbp .v-text-field__details {
