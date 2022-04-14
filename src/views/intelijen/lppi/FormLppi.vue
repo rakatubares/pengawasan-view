@@ -355,6 +355,18 @@ export default {
 			let response = await api.getFormDataById('lppi', this.doc_id)
 			this.data = response.data.data
 
+			if (this.data.penerima_info == null) {
+				this.data.penerima_info = JSON.parse(JSON.stringify(default_data.penerima_info))
+			}
+
+			if (this.data.penilai_info == null) {
+				this.data.penilai_info = JSON.parse(JSON.stringify(default_data.penilai_info))
+			}
+
+			if (this.data.disposisi == null) {
+				this.data.disposisi = JSON.parse(JSON.stringify(default_data.disposisi))
+			}
+
 			if (this.data.pejabat == null) {
 				this.data.pejabat = JSON.parse(JSON.stringify(default_data.pejabat))
 			}
