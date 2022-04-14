@@ -89,6 +89,12 @@ export default {
 			show_table: true,
 		}
 	},
+	watch: {
+		data_ikhtisar(val) {
+			this.list_ikhtisar = val
+			this.prepareTableData()
+		}
+	},
 	methods: {
 		insertData() {
 			this.$refs.form_ikhtisar.showModal('insert')
@@ -127,6 +133,7 @@ export default {
 				for (const i in this.list_ikhtisar) {
 					let item = this.list_ikhtisar[i]
 					item['index'] = i
+					item['kode_validitas'] = item['kode_validitas'].toString()
 					this.list_ikhtisar_table.push(item)
 				}
 
@@ -149,7 +156,7 @@ export default {
 			// emit to parent component
 			this.$emit('update-data', this.list_ikhtisar)
 		},
-	}
+	},
 }
 </script>
 

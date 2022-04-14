@@ -132,10 +132,12 @@ class PdfLppi extends Pdf {
 			ikhtisar.push(data)
 		}
 		const tabelData = ikhtisar
+		let txt_nama_penerima = this.lppi.penerima_info != null ? this.lppi.penerima_info.name : '-'
+		let txt_nama_penilai = this.lppi.penilai_info != null ? this.lppi.penilai_info.name : '-'
 		tabelData.push([
 			{content: ''},
-			{content: `Penerima Informasi\n\n\n\n${this.lppi.penerima_info.name}`},
-			{content: `Penilai Informasi\n\n\n\n${this.lppi.penilai_info.name}`, colSpan: 2, styles: {halign: 'left'}}
+			{content: `Penerima Informasi\n\n\n\n${txt_nama_penerima}`},
+			{content: `Penilai Informasi\n\n\n\n${txt_nama_penilai}`, colSpan: 2, styles: {halign: 'left'}}
 		])
 
 		const tabelHead = [
@@ -203,7 +205,8 @@ class PdfLppi extends Pdf {
 		this.pdf.text('Disposisi Kepada:', this.props.ind.sta, this.ln)
 		this.pdf.text(this.lppi.disposisi.name, this.props.ind.txt, this.ln)
 		this.pdf.text('Tanggal Disposisi:', this.props.ind.lbl_tgl_dis, this.ln)
-		this.pdf.text(this.lppi.tanggal_disposisi, this.props.ind.txt_tgl_dis, this.ln)
+		let txt_tanggal_disposisi = this.lppi.tanggal_disposisi != null ? this.lppi.tanggal_disposisi : ''
+		this.pdf.text(txt_tanggal_disposisi, this.props.ind.txt_tgl_dis, this.ln)
 		this.ln += this.props.font.height*1.5
 
 		// Tindak lanjut
@@ -231,10 +234,17 @@ class PdfLppi extends Pdf {
 		this.ln += this.props.font.height*(arr_catatan.length+2)
 
 		// TTD
-		let txt_jabatan = this.lppi.pejabat.plh == true ? `Plh. ${this.lppi.pejabat.jabatan.jabatan}` : this.lppi.pejabat.jabatan.jabatan
+		let txt_jabatan = this.lppi.pejabat.plh == true 
+			? `Plh. ${this.lppi.pejabat.jabatan.jabatan}` 
+			: this.lppi.pejabat.jabatan.jabatan
 		this.pdf.text(txt_jabatan, this.props.ind.sta, this.ln)
 		this.ln += this.props.font.height*5
 		this.pdf.text(this.lppi.pejabat.user.name, this.props.ind.sta, this.ln)
+
+		////// WATERMARK //////
+		if ([100].includes(this.lppi.kode_status)) {
+			this.watermark()
+		}
 
 		return this.pdf.output('datauristring')
 	}
