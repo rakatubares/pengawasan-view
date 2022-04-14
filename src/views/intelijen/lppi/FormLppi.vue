@@ -214,7 +214,7 @@
 						ref="selectPenerima"
 						label="Nama Penerima Informasi"
 						description="Pegawai yang menerima informasi"
-						:id.sync="data.penerima_info_id"
+						:id.sync="data.penerima_info.user_id"
 						role="p2vue.penindakan"
 					/>
 				</CCol>
@@ -225,7 +225,7 @@
 						ref="selectPenilai"
 						label="Nama Penilai Informasi"
 						description="Pegawai yang menilai informasi"
-						:id.sync="data.penilai_info_id"
+						:id.sync="data.penilai_info.user_id"
 						role="p2vue.penindakan"
 					/>
 				</CCol>
@@ -316,8 +316,8 @@ const default_data = {
 	tgl_terima_info_eksternal: null,
 	no_dok_info_eksternal: null,
 	tgl_dok_info_eksternal: null,
-	penerima_info_id: null,
-	penilai_info_id: null,
+	penerima_info: {user_id: null},
+	penilai_info: {user_id: null},
 	kesimpulan: null,
 	disposisi: {user_id: null},
 	tanggal_disposisi: null,
@@ -364,8 +364,8 @@ export default {
 			})
 		},
 		renderData() {
-			this.$refs.selectPenerima.getPetugas(this.data.penerima_info_id, true)
-			this.$refs.selectPenilai.getPetugas(this.data.penilai_info_id, true)
+			this.$refs.selectPenerima.getPetugas(this.data.penerima_info.user_id, true)
+			this.$refs.selectPenilai.getPetugas(this.data.penilai_info.user_id, true)
 			this.$refs.selectDisposisi.getPetugas(this.data.disposisi.user_id, true)
 			this.$refs.selectPejabat.selected_jabatan = this.data.pejabat.jabatan.kode
 			this.$refs.selectPejabat.plh = this.data.pejabat.plh
