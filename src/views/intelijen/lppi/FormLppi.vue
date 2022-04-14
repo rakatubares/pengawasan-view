@@ -13,7 +13,8 @@
 					<b>
 						<CInputCheckbox
 							label="Internal"
-							:checked.sync="flag_info_internal"
+							:checked.sync="data.flag_info_internal"
+							@update:checked="toggleFlagInternal"
 						/>
 					</b>
 				</CCol>
@@ -88,7 +89,8 @@
 					<b>
 						<CInputCheckbox
 							label="Eksternal"
-							:checked.sync="flag_info_eksternal"
+							:checked.sync="data.flag_info_eksternal"
+							@update:checked="toggleFlagEksternal"
 						/>
 					</b>
 				</CCol>
@@ -166,7 +168,9 @@
 			<CRow>
 				<CCol sm="12">
 					<MyTableIkhtisar
+						ref="tableIkhtisar"
 						state="insert"
+						:data_ikhtisar.sync="data.ikhtisar"
 						@update-data="updateIkhtisar"
 					/>
 				</CCol>
@@ -255,7 +259,7 @@
 						ref="selectDisposisi"
 						label="Nama Penerima Disposisi"
 						description="Pegawai yang menerima disposisi"
-						:id.sync="data.disposisi_id"
+						:id.sync="data.disposisi.user_id"
 						role="p2vue.penindakan"
 					/>
 				</CCol>
@@ -315,7 +319,7 @@ const default_data = {
 	penerima_info_id: null,
 	penilai_info_id: null,
 	kesimpulan: null,
-	disposisi_id: null,
+	disposisi: {user_id: null},
 	tanggal_disposisi: null,
 	flag_analisis: false,
 	flag_arsip: false,
@@ -341,37 +345,37 @@ export default {
 		state: String,
 		doc_id: Number,
 	},
-	watch: {
-		flag_info_internal(val) {
-			this.data.flag_info_internal = val
-			this.data.media_info_internal = null
-			this.data.tgl_terima_info_internal = null
-			this.data.no_dok_info_internal = null
-			this.data.tgl_dok_info_internal = null
-		},
-		flag_info_eksternal(val) {
-			this.data.flag_info_eksternal = val
-			this.data.media_info_eksternal = null
-			this.data.tgl_terima_info_eksternal = null
-			this.data.no_dok_info_eksternal = null
-			this.data.tgl_dok_info_eksternal = null
-		}
-	},
 	data() {
 		return {
-			console,
 			data: JSON.parse(JSON.stringify(default_data)),
-			flag_info_internal: false,
-			flag_info_eksternal: false,
 		}
 	},
 	methods: {
+		async getData() {
+			let response = await api.getFormDataById('lppi', this.doc_id)
+			this.data = response.data.data
+
+			if (this.data.pejabat == null) {
+				this.data.pejabat = JSON.parse(JSON.stringify(default_data.pejabat))
+			}
+
+			this.$nextTick(function () {
+				this.renderData()
+			})
+		},
+		renderData() {
+			this.$refs.selectPenerima.getPetugas(this.data.penerima_info_id, true)
+			this.$refs.selectPenilai.getPetugas(this.data.penilai_info_id, true)
+			this.$refs.selectDisposisi.getPetugas(this.data.disposisi.user_id, true)
+			this.$refs.selectPejabat.selected_jabatan = this.data.pejabat.jabatan.kode
+			this.$refs.selectPejabat.plh = this.data.pejabat.plh
+			this.$refs.selectPejabat.getPetugas(this.data.pejabat.user.user_id, true)
+			this.$refs.tableIkhtisar.list_ikhtisar = this.data.ikhtisar
+		},
 		updateIkhtisar(val) {
 			this.data.ikhtisar = val
 		},
 		async saveData() {
-			console.log('form lppi - save data', JSON.parse(JSON.stringify(this.data)))
-
 			if (this.state == 'insert') {
 				try {
 					this.data = await api.storeDoc('lppi', this.data)
@@ -383,7 +387,15 @@ export default {
 				}
 			} else if (this.state == 'edit') {
 				try {
-					await api.updateDoc('lppi', this.data.id, this.data)
+					let update_data = this.data
+					update_data.ikhtisar = this.data.ikhtisar.map(function(ikhtisar) {
+						let update_ikhtisar = ikhtisar
+						delete update_ikhtisar.index
+						return update_ikhtisar
+					})
+					this.data = await api.updateDoc('lppi', update_data.id, update_data)
+					console.log('form lppi - update data', JSON.parse(JSON.stringify(this.data)))
+					this.$emit('update:doc_id', this.data.id)
 					this.alert(`Data LPPI berhasil diubah`)
 				} catch (error) {
 					console.log(`form lppi - update data - error`, error)
@@ -393,6 +405,25 @@ export default {
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
 		},
+		toggleFlagInternal(val) {
+			this.data.flag_info_internal = val
+			this.data.media_info_internal = null
+			this.data.tgl_terima_info_internal = null
+			this.data.no_dok_info_internal = null
+			this.data.tgl_dok_info_internal = null
+		},
+		toggleFlagEksternal(val) {
+			this.data.flag_info_eksternal = val
+			this.data.media_info_eksternal = null
+			this.data.tgl_terima_info_eksternal = null
+			this.data.no_dok_info_eksternal = null
+			this.data.tgl_dok_info_eksternal = null
+		},
+	},
+	async mounted() {
+		if (this.state == 'edit') {
+			await this.getData()
+		}
 	}
 }
 </script>
