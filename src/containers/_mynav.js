@@ -23,6 +23,12 @@ export default [
 						to: '/lppi',
 						icon: 'cil-file'
 					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LKAI',
+						to: '/lkai',
+						icon: 'cil-file'
+					},
 				]
 			},
 			{

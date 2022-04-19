@@ -10,6 +10,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Intelijen
+const PageLkai = () => import('@/views/intelijen/lkai/PageLkai.vue')
 const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
 
 // Views - Penindakan
@@ -71,6 +72,11 @@ function configRoutes () {
 					path: 'li',
 					name: 'LI-1',
 					component: PageLi
+				},
+				{
+					path: 'lkai',
+					name: 'LKAI',
+					component: PageLkai
 				},
 				{
 					path: 'sbp',
