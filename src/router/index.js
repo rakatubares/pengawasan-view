@@ -10,6 +10,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Intelijen
+const PageLkai = () => import('@/views/intelijen/lkai/PageLkai.vue')
 const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
 
 Vue.use(Router)
@@ -33,6 +34,11 @@ function configRoutes () {
 					path: 'homepage',
 					name: 'Homepage',
 					component: Homepage
+				},
+				{
+					path: 'lkai',
+					name: 'LKAI',
+					component: PageLkai
 				},
 				{
 					path: 'lppi',

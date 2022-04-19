@@ -47,6 +47,7 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfLkai from './PdfLkai.js'
 import PdfLppi from './PdfLppi.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
@@ -95,6 +96,11 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
+				case 'lkai':
+					let pdfLkai = new PdfLkai(this.data)
+					this.src_pdf = pdfLkai.generatePdf()
+					break;
+
 				case 'lppi':
 					let pdfLppi = new PdfLppi(this.data)
 					this.src_pdf = pdfLppi.generatePdf()
