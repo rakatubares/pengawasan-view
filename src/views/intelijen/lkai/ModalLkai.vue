@@ -9,13 +9,13 @@
 		>
 			<template #tabs>
 				<CTab :title="tabs_list[0]['title']">
-					<!-- <MyFormLppi
+					<MyFormLkai
 						v-if="['insert','edit'].includes(modal_state)"
 						:state.sync="modal_state"
 						:doc_id.sync="doc_id"
-					/> -->
-					<!-- v-else-if="modal_state == 'show'" -->
+					/>
 					<MyDisplayLkai
+						v-else-if="modal_state == 'show'"
 						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
 					/>
@@ -41,7 +41,7 @@
 <script>
 import MyDisplayLkai from './DisplayLkai.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
-// import MyFormLppi from './FormLppi.vue'
+import MyFormLkai from './FormLkai.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 
 export default {
@@ -49,7 +49,7 @@ export default {
 	components: {
 		MyDisplayLkai,
 		MyDisplayPdf,
-		// MyFormLppi,
+		MyFormLkai,
 		MyModalTabs,
 	},
 	props: {

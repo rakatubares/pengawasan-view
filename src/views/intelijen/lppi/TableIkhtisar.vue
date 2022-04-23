@@ -66,6 +66,14 @@
 import MyFormIkhtisar from './FormIkhtisar.vue'
 import MyModalDeleteIkhtisar from './ModalDeleteIkhtisar.vue'
 
+const show_fields = [
+	{ key: 'ikhtisar', label: 'Ikhtisar Informasi' },
+	{ key: 'kode_kepercayaan', label: 'Sumber' },
+	{ key: 'kode_validitas', label: 'Validitas' },
+]
+
+const edit_fields = show_fields.concat({ key: 'actions', label: '' })
+
 export default {
 	name: 'TableIkhtisar',
 	components: {
@@ -80,12 +88,7 @@ export default {
 		return {
 			list_ikhtisar: this.data_ikhtisar,
 			list_ikhtisar_table: [],
-			fields: [
-				{ key: 'ikhtisar', label: 'Ikhtisar' },
-				{ key: 'kode_kepercayaan', label: 'Sumber' },
-				{ key: 'kode_validitas', label: 'Validitas' },
-				{ key: 'actions', label: '' },
-			],
+			fields: JSON.parse(JSON.stringify(show_fields)),
 			show_table: true,
 		}
 	},
@@ -93,9 +96,19 @@ export default {
 		data_ikhtisar(val) {
 			this.list_ikhtisar = val
 			this.prepareTableData()
+		},
+		state() {
+			this.chooseField()
 		}
 	},
 	methods: {
+		chooseField() {
+			if (['insert', 'edit'].includes(this.state)) {
+				this.fields = JSON.parse(JSON.stringify(edit_fields))
+			} else {
+				this.fields = JSON.parse(JSON.stringify(show_fields))
+			}
+		},
 		insertData() {
 			this.$refs.form_ikhtisar.showModal('insert')
 		},
@@ -157,6 +170,9 @@ export default {
 			this.$emit('update-data', this.list_ikhtisar)
 		},
 	},
+	mounted() {
+		this.chooseField()
+	}
 }
 </script>
 

@@ -249,8 +249,8 @@ class PdfLkai extends Pdf {
 		
 		this.pdf.text('Keputusan:', this.props.ind.num, this.ln)
 		this.pdf.setFont('Helvetica', 'normal')
-		let checkbox_y = data_pejabat.keputusan == 1 ? this.checked_checkbox : this.empty_checkbox
-		let checkbox_n = data_pejabat.keputusan == 1 ? this.empty_checkbox : this.checked_checkbox
+		let checkbox_y = data_pejabat.keputusan == true ? this.checked_checkbox : this.empty_checkbox
+		let checkbox_n = data_pejabat.keputusan == true ? this.empty_checkbox : this.checked_checkbox
 		this.pdf.addImage(checkbox_y, 'png', this.props.ind.lbl2, this.ln-3.5, 4, 4)
 		this.pdf.text('Setuju', this.props.ind.lbl2+5, this.ln)
 		this.pdf.addImage(checkbox_n, 'png', this.props.ind.lbl2+30, this.ln-3.5, 4, 4)
