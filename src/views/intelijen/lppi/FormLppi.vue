@@ -406,7 +406,6 @@ export default {
 						return update_ikhtisar
 					})
 					this.data = await api.updateDoc('lppi', update_data.id, update_data)
-					console.log('form lppi - update data', JSON.parse(JSON.stringify(this.data)))
 					this.$emit('update:doc_id', this.data.id)
 					this.alert(`Data LPPI berhasil diubah`)
 				} catch (error) {
