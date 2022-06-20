@@ -49,6 +49,7 @@
 import api from '../../router/api2.js'
 import PdfLkai from './PdfLkai.js'
 import PdfLppi from './PdfLppi.js'
+import PdfNhi from './PdfNhi.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -106,6 +107,11 @@ export default {
 					this.src_pdf = pdfLppi.generatePdf()
 					break;
 
+				case 'nhi':
+					let pdfNhi = new PdfNhi(this.data)
+					this.src_pdf = pdfNhi.generatePdf()
+					break;
+
 				default:
 					break;
 			}
@@ -125,6 +131,7 @@ export default {
 		}
 	},
 	mounted() {
+		console.log('display pdf - mounted', this.doc_type)
 		this.getPdf()
 	}
 }

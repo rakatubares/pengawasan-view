@@ -324,8 +324,8 @@ class Pdf {
 		this.ln_lamp += this.props.font.height*3
 	}
 
-	tabelBarang() {
-		const tabelData = converters.item_barang(this.data.objek.data.item)
+	tabelBarang(items=this.data.objek.data.item) {
+		const tabelData = converters.item_barang(items)
 		const tabelHead = [
 			{header: 'No', dataKey: 'no'},
 			{header: 'Uraian Barang', dataKey: 'uraian'},

@@ -12,6 +12,7 @@ const Homepage = () => import('@/views/Homepage')
 // Views - Intelijen
 const PageLkai = () => import('@/views/intelijen/lkai/PageLkai.vue')
 const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
+const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
 
 Vue.use(Router)
 
@@ -44,6 +45,11 @@ function configRoutes () {
 					path: 'lppi',
 					name: 'LPPI',
 					component: PageLppi
+				},
+				{
+					path: 'nhi',
+					name: 'NHI',
+					component: PageNhi
 				},
 			]
 		},

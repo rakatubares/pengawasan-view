@@ -29,6 +29,12 @@ export default [
 						to: '/lkai',
 						icon: 'cil-file'
 					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'NHI',
+						to: '/nhi',
+						icon: 'cil-file'
+					},
 				]
 			}
 		]
