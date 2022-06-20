@@ -44,7 +44,7 @@
 											Hapus
 										</CButton>
 										<CButton 
-											v-if="getButton('show', item)"
+											v-if="getButton('show', item)  & with_photo==true"
 											class="m-1"
 											size="sm" 
 											color="primary"
@@ -65,6 +65,7 @@
 		<MyFormItemBarang
 			v-if="show_modal_barang"
 			:show.sync="show_modal_barang"
+			:with_photo="with_photo"
 			:id.sync="item_to_edit"
 			:doc_type="doc_type"
 			:doc_id="doc_id"
@@ -117,20 +118,26 @@ export default {
 		state: String,
 		doc_type: String,
 		doc_id: Number,
-		data_objek: Object
+		data_objek: Object,
+		with_photo: {
+			type: Boolean,
+			default: true
+		}
 	},
 	computed: {
 		list_barang_table() {
-			let arr = this.list_barang
 			let data_barang = []
-			for (let idx in arr) {
-				let temp_barang = {
-					id: arr[idx]['id'],
-					uraian_barang: arr[idx]['uraian_barang'],
-					jumlah: (arr[idx]['jumlah_barang'] || '-') + ' ' + (arr[idx]['satuan']['kode_satuan'] || ''),
-					kategori: arr[idx]['kategori'] ? arr[idx]['kategori']['kategori'] : '-'
-				}
-				data_barang.push(temp_barang)
+			if (this.list_barang != null) {
+				let arr = this.list_barang
+				for (let idx in arr) {
+					let temp_barang = {
+						id: arr[idx]['id'],
+						uraian_barang: arr[idx]['uraian_barang'],
+						jumlah: (arr[idx]['jumlah_barang'] || '-') + ' ' + (arr[idx]['satuan']['kode_satuan'] || ''),
+						kategori: arr[idx]['kategori'] ? arr[idx]['kategori']['kategori'] : '-'
+					}
+					data_barang.push(temp_barang)
+				}	
 			}
 			return data_barang
 		},
@@ -162,7 +169,11 @@ export default {
 	methods: {
 		async getData() {
 			let response = await api.getObjek(this.doc_type, this.doc_id)
-			this.list_barang = response.data.item
+			if (response.data != null) {
+				this.list_barang = response.data.item
+			} else {
+				this.list_barang = null
+			}
 		},
 		inputNewBarang() {
 			this.show_modal_barang = true
@@ -208,7 +219,7 @@ export default {
 		getButton(type, item) {
 			let btn = false
 
-			if (this.state == 'insert') {
+			if ((this.state == 'insert') || (this.state == 'edit')) {
 				if ((type == 'edit') || (type == 'delete')) {
 					btn = true
 				} else {

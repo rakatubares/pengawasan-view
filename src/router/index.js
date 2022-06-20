@@ -12,6 +12,7 @@ const Homepage = () => import('@/views/Homepage')
 // Views - Intelijen
 const PageLkai = () => import('@/views/intelijen/lkai/PageLkai.vue')
 const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
+const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
 
 // Views - Penindakan
 const PageBast = () => import('@/views/penindakan/bast/PageBast')
@@ -77,6 +78,11 @@ function configRoutes () {
 					path: 'lkai',
 					name: 'LKAI',
 					component: PageLkai
+				},
+				{
+					path: 'nhi',
+					name: 'NHI',
+					component: PageNhi
 				},
 				{
 					path: 'sbp',

@@ -59,6 +59,7 @@ import PdfLphp from './PdfLphp.js'
 import PdfLpN from './PdfLpN.js'
 import PdfLppi from './PdfLppi.js'
 import PdfLptp from './PdfLptp.js'
+import PdfNhi from './PdfNhi.js'
 import PdfPengaman from './PdfPengaman.js'
 import PdfReekspor from './PdfReekspor.js'
 import PdfRiksa from './PdfRiksa.js'
@@ -198,6 +199,11 @@ export default {
 					this.src_pdf = pdfLptpn.generatePdf()
 					break;
 
+				case 'nhi':
+					let pdfNhi = new PdfNhi(this.data)
+					this.src_pdf = pdfNhi.generatePdf()
+					break;
+
 				case 'reekspor':
 					let pdfReekspor = new PdfReekspor(this.data)
 					this.src_pdf = pdfReekspor.generatePdf()
@@ -262,7 +268,7 @@ export default {
 					let pdfBast = new PdfBast(this.data)
 					this.src_pdf = pdfBast.generatePdf()
 					break;
-			
+
 				default:
 					break;
 			}
@@ -282,6 +288,7 @@ export default {
 		}
 	},
 	mounted() {
+		console.log('display pdf - mounted', this.doc_type)
 		this.getPdf()
 	}
 }
