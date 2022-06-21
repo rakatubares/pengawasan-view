@@ -115,6 +115,21 @@ class PdfNhi extends Pdf {
 		this.pdf.text(txt_kantor, this.props.ind.val3, this.ln)
 		this.ln += this.props.font.height
 
+		// CONSTRUCT BARANG
+		let height_barang = 1
+		let uraian_barang = ''
+		if (this.nhi.objek) {
+			if (this.nhi.objek.data.item.length > 1) {
+				uraian_barang = 'LIHAT LAMPIRAN'
+			} else {
+				let txt_barang = `${this.nhi.objek.data.item[0].jumlah_barang} `
+					+ `${this.nhi.objek.data.item[0].satuan.kode_satuan} `
+					+ `${this.nhi.objek.data.item[0].uraian_barang} `
+				uraian_barang = converters.array_text(txt_barang, 45)
+				height_barang = uraian_barang.length
+			}	
+		}
+
 		// EXIM
 		this.pdf.text('D.', this.props.ind.sta, this.ln)
 		this.pdf.text('Kegiatan atas Barang Impor/Ekspor*):', this.props.ind.lbl3, this.ln)
@@ -144,11 +159,16 @@ class PdfNhi extends Pdf {
 		this.pdf.text('2.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Eks/Untuk Kapal/Pesawat/Alat Angkut/Lainnya', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		let txt_sarkut_exim = this.nhi.flag_exim 
-			? `${this.nhi.nama_sarkut_exim || '-'} Voy/Flight/No. Pol: ${this.nhi.no_flight_trayek_exim || '-'}` 
-			: ''
-		this.pdf.text(txt_sarkut_exim, this.props.ind.val3, this.ln)
-		this.ln += this.props.font.height
+		if (this.nhi.flag_exim) {
+			var txt_sarkut_exim = `${this.nhi.nama_sarkut_exim || '-'} Voy/Flight/No. Pol: ${this.nhi.no_flight_trayek_exim || '-'}`
+			var arr_sarkut_exim = converters.array_text(txt_sarkut_exim, 50)
+			var height_sarkut_exim = arr_sarkut_exim.length
+		} else {
+			var arr_sarkut_exim = ''
+			var height_sarkut_exim = 1
+		}
+		this.pdf.text(arr_sarkut_exim, this.props.ind.val3, this.ln)
+		this.ln += this.props.font.height*height_sarkut_exim
 
 		this.pdf.text('3.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('No. BL/AWB', this.props.ind.lbl4, this.ln)
@@ -190,22 +210,14 @@ class PdfNhi extends Pdf {
 		this.pdf.text('Jenis/Jumlah barang', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
 		if (this.nhi.flag_exim) {
-			if (this.nhi.objek) {
-				if (this.nhi.objek.data.item.length > 1) {
-					var uraian_barang = 'LIHAT LAMPIRAN'
-				} else {
-					var uraian_barang = `${this.nhi.objek.data.item[0].jumlah_barang} `
-						+ `${this.nhi.objek.data.item[0].satuan.kode_satuan} `
-						+ `${this.nhi.objek.data.item[0].uraian_barang} `
-				}	
-			} else {
-				var uraian_barang = ''	
-			}
+			var uraian_barang_exim = uraian_barang
+			var height_barang_exim = height_barang
 		} else {
-			var uraian_barang = ''
+			var uraian_barang_exim = ''
+			var height_barang_exim = 1
 		}
-		this.pdf.text(uraian_barang, this.props.ind.val3, this.ln)
-		this.ln += this.props.font.height
+		this.pdf.text(uraian_barang_exim, this.props.ind.val3, this.ln, {align: 'justify', maxWidth: 80})
+		this.ln += this.props.font.height*height_barang_exim
 
 		this.pdf.text('8.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Data Lainnya', this.props.ind.lbl4, this.ln)
@@ -258,32 +270,29 @@ class PdfNhi extends Pdf {
 		this.pdf.text('5.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Eks/Untuk Kapal/Pesawat/Alat Angkut/Lainnya', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		let txt_sarkut_bkc = this.nhi.flag_bkc 
-			? `${this.nhi.nama_sarkut_bkc || ''} Voy/Flight/No. Pol: ${this.nhi.no_flight_trayek_bkc || ''}` 
-			: ''
-		this.pdf.text(txt_sarkut_bkc, this.props.ind.val3, this.ln)
-		this.ln += this.props.font.height
+		if (this.nhi.flag_bkc) {
+			var txt_sarkut_bkc = `${this.nhi.nama_sarkut_bkc || '-'} Voy/Flight/No. Pol: ${this.nhi.no_flight_trayek_bkc || '-'}`
+			var arr_sarkut_bkc = converters.array_text(txt_sarkut_bkc, 50)
+			var height_sarkut_bkc = arr_sarkut_bkc.length
+		} else {
+			var arr_sarkut_bkc = ''
+			var height_sarkut_bkc = 1
+		}
+		this.pdf.text(arr_sarkut_bkc, this.props.ind.val3, this.ln)
+		this.ln += this.props.font.height*height_sarkut_bkc
 
 		this.pdf.text('6.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Jenis/Jumlah barang', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
 		if (this.nhi.flag_bkc) {
-			if (this.nhi.objek) {
-				if (this.nhi.objek.data.item.length > 1) {
-					var uraian_barang = 'LIHAT LAMPIRAN'
-				} else {
-					var uraian_barang = `${this.nhi.objek.data.item[0].jumlah_barang} `
-						+ `${this.nhi.objek.data.item[0].satuan.kode_satuan} `
-						+ `${this.nhi.objek.data.item[0].uraian_barang} `
-				}	
-			} else {
-				var uraian_barang = ''	
-			}
+			var uraian_barang_bkc = uraian_barang
+			var height_barang_bkc = height_barang
 		} else {
-			var uraian_barang = ''
+			var uraian_barang_bkc = ''
+			var height_barang_bkc = 1
 		}
-		this.pdf.text(uraian_barang, this.props.ind.val3, this.ln)
-		this.ln += this.props.font.height
+		this.pdf.text(uraian_barang_bkc, this.props.ind.val3, this.ln, {align: 'justify', maxWidth: 80})
+		this.ln += this.props.font.height*height_barang_bkc
 
 		this.pdf.text('7.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Data Lainnya', this.props.ind.lbl4, this.ln)
@@ -323,11 +332,16 @@ class PdfNhi extends Pdf {
 		this.pdf.text('2.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Eks/Untuk Kapal/Pesawat/Alat Angkut/Lainnya', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		let txt_sarkut_tertentu = this.nhi.flag_tertentu 
-			? `${this.nhi.nama_sarkut_tertentu || '-'} Voy/Flight/No. Pol: ${this.nhi.no_flight_trayek_tertentu || '-'}`
-			: ''
-		this.pdf.text(txt_sarkut_tertentu, this.props.ind.val3, this.ln)
-		this.ln += this.props.font.height
+		if (this.nhi.flag_tertentu) {
+			var txt_sarkut_tertentu = `${this.nhi.nama_sarkut_tertentu || '-'} Voy/Flight/No. Pol: ${this.nhi.no_flight_trayek_tertentu || '-'}`
+			var arr_sarkut_tertentu = converters.array_text(txt_sarkut_tertentu, 50)
+			var height_sarkut_tertentu = arr_sarkut_tertentu.length
+		} else {
+			var arr_sarkut_tertentu = ''
+			var height_sarkut_tertentu = 1
+		}
+		this.pdf.text(arr_sarkut_tertentu, this.props.ind.val3, this.ln)
+		this.ln += this.props.font.height*height_sarkut_tertentu
 
 		this.pdf.text('3.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('No. BL/AWB', this.props.ind.lbl4, this.ln)
@@ -362,22 +376,14 @@ class PdfNhi extends Pdf {
 		this.pdf.text('Jenis/Jumlah barang', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
 		if (this.nhi.flag_tertentu) {
-			if (this.nhi.objek) {
-				if (this.nhi.objek.data.item.length > 1) {
-					var uraian_barang = 'LIHAT LAMPIRAN'
-				} else {
-					var uraian_barang = `${this.nhi.objek.data.item[0].jumlah_barang} `
-						+ `${this.nhi.objek.data.item[0].satuan.kode_satuan} `
-						+ `${this.nhi.objek.data.item[0].uraian_barang} `
-				}	
-			} else {
-				var uraian_barang = ''	
-			}
+			var uraian_barang_tertentu = uraian_barang
+			var height_barang_tertentu = height_barang
 		} else {
-			var uraian_barang = ''
+			var uraian_barang_tertentu = ''
+			var height_barang_tertentu = 1
 		}
-		this.pdf.text(uraian_barang, this.props.ind.val3, this.ln)
-		this.ln += this.props.font.height
+		this.pdf.text(uraian_barang_tertentu, this.props.ind.val3, this.ln, {align: 'justify', maxWidth: 80})
+		this.ln += this.props.font.height*height_barang_tertentu
 
 		this.pdf.text('7.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Data Lainnya', this.props.ind.lbl4, this.ln)
@@ -419,7 +425,7 @@ class PdfNhi extends Pdf {
 
 		// LAMPIRAN
 		if (this.nhi.objek) {
-			if (this.nhi.objek.data.item.length > 2) {
+			if (this.nhi.objek.data.item.length > 1) {
 				this.pdf.setFont('Helvetica', 'normal')
 				this.pdf.addPage()
 			
