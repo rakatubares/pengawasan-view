@@ -12,6 +12,7 @@ const Homepage = () => import('@/views/Homepage')
 // Views - Intelijen
 const PageLkai = () => import('@/views/intelijen/lkai/PageLkai.vue')
 const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
+const PageLppiN = () => import('@/views/intelijen/lppi/PageLppiN.vue')
 const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
 
 // Views - Penindakan
@@ -130,6 +131,11 @@ function configRoutes () {
 					component: PageLppi
 				},
 				{
+					path: 'lppin',
+					name: 'LPPI-N',
+					component: PageLppiN
+				},
+				{
 					path: 'riksa',
 					name: 'Periksa',
 					component: PageRiksa
@@ -178,6 +184,11 @@ function configRoutes () {
 					path: 'riksabadan',
 					name: 'BA Pemeriksaan Badan',
 					component: PageRiksaBadan
+				},
+				{
+					path: 'nhi',
+					name: 'NHI',
+					component: PageNhi
 				},
 			]
 		},

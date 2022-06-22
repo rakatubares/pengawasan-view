@@ -166,6 +166,12 @@ export default [
 				icon: 'cil-blur',
 				_children: [
 					{
+						_name: 'CSidebarNavItem',
+						name: 'LPPI-N',
+						to: '/lppin',
+						icon: 'cil-file'
+					},
+					{
 						_name: 'CSidebarNavDropdown',
 						name: 'SBP-N',
 						icon: 'cil-list',

@@ -12,6 +12,8 @@
 					<MyFormLppi
 						v-if="['insert','edit'].includes(modal_state)"
 						:state.sync="modal_state"
+						:tipe_surat="tipe_surat"
+						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
 					/>
 					<MyDisplayLppi
@@ -54,6 +56,7 @@ export default {
 	},
 	props: {
 		state: String,
+		tipe_surat: String,
 		doc_type: String,
 		id: Number
 	},
