@@ -2,7 +2,7 @@
 	<div class="wrapper">
 		<MyModalTabs
 			ref="modal_tabs"
-			title="Data LPPI"
+			:title="`Data ${tipe_surat}`"
 			:tabs_list.sync="tabs_list"
 			:current_tab.sync="current_tab"
 			@close-modal="closeModal"
