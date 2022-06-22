@@ -343,6 +343,8 @@ export default {
 	},
 	props: {
 		state: String,
+		tipe_surat: String,
+		doc_type: String,
 		doc_id: Number,
 	},
 	data() {
@@ -352,7 +354,7 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getFormDataById('lppi', this.doc_id)
+			let response = await api.getFormDataById(this.doc_type, this.doc_id)
 			this.data = response.data.data
 
 			if (this.data.penerima_info == null) {
@@ -390,10 +392,10 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					this.data = await api.storeDoc('lppi', this.data)
+					this.data = await api.storeDoc(this.doc_type, this.data)
 					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
-					this.alert(`Data LPPI berhasil disimpan`)
+					this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
 				} catch (error) {
 					console.log(`form lppi - save data - error`, error)
 				}
@@ -405,9 +407,9 @@ export default {
 						delete update_ikhtisar.index
 						return update_ikhtisar
 					})
-					this.data = await api.updateDoc('lppi', update_data.id, update_data)
+					this.data = await api.updateDoc(this.doc_type, update_data.id, update_data)
 					this.$emit('update:doc_id', this.data.id)
-					this.alert(`Data LPPI berhasil diubah`)
+					this.alert(`Data ${this.tipe_surat} berhasil diubah`)
 				} catch (error) {
 					console.log(`form lppi - update data - error`, error)
 				}

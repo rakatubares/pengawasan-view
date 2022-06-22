@@ -36,6 +36,19 @@ export default [
 						icon: 'cil-file'
 					},
 				]
+			},
+			{
+				_name: 'CSidebarNavDropdown',
+				name: 'NPP',
+				icon: 'cil-blur',
+				_children: [
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LPPI-N',
+						to: '/lppin',
+						icon: 'cil-file'
+					},
+				]
 			}
 		]
 	}

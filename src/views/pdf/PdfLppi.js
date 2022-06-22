@@ -29,11 +29,18 @@ const props = {
 }
 
 class PdfLppi extends Pdf {
-	constructor(data) {
+	constructor(
+		data,
+		lppi_type = 'lppi',
+		jenis_dok = 'LEMBAR PENGUMPULAN DAN PENILAIAN INFORMASI',
+		title_line_indent = {start: 57, end: 153}
+	) {
 		super(props);
-		this.jenis_dok = 'LEMBAR PENGUMPULAN DAN PENILAIAN INFORMASI'
 		this.data = data
-		this.lppi = this.data.dokumen.lppi
+		this.lppi = this.data.dokumen[lppi_type]
+		this.lppi_type = lppi_type
+		this.jenis_dok = jenis_dok
+		this.props.title_line = title_line_indent
 		this.prepareDocDate(this.lppi.tanggal_dokumen)
 	}
 

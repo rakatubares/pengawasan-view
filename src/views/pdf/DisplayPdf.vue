@@ -107,6 +107,16 @@ export default {
 					this.src_pdf = pdfLppi.generatePdf()
 					break;
 
+				case 'lppin':
+					let pdfLppin = new PdfLppi(
+						this.data,
+						this.active_pdf,
+						'LEMBAR PENGUMPULAN DAN PENILAIAN INFORMASI NPP',
+						{start: 53, end: 157}
+					)
+					this.src_pdf = pdfLppin.generatePdf()
+					break;
+
 				case 'nhi':
 					let pdfNhi = new PdfNhi(this.data)
 					this.src_pdf = pdfNhi.generatePdf()
