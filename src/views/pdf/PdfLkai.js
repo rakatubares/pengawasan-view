@@ -30,11 +30,18 @@ const props = {
 }
 
 class PdfLkai extends Pdf {
-	constructor(data) {
+	constructor(
+		data,
+		lkai_type = 'lkai',
+		doc_title = 'LEMBAR KERJA ANALISIS INTELIJEN',
+		title_line_indent = {start: 72, end: 138}
+	) {
 		super(props);
-		this.jenis_dok = 'LEMBAR KERJA ANALISIS INTELIJEN'
 		this.data = data
-		this.lkai = this.data.dokumen.lkai
+		this.lkai = this.data.dokumen[lkai_type]
+		this.lkai_type = lkai_type
+		this.doc_title = doc_title
+		this.props.title_line = title_line_indent
 		this.prepareDocDate(this.lkai.tanggal_dokumen)
 	}
 
@@ -45,7 +52,7 @@ class PdfLkai extends Pdf {
 		this.checked_checkbox.src = 'form/checkbox-checked.png'
 
 		this.createHeader()
-		this.createNomor(this.jenis_dok, '')
+		this.createNomor(this.doc_title, '')
 
 		// No & tanggal
 		this.pdf.text('Nomor', this.props.ind.sta, this.ln)
@@ -66,7 +73,8 @@ class PdfLkai extends Pdf {
 		// LPPI
 		let checkbox_lppi = this.lkai.nomor_lppi != null ? this.checked_checkbox : this.empty_checkbox
 		this.pdf.addImage(checkbox_lppi, 'png', this.props.ind.chk, this.ln-3.5, 4, 4);
-		this.pdf.text('LPPI,', this.props.ind.lbl2, this.ln)
+		let lppi_type = this.lkai_type == 'lkain' ? 'LPPI-N' : 'LPPI'
+		this.pdf.text(`${lppi_type},`, this.props.ind.lbl2, this.ln)
 		this.pdf.text('Nomor:', this.props.ind.lbl3, this.ln)
 		let txt_lppi = this.lkai.nomor_lppi != null
 			? this.lkai.tanggal_lppi != null
@@ -96,7 +104,8 @@ class PdfLkai extends Pdf {
 		// NPI
 		let checkbox_npi = this.lkai.flag_npi == 1 ? this.checked_checkbox : this.empty_checkbox
 		this.pdf.addImage(checkbox_npi, 'png', this.props.ind.chk, this.ln-3.5, 4, 4);
-		this.pdf.text('NPI,', this.props.ind.lbl2, this.ln)
+		let npi_type = this.lkai_type == 'lkain' ? 'NPI-N' : 'NPI'
+		this.pdf.text(`${npi_type},`, this.props.ind.lbl2, this.ln)
 		this.pdf.text('Nomor:', this.props.ind.lbl3, this.ln)
 		let txt_npi = this.lkai.nomor_npi != null
 			? this.lkai.tanggal_npi != null
@@ -178,19 +187,22 @@ class PdfLkai extends Pdf {
 		// NHI
 		let checkbox_nhi = this.lkai.flag_rekom_nhi == 1 ? this.checked_checkbox : this.empty_checkbox
 		this.pdf.addImage(checkbox_nhi, 'png', this.props.ind.chk, this.ln-3.5, 4, 4);
-		this.pdf.text('NHI', this.props.ind.lbl2, this.ln)
+		let nhi_type = this.lkai_type == 'lkain' ? 'NHI-N' : 'NHI'
+		this.pdf.text(nhi_type, this.props.ind.lbl2, this.ln)
 		this.ln += this.props.font.height*1.5
 
 		// NI
 		let checkbox_ni = this.lkai.flag_rekom_ni == 1 ? this.checked_checkbox : this.empty_checkbox
 		this.pdf.addImage(checkbox_ni, 'png', this.props.ind.chk, this.ln-3.5, 4, 4);
-		this.pdf.text('NI', this.props.ind.lbl2, this.ln)
+		let ni_type = this.lkai_type == 'lkain' ? 'NI-N' : 'NI'
+		this.pdf.text(ni_type, this.props.ind.lbl2, this.ln)
 		this.ln += this.props.font.height*1.5
 
 		// Rekomendasi
 		let checkbox_rekomendasi = this.lkai.rekomendasi_lain != null ? this.checked_checkbox : this.empty_checkbox
 		this.pdf.addImage(checkbox_rekomendasi, 'png', this.props.ind.chk, this.ln-3.5, 4, 4);
-		this.pdf.text('Rekomendasi Lainnya:', this.props.ind.lbl2, this.ln)
+		let rekom_type = this.lkai_type == 'lkain' ? 'Lainnya' : 'Rekomendasi Lainnya'
+		this.pdf.text(`${rekom_type}:`, this.props.ind.lbl2, this.ln)
 		let y_rect_rekomendasi = this.ln - 4
 		let txt_rekomendasi = this.lkai.rekomendasi_lain != null ? this.lkai.rekomendasi_lain : '-'
 		let arr_rekomendasi = converters.array_text(txt_rekomendasi, 60)
@@ -201,17 +213,19 @@ class PdfLkai extends Pdf {
 		this.ln += this.props.font.height*0.5
 
 		// Informasi
-		let checkbox_informasi = this.lkai.informasi_lain != null ? this.checked_checkbox : this.empty_checkbox
-		this.pdf.addImage(checkbox_informasi, 'png', this.props.ind.chk, this.ln-3.5, 4, 4);
-		this.pdf.text('Informasi Lainnya:', this.props.ind.lbl2, this.ln)
-		let y_rect_informasi = this.ln - 4
-		let txt_informasi = this.lkai.informasi_lain != null ? this.lkai.informasi_lain : '-'
-		let arr_informasi = converters.array_text(txt_informasi, 60)
-		this.pdf.text(arr_informasi, this.props.ind.val3, this.ln)
-		this.ln += this.props.font.height*(arr_informasi.length + 0.5)
-		let h_rect_informasi = this.ln - y_rect_informasi - 4
-		this.pdf.rect(this.props.ind.rct, y_rect_informasi, 105, h_rect_informasi)
-		this.ln += this.props.font.height
+		if (this.lkai_type == 'lkai') {
+			let checkbox_informasi = this.lkai.informasi_lain != null ? this.checked_checkbox : this.empty_checkbox
+			this.pdf.addImage(checkbox_informasi, 'png', this.props.ind.chk, this.ln-3.5, 4, 4);
+			this.pdf.text('Informasi Lainnya:', this.props.ind.lbl2, this.ln)
+			let y_rect_informasi = this.ln - 4
+			let txt_informasi = this.lkai.informasi_lain != null ? this.lkai.informasi_lain : '-'
+			let arr_informasi = converters.array_text(txt_informasi, 60)
+			this.pdf.text(arr_informasi, this.props.ind.val3, this.ln)
+			this.ln += this.props.font.height*(arr_informasi.length + 0.5)
+			let h_rect_informasi = this.ln - y_rect_informasi - 4
+			this.pdf.rect(this.props.ind.rct, y_rect_informasi, 105, h_rect_informasi)
+			this.ln += this.props.font.height
+		}
 
 		// Tujuan
 		this.pdf.setFont('Helvetica', 'bold')
@@ -234,6 +248,11 @@ class PdfLkai extends Pdf {
 		this.generateTtd(this.lkai.pejabat)
 		this.ln += this.props.font.height*4
 		this.generateTtd(this.lkai.atasan)
+
+		////// WATERMARK //////
+		if ([100].includes(this.lkai.kode_status)) {
+			this.watermark()
+		}
 
 		return this.pdf.output('datauristring')
 	}

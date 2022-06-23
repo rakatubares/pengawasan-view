@@ -92,6 +92,7 @@ export default {
 			if (this.state == 'insert') {
 				this.state = 'edit'
 			}
+			this.show = false
 		},
 		showModal(state, data=null) {
 			this.state = state

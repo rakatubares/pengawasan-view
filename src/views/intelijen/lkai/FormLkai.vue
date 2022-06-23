@@ -17,13 +17,13 @@
 								:checked.sync="lppi_enabled"
 								@update:checked="toggleLppi"
 							/>
-							<b class="ml-2">LPPI</b>
+							<b class="ml-2">{{ doc_type == 'lkain' ? 'LPPI-N' : 'LPPI' }}</b>
 						</CCol>
 					</CRow>
 				</CCol>
 				<CCol sm="12" md="6">
 					<div class="form-group">
-						<label>Nomor LPPI</label>
+						<label>Nomor {{ doc_type == 'lkain' ? 'LPPI-N' : 'LPPI' }}</label>
 						<v-autocomplete
 							v-model="lppi_search_value"
 							outlined
@@ -38,7 +38,7 @@
 							<template v-slot:no-data>
 								<v-list-item>
 									<v-list-item-title>
-										Data LPPI tidak ditemukan
+										Data {{ doc_type == 'lkain' ? 'LPPI-N' : 'LPPI' }} tidak ditemukan
 									</v-list-item-title>
 								</v-list-item>
 							</template>
@@ -53,7 +53,7 @@
 				</CCol>
 				<CCol sm="12" md="4">
 					<div class="form-group">
-						<label class="w-100">Tgl. LPPI</label>
+						<label class="w-100">Tgl. {{ doc_type == 'lkain' ? 'LPPI-N' : 'LPPI' }}</label>
 						<date-picker
 							v-model="data.tanggal_lppi"
 							format="DD-MM-YYYY" 
@@ -84,20 +84,20 @@
 								:checked.sync="data.flag_lpti"
 								@update:checked="toggleLpti"
 							/>
-							<b class="ml-2">LPTI</b>
+							<b class="ml-2">LPT-I</b>
 						</CCol>
 					</CRow>
 				</CCol>
 				<CCol sm="12" md="6">
 					<CInput
-						label="Nomor LPTI"
+						label="Nomor LPT-I"
 						:value.sync="data.nomor_lpti"
 						:disabled="data.flag_lpti == false"
 					/>
 				</CCol>
 				<CCol sm="12" md="4">
 					<div class="form-group">
-						<label class="w-100">Tgl. LPTI</label>
+						<label class="w-100">Tgl. LPT-I</label>
 						<date-picker
 							v-model="data.tanggal_lpti"
 							format="DD-MM-YYYY" 
@@ -128,20 +128,20 @@
 								:checked.sync="data.flag_npi"
 								@update:checked="toggleNpi"
 							/>
-							<b class="ml-2">NPI</b>
+							<b class="ml-2">{{ doc_type == 'lkain' ? 'NPI-N' : 'NPI' }}</b>
 						</CCol>
 					</CRow>
 				</CCol>
 				<CCol sm="12" md="6">
 					<CInput
-						label="Nomor NPI"
+						:label="`Nomor ${doc_type == 'lkain' ? 'NPI-N' : 'NPI'}`"
 						:value.sync="data.nomor_npi"
 						:disabled="data.flag_npi == false"
 					/>
 				</CCol>
 				<CCol sm="12" md="4">
 					<div class="form-group">
-						<label class="w-100">Tgl. NPI</label>
+						<label class="w-100">Tgl. {{ doc_type == 'lkain' ? 'NPI-N' : 'NPI' }}</label>
 						<date-picker
 							v-model="data.tanggal_npi"
 							format="DD-MM-YYYY" 
@@ -229,7 +229,7 @@
 					/>
 				</CCol>
 			</CRow>
-			<CRow>
+			<CRow v-if="doc_type == 'lkai'">
 				<CCol md="12">
 					<CTextarea
 						label="Informasi Lainnya"
@@ -458,11 +458,14 @@ export default {
 	},
 	props: {
 		state: String,
+		tipe_surat: String,
+		doc_type: String,
 		doc_id: Number,
 	},
 	data() {
 		return {
 			data: JSON.parse(JSON.stringify(default_data)),
+			lppi_type: this.doc_type == 'lkain' ? 'lppin' : 'lppi',
 			lppi_search_value: null,
 			lppi_search_items: [],
 			lppi_search_query: null,
@@ -478,7 +481,7 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getFormDataById('lkai', this.doc_id)
+			let response = await api.getFormDataById(this.doc_type, this.doc_id)
 			this.data = response.data.data
 
 			if (this.data.lppi_id != null) {
@@ -500,15 +503,14 @@ export default {
 			this.$refs.selectAtasan.selected_jabatan = this.data.atasan.jabatan.kode
 			this.$refs.selectAtasan.plh = this.data.atasan.plh
 			this.$refs.selectAtasan.getPetugas(this.data.atasan.user.user_id, true)
-			console.log('form lkai - render data', JSON.parse(JSON.stringify(this.data)))
 		},
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					this.data = await api.storeDoc('lkai', this.data)
+					this.data = await api.storeDoc(this.doc_type, this.data)
 					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
-					this.alert(`Data LKAI berhasil disimpan`)
+					this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
 				} catch (error) {
 					console.log(`form lkai - save data - error`, error)
 				}
@@ -520,9 +522,9 @@ export default {
 						delete update_ikhtisar.index
 						return update_ikhtisar
 					})
-					this.data = await api.updateDoc('lkai', update_data.id, update_data)
+					this.data = await api.updateDoc(this.doc_type, update_data.id, update_data)
 					this.$emit('update:doc_id', this.data.id)
-					this.alert(`Data LKAI berhasil diubah`)
+					this.alert(`Data ${this.tipe_surat} berhasil diubah`)
 				} catch (error) {
 					console.log(`form lkai - update data - error`, error)
 				}
@@ -534,7 +536,7 @@ export default {
 		async changeValueLppi(id) {
 			if (id != null) {
 				// Get data lppi
-				let lppi = await api.getDocumentById('lppi', id)
+				let lppi = await api.getDocumentById(this.lppi_type, id)
 				
 				// Specify lppi data
 				this.data.lppi_id = id
@@ -550,7 +552,7 @@ export default {
 		},
 		async search_lppi(search) {
 			let data = {'src': search, 'sta': [200], 'exc': this.lppi_search_exception}
-			let responses = await api.searchDoc('lppi', data)
+			let responses = await api.searchDoc(this.lppi_type, data)
 			this.lppi_search_items = responses.data.data
 		},
 		toggleLppi(val) {
@@ -584,6 +586,8 @@ export default {
 	async mounted() {
 		if (this.state == 'edit') {
 			await this.getData()
+		} else if (this.doc_type == 'lkain') {
+			delete this.data.informasi_lain
 		}
 	}
 }

@@ -48,6 +48,12 @@ export default [
 						to: '/lppin',
 						icon: 'cil-file'
 					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LKAI-N',
+						to: '/lkain',
+						icon: 'cil-file'
+					},
 				]
 			}
 		]

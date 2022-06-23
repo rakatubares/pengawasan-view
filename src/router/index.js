@@ -11,6 +11,7 @@ const Homepage = () => import('@/views/Homepage')
 
 // Views - Intelijen
 const PageLkai = () => import('@/views/intelijen/lkai/PageLkai.vue')
+const PageLkaiN = () => import('@/views/intelijen/lkai/PageLkaiN.vue')
 const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
 const PageLppiN = () => import('@/views/intelijen/lppi/PageLppiN.vue')
 const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
@@ -41,6 +42,11 @@ function configRoutes () {
 					path: 'lkai',
 					name: 'LKAI',
 					component: PageLkai
+				},
+				{
+					path: 'lkain',
+					name: 'LKAI-N',
+					component: PageLkaiN
 				},
 				{
 					path: 'lppi',
