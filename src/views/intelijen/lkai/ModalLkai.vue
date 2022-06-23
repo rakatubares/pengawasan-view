@@ -2,7 +2,7 @@
 	<div class="wrapper">
 		<MyModalTabs
 			ref="modal_tabs"
-			title="Data LKAI"
+			:title="`Data ${tipe_surat}`"
 			:tabs_list.sync="tabs_list"
 			:current_tab.sync="current_tab"
 			@close-modal="closeModal"
@@ -12,6 +12,8 @@
 					<MyFormLkai
 						v-if="['insert','edit'].includes(modal_state)"
 						:state.sync="modal_state"
+						:tipe_surat="tipe_surat"
+						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
 					/>
 					<MyDisplayLkai
@@ -54,6 +56,7 @@ export default {
 	},
 	props: {
 		state: String,
+		tipe_surat: String,
 		doc_type: String,
 		id: Number
 	},

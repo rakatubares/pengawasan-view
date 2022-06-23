@@ -67,12 +67,12 @@ import MyFormIkhtisar from './FormIkhtisar.vue'
 import MyModalDeleteIkhtisar from './ModalDeleteIkhtisar.vue'
 
 const show_fields = [
-	{ key: 'ikhtisar', label: 'Ikhtisar Informasi' },
+	{ key: 'ikhtisar', label: 'Ikhtisar Informasi', _style: 'min-width:300px' },
 	{ key: 'kode_kepercayaan', label: 'Sumber' },
 	{ key: 'kode_validitas', label: 'Validitas' },
 ]
 
-const edit_fields = show_fields.concat({ key: 'actions', label: '' })
+const edit_fields = show_fields.concat({ key: 'actions', label: '', _style: 'min-width:150px' })
 
 export default {
 	name: 'TableIkhtisar',

@@ -151,6 +151,16 @@ export default {
 					this.src_pdf = pdfLkai.generatePdf()
 					break;
 
+				case 'lkain':
+					let pdfLkain = new PdfLkai(
+						this.data,
+						this.active_pdf,
+						'LEMBAR KERJA ANALISIS INTELIJEN NPP (LKAI-N)',
+						{start: 60, end: 150}
+					)
+					this.src_pdf = pdfLkain.generatePdf()
+					break;
+
 				case 'lp':
 					let pdfLp = new PdfLp(this.data)
 					this.src_pdf = pdfLp.generatePdf()

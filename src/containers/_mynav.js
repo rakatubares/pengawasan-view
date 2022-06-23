@@ -172,6 +172,12 @@ export default [
 						icon: 'cil-file'
 					},
 					{
+						_name: 'CSidebarNavItem',
+						name: 'LKAI-N',
+						to: '/lkain',
+						icon: 'cil-file'
+					},
+					{
 						_name: 'CSidebarNavDropdown',
 						name: 'SBP-N',
 						icon: 'cil-list',

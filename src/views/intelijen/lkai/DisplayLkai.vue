@@ -14,7 +14,7 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
-						<b>No LPPI</b>
+						<b>{{ doc_type == 'lkain' ? 'No LPPI-N' : 'No LPPI' }}</b>
 					</CCol>
 					<CCol md="9" class="py-1">
 						{{ disp_lppi }}
@@ -30,7 +30,7 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
-						<b>No NPI</b>
+						<b>{{ doc_type == 'lkain' ? 'No NPI-N' : 'No NPI' }}</b>
 					</CCol>
 					<CCol md="9" class="py-1">
 						{{ disp_npi }}
@@ -113,7 +113,7 @@
 						{{ disp_rekomendasi }}
 					</CCol>
 				</CRow>
-				<CRow class="mb-1">
+				<CRow class="mb-1" v-if="doc_type == 'lkai'">
 					<CCol md="3" class="py-1">
 						<b>Informasi Lainnya</b>
 					</CCol>
