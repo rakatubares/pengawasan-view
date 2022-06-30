@@ -15,6 +15,7 @@ const PageLkaiN = () => import('@/views/intelijen/lkai/PageLkaiN.vue')
 const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
 const PageLppiN = () => import('@/views/intelijen/lppi/PageLppiN.vue')
 const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
+const PageNhiN = () => import('@/views/intelijen/nhin/PageNhiN.vue')
 
 Vue.use(Router)
 
@@ -62,6 +63,11 @@ function configRoutes () {
 					path: 'nhi',
 					name: 'NHI',
 					component: PageNhi
+				},
+				{
+					path: 'nhin',
+					name: 'NHI-N',
+					component: PageNhiN
 				},
 			]
 		},

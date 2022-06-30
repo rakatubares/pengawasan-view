@@ -51,6 +51,7 @@ import PdfLkai from './PdfLkai.js'
 import PdfLppi from './PdfLppi.js'
 import PdfNhi from './PdfNhi.js'
 import MyAlert from '../components/AlertSubmit.vue'
+import PdfNhiN from './pdfNhiN.js'
 
 export default {
 	name: "DisplayPdf",
@@ -132,6 +133,11 @@ export default {
 					this.src_pdf = pdfNhi.generatePdf()
 					break;
 
+				case 'nhin':
+					let pdfNhin = new PdfNhiN(this.data)
+					this.src_pdf = pdfNhin.generatePdf()
+					break;
+
 				default:
 					break;
 			}
@@ -151,7 +157,6 @@ export default {
 		}
 	},
 	mounted() {
-		console.log('display pdf - mounted', this.doc_type)
 		this.getPdf()
 	}
 }
