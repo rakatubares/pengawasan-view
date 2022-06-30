@@ -111,9 +111,14 @@ class PdfNhiN extends Pdf {
 		this.pdf.text('C.', this.props.ind.sta, this.ln)
 		this.pdf.text('Kantor Bea dan Cukai', this.props.ind.lbl3, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		let txt_kantor = this.nhin.kantor || ''
-		this.pdf.text(txt_kantor, this.props.ind.val3, this.ln)
-		this.ln += this.props.font.height
+		let arr_kantor = ''
+		let hgt_kantor = 1
+		if (this.nhin.kantor_bc) {
+			arr_kantor = converters.array_text(this.nhin.kantor_bc.nama_kantor, 38)
+			hgt_kantor = arr_kantor.length
+		}
+		this.pdf.text(arr_kantor, this.props.ind.val3, this.ln)
+		this.ln += this.props.font.height*hgt_kantor
 
 		// EXIM
 		this.pdf.text('D.', this.props.ind.sta, this.ln)

@@ -179,6 +179,14 @@ class API {
 		return await this.getApi('/lokasi')
 	}
 
+	async searchKantorBC(data) {
+		return await this.postApi('/kantor/search', data)
+	}
+
+	async getKantorByCode(code) {
+		return await this.getApi(`/kantor/kode/${code}`)
+	}
+
 	async searchSatuan(data) {
 		return await this.postApi('/satuan/search', data)
 	}
