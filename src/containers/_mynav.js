@@ -178,6 +178,12 @@ export default [
 						icon: 'cil-file'
 					},
 					{
+						_name: 'CSidebarNavItem',
+						name: 'NHI-N',
+						to: '/nhin',
+						icon: 'cil-file'
+					},
+					{
 						_name: 'CSidebarNavDropdown',
 						name: 'SBP-N',
 						icon: 'cil-list',

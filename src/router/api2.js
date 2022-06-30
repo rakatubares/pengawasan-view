@@ -207,6 +207,14 @@ class API {
 		return await this.getApi(`/kategori/${id}`)
 	}
 
+	async searchBandara(data) {
+		return await this.postApi('/bandara/search', data)
+	}
+
+	async getBandaraByCode(code) {
+		return await this.getApi(`/bandara/${code}`)
+	}
+
 	async getKlasifikasiKepercayaan() {
 		return await this.getApi(`/kepercayaan`)
 	}

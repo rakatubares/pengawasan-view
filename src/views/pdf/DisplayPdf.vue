@@ -71,6 +71,7 @@ import PdfTitip from './PdfTitip.js'
 import PdfTolak1 from './PdfTolak1.js'
 import PdfTolak2 from './PdfTolak2.js'
 import MyAlert from '../components/AlertSubmit.vue'
+import PdfNhiN from './pdfNhiN.js'
 
 export default {
 	name: "DisplayPdf",
@@ -224,6 +225,11 @@ export default {
 					this.src_pdf = pdfNhi.generatePdf()
 					break;
 
+				case 'nhin':
+					let pdfNhin = new PdfNhiN(this.data)
+					this.src_pdf = pdfNhin.generatePdf()
+					break;
+
 				case 'reekspor':
 					let pdfReekspor = new PdfReekspor(this.data)
 					this.src_pdf = pdfReekspor.generatePdf()
@@ -308,7 +314,6 @@ export default {
 		}
 	},
 	mounted() {
-		console.log('display pdf - mounted', this.doc_type)
 		this.getPdf()
 	}
 }

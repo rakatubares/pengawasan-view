@@ -4,20 +4,20 @@
 			<CCol class="mt-3 mx-2" md="12">
 				<CRow>
 					<CCol class="pb-1">
-						<h4>{{ disp_no_nhi }}</h4>
+						<h4>{{ disp_no_nhin }}</h4>
 					</CCol>
 				</CRow>
 				<CRow>
 					<CCol class="pt-1 pb-3">
-						<h5>{{ disp_tgl_nhi }}</h5>
+						<h5>{{ disp_tgl_nhin }}</h5>
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
-						<b>No LKAI</b>
+						<b>No LKAI-N</b>
 					</CCol>
 					<CCol md="9" class="py-1">
-						{{ disp_lkai }}
+						{{ disp_lkain }}
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
@@ -73,7 +73,7 @@
 				<div class="sep" v-if="data_doc.flag_exim">
 					<CRow class="mt-2">
 						<CCol>
-							<h4><b>Barang Impor/Ekspor</b></h4>
+							<h4><b>Kegiatan atas Barang Impor/Ekspor</b></h4>
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
@@ -134,51 +134,59 @@
 					</CRow>
 				</div>
 
-				<!-- BKC -->
-				<div class="sep" v-if="data_doc.flag_bkc">
+				<!-- Sarkut -->
+				<div class="sep" v-if="data_doc.flag_sarkut">
 					<CRow class="mt-2">
 						<CCol>
-							<h4><b>Barang Kena Cukai</b></h4>
+							<h4><b>Kegiatan atas Sarana Pengangkut</b></h4>
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
 						<CCol md="3" class="py-1">
-							<b>Eks Pabrik/Tempat Penyimpanan/Tempat Penimbunan</b>
+							<b>Nama</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_penimbunan }}
+							{{ disp_nama_sarkut }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
 						<CCol md="3" class="py-1">
-							<b>Penyalur</b>
+							<b>Jenis Sarana Pengangkut</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_penyalur }}
+							{{ disp_jenis_sarkut }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
 						<CCol md="3" class="py-1">
-							<b>Tempat Penjualan Eceran</b>
+							<b>Voyage / Flight / No Pol</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_tempat_penjualan }}
+							{{ disp_flight_trayek_sarkut }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
 						<CCol md="3" class="py-1">
-							<b>NPPBKC</b>
+							<b>Pelabuhan Asal</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_nppbkc }}
+							{{ disp_asal_sarkut }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
 						<CCol md="3" class="py-1">
-							<b>Eks/Untuk Kapal/Pesawat/Alat Angkut/Lainnya</b>
+							<b>Pelabuhan Tujuan</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_sarkut_bkc }}
+							{{ disp_tujuan_sarkut }}
+						</CCol>
+					</CRow>
+					<CRow class="mb-1">
+						<CCol md="3" class="py-1">
+							<b>IMO / MMSI</b>
+						</CCol>
+						<CCol md="9" class="py-1">
+							{{ disp_imo_mmsi }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
@@ -186,56 +194,88 @@
 							<b>Data Lainnya</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_data_lain_bkc }}
+							{{ disp_data_lain_sarkut }}
 						</CCol>
 					</CRow>
 				</div>
 
-				<!-- Barang Tertentu -->
-				<div class="sep" v-if="data_doc.flag_tertentu">
+				<!-- Orang -->
+				<div class="sep" v-if="data_doc.flag_orang">
 					<CRow class="mt-2">
 						<CCol>
-							<h4><b>Barang Tertentu</b></h4>
+							<h4><b>Kegiatan atas Orang</b></h4>
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
 						<CCol md="3" class="py-1">
-							<b>Nama/No Dokumen</b>
+							<b>Nama</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_dok_tertentu }}
+							{{ disp_nama_orang }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
 						<CCol md="3" class="py-1">
-							<b>Eks/Untuk Kapal/Pesawat/Alat Angkut/Lainnya</b>
+							<b>Jenis Kelamin</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_sarkut_tertentu }}
+							{{ disp_jenis_kelamin }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
 						<CCol md="3" class="py-1">
-							<b>BL/AWB</b>
+							<b>Kewarganegaraan</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_awb_tertentu }}
+							{{ disp_warga_negara }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
 						<CCol md="3" class="py-1">
-							<b>No Container/Merek Koli</b>
+							<b>No Paspor</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_merek_koli_tertentu }}
+							{{ disp_paspor }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
 						<CCol md="3" class="py-1">
-							<b>Orang Pribadi/Badan Hukum</b>
+							<b>Flight / Voyage</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_orang_badan_hukum }}
+							{{ disp_flight_voyage_orang }}
+						</CCol>
+					</CRow>
+					<CRow class="mb-1">
+						<CCol md="3" class="py-1">
+							<b>Pelabuhan / Bandara Asal</b>
+						</CCol>
+						<CCol md="9" class="py-1">
+							{{ disp_pelabuhan_asal_orang }}
+						</CCol>
+					</CRow>
+					<CRow class="mb-1">
+						<CCol md="3" class="py-1">
+							<b>Pelabuhan / Bandara Tujuan</b>
+						</CCol>
+						<CCol md="9" class="py-1">
+							{{ disp_pelabuhan_tujuan_orang }}
+						</CCol>
+					</CRow>
+					<CRow class="mb-1">
+						<CCol md="3" class="py-1">
+							<b>Waktu Keberangkatan</b>
+						</CCol>
+						<CCol md="9" class="py-1">
+							{{ disp_waktu_berangkat_orang }}
+						</CCol>
+					</CRow>
+					<CRow class="mb-1">
+						<CCol md="3" class="py-1">
+							<b>Waktu Kedatangan</b>
+						</CCol>
+						<CCol md="9" class="py-1">
+							{{ disp_waktu_datang_orang }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
@@ -243,7 +283,7 @@
 							<b>Data Lainnya</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_data_lain_tertentu }}
+							{{ disp_data_lain_orang }}
 						</CCol>
 					</CRow>
 				</div>
@@ -290,36 +330,36 @@ import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
 
 export default {
-	name: 'DisplayNhi',
+	name: 'DisplayNhiN',
 	components: {
 		MyDisplayPegawai,
 		MyDisplayPejabat,
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number
+		doc_id: Number,
 	},
 	data() {
 		return {
-			data_doc: {}
+			data_doc: {},
 		}
 	},
 	computed: {
-		disp_no_nhi() { return this.data_doc.no_dok_lengkap || '-' },
-		disp_tgl_nhi() { return this.data_doc.tanggal_dokumen || '-' },
-		disp_lkai() { 
+		disp_no_nhin() { return this.data_doc.no_dok_lengkap || '-' },
+		disp_tgl_nhin() { return this.data_doc.tanggal_dokumen || '-' },
+		disp_lkain() { 
 			if (
-				(this.data_doc.nomor_lkai != null) &&
-				(this.data_doc.tanggal_lkai != null)
+				(this.data_doc.nomor_lkain != null) &&
+				(this.data_doc.tanggal_lkain != null)
 			) {
-				let no_lkai = this.data_doc.nomor_lkai || '-'
-				let tgl_lkai = this.data_doc.tanggal_lkai || '-'
-				var lkai = `${no_lkai} tanggal ${tgl_lkai}`
+				let no_lkain = this.data_doc.nomor_lkain || '-'
+				let tgl_lkain = this.data_doc.tanggal_lkain || '-'
+				var lkain = `${no_lkain} tanggal ${tgl_lkain}`
 			} else {
-				var lkai = '-'
+				var lkain = '-'
 			}
 
-			return lkai
+			return lkain
 		},
 		disp_sifat() { return this.data_doc.sifat || '-' },
 		disp_klasifikasi() { return this.data_doc.klasifikasi || '-' },
@@ -342,25 +382,57 @@ export default {
 		disp_importir_ppjk() { return this.data_doc.importir_ppjk || '-' },
 		disp_npwp() { return this.data_doc.npwp || '-' },
 		disp_data_lain_exim() { return this.data_doc.data_lain_exim || '-' },
-		disp_penimbunan() { return this.data_doc.tempat_penimbunan || '-' },
-		disp_penyalur() { return this.data_doc.penyalur || '-' },
-		disp_tempat_penjualan() { return this.data_doc.tempat_penjualan || '-' },
-		disp_nppbkc() { return this.data_doc.nppbkc || '-' },
-		disp_sarkut_bkc() { return `${this.data_doc.nama_sarkut_bkc} Voy/Flight/No. Pol ${this.data_doc.no_flight_trayek_bkc}` },
-		disp_data_lain_bkc() { return this.data_doc.no_flight_trayek_bkc || '-' },
-		disp_dok_tertentu() { return `${this.data_doc.jenis_dok_tertentu} ${this.data_doc.nomor_dok_tertentu} tanggal ${this.data_doc.tanggal_dok_tertentu}` },
-		disp_sarkut_tertentu() { return `${this.data_doc.nama_sarkut_tertentu} Voy/Flight/No. Pol ${this.data_doc.no_flight_trayek_tertentu}` },
-		disp_awb_tertentu() { return `${this.data_doc.nomor_awb_tertentu} tanggal ${this.data_doc.tanggal_awb_tertentu}`},
-		disp_merek_koli_tertentu() { return this.data_doc.merek_koli_tertentu || '-' },
-		disp_orang_badan_hukum() { return this.data_doc.orang_badan_hukum || '-' },
-		disp_data_lain_tertentu() { return this.data_doc.data_lain_tertentu || '-' },
+		disp_nama_sarkut() { return this.data_doc.nama_sarkut || '-' },
+		disp_jenis_sarkut() { return this.data_doc.jenis_sarkut || '-' },
+		disp_flight_trayek_sarkut() { return this.data_doc.no_flight_trayek_sarkut || '-' },
+		disp_asal_sarkut() { 
+			if (this.data_doc.pelabuhan_asal_sarkut) {
+				return `${this.data_doc.pelabuhan_asal_sarkut.airport_name}, ${this.data_doc.pelabuhan_asal_sarkut.negara.nama_negara}`
+			} else {
+				return '-'
+			}
+		},
+		disp_tujuan_sarkut() { 
+			if (this.data_doc.pelabuhan_tujuan_sarkut) {
+				return `${this.data_doc.pelabuhan_tujuan_sarkut.airport_name}, ${this.data_doc.pelabuhan_tujuan_sarkut.negara.nama_negara}`
+			} else {
+				return '-'
+			}
+		},
+		disp_imo_mmsi() { return this.data_doc.imo_mmsi_sarkut || '-' },
+		disp_data_lain_sarkut() { return this.data_doc.data_lain_sarkut || '-' },
+		disp_nama_orang() { return this.data_doc.orang.nama || '-' },
+		disp_jenis_kelamin() { return this.data_doc.orang.jenis_kelamin || '-' },
+		disp_warga_negara() { return this.data_doc.orang.warga_negara || '-' },
+		disp_paspor() { return this.data_doc.orang.nomor_identitas || '-' },
+		disp_flight_voyage_orang() { return this.data_doc.flight_voyage_orang || '-' },
+		disp_pelabuhan_asal_orang() {
+			if (this.data_doc.pelabuhan_asal_orang) {
+				return `${this.data_doc.pelabuhan_asal_orang.airport_name}, ${this.data_doc.pelabuhan_asal_orang.negara.nama_negara}`
+			} else {
+				return '-'
+			}
+		},
+		disp_pelabuhan_tujuan_orang() {
+			if (this.data_doc.pelabuhan_tujuan_orang) {
+				return `${this.data_doc.pelabuhan_tujuan_orang.airport_name}, ${this.data_doc.pelabuhan_tujuan_orang.negara.nama_negara}`
+			} else {
+				return '-'
+			}
+		},
+		disp_waktu_berangkat_orang() { return this.data_doc.waktu_berangkat_orang || '-' },
+		disp_waktu_datang_orang() { return this.data_doc.waktu_datang_orang || '-' },
+		disp_data_lain_orang() { return this.data_doc.data_lain_orang || '-' },
 		disp_indikasi() { return this.data_doc.indikasi || '-' },
 		data_tembusan() { return  this.data_doc.tembusan || null }
 	},
 	methods: {
 		async getData() {
 			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
+			response.data.data.flag_exim = response.data.data.flag_exim == 1 ? true : false
 			this.data_doc = response.data.data
+			this.$emit('update:is_exim', response.data.data.flag_exim)
+			this.$emit('show-data')
 		}
 	},
 	async mounted() {
