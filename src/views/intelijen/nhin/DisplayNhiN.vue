@@ -374,7 +374,13 @@ export default {
 
 			return waktu
 		},
-		disp_kantor() { return this.data_doc.kantor || '-' },
+		disp_kantor() { 
+			if (this.data_doc.kantor_bc) {
+				return this.data_doc.kantor_bc.nama_kantor
+			} else {
+				return '-'
+			}
+		},
 		disp_dok_exim() { return `${this.data_doc.jenis_dok_exim} ${this.data_doc.nomor_dok_exim} tanggal ${this.data_doc.tanggal_dok_exim}` },
 		disp_sarkut_exim() { return `${this.data_doc.nama_sarkut_exim} Voy/Flight/No. Pol ${this.data_doc.no_flight_trayek_exim}` },
 		disp_awb_exim() { return `${this.data_doc.nomor_awb_exim} tanggal ${this.data_doc.tanggal_awb_exim}`},

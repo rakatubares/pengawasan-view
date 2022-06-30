@@ -111,10 +111,15 @@
 			</CRow>
 			<CRow>
 				<CCol sm="8">
-					<CInput
+					<!-- <CInput
 						label="Kantor Bea dan Cukai"
 						description="Kantor Wilayah atau Kantor Pelayanan yang membawahi pengawasan atas wilayah terjadinya atau akan terjadinya indikasi pelanggaran"
 						:value.sync="data.kantor"
+					/> -->
+					<MySelectKantorBC
+						ref="selectKantor"
+						:kd_kantor.sync="data.kantor_bc.kd_kantor"
+						default_kantor="050100"
 					/>
 				</CCol>
 			</CRow>
@@ -331,6 +336,7 @@
 				<CRow>
 					<CCol md="8" sm="12">
 						<MySelectBandara 
+							ref="selectAsalOrang"
 							label="Pelabuhan / Bandara Asal"
 							:iata_code.sync="data.pelabuhan_asal_orang.iata_code"
 						/>
@@ -339,6 +345,7 @@
 				<CRow>
 					<CCol md="8" sm="12">
 						<MySelectBandara 
+							ref="selectTujuanOrang"
 							label="Pelabuhan / Bandara Tujuan"
 							:iata_code.sync="data.pelabuhan_tujuan_orang.iata_code"
 						/>
@@ -478,6 +485,7 @@ import MyAlert from '../../components/AlertSubmit.vue'
 import MyComboboxTembusan from '../../components/ComboboxTembusan.vue'
 import MySelectBandara from '../../components/SelectBandara.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectKantorBC from '../../components/SelectKantorBC.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 
 const default_sifat_nhi_options = ['segera', 'sangat segera']
@@ -493,7 +501,7 @@ const default_data = {
 	tempat_indikasi: null,
 	waktu_indikasi: null,
 	zona_waktu: default_zona_waktu_options[0],
-	kantor: null,
+	kantor_bc: {kd_kantor: null},
 	flag_exim: true,
 	jenis_dok_exim: null,
 	nomor_dok_exim: null,
@@ -543,6 +551,7 @@ export default {
 		MyComboboxTembusan,
 		MySelectBandara,
 		MySelectEntitas,
+		MySelectKantorBC,
 		MySelectPejabat,
 	},
 	props: {
@@ -617,6 +626,14 @@ export default {
 			}
 		},
 		renderData() {
+			// Get data kantor
+			this.$refs.selectKantor.getData(this.data.kantor_bc.kd_kantor)
+
+			// Get data orang
+			if (this.data.orang) {
+				this.$refs.selectOrang.getEntitas(this.data.orang.id, true)	
+			}
+
 			// Get data bandara
 			if (this.data.pelabuhan_asal_sarkut.iata_code != null) {
 				this.$refs.selectAsalSarkut.getData(this.data.pelabuhan_asal_sarkut.iata_code)
