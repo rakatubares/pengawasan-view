@@ -7,9 +7,8 @@
 						:label="label.jabatan"
 						:options.sync="option_jabatan"
 						:value.sync="selected_jabatan"
-						
+						@update:value="changeFilterJabatan($event, true)"
 					>
-					<!-- @update:value="changeFilterJabatan" -->
 						<template #append>
 							<CDropdown
 								:togglerText.sync="txt_plh"
@@ -28,9 +27,6 @@
 							</CDropdown>
 						</template>
 					</CSelect>
-				</CCol>
-				<CCol md="4" sm=12>
-
 				</CCol>
 			</CRow>
 			<CRow>
@@ -91,6 +87,7 @@ const default_petugas = {
 export default {
 	name: 'SelectPejabat',
 	props: {
+		state: String,
 		label: {
 			type: Object,
 			default() {
@@ -101,8 +98,11 @@ export default {
 			}
 		},
 		description: String,
+		default_jabatan: String,
 		selectable_jabatan: Array,
 		selectable_plh: Array,
+		id_pejabat: Number,
+		jabatan: String,
 	},
 	computed: {
 		...mapState(['userInfo'])
@@ -127,39 +127,62 @@ export default {
 				this.items = await api.getUserByPosition(positions)
 			}
 		},
-		selected_jabatan(val) {
-			this.filter_jabatan = [val]
-			this.$emit('update:jabatan', val)
-		}
 	},
 	methods: {
 		async createOption() {
 			let positions = {positions: this.selectable_jabatan}
 			let list_jabatan = await api.getJabatanByCode(positions)
-			list_jabatan.forEach(row => {
+
+			// Create Options
+			list_jabatan.forEach(j => {
 				let option = {
-					value: row.kode,
-					label: row.jabatan
+					value: j.kode,
+					label: j.jabatan
 				}
 				this.option_jabatan.push(option)
 			});
-			this.selected_jabatan = this.option_jabatan[0].value
+			
+			// Get default pejabat when creating new document
+			if (this.state == 'insert') {
+				var select = this.option_jabatan[0].value
+				if (this.default_jabatan != null) {
+					this.option_jabatan.forEach(o => {
+						if (o.value == this.default_jabatan) {
+							select = o.value
+						}
+					});	
+				}
+
+				this.changeFilterJabatan(select, false)
+				await this.autofillPejabat(this.selected_jabatan)
+			}
 		},
-		changeFilterJabatan() {
-			this.filter_jabatan = [this.jabatan]
-			this.$emit('update:jabatan', this.jabatan)
+		async autofillPejabat(kd_jabatan) {
+			let pejabat = await api.getUserByPosition({positions: [kd_jabatan]})
+			this.changePejabat(pejabat[0].user_id, true)
+		},
+		async changeFilterJabatan(val, autofill=true) {
+			this.selected_jabatan = val
+			this.filter_jabatan = [this.selected_jabatan]
+			this.$emit('update:jabatan', this.selected_jabatan)
+			if ((this.plh == false) && (autofill == true)) {
+				await this.autofillPejabat(this.selected_jabatan)	
+			}
 		},
 		changePejabat(id, mounted=false) {
 			this.getPetugas(id, mounted)
 			this.$emit('update:id_pejabat', id)
 		},
-		togglePlh(val) {
+		async togglePlh(val) {
 			if (val == true) {
 				this.plh = true
 				this.txt_plh = 'PLH'
+				this.filter_jabatan = this.selectable_plh
 			} else {
 				this.plh = false
 				this.txt_plh = 'Non-PLH'
+				this.filter_jabatan = [this.selected_jabatan]
+				await this.autofillPejabat(this.selected_jabatan)
 			}
 			this.$emit('update:plh', this.plh)
 		},
@@ -180,7 +203,9 @@ export default {
 		},
 	},
 	mounted() {
-		this.createOption()
+		this.$nextTick(function() {
+			this.createOption()	
+		})
 	}
 }
 </script>

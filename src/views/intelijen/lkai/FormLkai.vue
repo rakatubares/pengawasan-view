@@ -312,6 +312,8 @@
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectPejabat"
+						:state.sync="state"
+						:default_jabatan.sync="default_jabatan"
 						:selectable_jabatan="['bd.0501', 'bd.0502']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
 						:id_pejabat.sync="data.pejabat.user.user_id"
@@ -372,6 +374,7 @@
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectAtasan"
+						:state.sync="state"
 						:selectable_jabatan="['bd.05']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
 						:id_pejabat.sync="data.atasan.user.user_id"
@@ -471,6 +474,7 @@ export default {
 			lppi_search_query: null,
 			lppi_search_exception: null,
 			lppi_enabled: false,
+			default_jabatan: 'bd.0501',
 			ikhtisar_state: 'insert'
 		}
 	},
@@ -498,10 +502,10 @@ export default {
 		},
 		renderData() {
 			this.$refs.selectPejabat.selected_jabatan = this.data.pejabat.jabatan.kode
-			this.$refs.selectPejabat.plh = this.data.pejabat.plh
+			this.$refs.selectPejabat.togglePlh(this.data.pejabat.plh)
 			this.$refs.selectPejabat.getPetugas(this.data.pejabat.user.user_id, true)
 			this.$refs.selectAtasan.selected_jabatan = this.data.atasan.jabatan.kode
-			this.$refs.selectAtasan.plh = this.data.atasan.plh
+			this.$refs.selectAtasan.togglePlh(this.data.atasan.plh)
 			this.$refs.selectAtasan.getPetugas(this.data.atasan.user.user_id, true)
 		},
 		async saveData() {
@@ -584,6 +588,11 @@ export default {
 		},
 	},
 	async mounted() {
+		// Change jabatan option for LKAI-N
+		if (this.doc_type == 'lkain') {
+			this.default_jabatan = 'bd.0502'
+		}
+
 		if (this.state == 'edit') {
 			await this.getData()
 		} else if (this.doc_type == 'lkain') {

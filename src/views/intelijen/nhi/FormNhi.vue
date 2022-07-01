@@ -430,6 +430,7 @@
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectPejabat"
+						:state.sync="state"
 						:label="{jabatan: 'Jabatan Penerbit', nama: 'Nama Penerbit'}"
 						:selectable_jabatan="['bd.05']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
@@ -604,7 +605,7 @@ export default {
 		},
 		renderData() {
 			this.$refs.selectPejabat.selected_jabatan = this.data.penerbit.jabatan.kode
-			this.$refs.selectPejabat.plh = this.data.penerbit.plh
+			this.$refs.selectPejabat.togglePlh(this.data.penerbit.plh)
 			this.$refs.selectPejabat.getPetugas(this.data.penerbit.user.user_id, true)
 		},
 		async saveData() {
