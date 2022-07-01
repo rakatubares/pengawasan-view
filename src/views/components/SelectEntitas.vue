@@ -87,7 +87,7 @@
 		<CRow v-if="showAlamat">
 			<CCol md="12">
 				<CTextarea
-					label="Alamat"
+					label="Alamat Identitas"
 					:value.sync="entitas.alamat"
 					disabled
 				/>
@@ -110,6 +110,14 @@
 							:value.sync="new_entitas.nama"
 							:is-valid="validatorRequired"
 							invalid-feedback="Nama entitas wajib diisi"
+						/>
+					</CCol>
+				</CRow>
+				<CRow>
+					<CCol sm="12">
+						<CInput
+							label="Alias"
+							:value.sync="new_entitas.alias"
 						/>
 					</CCol>
 				</CRow>
@@ -186,16 +194,40 @@
 				<CRow>
 					<CCol sm="12">
 						<CInput
-							label="Pekerjaan"
-							:value.sync="new_entitas.pekerjaan"
+							label="Penerbit Identitas"
+							:value.sync="new_entitas.penerbit_identitas"
+						/>
+					</CCol>
+				</CRow>
+				<CRow>
+					<CCol sm="12">
+						<CInput
+							label="Tempat Terbit"
+							:value.sync="new_entitas.tempat_identitas_terbit"
 						/>
 					</CCol>
 				</CRow>
 				<CRow>
 					<CCol sm="12">
 						<CTextarea
-							label="Alamat"
+							label="Alamat Identitas"
 							:value.sync="new_entitas.alamat"
+						/>
+					</CCol>
+				</CRow>
+				<CRow>
+					<CCol sm="12">
+						<CTextarea
+							label="Alamat Tinggal"
+							:value.sync="new_entitas.alamat_tinggal"
+						/>
+					</CCol>
+				</CRow>
+				<CRow>
+					<CCol sm="12">
+						<CInput
+							label="Pekerjaan"
+							:value.sync="new_entitas.pekerjaan"
 						/>
 					</CCol>
 				</CRow>

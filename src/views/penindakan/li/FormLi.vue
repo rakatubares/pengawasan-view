@@ -41,6 +41,7 @@
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectPenerbit"
+						:state.sync="state"
 						:label="{jabatan: 'Jabatan Penerbit', nama: 'Nama Penerbit'}"
 						:selectable_jabatan="['bd.0503', 'bd.0504']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
@@ -54,6 +55,7 @@
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectAtasan"
+						:state.sync="state"
 						:label="{jabatan: 'Jabatan Atasan', nama: 'Nama Atasan'}"
 						:selectable_jabatan="['bd.05']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
@@ -131,25 +133,25 @@ export default {
 		},
 		renderData() {
 			this.$refs.selectPenerbit.selected_jabatan = this.data.penerbit.jabatan.kode
+			this.$refs.selectPenerbit.togglePlh(this.data.penerbit.plh)
 			this.$refs.selectPenerbit.getPetugas(this.data.penerbit.user.user_id, true)
 			this.$refs.selectAtasan.selected_jabatan = this.data.atasan.jabatan.kode
+			this.$refs.selectAtasan.togglePlh(this.data.atasan.plh)
 			this.$refs.selectAtasan.getPetugas(this.data.atasan.user.user_id, true)
 		},
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					console.log('form li - doc id 1', this.doc_id)
-					let response = await api.storeDoc(this.doc_type, this.data)
-					this.$emit('update:doc_id', response.id)
+					this.data = await api.storeDoc(this.doc_type, this.data)
+					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data LI-1 berhasil disimpan')
-					console.log('form li - doc id 2', this.doc_id)
 				} catch (error) {
 					console.log('form li - save data - error', error)
 				}
 			} else if (this.state == 'edit') {
 				try {
-					await api.updateDoc(this.doc_type, this.data.id, this.data)
+					this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 					this.alert('Data LI-1 berhasil diubah')
 				} catch (error) {
 					console.log('form li - update data - error', error)
