@@ -18,8 +18,9 @@ const props = {
 		txt: ind_start + 18,
 		cln2: ind_start + 50,
 		txt2: ind_start + 53,
-		ttd1: ind_start + 5,
-		ttd2: 125,
+		ttd1: ind_start + 7,
+		plh2: 120,
+		ttd2: 127,
 	}
 }
 
@@ -88,10 +89,14 @@ class PdfLi extends Pdf {
 		let ln_ttd_nip = ln_ttd_nama + this.props.font.height
 		this.ln = ln_ttd_nip + this.props.font.height*3
 
+		let plh_atasan = this.data.dokumen.li.atasan.plh ? 'Plh.' : ''
+		this.pdf.text(plh_atasan, this.props.ind.sta, ln_ttd_jabatan)
 		this.pdf.text(this.data.dokumen.li.atasan.jabatan.jabatan, this.props.ind.ttd1, ln_ttd_jabatan)
 		this.pdf.text(this.data.dokumen.li.atasan.user.name, this.props.ind.ttd1, ln_ttd_nama)
 		this.pdf.text('NIP. ' + this.data.dokumen.li.atasan.user.nip, this.props.ind.ttd1, ln_ttd_nip)
 		
+		let plh_penerbit = this.data.dokumen.li.penerbit.plh ? 'Plh.' : ''
+		this.pdf.text(plh_penerbit, this.props.ind.plh2, ln_ttd_jabatan)
 		this.pdf.text(this.data.dokumen.li.penerbit.jabatan.jabatan, this.props.ind.ttd2, ln_ttd_jabatan)
 		this.pdf.text(this.data.dokumen.li.penerbit.user.name, this.props.ind.ttd2, ln_ttd_nama)
 		this.pdf.text('NIP. ' + this.data.dokumen.li.penerbit.user.nip, this.props.ind.ttd2, ln_ttd_nip)
