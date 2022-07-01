@@ -27,7 +27,9 @@ const props = {
 		lbl3: 40,
 		cln4: 115,
 		txt4: 118, 
-		ttd:125,
+		ttd1: 22,
+		plh2: 120,
+		ttd2: 127,
 		lamp: 140
 	}
 }
@@ -172,14 +174,18 @@ class PdfLap extends Pdf {
 		this.ln = ln_ttd_nip + this.props.font.height*3
 		let tgl_lap = converters.fullDate(converters.date(this.data.dokumen.lap.tanggal_dokumen, 'DD-MM-YYYY'))
 
-		this.pdf.text(this.data.dokumen.lap.atasan.jabatan.jabatan, this.props.ind.num, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.lap.atasan.user.name, this.props.ind.num, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen.lap.atasan.user.nip, this.props.ind.num, ln_ttd_nip)
+		let plh_atasan = this.data.dokumen.lap.atasan.plh ? 'Plh.' : ''
+		this.pdf.text(plh_atasan, this.props.ind.alp, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen.lap.atasan.jabatan.jabatan, this.props.ind.ttd1, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen.lap.atasan.user.name, this.props.ind.ttd1, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.dokumen.lap.atasan.user.nip, this.props.ind.ttd1, ln_ttd_nip)
 		
-		this.pdf.text('Tangerang, ' + tgl_lap, this.props.ind.ttd, ln_tgl_ttd)
-		this.pdf.text(this.data.dokumen.lap.penerbit.jabatan.jabatan, this.props.ind.ttd, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.lap.penerbit.user.name, this.props.ind.ttd, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen.lap.penerbit.user.nip, this.props.ind.ttd, ln_ttd_nip)
+		this.pdf.text('Tangerang, ' + tgl_lap, this.props.ind.ttd2, ln_tgl_ttd)
+		let plh_penerbit = this.data.dokumen.lap.penerbit.plh ? 'Plh.' : ''
+		this.pdf.text(plh_penerbit, this.props.ind.plh2, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen.lap.penerbit.jabatan.jabatan, this.props.ind.ttd2, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen.lap.penerbit.user.name, this.props.ind.ttd2, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.dokumen.lap.penerbit.user.nip, this.props.ind.ttd2, ln_ttd_nip)
 
 		////// WATERMARK //////
 		if ([100].includes(this.data.dokumen.lap.kode_status)) {
