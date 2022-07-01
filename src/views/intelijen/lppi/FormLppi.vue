@@ -268,6 +268,8 @@
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectPejabat"
+						:state.sync="state"
+						:default_jabatan.sync="default_jabatan"
 						:selectable_jabatan="['bd.0501', 'bd.0502']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
 						:id_pejabat.sync="data.pejabat.user.user_id"
@@ -350,6 +352,7 @@ export default {
 	data() {
 		return {
 			data: JSON.parse(JSON.stringify(default_data)),
+			default_jabatan: 'bd.0501'
 		}
 	},
 	methods: {
@@ -382,7 +385,7 @@ export default {
 			this.$refs.selectPenilai.getPetugas(this.data.penilai_info.user_id, true)
 			this.$refs.selectDisposisi.getPetugas(this.data.disposisi.user_id, true)
 			this.$refs.selectPejabat.selected_jabatan = this.data.pejabat.jabatan.kode
-			this.$refs.selectPejabat.plh = this.data.pejabat.plh
+			this.$refs.selectPejabat.togglePlh(this.data.pejabat.plh)
 			this.$refs.selectPejabat.getPetugas(this.data.pejabat.user.user_id, true)
 			this.$refs.tableIkhtisar.list_ikhtisar = this.data.ikhtisar
 		},
@@ -434,6 +437,11 @@ export default {
 		},
 	},
 	async mounted() {
+		// Change jabatan option for LPPI-N
+		if (this.doc_type == 'lppin') {
+			this.default_jabatan = 'bd.0502'
+		}
+
 		if (this.state == 'edit') {
 			await this.getData()
 		}
