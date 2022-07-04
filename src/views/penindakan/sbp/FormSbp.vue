@@ -186,6 +186,7 @@
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectPejabat"
+						:state.sync="state"
 						:label="{jabatan: 'Jabatan Atasan', nama: 'Nama Atasan'}"
 						:selectable_jabatan="['bd.0503', 'bd.0504']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
@@ -330,7 +331,9 @@ export default {
 			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
 			this.$refs.selectPetugas2.getPetugas(this.data.penindakan.petugas2.user_id, true)
 			if (this.doc_type == 'sbp') {
-				this.$refs.selectPejabat.getPetugas(this.data.lptp.atasan.user.user_id, true)	
+				this.$refs.selectPejabat.selected_jabatan = this.data.lptp.atasan.jabatan.kode
+				this.$refs.selectPejabat.togglePlh(this.data.lptp.atasan.plh)
+				this.$refs.selectPejabat.getPetugas(this.data.lptp.atasan.user.user_id, true)
 			}
 		},
 		async saveData() {

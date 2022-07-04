@@ -20,7 +20,7 @@ const props = {
 		lbl2: ind_start + 110,
 		cln2: ind_start + 135,
 		txt2: ind_start + 138,
-		ttd:125,
+		plh: ind_start + 103,
 		lamp: 140
 	}
 }
@@ -188,6 +188,8 @@ class PdfLp extends Pdf {
 		let tgl_lp = converters.fullDate(converters.date(this.data.dokumen.lp.tanggal_dokumen, 'DD-MM-YYYY'))
 		this.pdf.text('Tangerang, ' + tgl_lp, this.props.ind.lbl2, this.ln)
 		this.ln += this.props.font.height
+		let plh = this.data.dokumen.lp.pejabat.plh ? 'Plh.' : ''
+		this.pdf.text(plh, this.props.ind.plh, this.ln)
 		this.pdf.text(this.data.dokumen.lp.pejabat.jabatan.jabatan, this.props.ind.lbl2, this.ln)
 		this.ln += this.props.font.height*5
 		this.pdf.text(this.data.dokumen.lp.pejabat.user.name, this.props.ind.lbl2, this.ln)

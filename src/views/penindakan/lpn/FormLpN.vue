@@ -66,6 +66,7 @@
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectPenyusun"
+						:state.sync="state"
 						:label="{jabatan: 'Jabatan Penyusun', nama: 'Nama Penyusun'}"
 						:selectable_jabatan="['bd.0503', 'bd.0504']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
@@ -79,6 +80,7 @@
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectPenerbit"
+						:state.sync="state"
 						:label="{jabatan: 'Jabatan Penerbit', nama: 'Nama Penerbit'}"
 						:selectable_jabatan="['bd.05']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
@@ -179,8 +181,10 @@ export default {
 			this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
 			this.$refs.selectSbp.getData(this.data.id_sbp, true)
 			this.$refs.selectPenyusun.selected_jabatan = this.data.penyusun.jabatan.kode
+			this.$refs.selectPenyusun.togglePlh(this.data.penyusun.plh)
 			this.$refs.selectPenyusun.getPetugas(this.data.penyusun.user.user_id, true)
 			this.$refs.selectPenerbit.selected_jabatan = this.data.penerbit.jabatan.kode
+			this.$refs.selectPenerbit.togglePlh(this.data.penerbit.plh)
 			this.$refs.selectPenerbit.getPetugas(this.data.penerbit.user.user_id, true)
 		},
 		async saveData() {

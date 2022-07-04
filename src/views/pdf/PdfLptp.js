@@ -23,7 +23,8 @@ const props = {
 		lbl3: ind_start + 12,
 		cln3: ind_start + 20,
 		txt3: ind_start + 23,
-		ttd:125,
+		ttd1: 17,
+		ttd2: 130,
 		lamp: 130
 	}
 }
@@ -303,14 +304,16 @@ class PdfLptp extends Pdf {
 		this.ln = ln_ttd_nip + this.props.font.height*3
 		
 		if (this.lptp_type == 'lptp') {
-			this.pdf.text(this.data.dokumen[this.lptp_type].atasan.jabatan.jabatan, this.props.ind.lbl, ln_ttd_jabatan)
-			this.pdf.text(this.data.dokumen[this.lptp_type].atasan.user.name, this.props.ind.lbl, ln_ttd_nama)
-			this.pdf.text('NIP. ' + this.data.dokumen[this.lptp_type].atasan.user.nip, this.props.ind.lbl, ln_ttd_nip)	
+			let plh_atasan = this.data.dokumen[this.lptp_type].atasan.plh ? 'Plh.' : ''
+			this.pdf.text(plh_atasan, this.props.ind.num, ln_ttd_jabatan)
+			this.pdf.text(this.data.dokumen[this.lptp_type].atasan.jabatan.jabatan, this.props.ind.ttd1, ln_ttd_jabatan)
+			this.pdf.text(this.data.dokumen[this.lptp_type].atasan.user.name, this.props.ind.ttd1, ln_ttd_nama)
+			this.pdf.text('NIP. ' + this.data.dokumen[this.lptp_type].atasan.user.nip, this.props.ind.ttd1, ln_ttd_nip)	
 		}
 		
-		this.pdf.text('Petugas yang melakukan penindakan', this.props.ind.lbl2, ln_ttd_jabatan)
-		this.pdf.text(this.data.penindakan.petugas1.name, this.props.ind.lbl2, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.penindakan.petugas1.nip, this.props.ind.lbl2, ln_ttd_nip)
+		this.pdf.text('Petugas yang melakukan penindakan', this.props.ind.ttd2, ln_ttd_jabatan)
+		this.pdf.text(this.data.penindakan.petugas1.name, this.props.ind.ttd2, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.penindakan.petugas1.nip, this.props.ind.ttd2, ln_ttd_nip)
 
 		////// KETERANGAN //////
 		this.pdf.text('Catatan', this.props.ind.num, this.ln)

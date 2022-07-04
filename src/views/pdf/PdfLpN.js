@@ -23,7 +23,9 @@ const props = {
 		lbl3: ind_start + 12,
 		cln3: ind_start + 47,
 		txt3: ind_start + 50,
-		ttd:125,
+		ttd1: ind_start + 7,
+		plh2: ind_start + 118,
+		ttd2: ind_start + 125,
 		lamp: 140
 	}
 }
@@ -282,11 +284,11 @@ class PdfLpN extends Pdf {
 		this.pdf.text(txt_hal_terjadi, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height*(((txt_hal_terjadi.length) > 0 ? txt_hal_terjadi.length : 1) + 1)
 
-		this.pdf.text('Pejabat yang melaksanakan penindakan,', this.props.ind.ttd, this.ln)
+		this.pdf.text('Pejabat yang melaksanakan penindakan,', this.props.ind.ttd2, this.ln)
 		this.ln += this.props.font.height*4
-		this.pdf.text(this.data.penindakan.petugas1.name, this.props.ind.ttd, this.ln)
+		this.pdf.text(this.data.penindakan.petugas1.name, this.props.ind.ttd2, this.ln)
 		this.ln += this.props.font.height
-		this.pdf.text('NIP. ' + this.data.penindakan.petugas1.nip, this.props.ind.ttd, this.ln)
+		this.pdf.text('NIP. ' + this.data.penindakan.petugas1.nip, this.props.ind.ttd2, this.ln)
 		this.ln += this.props.font.height*2
 
 		this.pdf.text('7.', this.props.ind.num, this.ln)
@@ -310,14 +312,18 @@ class PdfLpN extends Pdf {
 		let ln_ttd_nip = ln_ttd_nama + this.props.font.height
 		this.ln = ln_ttd_nip + this.props.font.height*3
 		
-		this.pdf.text(this.data.dokumen.lpn.penyusun.jabatan.jabatan, this.props.ind.lbl, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.lpn.penyusun.user.name, this.props.ind.lbl, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen.lpn.penyusun.user.nip, this.props.ind.lbl, ln_ttd_nip)
+		let plh_penyusun = this.data.dokumen.lpn.penyusun.plh ? 'Plh.' : ''
+		this.pdf.text(plh_penyusun, this.props.ind.num, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen.lpn.penyusun.jabatan.jabatan, this.props.ind.ttd1, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen.lpn.penyusun.user.name, this.props.ind.ttd1, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.dokumen.lpn.penyusun.user.nip, this.props.ind.ttd1, ln_ttd_nip)
 
-		this.pdf.text('Tangerang, ' + this.full_tgl_dok, this.props.ind.ttd, ln_tanggal)
-		this.pdf.text(this.data.dokumen.lpn.penerbit.jabatan.jabatan, this.props.ind.ttd, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.lpn.penerbit.user.name, this.props.ind.ttd, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen.lpn.penerbit.user.nip, this.props.ind.ttd, ln_ttd_nip)
+		this.pdf.text('Tangerang, ' + this.full_tgl_dok, this.props.ind.ttd2, ln_tanggal)
+		let plh_penerbit = this.data.dokumen.lpn.penerbit.plh ? 'Plh.' : ''
+		this.pdf.text(plh_penerbit, this.props.ind.plh2, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen.lpn.penerbit.jabatan.jabatan, this.props.ind.ttd2, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen.lpn.penerbit.user.name, this.props.ind.ttd2, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.dokumen.lpn.penerbit.user.nip, this.props.ind.ttd2, ln_ttd_nip)
 
 		////// KETERANGAN //////
 		this.pdf.text('Tembusan:', this.props.ind.num, this.ln)
