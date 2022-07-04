@@ -66,6 +66,7 @@
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectPenyusun"
+						:state.sync="state"
 						:label="{jabatan: 'Jabatan Penyusun', nama: 'Nama Penyusun'}"
 						:selectable_jabatan="['bd.0503', 'bd.0504']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
@@ -79,6 +80,7 @@
 				<CCol md="12">
 					<MySelectPejabat
 						ref="selectAtasan"
+						:state.sync="state"
 						:label="{jabatan: 'Jabatan Atasan', nama: 'Nama Atasan'}"
 						:selectable_jabatan="['bd.05']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
@@ -183,8 +185,10 @@ export default {
 			this.validatorDatetime(this.data.tanggal_dokumen, 'DD-MM-YYYY HH:mm', 'validasi.tanggal_lphp', 'Tanggal LPHP wajib diisi')
 			this.$refs.selectSbp.getData(this.data.id_sbp, true)
 			this.$refs.selectPenyusun.selected_jabatan = this.data.penyusun.jabatan.kode
+			this.$refs.selectPenyusun.togglePlh(this.data.penyusun.plh)
 			this.$refs.selectPenyusun.getPetugas(this.data.penyusun.user.user_id, true)
 			this.$refs.selectAtasan.selected_jabatan = this.data.atasan.jabatan.kode
+			this.$refs.selectAtasan.togglePlh(this.data.atasan.plh)
 			this.$refs.selectAtasan.getPetugas(this.data.atasan.user.user_id, true)
 		},
 		async saveData() {

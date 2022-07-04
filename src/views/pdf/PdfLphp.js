@@ -23,7 +23,8 @@ const props = {
 		lbl3: ind_start + 12,
 		cln3: ind_start + 60,
 		txt3: ind_start + 63,
-		ttd:125,
+		ttd1: 17,
+		plh2: ind_start + 13,
 		lamp: 140
 	}
 }
@@ -260,12 +261,15 @@ class PdfLphp extends Pdf {
 		this.ln = ln_ttd_nip + this.props.font.height*3
 		let tgl_lphp = converters.fullDate(converters.date(this.data.dokumen[this.lphp_type].tanggal_dokumen, 'DD-MM-YYYY'))
 
-
-		this.pdf.text(this.data.dokumen[this.lphp_type].atasan.jabatan.jabatan, this.props.ind.lbl, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen[this.lphp_type].atasan.user.name, this.props.ind.lbl, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen[this.lphp_type].atasan.user.nip, this.props.ind.lbl, ln_ttd_nip)
+		let plh_atasan = this.data.dokumen[this.lphp_type].atasan.plh ? 'Plh.' : ''
+		this.pdf.text(plh_atasan, this.props.ind.num, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen[this.lphp_type].atasan.jabatan.jabatan, this.props.ind.ttd1, ln_ttd_jabatan)
+		this.pdf.text(this.data.dokumen[this.lphp_type].atasan.user.name, this.props.ind.ttd1, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.dokumen[this.lphp_type].atasan.user.nip, this.props.ind.ttd1, ln_ttd_nip)
 		
 		this.pdf.text('Tangerang, ' + tgl_lphp, this.props.ind.lbl2, ln_tgl_ttd)
+		let plh_penyusun = this.data.dokumen[this.lphp_type].penyusun.plh ? 'Plh.' : ''
+		this.pdf.text(plh_penyusun, this.props.ind.plh2, ln_ttd_jabatan)
 		this.pdf.text(this.data.dokumen[this.lphp_type].penyusun.jabatan.jabatan, this.props.ind.lbl2, ln_ttd_jabatan)
 		this.pdf.text(this.data.dokumen[this.lphp_type].penyusun.user.name, this.props.ind.lbl2, ln_ttd_nama)
 		this.pdf.text('NIP. ' + this.data.dokumen[this.lphp_type].penyusun.user.nip, this.props.ind.lbl2, ln_ttd_nip)
