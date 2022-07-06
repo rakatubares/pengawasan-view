@@ -408,8 +408,30 @@ export default {
 		disp_imo_mmsi() { return this.data_doc.imo_mmsi_sarkut || '-' },
 		disp_data_lain_sarkut() { return this.data_doc.data_lain_sarkut || '-' },
 		disp_nama_orang() { return this.data_doc.orang.nama || '-' },
-		disp_jenis_kelamin() { return this.data_doc.orang.jenis_kelamin || '-' },
-		disp_warga_negara() { return this.data_doc.orang.warga_negara || '-' },
+		disp_jenis_kelamin() { 
+			let txt_jenis_kelamin = '-'
+			switch (this.data_doc.orang.jenis_kelamin) {
+				case 'F':
+					txt_jenis_kelamin = 'Perempuan'
+					break;
+
+				case 'M':
+					txt_jenis_kelamin = 'Laki-laki'
+					break;
+			
+				default:
+					break;
+			}
+
+			return txt_jenis_kelamin
+		},
+		disp_warga_negara() { 
+			if (this.data_doc.orang.warga_negara) {
+				return this.data_doc.orang.warga_negara.nama_negara
+			} else {
+				return '-'
+			}
+		},
 		disp_paspor() { return this.data_doc.orang.nomor_identitas || '-' },
 		disp_flight_voyage_orang() { return this.data_doc.flight_voyage_orang || '-' },
 		disp_pelabuhan_asal_orang() {
