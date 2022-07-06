@@ -111,11 +111,6 @@
 			</CRow>
 			<CRow>
 				<CCol sm="8">
-					<!-- <CInput
-						label="Kantor Bea dan Cukai"
-						description="Kantor Wilayah atau Kantor Pelayanan yang membawahi pengawasan atas wilayah terjadinya atau akan terjadinya indikasi pelanggaran"
-						:value.sync="data.kantor"
-					/> -->
 					<MySelectKantorBC
 						ref="selectKantor"
 						:kd_kantor.sync="data.kantor_bc.kd_kantor"
@@ -598,7 +593,7 @@ export default {
 
 			this.fillNull()
 
-			this.$nextTick(function () {
+			this.$nextTick(function() {
 				this.renderData()
 			})
 
@@ -653,7 +648,6 @@ export default {
 			this.$refs.selectPejabat.selected_jabatan = this.data.penerbit.jabatan.kode
 			this.$refs.selectPejabat.togglePlh(this.data.penerbit.plh)
 			this.$refs.selectPejabat.getPetugas(this.data.penerbit.user.user_id, true)
-			
 		},
 		async saveData() {
 			if (this.state == 'insert') {

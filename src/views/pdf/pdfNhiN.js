@@ -313,14 +313,32 @@ class PdfNhiN extends Pdf {
 		this.pdf.text('2.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Jenis Kelamin', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		let txt_jenis_kelamin = this.nhin.flag_orang ? (this.nhin.orang.jenis_kelamin || '') : ''
+		let txt_jenis_kelamin = ''
+		if (this.nhin.flag_orang) {
+			switch (this.nhin.flag_orang.jenis_kelamin ) {
+				case 'F':
+					txt_jenis_kelamin = 'Perempuan'
+					break;
+
+				case 'M':
+					txt_jenis_kelamin = 'Laki-laki'
+					break;
+			
+				default:
+					break;
+			}
+		}
 		this.pdf.text(txt_jenis_kelamin, this.props.ind.val3, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('3.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Kewarganegaraan', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		let txt_warga_negara = this.nhin.flag_orang ? (this.nhin.orang.warga_negara || '') : ''
+		let txt_warga_negara = this.nhin.flag_orang 
+			? this.nhin.orang.warga_negara 
+				? this.nhin.orang.warga_negara.nama_negara
+				: ''
+			: ''
 		this.pdf.text(txt_warga_negara, this.props.ind.val3, this.ln)
 		this.ln += this.props.font.height
 
