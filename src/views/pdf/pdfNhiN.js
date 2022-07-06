@@ -17,13 +17,13 @@ const props = {
 		cln1: ind_start+20,
 		val1: ind_start+25,
 		lbl2: ind_start+120,
-		cln2: ind_start+145,
+		cln2: ind_start+146,
 		val2: ind_start+150,
 		par: ind_start+10,
 		lbl3: ind_start+5,
 		lbl4: ind_start+10,
-		cln3: ind_start+100,
-		val3: ind_start+105,
+		cln3: ind_start+90,
+		val3: ind_start+95,
 		ttd:125,
 		lamp: 150
 	}
@@ -88,7 +88,7 @@ class PdfNhiN extends Pdf {
 		this.pdf.text('Tempat', this.props.ind.lbl3, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
 		let txt_tempat = this.nhin.tempat_indikasi || ''
-		let arr_tempat = converters.array_text(txt_tempat.replace('\n', ' '), 50)
+		let arr_tempat = converters.array_text(txt_tempat.replace('\n', ' '), 55)
 		let hgt_tempat = arr_tempat.length > 0 ? arr_tempat.length : 1
 		this.pdf.text(arr_tempat, this.props.ind.val3, this.ln)
 		this.ln += this.props.font.height*hgt_tempat
@@ -114,7 +114,7 @@ class PdfNhiN extends Pdf {
 		let arr_kantor = ''
 		let hgt_kantor = 1
 		if (this.nhin.kantor_bc) {
-			arr_kantor = converters.array_text(this.nhin.kantor_bc.nama_kantor, 38)
+			arr_kantor = converters.array_text(this.nhin.kantor_bc.nama_kantor, 43)
 			hgt_kantor = arr_kantor.length
 		}
 		this.pdf.text(arr_kantor, this.props.ind.val3, this.ln)
@@ -150,8 +150,8 @@ class PdfNhiN extends Pdf {
 		this.pdf.text('Eks/Untuk Kapal/Pesawat/Alat Angkut/Lainnya', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
 		if (this.nhin.flag_exim) {
-			var txt_sarkut_exim = `${this.nhin.nama_sarkut_exim || '-'} Voy/Flight/No. Pol: ${this.nhin.no_flight_trayek_exim || '-'}`
-			var arr_sarkut_exim = converters.array_text(txt_sarkut_exim, 50)
+			var txt_sarkut_exim = `${this.nhin.nama_sarkut_exim || '-'}   Voy/Flight/No. Pol: ${this.nhin.no_flight_trayek_exim || '-'}`
+			var arr_sarkut_exim = converters.array_text(txt_sarkut_exim, 55)
 			var height_sarkut_exim = arr_sarkut_exim.length
 		} else {
 			var arr_sarkut_exim = ''
@@ -208,20 +208,20 @@ class PdfNhiN extends Pdf {
 				let txt_barang = `${this.nhin.barang_exim.data.item[0].jumlah_barang} `
 					+ `${this.nhin.barang_exim.data.item[0].satuan.kode_satuan} `
 					+ `${this.nhin.barang_exim.data.item[0].uraian_barang} `
-				uraian_barang = converters.array_text(txt_barang, 45)
+				uraian_barang = converters.array_text(txt_barang, 50)
 				height_barang = uraian_barang.length
 			}	
 		}
-		this.pdf.text(uraian_barang, this.props.ind.val3, this.ln, {align: 'justify', maxWidth: 80})
+		this.pdf.text(uraian_barang, this.props.ind.val3, this.ln, {align: 'justify', maxWidth: 90})
 		this.ln += this.props.font.height*height_barang
 
 		this.pdf.text('8.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Data Lainnya', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
 		let txt_lain_exim = this.nhin.flag_exim ? (this.nhin.data_lain_exim || '') : ''
-		let arr_lain_exim = converters.array_text(txt_lain_exim, 50)
+		let arr_lain_exim = converters.array_text(txt_lain_exim, 55)
 		let hgt_lain_exim = arr_lain_exim.length > 1 ? arr_lain_exim.length : 1
-		this.pdf.text(txt_lain_exim, this.props.ind.val3, this.ln, {align: 'justify', maxWidth: 80})
+		this.pdf.text(txt_lain_exim, this.props.ind.val3, this.ln, {align: 'justify', maxWidth: 95})
 		this.ln += this.props.font.height*hgt_lain_exim
 
 		// Sarkut
@@ -263,8 +263,10 @@ class PdfNhiN extends Pdf {
 				}
 			}
 		}
-		this.pdf.text(txt_asal_sarkut, this.props.ind.val3, this.ln)
-		this.ln += this.props.font.height
+		let arr_asal_sarkut = converters.array_text(txt_asal_sarkut, 60)
+		let hgt_asal_sarkut = arr_asal_sarkut.length > 1 ? arr_asal_sarkut.length : 1
+		this.pdf.text(arr_asal_sarkut, this.props.ind.val3, this.ln)
+		this.ln += this.props.font.height*hgt_asal_sarkut
 
 		this.pdf.text('5.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Pelabuhan Tujuan', this.props.ind.lbl4, this.ln)
@@ -279,8 +281,10 @@ class PdfNhiN extends Pdf {
 				}
 			}
 		}
-		this.pdf.text(txt_tujuan_sarkut, this.props.ind.val3, this.ln)
-		this.ln += this.props.font.height
+		let arr_tujuan_sarkut = converters.array_text(txt_tujuan_sarkut, 60)
+		let hgt_tujuan_sarkut = arr_tujuan_sarkut.length > 1 ? arr_tujuan_sarkut.length : 1
+		this.pdf.text(arr_tujuan_sarkut, this.props.ind.val3, this.ln)
+		this.ln += this.props.font.height*hgt_tujuan_sarkut
 
 		this.pdf.text('6.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('IMO / MMSI', this.props.ind.lbl4, this.ln)
@@ -293,9 +297,9 @@ class PdfNhiN extends Pdf {
 		this.pdf.text('Data Lainnya', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
 		let txt_lain_sarkut = this.nhin.flag_sarkut ? (this.nhin.data_lain_sarkut || '') : ''
-		let arr_lain_sarkut = converters.array_text(txt_lain_sarkut, 50)
+		let arr_lain_sarkut = converters.array_text(txt_lain_sarkut, 55)
 		let hgt_lain_sarkut = arr_lain_sarkut.length > 1 ? arr_lain_sarkut.length : 1
-		this.pdf.text(txt_lain_sarkut, this.props.ind.val3, this.ln, {align: 'justify', maxWidth: 80})
+		this.pdf.text(txt_lain_sarkut, this.props.ind.val3, this.ln, {align: 'justify', maxWidth: 95})
 		this.ln += this.props.font.height*hgt_lain_sarkut
 
 		// Orang
@@ -315,7 +319,7 @@ class PdfNhiN extends Pdf {
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
 		let txt_jenis_kelamin = ''
 		if (this.nhin.flag_orang) {
-			switch (this.nhin.flag_orang.jenis_kelamin ) {
+			switch (this.nhin.orang.jenis_kelamin ) {
 				case 'F':
 					txt_jenis_kelamin = 'Perempuan'
 					break;
@@ -369,8 +373,10 @@ class PdfNhiN extends Pdf {
 				}
 			}
 		}
-		this.pdf.text(txt_asal_orang, this.props.ind.val3, this.ln)
-		this.ln += this.props.font.height
+		let arr_asal_orang = converters.array_text(txt_asal_orang, 60)
+		let hgt_asal_orang = arr_asal_orang.length > 1 ? arr_asal_orang.length : 1
+		this.pdf.text(arr_asal_orang, this.props.ind.val3, this.ln)
+		this.ln += this.props.font.height*hgt_asal_orang
 
 		this.pdf.text('7.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Pelabuhan / Bandara Tujuan', this.props.ind.lbl4, this.ln)
@@ -385,8 +391,10 @@ class PdfNhiN extends Pdf {
 				}
 			}
 		}
-		this.pdf.text(txt_tujuan_orang, this.props.ind.val3, this.ln)
-		this.ln += this.props.font.height
+		let arr_tujuan_orang = converters.array_text(txt_tujuan_orang, 60)
+		let hgt_tujuan_orang = arr_tujuan_orang.length > 1 ? arr_tujuan_orang.length : 1
+		this.pdf.text(arr_tujuan_orang, this.props.ind.val3, this.ln)
+		this.ln += this.props.font.height*hgt_tujuan_orang
 
 		this.pdf.text('8.', this.props.ind.lbl3, this.ln)
 		this.pdf.text('Waktu Keberangkatan', this.props.ind.lbl4, this.ln)
@@ -406,9 +414,9 @@ class PdfNhiN extends Pdf {
 		this.pdf.text('Data Lainnya', this.props.ind.lbl4, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
 		let txt_lain_orang = this.nhin.flag_orang ? (this.nhin.data_lain_orang || '') : ''
-		let arr_lain_orang = converters.array_text(txt_lain_orang, 50)
+		let arr_lain_orang = converters.array_text(txt_lain_orang, 55)
 		let hgt_lain_orang = arr_lain_orang.length > 1 ? arr_lain_orang.length : 1
-		this.pdf.text(txt_lain_orang, this.props.ind.val3, this.ln, {align: 'justify', maxWidth: 80})
+		this.pdf.text(txt_lain_orang, this.props.ind.val3, this.ln, {align: 'justify', maxWidth: 95})
 		this.ln += this.props.font.height*(hgt_lain_orang+1)
 
 		// Indikasi
