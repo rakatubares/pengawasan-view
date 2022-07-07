@@ -5,6 +5,7 @@
 				<div class="form-group">
 					<label>{{ label }}</label>
 					<v-autocomplete
+						class="rounded-false rounded-left"
 						v-model="value"
 						outlined
 						dense
@@ -12,15 +13,24 @@
 						:search-input.sync="search"
 						item-text="nama"
 						item-value="id"
-						@change="changeValue"
 					>
 						<template v-slot:append-outer>
 							<CButton 
-								color="success"
-								v-c-tooltip.hover="{content: 'Tambah Entitas'}"
-								@click="showModalEntitas"
+								v-if="editable"
+								class="rounded-false button-input"
+								color="primary"
+								v-c-tooltip.hover="{content: 'Edit Entitas'}"
+								@click="editEntitas"
 							>
-								<CIcon name="cil-user-follow"/>
+								<CIcon class="m-0" name="cil-pencil"/>
+							</CButton>
+							<CButton 
+								class="rounded-false rounded-right button-input"
+								color="success"
+								v-c-tooltip.hover="{content: 'Entitas Baru'}"
+								@click="inputEntitas"
+							>
+								<CIcon class="m-0" name="cil-user-follow"/>
 							</CButton>
 						</template>
 						<template v-slot:no-data>
@@ -87,7 +97,7 @@
 		<CRow v-if="showAlamat">
 			<CCol md="12">
 				<CTextarea
-					label="Alamat"
+					label="Alamat Identitas"
 					:value.sync="entitas.alamat"
 					disabled
 				/>
@@ -110,6 +120,14 @@
 							:value.sync="new_entitas.nama"
 							:is-valid="validatorRequired"
 							invalid-feedback="Nama entitas wajib diisi"
+						/>
+					</CCol>
+				</CRow>
+				<CRow>
+					<CCol sm="12">
+						<CInput
+							label="Alias"
+							:value.sync="new_entitas.alias"
 						/>
 					</CCol>
 				</CRow>
@@ -147,7 +165,7 @@
 						<CSelect
 							label="Jenis Kelamin"
 							:value.sync="new_entitas.jenis_kelamin"
-							:options="['Laki-laki', 'Perempuan']"
+							:options="[{value: 'M', label: 'Laki-laki'}, {value: 'F', label: 'Perempuan'}]"
 						/>
 					</CCol>
 					<CCol sm="6">
@@ -159,9 +177,10 @@
 				</CRow>
 				<CRow>
 					<CCol sm="12">
-						<CInput
+						<MySelectNegara
+							ref="SelectNegara"
 							label="Kewarganegaraan"
-							:value.sync="new_entitas.warga_negara"
+							:kode.sync="new_entitas.warga_negara.kode_2"
 						/>
 					</CCol>
 				</CRow>
@@ -186,16 +205,40 @@
 				<CRow>
 					<CCol sm="12">
 						<CInput
-							label="Pekerjaan"
-							:value.sync="new_entitas.pekerjaan"
+							label="Penerbit Identitas"
+							:value.sync="new_entitas.penerbit_identitas"
+						/>
+					</CCol>
+				</CRow>
+				<CRow>
+					<CCol sm="12">
+						<CInput
+							label="Tempat Terbit"
+							:value.sync="new_entitas.tempat_identitas_terbit"
 						/>
 					</CCol>
 				</CRow>
 				<CRow>
 					<CCol sm="12">
 						<CTextarea
-							label="Alamat"
+							label="Alamat Identitas"
 							:value.sync="new_entitas.alamat"
+						/>
+					</CCol>
+				</CRow>
+				<CRow>
+					<CCol sm="12">
+						<CTextarea
+							label="Alamat Tinggal"
+							:value.sync="new_entitas.alamat_tinggal"
+						/>
+					</CCol>
+				</CRow>
+				<CRow>
+					<CCol sm="12">
+						<CInput
+							label="Pekerjaan"
+							:value.sync="new_entitas.pekerjaan"
 						/>
 					</CCol>
 				</CRow>
@@ -245,29 +288,29 @@
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
-import MyAlert from '../components/AlertSubmit.vue'
 import api from '../../router/api2.js'
 import validators from '../../helpers/validator.js'
+import MyAlert from '../components/AlertSubmit.vue'
+import MySelectNegara from '../components/SelectNegara.vue'
 
 const default_entitas = {
 	id: null,
 	nama: null,
 	jenis_identitas: null,
 	nomor_identitas: null,
-	jenis_kelamin: 'Laki-laki'
+	jenis_kelamin: 'M',
+	warga_negara: {kode_2: null}
 }
 
 export default {
 	name: 'SelectEntitas',
 	components: {
 		DatePicker,
-		MyAlert
+		MyAlert,
+		MySelectNegara,
 	},
 	props: {
-		id: {
-			type: Number,
-			default: null
-		},
+		id: Number,
 		label: String,
 		description: String,
 		showTanggalLahir: {
@@ -289,12 +332,14 @@ export default {
 	},
 	data() {
 		return {
+			state: 'insert',
 			items: [],
 			value: null,
 			search: null,
 			entitas: JSON.parse(JSON.stringify(default_entitas)),
 			show_modal: false,
 			new_entitas: JSON.parse(JSON.stringify(default_entitas)),
+			editable: false,
 		}
 	},
 	watch: {
@@ -302,38 +347,82 @@ export default {
 			let data = {'s': val}
 			let response = await api.searchEntitas(data)
 			this.items = response.data.data
+		},
+		value(val) {
+			this.getEntitas(val)
+			this.$emit('update:id', val)
 		}
 	},
 	methods: {
-		changeValue(id) {
-			this.getEntitas(id)
-			this.$emit('update:id', id)
-		},
 		async getEntitas(id, mounted=false) {
 			if (id != null) {
+				// Get entity data
 				let response = await api.getEntitasById(id)
+				let entitas = response.data.data
+
+				// Fill null value
+				if (entitas.warga_negara == null) {
+					entitas.warga_negara = {kode_2: null}
+				}
+
+				// Change local variable
 				this.entitas = response.data.data
 				if (mounted == true) {
 					this.items = [this.entitas]
-					this.value = this.items[0]
+					this.value = this.items[0]['id']
 				}
+				this.editable = true
 			} else {
 				this.entitas = JSON.parse(JSON.stringify(default_entitas))
+				this.editable = false
 			}
 		},
-		showModalEntitas() {
+		editEntitas() {
+			this.new_entitas = this.entitas
+			this.$nextTick(function() {
+				this.$refs.SelectNegara.getData(this.new_entitas.warga_negara.kode_2)	
+			})
+			this.showModalEntitas('update')
+		},
+		inputEntitas() {
+			this.new_entitas = JSON.parse(JSON.stringify(default_entitas))
+			this.showModalEntitas('insert')
+		},
+		showModalEntitas(state='insert') {
+			this.state = state
 			this.show_modal = true
 		},
 		closeModalEntitas() {
-			this.new_entitas = JSON.parse(JSON.stringify(default_entitas)),
+			this.new_entitas = JSON.parse(JSON.stringify(default_entitas))
+			this.$refs.SelectNegara.getData(null)
 			this.show_modal = false
 		},
 		async saveEntitas() {
 			try {
-				let response = await api.saveEntitas(this.new_entitas)	
+				// Save data
+				if (this.state == 'update') {
+					var response = await api.updateEntitas(this.new_entitas.id, this.new_entitas)
+				} else {
+					var response = await api.saveEntitas(this.new_entitas)
+				}
+				let entitas = response.data.data
+				
+				// Fill null value
+				if (entitas.warga_negara == null) {
+					entitas.warga_negara = {kode_2: null}
+				}
+				
+				// Change local variable to result
+				this.entitas = entitas
+				this.items = [this.entitas]
+				this.value = this.items[0]['id']
+				this.editable = true
+
+				// Emit result
 				this.alert('Entitas berhasil disimpan')
 				this.$emit('update:id', response.data.id)
-				this.getEntitas(response.data.id, true)
+				
+				// Close modal
 				this.closeModalEntitas()
 			} catch (error) {
 				console.log('form entitas - save data - error', error)
@@ -352,5 +441,13 @@ export default {
 <style>
 .v-input__append-outer {
 	margin: 0 !important;
+}
+
+.rounded-false {
+	border-radius: 0;
+}
+
+.button-input {
+	padding: 0.35rem 0.75rem;
 }
 </style>
