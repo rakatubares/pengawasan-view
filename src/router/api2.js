@@ -165,6 +165,10 @@ class API {
 		return await this.postApi(`/entitas`, data)
 	}
 
+	async updateEntitas(id, data) {
+		return await this.putApi(`/entitas/${id}`, data)
+	}
+
 	async searchEntitas(data) {
 		return await this.postApi('/entitas/search', data)
 	}
@@ -177,6 +181,14 @@ class API {
 
 	async getGrupLokasi() {
 		return await this.getApi('/lokasi')
+	}
+
+	async searchNegara(data) {
+		return await this.postApi('/negara/search', data)
+	}
+
+	async getNegaraByCode(code) {
+		return await this.getApi(`/negara/${code}`)
 	}
 }
 
