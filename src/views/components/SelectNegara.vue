@@ -1,8 +1,9 @@
 <template>
-	<div class="wrapper select-negara">
+	<div class="wrapper">
 		<div class="form-group">
 			<label>{{ label }}</label>
 			<v-autocomplete
+				class="no-message"
 				v-model="value"
 				no-filter
 				outlined

@@ -7,9 +7,46 @@
 	background: none !important;
 }
 
+.no-rounded {
+	border-radius: 0;
+}
+
 // ==========================
 //  FORM
 // ==========================
+
+.my-form .row+.row {
+	margin-top:0;
+}
+
+// Auto Complete
+.v-input__slot {
+	min-height: 34px !important;
+	font-size: 14px;
+}
+
+.v-input__append-outer {
+	margin: 0 !important
+}
+
+.v-select__slot > input {
+	font-size: 0.875rem;
+	font-weight: 400;
+	color: #768192 !important;
+}
+
+div.v-input.no-message .v-text-field__details {
+	display: none;
+}
+
+// Button append input
+.button-input {
+	padding: 0.35rem 0.75rem;
+}
+
+.button-input > svg.c-icon {
+	margin: 0 !important;
+}
 
 // Switch
 .c-switch-slider {

@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-detail-barang">
+	<div class="wrapper my-form">
 		<!-- Form input penindakan barang -->
 		<CRow>
 			<CCol col="12">
@@ -43,7 +43,7 @@
 									format="DD-MM-YYYY" 
 									value-type="format"
 									type="date"
-								></date-picker>
+								/>
 							</div>
 						</CCol>
 					</CRow>
@@ -53,8 +53,7 @@
 								ref="selectPemilik"
 								label="Nama pemilik/importir/eksportir/kuasa"
 								:id.sync="data_objek.pemilik.id"
-							>
-							</MySelectEntitas>
+							/>
 						</CCol>
 					</CRow>
 
@@ -80,11 +79,10 @@
 			:data_objek.sync="data_objek"
 			state="insert"
 			@submit-data="$emit('submit-data')"
-		>
-		</MyTableItemBarang>
+		/>
 
 		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
+		<MyAlert ref="alert"/>
 	</div>
 </template>
 
@@ -206,21 +204,5 @@ export default {
 </script>
 
 <style>
-.form-detail-barang .v-select__slot > input {
-	font-size: 0.875rem;
-	font-weight: 400;
-	color: #768192;
-}
 
-.form-detail-barang .v-input__slot {
-	min-height: calc(1.5em + 0.75rem) !important;
-}
-
-.form-detail-barang .v-input__slot > fieldset {
-	border: 1px solid;
-}
-
-.form-detail-barang .v-text-field__details {
-	display: none;
-}
 </style>
