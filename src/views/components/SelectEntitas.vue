@@ -5,7 +5,7 @@
 				<div class="form-group">
 					<label>{{ label }}</label>
 					<v-autocomplete
-						class="rounded-false rounded-left"
+						class="no-rounded rounded-left no-message"
 						v-model="value"
 						outlined
 						dense
@@ -17,7 +17,7 @@
 						<template v-slot:append-outer>
 							<CButton 
 								v-if="editable"
-								class="rounded-false button-input"
+								class="button-input no-rounded"
 								color="primary"
 								v-c-tooltip.hover="{content: 'Edit Entitas'}"
 								@click="editEntitas"
@@ -25,7 +25,7 @@
 								<CIcon class="m-0" name="cil-pencil"/>
 							</CButton>
 							<CButton 
-								class="rounded-false rounded-right button-input"
+								class="button-input no-rounded rounded-right"
 								color="success"
 								v-c-tooltip.hover="{content: 'Entitas Baru'}"
 								@click="inputEntitas"
@@ -98,7 +98,7 @@
 			<CCol md="12">
 				<CTextarea
 					label="Alamat Identitas"
-					:value.sync="entitas.alamat"
+					:value.sync="entitas.alamat_identitas"
 					disabled
 				/>
 			</CCol>
@@ -222,7 +222,7 @@
 					<CCol sm="12">
 						<CTextarea
 							label="Alamat Identitas"
-							:value.sync="new_entitas.alamat"
+							:value.sync="new_entitas.alamat_identitas"
 						/>
 					</CCol>
 				</CRow>
@@ -439,15 +439,5 @@ export default {
 </script>
 
 <style>
-.v-input__append-outer {
-	margin: 0 !important;
-}
 
-.rounded-false {
-	border-radius: 0;
-}
-
-.button-input {
-	padding: 0.35rem 0.75rem;
-}
 </style>

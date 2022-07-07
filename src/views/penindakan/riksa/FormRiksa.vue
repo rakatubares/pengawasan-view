@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-riksa">
+	<div class="wrapper my-form">
 		<!-- Form BA Pemeriksaan -->
 		<CForm class="pt-3">
 			<CRow>
@@ -7,8 +7,7 @@
 					<MySelectSprint
 						ref="selectSprint"
 						:id.sync="data.penindakan.sprint.id"
-					>
-					</MySelectSprint>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -29,7 +28,8 @@
 						ref="selectSaksi"
 						label="Nama Saksi"
 						description="Nama terang pemilik/kuasa barang atau sarana pengangkut yang menyaksikan pemeriksaan"
-						:showAlamat="true"
+						showAlamat
+						showPekerjaan
 						:id.sync="data.penindakan.saksi.id"
 					/>
 				</CCol>
@@ -170,11 +170,5 @@ export default {
 </script>
 
 <style>
-.form-riksa .row+.row {
-	margin-top:0;
-}
 
-.form-riksa .v-text-field__details {
-	display: none;
-}
 </style>
