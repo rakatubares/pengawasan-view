@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper form-detail-badan">
 		<!-- Form input penindakan badan -->
 		<CRow>
 			<CCol col="12">
@@ -69,6 +69,10 @@ export default {
 		}
 	},
 	methods: {
+		async getDocument() {
+			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
+			this.orang_id = response.data.data.penindakan.saksi.id
+		},
 		async saveData() {
 			let data = {orang_id: this.orang_id}
 			let response = await api.insertDetail(this.doc_type, this.doc_id, 'orang', data)
@@ -76,6 +80,7 @@ export default {
 			this.alert('Data orang berhasil disimpan')
 		},
 		parseData(objek) {
+			console.log('form detail badan - parse data', objek)
 			if (objek == null) {
 				this.orang_id = null
 			}
@@ -86,7 +91,7 @@ export default {
 		},
 		validatorRequired(val) { return validators.required(val) },
 	},
-	mounted() {
+	async mounted() {
 		if (this.data.type == 'orang') {
 			if (this.data.data != null) {
 				this.orang_id = this.data.data.id
@@ -97,7 +102,8 @@ export default {
 				this.state = 'insert'
 			}
 		} else {
-			this.orang_id = null
+			await this.getDocument()
+			this.parseData(this.orang_id)
 			this.state = 'insert'
 		}
 	}
@@ -105,5 +111,21 @@ export default {
 </script>
 
 <style>
+.form-detail-badan .v-select__slot > input {
+	font-size: 0.875rem;
+	font-weight: 400;
+	color: #768192;
+}
 
+.form-detail-badan .v-input__slot {
+	min-height: calc(1.5em + 0.75rem) !important;
+}
+
+.form-detail-badan .v-input__slot > fieldset {
+	border: 1px solid;
+}
+
+.form-detail-badan .v-text-field__details {
+	display: none;
+}
 </style>
