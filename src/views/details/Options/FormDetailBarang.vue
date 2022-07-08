@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-detail-barang">
+	<div class="wrapper my-form">
 		<!-- Form input penindakan barang -->
 		<CRow>
 			<CCol col="12">
@@ -206,7 +206,7 @@ export default {
 </script>
 
 <style>
-.form-detail-barang .v-select__slot > input {
+/* .form-detail-barang .v-select__slot > input {
 	font-size: 0.875rem;
 	font-weight: 400;
 	color: #768192;
@@ -222,5 +222,5 @@ export default {
 
 .form-detail-barang .v-text-field__details {
 	display: none;
-}
+} */
 </style>

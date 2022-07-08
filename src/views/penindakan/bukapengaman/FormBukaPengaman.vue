@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-buka-pengaman">
+	<div class="wrapper my-form">
 		<!-- Form BA Buka Tanda Pengaman header -->
 		<CForm class="pt-3">
 			<CRow>
@@ -7,8 +7,7 @@
 					<MySelectSprint
 						ref="selectSprint"
 						:id.sync="data.sprint.id"
-					>
-					</MySelectSprint>
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -16,6 +15,7 @@
 					<!-- Input data nomor tanda pengaman -->
 					<CInput
 						v-if="data_source == 'Input Data'"
+						class="no-rounded rounded-right"
 						label="Nomor Tanda Pengaman"
 						description="Nomor tanda pengaman yang digunakan dalam pembukaan tanda pengaman"
 						:value.sync="data.nomor_pengaman"
@@ -41,6 +41,7 @@
 					<div v-if="data_source == 'Load Data'" class="form-group">
 						<label>Nomor Tanda Pengaman</label>
 						<v-autocomplete
+							class="no-rounded rounded-right no-message"
 							v-model="pengaman_search_value"
 							outlined
 							dense
@@ -378,18 +379,5 @@ export default {
 </script>
 
 <style>
-.form-buka-pengaman .row+.row {
-	margin-top:0;
-}
-.form-buka-pengaman .v-text-field__details {
-	display: none;
-}
-/* V-AUTOCOMPLETE */
-.form-buka-pengaman .v-input__slot {
-	min-height: 34px !important;
-	font-size: 14px;
-}
-.form-buka-pengaman .v-input__prepend-outer {
-	margin: 0 !important;
-} 
+
 </style>

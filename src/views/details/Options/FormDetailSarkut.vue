@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-detail-sarkut">
+	<div class="wrapper my-form">
 		<!-- Form input penindakan sarana pengangkut -->
 		<CRow>
 			<CCol col="12">
@@ -66,8 +66,7 @@
 								ref="selectPilot"
 								label="Nama nahkoda/pengemudi/pilot"
 								:id.sync="data_objek.pilot.id"
-							>
-							</MySelectEntitas>
+							/>
 						</CCol>
 					</CRow>
 
@@ -182,21 +181,5 @@ export default {
 </script>
 
 <style>
-.form-detail-sarkut .v-select__slot > input {
-	font-size: 0.875rem;
-	font-weight: 400;
-	color: #768192;
-}
 
-.form-detail-sarkut .v-input__slot {
-	min-height: calc(1.5em + 0.75rem) !important;
-}
-
-.form-detail-sarkut .v-input__slot > fieldset {
-	border: 1px solid;
-}
-
-.form-detail-sarkut .v-text-field__details {
-	display: none;
-}
 </style>

@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-pengaman">
+	<div class="wrapper my-form">
 		<!-- Form BA Tanda Pengaman header -->
 		<CForm class="pt-3">
 			<CRow>
@@ -227,10 +227,5 @@ export default {
 </script>
 
 <style>
-.form-pengaman .row+.row {
-	margin-top:0;
-}
-.form-pengaman .v-text-field__details {
-	display: none;
-}
+
 </style>
