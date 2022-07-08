@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-reekspor">
+	<div class="wrapper my-form">
 		<!-- Form BA Reekspor -->
 		<CForm class="pt-3">
 			<CRow>
@@ -356,18 +356,5 @@ export default {
 </script>
 
 <style>
-.form-reekspor .row+.row {
-	margin-top:0;
-}
-.form-reekspor .v-text-field__details {
-	display: none;
-}
-/* V-AUTOCOMPLETE */
-.form-reekspor .v-input__slot {
-	min-height: 34px !important;
-	font-size: 14px;
-}
-.form-reekspor .v-input__prepend-outer {
-	margin: 0 !important;
-} 
+
 </style>
