@@ -5,6 +5,7 @@
 				<div class="form-group">
 					<label>No SPRINT</label>
 					<v-autocomplete
+						class="no-rounded rounded-left no-message"
 						v-model="value"
 						outlined
 						dense
@@ -16,6 +17,7 @@
 					>
 						<template v-slot:append-outer>
 							<CButton 
+								class="button-input no-rounded rounded-right"
 								color="success"
 								v-c-tooltip.hover="{content: 'Tambah SPRINT'}"
 								@click="showModalSprint"
@@ -273,7 +275,5 @@ export default {
 </script>
 
 <style>
-.v-input__append-outer {
-	margin: 0 !important
-}
+
 </style>
