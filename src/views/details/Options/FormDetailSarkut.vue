@@ -66,8 +66,7 @@
 								ref="selectPilot"
 								label="Nama nahkoda/pengemudi/pilot"
 								:id.sync="data_objek.pilot.id"
-							>
-							</MySelectEntitas>
+							/>
 						</CCol>
 					</CRow>
 
