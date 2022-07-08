@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-contoh">
+	<div class="wrapper my-form">
 		<!-- Form BA Contoh Barang -->
 		<CForm class="pt-3">
 			<CRow>
@@ -163,10 +163,5 @@ export default {
 </script>
 
 <style>
-.form-contoh .row+.row {
-	margin-top:0;
-}
-.form-contoh .v-text-field__details {
-	display: none;
-}
+
 </style>
