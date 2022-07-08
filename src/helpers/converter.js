@@ -233,9 +233,9 @@ converters.badan = (data) => {
 		
 		let tgl_lahir = converters.string(data.tanggal_lahir)
 		
-		let warga_negara = converters.string(data.warga_negara)
+		let warga_negara = converters.string(data.warga_negara.nama_negara)
 		
-		let alamat = converters.string(data.alamat).replace('\n', ' ')
+		let alamat = converters.string(data.alamat_identitas).replace('\n', ' ')
 
 		let jns_identitas = converters.string_format(converters.string(data.jenis_identitas), '{} ')
 		let no_identitas = converters.string(data.nomor_identitas)

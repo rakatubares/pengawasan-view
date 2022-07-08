@@ -76,7 +76,20 @@ class PdfTolak1 extends Pdf {
 
 		this.pdf.text('Jenis kelamin', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.penindakan.saksi.jenis_kelamin, this.props.ind.txt, this.ln)
+		let txt_jenis_kelamin = ''
+		switch (this.data.penindakan.saksi.jenis_kelamin) {
+			case 'F':
+				txt_jenis_kelamin = 'Perempuan'
+				break;
+
+			case 'M':
+				txt_jenis_kelamin = 'Laki-laki'
+				break;
+		
+			default:
+				break;
+		}
+		this.pdf.text(txt_jenis_kelamin, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Agama', this.props.ind.alp, this.ln)
@@ -86,7 +99,11 @@ class PdfTolak1 extends Pdf {
 
 		this.pdf.text('Kewarganegaraan', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.penindakan.saksi.warga_negara, this.props.ind.txt, this.ln)
+		let txt_warga_negara = ''
+		if (this.data.penindakan.saksi.warga_negara) {
+			txt_warga_negara = this.data.penindakan.saksi.warga_negara.nama_negara
+		}
+		this.pdf.text(txt_warga_negara, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Pekerjaan', this.props.ind.alp, this.ln)
@@ -96,7 +113,7 @@ class PdfTolak1 extends Pdf {
 
 		this.pdf.text('Alamat', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.penindakan.saksi.alamat.replace('\n', ' '), this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.penindakan.saksi.alamat_identitas.replace('\n', ' '), this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		let txt_penolakan = 'menolak untuk menandatangani Surat Bukti Penindakan tersebut di atas dengan alasan:'

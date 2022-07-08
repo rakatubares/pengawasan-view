@@ -35,6 +35,14 @@
 				</CRow>
 				<CRow class="mt-2 ml-1">
 					<CCol md="3">
+						<b>jenis Kelamin</b>
+					</CCol>
+					<CCol md="9">
+						&nbsp;{{disp_jenis_kelamin}}
+					</CCol>
+				</CRow>
+				<CRow class="mt-2 ml-1">
+					<CCol md="3">
 						<b>Kewarganegaraan</b>
 					</CCol>
 					<CCol md="9">
@@ -54,7 +62,7 @@
 						<b>Alamat Identitas</b>
 					</CCol>
 					<CCol md="9">
-						&nbsp;{{disp_alamat}}
+						&nbsp;{{disp_alamat_identitas}}
 					</CCol>
 				</CRow>
 				<CRow class="mt-2 ml-1">
@@ -112,9 +120,31 @@ export default {
 		disp_nama() { return this.data.nama || '-' },
 		disp_alias() { return this.data.alias || '-' },
 		disp_tanggal_lahir() { return this.data.tanggal_lahir || '-' },
-		disp_warga_negara() { return this.data.warga_negara || '-' },
+		disp_jenis_kelamin() {
+			let txt_jenis_kelamin = ''
+			switch (this.data.jenis_kelamin) {
+				case 'F':
+					txt_jenis_kelamin = 'Perempuan'
+					break;
+
+				case 'M':
+					txt_jenis_kelamin = 'Laki-laki'
+					break;
+			
+				default:
+					break;
+			}
+			return txt_jenis_kelamin
+		},
+		disp_warga_negara() { 
+			let txt_warga_negara = '-'
+			if (this.data.warga_negara) {
+				txt_warga_negara = this.data.warga_negara.nama_negara
+			}
+			return txt_warga_negara
+		},
 		disp_alamat_tinggal() { return this.data.alamat_tinggal || '-' },
-		disp_alamat() { return this.data.alamat || '-' },
+		disp_alamat_identitas() { return this.data.alamat_identitas || '-' },
 		disp_identitas() { return (this.data.jenis_identitas || '') + ' ' + (this.data.nomor_identitas || '-') },
 		disp_penerbit() { return this.data.penerbit_identitas || '-' },
 		disp_tempat_terbit() { return this.data.tempat_identitas_terbit || '-' },

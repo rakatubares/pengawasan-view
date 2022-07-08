@@ -190,7 +190,12 @@ class PdfLphp extends Pdf {
 			: ''
 		let jenis_kelamin = this.data.objek != null
 			? this.data.objek.type == 'orang' 
-				? this.data.objek.data.jenis_kelamin : ''
+				? this.data.objek.data.jenis_kelamin == 'F'
+					? 'Perempuan' 
+					: this.data.objek.data.jenis_kelamin == 'M'
+						? 'Laki-laki'
+						: ''
+				: ''
 			: ''
 		let identitas = this.data.objek != null
 			? this.data.objek.type == 'orang' 
@@ -199,12 +204,14 @@ class PdfLphp extends Pdf {
 			: ''
 		let alamat_orang = this.data.objek != null
 			? this.data.objek.type == 'orang' 
-				? converters.array_text(this.data.objek.data.alamat, 40)
+				? converters.array_text(this.data.objek.data.alamat_identitas, 40)
 				: ''
 			: ''
 		let warga_negara = this.data.objek != null
 			? this.data.objek.type == 'orang' 
-				? this.data.objek.data.warga_negara : ''
+				? this.data.objek.data.warga_negara
+					? this.data.objek.data.warga_negara.nama_negara : ''
+				: ''
 			: ''
 
 		this.pdf.text('D.', this.props.ind.lbl, this.ln)
