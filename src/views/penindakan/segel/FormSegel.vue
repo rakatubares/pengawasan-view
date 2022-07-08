@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-segel">
+	<div class="wrapper my-form">
 		<!-- Form BA Segel header -->
 		<CForm class="pt-3">
 			<CRow>
@@ -189,10 +189,10 @@ export default {
 </script>
 
 <style>
-.form-segel .row+.row {
+/* .form-segel .row+.row {
 	margin-top:0;
 }
 .form-segel .v-text-field__details {
 	display: none;
-}
+} */
 </style>

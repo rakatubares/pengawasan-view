@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-buka-segel">
+	<div class="wrapper my-form">
 		<!-- Form BA Buka Segel header -->
 		<CForm class="pt-3">
 			<CRow>
@@ -15,6 +15,7 @@
 					<!-- Input data nomor segel -->
 					<CInput
 						v-if="data_source == 'Input Data'"
+						class="no-rounded rounded-right"
 						label="Nomor Segel"
 						description="Nomor segel yang digunakan dalam pembukaan segel"
 						:value.sync="data.nomor_segel"
@@ -40,6 +41,7 @@
 					<div v-if="data_source == 'Load Segel'" class="form-group">
 						<label>Nomor Segel</label>
 						<v-autocomplete
+							class="no-rounded rounded-right no-message"
 							v-model="segel_search_value"
 							outlined
 							dense
@@ -365,21 +367,5 @@ export default {
 </script>
 
 <style>
-.form-buka-segel .row+.row {
-	margin-top:0;
-}
 
-.form-buka-segel .v-text-field__details {
-	display: none;
-}
-
-/* V-AUTOCOMPLETE */
-.form-buka-segel .v-input__slot {
-	min-height: 34px !important;
-	font-size: 14px;
-}
-
-.form-buka-segel .v-input__prepend-outer {
-	margin: 0 !important;
-} 
 </style>
