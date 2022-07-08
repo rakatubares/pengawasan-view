@@ -46,3 +46,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.c-sidebar-nav-dropdown-items {
+	padding-left: .5rem;
+}
+</style>
