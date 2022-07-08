@@ -125,12 +125,25 @@ class PdfLp extends Pdf {
 		this.pdf.text(txt_identitas, this.props.ind.txt, this.ln)
 		this.pdf.text('Jenis Kelamin', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(this.data.penindakan.saksi.jenis_kelamin, this.props.ind.txt2, this.ln)
+		let txt_jenis_kelamin = ''
+		switch (this.data.penindakan.saksi.jenis_kelamin) {
+			case 'F':
+				txt_jenis_kelamin = 'Perempuan'
+				break;
+
+			case 'M':
+				txt_jenis_kelamin = 'Laki-laki'
+				break;
+		
+			default:
+				break;
+		}
+		this.pdf.text(txt_jenis_kelamin, this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Alamat', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_alamat = converters.array_text(this.data.penindakan.saksi.alamat.replace('\n', ' '), 90)
+		let txt_alamat = converters.array_text(this.data.penindakan.saksi.alamat_identitas.replace('\n', ' '), 90)
 		this.pdf.text(txt_alamat, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height*(txt_alamat.length + 1)
 
