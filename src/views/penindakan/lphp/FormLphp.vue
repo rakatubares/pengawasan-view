@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-lphp">
+	<div class="wrapper my-form">
 		<!-- Form LPHP -->
 		<CForm class="pt-3">
 			<CRow>
@@ -237,20 +237,5 @@ export default {
 </script>
 
 <style>
-.form-lphp .row+.row {
-	margin-top:0;
-}
 
-.form-lphp .v-text-field__details {
-	display: none;
-}
-
-/* V-AUTOCOMPLETE */
-.form-lphp .v-input__slot {
-	min-height: 34px !important;
-	font-size: 14px;
-}
-.form-lphp .v-input__prepend-outer {
-	margin: 0 !important;
-} 
 </style>

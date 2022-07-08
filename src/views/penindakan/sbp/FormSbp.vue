@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-sbp">
+	<div class="wrapper my-form">
 
 		<!-- Form SBP header -->
 		<CForm class="pt-3">
@@ -391,25 +391,5 @@ export default {
 </script>
 
 <style>
-.form-sbp .row+.row {
-	margin-top:0;
-}
 
-.form-sbp .v-select__slot > input {
-	font-size: 0.875rem;
-	font-weight: 400;
-	color: #768192;
-}
-
-.form-sbp .v-input__slot {
-	min-height: calc(1.5em + 0.75rem) !important;
-}
-
-.form-sbp .v-input__slot > fieldset {
-	border: 1px solid;
-}
-
-.form-sbp .v-text-field__details {
-	display: none;
-}
 </style>
