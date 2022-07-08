@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-titip">
+	<div class="wrapper my-form">
 		<!-- Form BA Penitipan header -->
 		<CForm class="pt-3">
 			<CRow>
@@ -67,8 +67,8 @@
 						ref="selectPenerima"
 						label="Nama Penerima"
 						description="Nama orang yang menerima penitipan"
-						:showPekerjaan="true"
-						:showAlamat="true"
+						showPekerjaan
+						showAlamat
 						:id.sync="data.penerima.id"
 					/>
 				</CCol>
@@ -253,11 +253,5 @@ export default {
 </script>
 
 <style>
-.form-titip .row+.row {
-	margin-top:0;
-}
 
-.form-titip .v-text-field__details {
-	display: none;
-}
 </style>
