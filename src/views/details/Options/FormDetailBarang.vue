@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper my-form">
 		<!-- Form input penindakan barang -->
 		<CRow>
 			<CCol col="12">
@@ -43,7 +43,7 @@
 									format="DD-MM-YYYY" 
 									value-type="format"
 									type="date"
-								></date-picker>
+								/>
 							</div>
 						</CCol>
 					</CRow>
@@ -53,8 +53,7 @@
 								ref="selectPemilik"
 								label="Nama pemilik/importir/eksportir/kuasa"
 								:id.sync="data_objek.pemilik.id"
-							>
-							</MySelectEntitas>
+							/>
 						</CCol>
 					</CRow>
 
@@ -80,11 +79,10 @@
 			:data_objek.sync="data_objek"
 			state="insert"
 			@submit-data="$emit('submit-data')"
-		>
-		</MyTableItemBarang>
+		/>
 
 		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
+		<MyAlert ref="alert"/>
 	</div>
 </template>
 
@@ -139,6 +137,10 @@ export default {
 		}
 	},
 	methods: {
+		async getSaksiId() {
+			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
+			return response.data.data.penindakan.saksi.id
+		},
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
@@ -157,6 +159,9 @@ export default {
 			}
 		},
 		parseData(objek) {
+			if (objek.kemasan == null) {
+				objek.kemasan = {id: null}
+			}
 			if (objek.dokumen == null) {
 				objek.dokumen = {
 					jns_dok: null,
@@ -164,6 +169,10 @@ export default {
 					tgl_dok: null
 				}
 			}
+			if (objek.pemilik == null) {
+				objek.pemilik = {id: null}
+			}
+			
 			this.data_objek = objek
 			this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
 			this.$refs.selectKemasan.getData(this.data_objek.kemasan.id)
@@ -174,7 +183,7 @@ export default {
 		validatorRequired(val) { return validators.required(val) },
 		validatorInteger(val) { return validators.integer(val) },
 	},
-	mounted() {
+	async mounted() {
 		if (this.data.type == 'barang') {
 			if (this.data.data != null) {
 				this.parseData(this.data.data)
@@ -184,7 +193,10 @@ export default {
 				this.state = 'insert'
 			}	
 		} else {
+			let saksi_id = await this.getSaksiId()
 			this.data_objek = JSON.parse(JSON.stringify(data_default))
+			this.data_objek.pemilik.id = saksi_id
+			this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
 			this.state = 'insert'
 		}
 	}
@@ -192,5 +204,4 @@ export default {
 </script>
 
 <style>
-
 </style>
