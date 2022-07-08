@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper my-form">
 		<!-- Form input penindakan sarana pengangkut -->
 		<CRow>
 			<CCol col="12">
@@ -66,8 +66,7 @@
 								ref="selectPilot"
 								label="Nama nahkoda/pengemudi/pilot"
 								:id.sync="data_objek.pilot.id"
-							>
-							</MySelectEntitas>
+							/>
 						</CCol>
 					</CRow>
 
@@ -133,6 +132,10 @@ export default {
 		}
 	},
 	methods: {
+		async getSaksiId() {
+			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
+			return response.data.data.penindakan.saksi.id
+		},
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
@@ -164,7 +167,7 @@ export default {
 		},
 		validatorRequired(val) { return validators.required(val) },
 	},
-	mounted() {
+	async mounted() {
 		if (this.data.type == 'sarkut') {
 			if (this.data.data != null) {
 				this.parseData(this.data.data)
@@ -174,7 +177,10 @@ export default {
 				this.state = 'insert'
 			}	
 		} else {
+			let saksi_id = await this.getSaksiId()
 			this.data_objek = JSON.parse(JSON.stringify(data_default))
+			this.data_objek.pilot.id = saksi_id
+			this.$refs.selectPilot.getEntitas(this.data_objek.pilot.id, true)
 			this.state = 'insert'
 		}
 	}
