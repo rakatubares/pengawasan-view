@@ -75,7 +75,10 @@ class PdfRiksaBadan extends Pdf {
 
 		this.pdf.text('Kewarganegaraan', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_warga_negara = this.riksabadan.orang.warga_negara != null ? this.riksabadan.orang.warga_negara : '-'
+		let txt_warga_negara = '-'
+		if (this.riksabadan.orang.warga_negara) {
+			txt_warga_negara = this.riksabadan.orang.warga_negara.nama_negara
+		}
 		this.pdf.text(txt_warga_negara, this.props.ind.val, this.ln)
 		this.ln += this.props.font.height
 
@@ -88,7 +91,7 @@ class PdfRiksaBadan extends Pdf {
 
 		this.pdf.text('Alamat KTP/Paspor', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_alamat_id = this.riksabadan.orang.alamat || '-'
+		let txt_alamat_id = this.riksabadan.orang.alamat_identitas || '-'
 		let arr_alamat_id = converters.array_text(txt_alamat_id, 110)
 		this.pdf.text(arr_alamat_id, this.props.ind.val, this.ln)
 		this.ln += this.props.font.height*arr_alamat_id.length
