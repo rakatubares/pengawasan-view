@@ -7,8 +7,14 @@
 	background: none !important;
 }
 
-.no-rounded {
+.no-rounded,
+.no-rounded input {
 	border-radius: 0;
+}
+
+.rounded-right input {
+	border-top-right-radius: 0.25rem !important;
+	border-bottom-right-radius: 0.25rem !important;
 }
 
 // ==========================
@@ -23,6 +29,10 @@
 .v-input__slot {
 	min-height: 34px !important;
 	font-size: 14px;
+}
+
+.v-input__prepend-outer {
+	margin: 0 !important;
 }
 
 .v-input__append-outer {
