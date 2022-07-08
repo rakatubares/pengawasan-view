@@ -90,7 +90,7 @@ class PdfBukaSegel extends Pdf {
 		this.ln += this.props.font.height
 		this.pdf.text('Alamat', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(converters.string(this.data.dokumen.bukasegel.saksi.alamat).replace('\n', ' '), this.props.ind.txt2, this.ln)
+		this.pdf.text(converters.string(this.data.dokumen.bukasegel.saksi.alamat_identitas).replace('\n', ' '), this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('Pekerjaan', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
