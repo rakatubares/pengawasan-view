@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-lpn">
+	<div class="wrapper my-form">
 		<!-- Form LP -->
 		<CForm class="pt-3">
 			<CRow>
@@ -226,20 +226,5 @@ export default {
 </script>
 
 <style>
-.form-lpn .row+.row {
-	margin-top:0;
-}
 
-.form-lpn .v-text-field__details {
-	display: none;
-}
-
-/* V-AUTOCOMPLETE */
-.form-lpn .v-input__slot {
-	min-height: 34px !important;
-	font-size: 14px;
-}
-.form-lpn .v-input__prepend-outer {
-	margin: 0 !important;
-} 
 </style>

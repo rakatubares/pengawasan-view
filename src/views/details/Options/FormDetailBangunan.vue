@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-detail-bangunan">
+	<div class="wrapper my-form">
 		<!-- Form input penindakan bangunan -->
 		<CRow>
 			<CCol col="12">
@@ -149,21 +149,5 @@ export default {
 </script>
 
 <style>
-.form-detail-bangunan .v-select__slot > input {
-	font-size: 0.875rem;
-	font-weight: 400;
-	color: #768192;
-}
 
-.form-detail-bangunan .v-input__slot {
-	min-height: calc(1.5em + 0.75rem) !important;
-}
-
-.form-detail-bangunan .v-input__slot > fieldset {
-	border: 1px solid;
-}
-
-.form-detail-bangunan .v-text-field__details {
-	display: none;
-}
 </style>

@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-detail-badan">
+	<div class="wrapper my-form">
 		<!-- Form input penindakan badan -->
 		<CRow>
 			<CCol col="12">
@@ -13,8 +13,7 @@
 								:showTanggalLahir="true"
 								:showWargaNegara="true"
 								:showAlamat="true"
-							>
-							</MySelectEntitas>
+							/>
 						</CCol>
 					</CRow>
 
@@ -111,21 +110,5 @@ export default {
 </script>
 
 <style>
-.form-detail-badan .v-select__slot > input {
-	font-size: 0.875rem;
-	font-weight: 400;
-	color: #768192;
-}
 
-.form-detail-badan .v-input__slot {
-	min-height: calc(1.5em + 0.75rem) !important;
-}
-
-.form-detail-badan .v-input__slot > fieldset {
-	border: 1px solid;
-}
-
-.form-detail-badan .v-text-field__details {
-	display: none;
-}
 </style>
