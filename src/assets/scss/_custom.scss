@@ -27,8 +27,12 @@
 
 // Auto Complete
 .v-input__slot {
-	min-height: 34px !important;
+	min-height: 35px !important;
 	font-size: 14px;
+}
+
+.v-input__slot > fieldset {
+	border: 1px solid !important;
 }
 
 .v-input__prepend-outer {
@@ -51,6 +55,7 @@ div.v-input.no-message .v-text-field__details {
 
 // Button append input
 .button-input {
+	height: 35px;
 	padding: 0.35rem 0.75rem;
 }
 
