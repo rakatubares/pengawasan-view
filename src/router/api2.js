@@ -218,7 +218,7 @@ class API {
 	async getKategoriById(id) {
 		return await this.getApi(`/kategori/${id}`)
 	}
-
+	
 	async searchNegara(data) {
 		return await this.postApi('/negara/search', data)
 	}

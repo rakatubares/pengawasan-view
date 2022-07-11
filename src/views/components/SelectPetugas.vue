@@ -5,6 +5,7 @@
 				<div class="form-group">
 					<label>{{ label }}</label>
 					<v-autocomplete
+						class="no-message"
 						v-model="value"
 						outlined
 						dense
