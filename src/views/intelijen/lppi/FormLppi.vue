@@ -360,6 +360,13 @@ export default {
 			let response = await api.getFormDataById(this.doc_type, this.doc_id)
 			this.data = response.data.data
 
+			this.fillNull()
+
+			this.$nextTick(function () {
+				this.renderData()
+			})
+		},
+		fillNull() {
 			if (this.data.penerima_info == null) {
 				this.data.penerima_info = JSON.parse(JSON.stringify(default_data.penerima_info))
 			}
@@ -375,10 +382,6 @@ export default {
 			if (this.data.pejabat == null) {
 				this.data.pejabat = JSON.parse(JSON.stringify(default_data.pejabat))
 			}
-
-			this.$nextTick(function () {
-				this.renderData()
-			})
 		},
 		renderData() {
 			this.$refs.selectPenerima.getPetugas(this.data.penerima_info.user_id, true)
@@ -396,6 +399,8 @@ export default {
 			if (this.state == 'insert') {
 				try {
 					this.data = await api.storeDoc(this.doc_type, this.data)
+					this.fillNull()
+
 					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
@@ -411,6 +416,8 @@ export default {
 						return update_ikhtisar
 					})
 					this.data = await api.updateDoc(this.doc_type, update_data.id, update_data)
+					this.fillNull()
+					
 					this.$emit('update:doc_id', this.data.id)
 					this.alert(`Data ${this.tipe_surat} berhasil diubah`)
 				} catch (error) {
