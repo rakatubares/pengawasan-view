@@ -26,7 +26,7 @@
 				<b>Jenis Kelamin</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data_entitas.jenis_kelamin }}
+				{{ disp_jenis_kelamin }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -42,7 +42,7 @@
 				<b>Warga Negara</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data_entitas.warga_negara }}
+				{{ disp_warga_negara }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -74,7 +74,7 @@
 				<b>Alamat Identitas</b>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data_entitas.alamat }}
+				{{ data_entitas.alamat_identitas }}
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
@@ -154,6 +154,31 @@ export default {
 			if (val != null) {
 				this.data_entitas = JSON.parse(JSON.stringify(val))
 			}
+		}
+	},
+	computed: {
+		disp_jenis_kelamin() {
+			let txt_jenis_kelamin = ''
+			switch (this.data_entitas.jenis_kelamin) {
+				case 'F':
+					txt_jenis_kelamin = 'Perempuan'
+					break;
+
+				case 'M':
+					txt_jenis_kelamin = 'Laki-laki'
+					break;
+			
+				default:
+					break;
+			}
+			return txt_jenis_kelamin
+		},
+		disp_warga_negara() {
+			let txt_warga_negara = ''
+			if (this.data_entitas.warga_negara) {
+				txt_warga_negara = this.data_entitas.warga_negara.nama_negara
+			}
+			return txt_warga_negara
 		}
 	},
 	data() {
