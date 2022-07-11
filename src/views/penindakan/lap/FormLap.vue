@@ -506,7 +506,7 @@ export default {
 			let response = await api.getFormDataById(this.doc_type, this.doc_id)
 			this.data = response.data.data
 
-			this.data.flag_layak_penindakan = this.data.flag_layak_penindakan == 1 ? true : false
+			this.fillDefault()
 			if (this.data.skema_penindakan == null) {
 				this.data.skema_penindakan = {id: null}
 			}
@@ -521,6 +521,9 @@ export default {
 				this.renderData()
 			})
 		},
+		fillDefault() {
+			this.data.flag_layak_penindakan = this.data.flag_layak_penindakan == 1 ? true : false
+		},
 		renderData() {
 			this.validatorDatetime(this.data.tanggal_dokumen, 'DD-MM-YYYY', 'validasi.tanggal_dokumen', this.validasi.tanggal_dokumen.text)
 			this.validatorDatetime(this.data.tanggal_sumber, 'DD-MM-YYYY', 'validasi.tanggal_sumber', this.validasi.tanggal_sumber.text)
@@ -534,8 +537,9 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					let response = await api.storeDoc(this.doc_type, this.data)
-					this.$emit('update:doc_id', response.id)
+					this.data = await api.storeDoc(this.doc_type, this.data)
+					this.fillDefault()
+					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert('Data LAP berhasil disimpan')
 				} catch (error) {
@@ -543,7 +547,8 @@ export default {
 				}
 			} else if (this.state == 'edit') {
 				try {
-					await api.updateDoc(this.doc_type, this.data.id, this.data)
+					this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
+					this.fillDefault()
 					this.alert('Data LAP berhasil diubah')
 				} catch (error) {
 					console.log('form lap - update data - error', error)
