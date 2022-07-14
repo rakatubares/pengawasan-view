@@ -50,8 +50,9 @@ import api from '../../router/api2.js'
 import PdfLkai from './PdfLkai.js'
 import PdfLppi from './PdfLppi.js'
 import PdfNhi from './PdfNhi.js'
-import MyAlert from '../components/AlertSubmit.vue'
 import PdfNhiN from './pdfNhiN.js'
+import PdfNi from './PdfNi.js'
+import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
 	name: "DisplayPdf",
@@ -136,6 +137,11 @@ export default {
 				case 'nhin':
 					let pdfNhin = new PdfNhiN(this.data)
 					this.src_pdf = pdfNhin.generatePdf()
+					break;
+
+				case 'ni':
+					let pdfNi = new PdfNi(this.data)
+					this.src_pdf = pdfNi.generatePdf()
 					break;
 
 				default:

@@ -170,7 +170,10 @@ export default {
 				if ((type == 'edit') || (type == 'delete')) {
 					btn = [100].includes(item.status.kode_status)
 				} else if (type == 'show') {
-					btn = [101, 102, 111, 112, 121, 122, 200, 201, 202, 211, 212, 221, 222].includes(item.status.kode_status)
+					btn = [
+						101, 102, 111, 112, 113, 121, 122, 
+						200, 201, 202, 211, 212, 213, 221, 222
+					].includes(item.status.kode_status)
 				} else {
 					btn = false
 				}
