@@ -16,6 +16,7 @@ const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
 const PageLppiN = () => import('@/views/intelijen/lppi/PageLppiN.vue')
 const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
 const PageNhiN = () => import('@/views/intelijen/nhin/PageNhiN.vue')
+const PageNi = () => import('@/views/intelijen/ni/PageNi.vue')
 
 // Views - Penindakan
 const PageBast = () => import('@/views/penindakan/bast/PageBast')
@@ -201,6 +202,11 @@ function configRoutes () {
 					path: 'nhin',
 					name: 'NHI-N',
 					component: PageNhiN
+				},
+				{
+					path: 'ni',
+					name: 'NI',
+					component: PageNi
 				},
 			]
 		},

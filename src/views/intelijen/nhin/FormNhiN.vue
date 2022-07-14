@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-nhin">
+	<div class="wrapper my-form">
 		<CForm class="pt-3">
 			<CRow>
 				<CCol md="6" sm="12">
@@ -776,28 +776,5 @@ export default {
 </script>
 
 <style>
-.form-nhin .row+.row {
-	margin-top:0;
-}
 
-.form-nhin .v-text-field__details {
-	display: none;
-}
-
-/* V-AUTOCOMPLETE */
-.form-nhin .v-input__slot {
-	min-height: 34px !important;
-	font-size: 14px;
-}
-.form-nhin .v-input__prepend-outer {
-	margin: 0 !important;
-} 
-
-/* V-COMBOBOX */
-.form-nhin .v-input__slot[role=combobox] .v-input__append-inner {
-	margin: 0 -12px 0 0;
-}
-.form-nhin .v-input__slot[role=combobox] .v-input__append-inner button {
-	border-radius: 0 0.25rem 0.25rem 0;
-}
 </style>

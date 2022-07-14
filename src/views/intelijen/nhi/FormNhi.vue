@@ -1,11 +1,12 @@
 <template>
-	<div class="wrapper form-nhi">
+	<div class="wrapper my-form">
 		<CForm class="pt-3">
 			<CRow>
 				<CCol md="6" sm="12">
 					<div class="form-group">
 						<label>Nomor LKAI</label>
 						<v-autocomplete
+							class="no-message"
 							v-model="lkai_search_value"
 							outlined
 							dense
@@ -545,10 +546,10 @@ const default_data = {
 	tembusan: []
 }
 const default_nhi_options = [
-		{value: 'exim', label: 'Barang Ekspor/Impor'}, 
-		{value: 'bkc', label: 'Barang BKC'}, 
-		{value: 'tertentu', label: 'Barang Tertentu'}
-	]
+	{value: 'exim', label: 'Barang Ekspor/Impor'}, 
+	{value: 'bkc', label: 'Barang BKC'}, 
+	{value: 'tertentu', label: 'Barang Tertentu'}
+]
 
 export default {
 	name: 'FormNhi',
@@ -732,28 +733,5 @@ export default {
 </script>
 
 <style>
-.form-nhi .row+.row {
-	margin-top:0;
-}
 
-.form-nhi .v-text-field__details {
-	display: none;
-}
-
-/* V-AUTOCOMPLETE */
-.form-nhi .v-input__slot {
-	min-height: 34px !important;
-	font-size: 14px;
-}
-.form-nhi .v-input__prepend-outer {
-	margin: 0 !important;
-} 
-
-/* V-COMBOBOX */
-.form-nhi .v-input__slot[role=combobox] .v-input__append-inner {
-	margin: 0 -12px 0 0;
-}
-.form-nhi .v-input__slot[role=combobox] .v-input__append-inner button {
-	border-radius: 0 0.25rem 0.25rem 0;
-}
 </style>

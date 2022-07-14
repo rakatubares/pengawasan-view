@@ -8,6 +8,7 @@
 	>
 		<template #append>
 			<CButton 
+				class="no-rounded rounded-right"
 				color="danger"
 				@click="remove"
 			>

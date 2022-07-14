@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-lkai">
+	<div class="wrapper my-form">
 		<CForm class="pt-4">
 			<!-- Dokumen sumber -->
 			<!-- LPPI -->
@@ -25,6 +25,7 @@
 					<div class="form-group">
 						<label>Nomor {{ doc_type == 'lkain' ? 'LPPI-N' : 'LPPI' }}</label>
 						<v-autocomplete
+							class="no-message"
 							v-model="lppi_search_value"
 							outlined
 							dense
@@ -603,28 +604,5 @@ export default {
 </script>
 
 <style>
-.form-lkai .bottom {
-	bottom: 1rem;
-	position: absolute;
-}
 
-.form-lkai .row+.row {
-	margin-top:0;
-}
-
-.form-lkai .v-text-field__details {
-	display: none;
-}
-
-/* V-AUTOCOMPLETE */
-.form-lkai .v-input__slot {
-	min-height: 34px !important;
-	font-size: 14px;
-}
-.form-lkai .v-input__prepend-outer {
-	margin: 0 !important;
-} 
-.form-lkai .v-input--is-disabled .v-input__slot {
-	background-color: #d8dbe0;
-}
 </style>

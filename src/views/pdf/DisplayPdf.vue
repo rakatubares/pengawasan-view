@@ -60,6 +60,8 @@ import PdfLpN from './PdfLpN.js'
 import PdfLppi from './PdfLppi.js'
 import PdfLptp from './PdfLptp.js'
 import PdfNhi from './PdfNhi.js'
+import PdfNhiN from './pdfNhiN.js'
+import PdfNi from './PdfNi.js'
 import PdfPengaman from './PdfPengaman.js'
 import PdfReekspor from './PdfReekspor.js'
 import PdfRiksa from './PdfRiksa.js'
@@ -71,7 +73,6 @@ import PdfTitip from './PdfTitip.js'
 import PdfTolak1 from './PdfTolak1.js'
 import PdfTolak2 from './PdfTolak2.js'
 import MyAlert from '../components/AlertSubmit.vue'
-import PdfNhiN from './pdfNhiN.js'
 
 export default {
 	name: "DisplayPdf",
@@ -228,6 +229,11 @@ export default {
 				case 'nhin':
 					let pdfNhin = new PdfNhiN(this.data)
 					this.src_pdf = pdfNhin.generatePdf()
+					break;
+
+				case 'ni':
+					let pdfNi = new PdfNi(this.data)
+					this.src_pdf = pdfNi.generatePdf()
 					break;
 
 				case 'reekspor':

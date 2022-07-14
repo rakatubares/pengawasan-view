@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper form-lppi">
+	<div class="wrapper my-form">
 		<CForm class="pt-3">
 			<CRow>
 				<CCol sm="12">
@@ -457,19 +457,5 @@ export default {
 </script>
 
 <style>
-.form-lppi .row+.row {
-	margin-top:0;
-}
 
-.form-lppi .v-text-field__details {
-	display: none;
-}
-/* V-AUTOCOMPLETE */
-.form-lppi .v-input__slot {
-	min-height: 34px !important;
-	font-size: 14px;
-}
-.form-lppi .v-input__prepend-outer {
-	margin: 0 !important;
-} 
 </style>
