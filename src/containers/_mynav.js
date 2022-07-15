@@ -190,6 +190,12 @@ export default [
 						icon: 'cil-file'
 					},
 					{
+						_name: 'CSidebarNavItem',
+						name: 'NI-N',
+						to: '/nin',
+						icon: 'cil-file'
+					},
+					{
 						_name: 'CSidebarNavDropdown',
 						name: 'SBP-N',
 						icon: 'cil-list',

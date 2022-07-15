@@ -2,7 +2,7 @@
 	<div class="wrapper">
 		<MyModalTabs
 			ref="modal_tabs"
-			title="Data NI"
+			:title="`Data ${label_ni}`"
 			:tabs_list.sync="tabs_list"
 			:current_tab.sync="current_tab"
 			@close-modal="closeModal"
@@ -13,11 +13,15 @@
 						v-if="['insert','edit'].includes(modal_state)"
 						:state.sync="modal_state"
 						:doc_type.sync="doc_type"
+						:label_ni="label_ni"
+						:tipe_lkai="tipe_lkai"
+						:label_lkai="label_lkai"
 						:doc_id.sync="doc_id"
 					/>
 					<MyDisplayNi
 						v-else-if="modal_state == 'show'"	
 						:doc_type="doc_type"
+						:label_lkai="label_lkai"
 						:doc_id.sync="doc_id"
 					/>
 				</CTab>
@@ -56,6 +60,9 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
+		label_ni: String,
+		tipe_lkai: String,
+		label_lkai: String,
 		id: Number
 	},
 	data() {

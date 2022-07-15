@@ -15,7 +15,9 @@
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
-					:tipe_surat="tipe_surat"
+					:label_ni="label_ni"
+					:tipe_lkai="tipe_lkai"
+					:label_lkai="label_lkai"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>
@@ -39,18 +41,26 @@ export default {
 			type: String,
 			default: 'ni'
 		},
-		tipe_surat: {
+		label_ni: {
 			type: String,
 			default: 'NI'
-		}
+		},
+		tipe_lkai: {
+			type: String,
+			default: 'lkai'
+		},
+		label_lkai: {
+			type: String,
+			default: 'LKAI'
+		},
 	},
 	data() {
 		return {
-			table_title: `Daftar ${this.tipe_surat}`,
+			table_title: `Daftar ${this.label_ni}`,
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
-				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
-				{ key: 'lkai', label: 'LKAI' },
+				{ key: 'no_dok_lengkap', label: `No ${this.label_ni}` },
+				{ key: 'tanggal_dokumen', label: `Tgl ${this.label_ni}` },
+				{ key: 'lkai', label: this.label_lkai },
 			],
 			custom_fields: ['lkai'],
 			modal_data_props: {
@@ -76,7 +86,7 @@ export default {
 			this.modal_data_props.show = false
 		},
 		constructDeleteText(item) {
-			let text = "Apakah Anda yakin untuk menghapus data <b>NI atas</b> " 
+			let text = `Apakah Anda yakin untuk menghapus data <b>${this.label_ni} atas</b> `
 				+ item.no_lkai.bold() 
 				+ " tanggal " + item.tgl_lkai.bold()
 				+ "?"

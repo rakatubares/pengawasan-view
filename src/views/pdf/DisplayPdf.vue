@@ -158,6 +158,8 @@ export default {
 						this.data,
 						this.active_pdf,
 						'LEMBAR KERJA ANALISIS INTELIJEN NPP (LKAI-N)',
+						'lppin',
+						'LPPI-N',
 						{start: 60, end: 150}
 					)
 					this.src_pdf = pdfLkain.generatePdf()
@@ -234,6 +236,17 @@ export default {
 				case 'ni':
 					let pdfNi = new PdfNi(this.data)
 					this.src_pdf = pdfNi.generatePdf()
+					break;
+				
+				case 'nin':
+					let pdfNiN = new PdfNi(
+						this.data,
+						this.active_pdf,
+						'NOTA INFORMASI NPP',
+						'LKAI-N',
+						{start: 85, end: 125}
+					)
+					this.src_pdf = pdfNiN.generatePdf()
 					break;
 
 				case 'reekspor':

@@ -14,7 +14,7 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
-						<b>No LKAI</b>
+						<b>No {{label_lkai}}</b>
 					</CCol>
 					<CCol md="9" class="py-1">
 						{{ disp_lkai }}
@@ -90,6 +90,7 @@ export default {
 	},
 	props: {
 		doc_type: String,
+		label_lkai: String,
 		doc_id: Number
 	},
 	data() {

@@ -4,7 +4,7 @@
 			<CRow>
 				<CCol md="6" sm="12">
 					<div class="form-group">
-						<label>Nomor LKAI</label>
+						<label>Nomor {{label_lkai}}</label>
 						<v-autocomplete
 							class="no-message"
 							v-model="lkai_search_value"
@@ -19,7 +19,7 @@
 							<template v-slot:no-data>
 								<v-list-item>
 									<v-list-item-title>
-										Data LKAI tidak ditemukan
+										Data {{label_lkai}} tidak ditemukan
 									</v-list-item-title>
 								</v-list-item>
 							</template>
@@ -30,12 +30,12 @@
 								</v-list-item-content>
 							</template>
 						</v-autocomplete>
-						<small class="form-text text-muted w-100">Nomor LKAI sebagai sumber penerbitan NHI</small>
+						<small class="form-text text-muted w-100">Nomor {{label_lkai}} sebagai sumber penerbitan {{label_ni}}</small>
 					</div>
 				</CCol>
 				<CCol md="3" sm="12">
 					<CInput
-						label="Tanggal LKAI"
+						:label="`Tanggal ${label_lkai}`"
 						:value.sync="data.tanggal_lkai"
 						disabled
 					/>
@@ -45,7 +45,7 @@
 				<CCol md="4" sm="12">
 					<CSelect
 						label="Sifat"
-						description="Kategori sifat NI"
+						:description="`Kategori sifat ${label_ni}`"
 						:options="sifat_ni_options"
 						:value.sync="data.sifat"
 					/>
@@ -53,7 +53,7 @@
 				<CCol md="4" sm="12">
 					<CSelect
 						label="Klasifikasi"
-						description="Kategori klasifikasi NI"
+						:description="`Kategori klasifikasi ${label_ni}`"
 						:options="klasifikasi_ni_options"
 						:value.sync="data.klasifikasi"
 					/>
@@ -63,7 +63,7 @@
 				<CCol sm="8">
 					<CInput
 						label="Penerima"
-						description="Jabatan penerima NI"
+						:description="`Jabatan penerima ${label_ni}`"
 						:value.sync="data.tujuan"
 					/>
 				</CCol>
@@ -169,6 +169,9 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
+		label_ni: String,
+		tipe_lkai: String,
+		label_lkai: String,
 		doc_id: Number
 	},
 	data() {
@@ -184,7 +187,7 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getFormDataById('ni', this.doc_id)
+			let response = await api.getFormDataById(this.doc_type, this.doc_id)
 			this.data = response.data.data
 
 			if (this.data.lkai_id != null) {
@@ -205,21 +208,21 @@ export default {
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
-					this.data = await api.storeDoc('ni', this.data)
+					this.data = await api.storeDoc(this.doc_type, this.data)
 					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
-					this.alert(`Data NI berhasil disimpan`)
+					this.alert(`Data ${this.label_ni} berhasil disimpan`)
 				} catch (error) {
-					console.log(`form ni - save data - error`, error)
+					console.log(`form ${this.doc_type} - save data - error`, error)
 				}
 			} else if (this.state == 'edit') {
 				try {
 					let update_data = this.data
-					this.data = await api.updateDoc('ni', update_data.id, update_data)
+					this.data = await api.updateDoc(this.doc_type, update_data.id, update_data)
 					this.$emit('update:doc_id', this.data.id)
-					this.alert(`Data NI berhasil diubah`)
+					this.alert(`Data ${this.label_ni} berhasil diubah`)
 				} catch (error) {
-					console.log(`form ni - update data - error`, error)
+					console.log(`form ${this.doc_type} - update data - error`, error)
 				}
 			}
 		},
@@ -229,7 +232,7 @@ export default {
 		async changeValueLkai(id) {
 			if (id != null) {
 				// Get data LKAI
-				let response = await api.getDisplayDataById('lkai', id)
+				let response = await api.getDisplayDataById(this.tipe_lkai, id)
 				let lkai = response.data.data
 				
 				// Change current data according to lkai
@@ -241,7 +244,7 @@ export default {
 		},
 		async search_lkai(search) {
 			let data = {'src': search, 'exc': this.lkai_search_exception, 'flt': {kode_status: 200}}
-			let responses = await api.searchDoc('lkai', data)
+			let responses = await api.searchDoc(this.tipe_lkai, data)
 			this.lkai_search_items = responses.data.data
 		},
 		addCc() {
