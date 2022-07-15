@@ -66,6 +66,12 @@ export default [
 						to: '/nhin',
 						icon: 'cil-file'
 					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'NI-N',
+						to: '/nin',
+						icon: 'cil-file'
+					},
 				]
 			}
 		]

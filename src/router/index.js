@@ -17,6 +17,7 @@ const PageLppiN = () => import('@/views/intelijen/lppi/PageLppiN.vue')
 const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
 const PageNhiN = () => import('@/views/intelijen/nhin/PageNhiN.vue')
 const PageNi = () => import('@/views/intelijen/ni/PageNi.vue')
+const PageNiN = () => import('@/views/intelijen/ni/PageNiN.vue')
 
 Vue.use(Router)
 
@@ -74,6 +75,11 @@ function configRoutes () {
 					path: 'ni',
 					name: 'NI',
 					component: PageNi
+				},
+				{
+					path: 'nin',
+					name: 'NI-N',
+					component: PageNiN
 				},
 			]
 		},

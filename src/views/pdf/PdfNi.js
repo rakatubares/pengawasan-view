@@ -8,10 +8,7 @@ const props = {
 		size: 10,
 		height: 4
 	},
-	title_line: {
-		start: 88,
-		end: 122
-	},
+	title_line: {},
 	ind: {
 		sta: ind_start,
 		cln1: ind_start+20,
@@ -25,11 +22,19 @@ const props = {
 }
 
 class PdfNi extends Pdf {
-	constructor(data) {
+	constructor(
+		data,
+		ni_type = 'ni',
+		jenis_dok = 'NOTA INFORMASI',
+		lkai_label = 'LKAI',
+		title_line_position = {start: 88, end: 122}
+	) {
 		super(props);
-		this.jenis_dok = 'NOTA INFORMASI'
-		this.data = data
-		this.ni = this.data.dokumen.ni
+		this.ni_type = ni_type
+		this.ni = data.dokumen[this.ni_type]
+		this.jenis_dok = jenis_dok
+		this.lkai_label = lkai_label
+		this.props.title_line = title_line_position
 		this.prepareDocDate(this.ni.tanggal_dokumen)
 	}
 
@@ -49,7 +54,7 @@ class PdfNi extends Pdf {
 		this.pdf.text(':', this.props.ind.cln1, this.ln)
 		this.pdf.text(this.full_tgl_dok, this.props.ind.val1, this.ln)
 
-		this.pdf.text('Nomor LKAI', this.props.ind.lbl2, this.ln)
+		this.pdf.text(`Nomor ${this.lkai_label}`, this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
 		this.pdf.text(this.ni.nomor_lkai, this.props.ind.val2, this.ln)
 		this.ln += this.props.font.height
@@ -58,7 +63,7 @@ class PdfNi extends Pdf {
 		this.pdf.text(':', this.props.ind.cln1, this.ln)
 		this.pdf.text(this.ni.sifat, this.props.ind.val1, this.ln)
 
-		this.pdf.text('Tanggal LKAI', this.props.ind.lbl2, this.ln)
+		this.pdf.text(`Tanggal ${this.lkai_label}`, this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
 		this.pdf.text(converters.fullDate(this.ni.tanggal_lkai), this.props.ind.val2, this.ln)
 		this.ln += this.props.font.height
@@ -73,8 +78,13 @@ class PdfNi extends Pdf {
 		this.pdf.text(`Yth. ${txt_tujuan}`, this.props.ind.sta, this.ln)
 		this.ln += this.props.font.height
 
-		let txt_op = '     Sehubungan dengan hasil analisis intelijen yang mengindikasikan adanya pelanggaran kepabeanan atau cukai, '
-			+ 'dengan ini disampaikan informasi agar dapat dilakukan penelitian mendalam tentang informasi sebagai berikut:'
+		if (this.ni_type == 'nin') {
+			var txt_op = '     Sehubungan dengan hasil analisis intelijen yang mengindikasikan adanya pelanggaran kepabeanan terkait NPP, '
+				+ 'diinformasikan kepada Saudara untuk dilakukan penelitian mendalam tentang informasi sebagai berikut:'	
+		} else {
+			var txt_op = '     Sehubungan dengan hasil analisis intelijen yang mengindikasikan adanya pelanggaran kepabeanan atau cukai, '
+				+ 'dengan ini disampaikan informasi agar dapat dilakukan penelitian mendalam tentang informasi sebagai berikut:'	
+		}
 		this.pdf.text(txt_op, this.props.ind.sta, this.ln, {align: 'justify', maxWidth: 185})
 		this.ln += this.props.font.height*3
 
@@ -87,7 +97,11 @@ class PdfNi extends Pdf {
 		this.ln += this.props.font.height
 
 		// Closing
-		let txt_closing = 'Demikian disampaikan atas perhatian Bapak / Ibu / Saudara *) diucapkan terima kasih untuk mendapat perhatian.'
+		if (this.ni_type == 'nin') {
+			var txt_closing = 'Demikian disampaikan untuk mendapat perhatian.'
+		} else {
+			var txt_closing = 'Demikian disampaikan atas perhatian Bapak / Ibu / Saudara *) diucapkan terima kasih untuk mendapat perhatian.'
+		}
 		this.pdf.text(txt_closing, this.props.ind.sta, this.ln)
 		this.ln += this.props.font.height*4
 

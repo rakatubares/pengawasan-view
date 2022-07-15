@@ -34,13 +34,17 @@ class PdfLkai extends Pdf {
 		data,
 		lkai_type = 'lkai',
 		doc_title = 'LEMBAR KERJA ANALISIS INTELIJEN',
+		lppi_type = 'lppi',
+		lppi_label = 'LPPI',
 		title_line_indent = {start: 72, end: 138}
 	) {
 		super(props);
-		this.data = data
-		this.lkai = this.data.dokumen[lkai_type]
 		this.lkai_type = lkai_type
 		this.doc_title = doc_title
+		this.lppi_type = lppi_type
+		this.lppi_label = lppi_label
+		this.lkai = data.dokumen[this.lkai_type]
+		this.lppi = data.dokumen[this.lppi_type]
 		this.props.title_line = title_line_indent
 		this.prepareDocDate(this.lkai.tanggal_dokumen)
 	}
@@ -71,18 +75,27 @@ class PdfLkai extends Pdf {
 		this.pdf.setFont('Helvetica', 'normal')
 
 		// LPPI
-		let checkbox_lppi = this.lkai.nomor_lppi != null ? this.checked_checkbox : this.empty_checkbox
+		let checkbox_lppi = this.empty_checkbox
+		if (this.lppi) {
+			checkbox_lppi = this.checked_checkbox
+		}
 		this.pdf.addImage(checkbox_lppi, 'png', this.props.ind.chk, this.ln-3.5, 4, 4);
-		let lppi_type = this.lkai_type == 'lkain' ? 'LPPI-N' : 'LPPI'
-		this.pdf.text(`${lppi_type},`, this.props.ind.lbl2, this.ln)
+		this.pdf.text(`${this.lppi_label},`, this.props.ind.lbl2, this.ln)
 		this.pdf.text('Nomor:', this.props.ind.lbl3, this.ln)
-		let txt_lppi = this.lkai.nomor_lppi != null
-			? this.lkai.tanggal_lppi != null
-				? `${this.lkai.nomor_lppi} tanggal ${this.lkai.tanggal_lppi}`
-				: `${this.lkai.nomor_lppi} tanggal -`
-			: this.lkai.tanggal_lppi != null
-				? `- tanggal ${this.lkai.tanggal_lppi}`
-				: '-'
+		let txt_lppi = '-'
+		if (this.lppi) {
+			if (this.lppi.no_dok_lengkap) {
+				if (this.lppi.tanggal_dokumen) {
+					txt_lppi = `${this.lppi.no_dok_lengkap} tanggal ${this.lppi.tanggal_dokumen}`
+				} else {
+					txt_lppi = `${this.lppi.no_dok_lengkap} tanggal -`
+				}
+			} else {
+				if (this.lppi.tanggal_dokumen) {
+					txt_lppi = `- tanggal ${this.lppi.tanggal_dokumen}`
+				}
+			}
+		}
 		this.pdf.text(txt_lppi, this.props.ind.val2, this.ln)
 		this.ln += this.props.font.height
 
