@@ -1,6 +1,6 @@
 <template>
 	<div class="wrapper">
-		<CRow>
+		<CRow v-if="show_button">
 			<CCol>
 				<CButton 
 					v-for="doc_type in list_pdf"
@@ -48,6 +48,7 @@
 <script>
 import api from '../../router/api2.js'
 import PdfBast from './PdfBast.js'
+import PdfContoh from './PdfContoh.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLpN from './PdfLpN.js'
@@ -70,6 +71,10 @@ export default {
 		state: String,
 		doc_type: String,
 		doc_id: Number,
+		show_button: {
+			type: Boolean,
+			default: true
+		}
 	},
 	data() {
 		return {
@@ -109,6 +114,11 @@ export default {
 				case 'bast':
 					let pdfBast = new PdfBast(this.data)
 					this.src_pdf = pdfBast.generatePdf()
+					break;
+
+				case 'contoh':
+					let pdfContoh = new PdfContoh(this.data)
+					this.src_pdf = pdfContoh.generatePdf()
 					break;
 					
 				case 'lp':
