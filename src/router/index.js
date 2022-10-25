@@ -44,7 +44,7 @@ function configRoutes () {
 				},
 				{
 					path: 'bhp',
-					name: 'Penrikan BHP',
+					name: 'Penarikan BHP',
 					component: PageBhp
 				},
 				{
