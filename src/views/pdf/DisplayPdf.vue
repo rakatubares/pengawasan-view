@@ -123,6 +123,11 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
+				case 'bast':
+					let pdfBast = new PdfBast(this.data)
+					this.src_pdf = pdfBast.generatePdf()
+					break;
+
 				case 'bukapengaman':
 					let pdfBukaPengaman = new PdfBukaPengaman(this.data)
 					this.src_pdf = pdfBukaPengaman.generatePdf()
@@ -249,6 +254,11 @@ export default {
 					this.src_pdf = pdfNiN.generatePdf()
 					break;
 
+				case 'pengaman':
+					let pdfPengaman = new PdfPengaman(this.data)
+					this.src_pdf = pdfPengaman.generatePdf()
+					break;
+
 				case 'reekspor':
 					let pdfReekspor = new PdfReekspor(this.data)
 					this.src_pdf = pdfReekspor.generatePdf()
@@ -302,16 +312,6 @@ export default {
 				case 'tolak2':
 					let pdfTolak2 = new PdfTolak2(this.data)
 					this.src_pdf = pdfTolak2.generatePdf()
-					break;
-
-				case 'pengaman':
-					let pdfPengaman = new PdfPengaman(this.data)
-					this.src_pdf = pdfPengaman.generatePdf()
-					break;
-
-				case 'bast':
-					let pdfBast = new PdfBast(this.data)
-					this.src_pdf = pdfBast.generatePdf()
 					break;
 
 				default:

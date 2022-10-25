@@ -65,9 +65,29 @@ function configRoutes () {
 					component: Homepage
 				},
 				{
+					path: 'bast',
+					name: 'BAST',
+					component: PageBast
+				},
+				{
 					path: 'bhp',
 					name: 'Penarikan BHP',
 					component: PageBhp
+				},
+				{
+					path: 'bukapengaman',
+					name: 'BA Pembukaan Tanda Pengaman',
+					component: PageBukaPengaman
+				},
+				{
+					path: 'bukasegel',
+					name: 'BA Buka Segel',
+					component: PageBukaSegel
+				},
+				{
+					path: 'contoh',
+					name: 'BA Contoh Barang',
+					component: PageContoh
 				},
 				{
 					path: 'lap',
@@ -90,29 +110,14 @@ function configRoutes () {
 					component: PageLkaiN
 				},
 				{
-					path: 'nhi',
-					name: 'NHI',
-					component: PageNhi
+					path: 'lp',
+					name: 'LP',
+					component: PageLp
 				},
 				{
-					path: 'sbp',
-					name: 'SBP',
-					component: PageSbp
-				},
-				{
-					path: 'sbpn',
-					name: 'SBP-N',
-					component: PageSbpN
-				},
-				{
-					path: 'tolak1',
-					name: 'BA Penolakan SBP',
-					component: PageTolak1
-				},
-				{
-					path: 'tolak2',
-					name: 'BA Penolakan TTD BA Penolakan SBP',
-					component: PageTolak2
+					path: 'lpn',
+					name: 'LP-N',
+					component: PageLpN
 				},
 				{
 					path: 'lphp',
@@ -125,16 +130,6 @@ function configRoutes () {
 					component: PageLphpN
 				},
 				{
-					path: 'lp',
-					name: 'LP',
-					component: PageLp
-				},
-				{
-					path: 'lpn',
-					name: 'LP-N',
-					component: PageLpN
-				},
-				{
 					path: 'lppi',
 					name: 'LPPI',
 					component: PageLppi
@@ -143,56 +138,6 @@ function configRoutes () {
 					path: 'lppin',
 					name: 'LPPI-N',
 					component: PageLppiN
-				},
-				{
-					path: 'riksa',
-					name: 'Periksa',
-					component: PageRiksa
-				},
-				{
-					path: 'segel',
-					name: 'BA Segel',
-					component: PageSegel
-				},
-				{
-					path: 'bukasegel',
-					name: 'BA Buka Segel',
-					component: PageBukaSegel
-				},
-				{
-					path: 'titip',
-					name: 'BA Penitipan',
-					component: PageTitip
-				},
-				{
-					path: 'pengaman',
-					name: 'BA Tanda Pengaman',
-					component: PagePengaman
-				},
-				{
-					path: 'bukapengaman',
-					name: 'BA Pembukaan Tanda Pengaman',
-					component: PageBukaPengaman
-				},
-				{
-					path: 'bast',
-					name: 'BAST',
-					component: PageBast
-				},
-				{
-					path: 'contoh',
-					name: 'BA Contoh Barang',
-					component: PageContoh
-				},
-				{
-					path: 'reekspor',
-					name: 'BA Pengawasan Reekspor',
-					component: PageReekspor
-				},
-				{
-					path: 'riksabadan',
-					name: 'BA Pemeriksaan Badan',
-					component: PageRiksaBadan
 				},
 				{
 					path: 'nhi',
@@ -213,6 +158,56 @@ function configRoutes () {
 					path: 'nin',
 					name: 'NI-N',
 					component: PageNiN
+				},
+				{
+					path: 'pengaman',
+					name: 'BA Tanda Pengaman',
+					component: PagePengaman
+				},
+				{
+					path: 'reekspor',
+					name: 'BA Pengawasan Reekspor',
+					component: PageReekspor
+				},
+				{
+					path: 'riksa',
+					name: 'Periksa',
+					component: PageRiksa
+				},
+				{
+					path: 'riksabadan',
+					name: 'BA Pemeriksaan Badan',
+					component: PageRiksaBadan
+				},
+				{
+					path: 'sbp',
+					name: 'SBP',
+					component: PageSbp
+				},
+				{
+					path: 'sbpn',
+					name: 'SBP-N',
+					component: PageSbpN
+				},
+				{
+					path: 'segel',
+					name: 'BA Segel',
+					component: PageSegel
+				},
+				{
+					path: 'titip',
+					name: 'BA Penitipan',
+					component: PageTitip
+				},
+				{
+					path: 'tolak1',
+					name: 'BA Penolakan SBP',
+					component: PageTolak1
+				},
+				{
+					path: 'tolak2',
+					name: 'BA Penolakan TTD BA Penolakan SBP',
+					component: PageTolak2
 				},
 			]
 		},
