@@ -27,7 +27,8 @@ const mutations = {
 
 const getters = {
 	sso: state => { return state.sso },
-	token: state => { return state.token }
+	token: state => { return state.token },
+	userInfo: state => { return state.userInfo },
 }
 
 export default new Vuex.Store({
