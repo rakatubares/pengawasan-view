@@ -3,14 +3,12 @@ export default [
 		_name: 'CSidebarNav',
 		_children: [
 			{
-				_name: 'CSidebarNavItem',
-				name: 'Dashboard',
-				to: '/dashboard',
-				icon: 'chart'
-			},
-			{
 				_name: 'CSidebarNavTitle',
-				_children: ['Form']
+				_children: ['Form'],
+				permissions: [
+					'view-lppi', 'view-lkai', 'view-nhi', 'view-ni',
+					'view-lppin', 'view-lkain', 'view-nhin', 'view-nin',
+				]
 			},
 			{
 				_name: 'CSidebarNavDropdown',
@@ -21,25 +19,29 @@ export default [
 						_name: 'CSidebarNavItem',
 						name: 'LPPI',
 						to: '/lppi',
-						icon: 'cil-file'
+						icon: 'cil-file',
+						permissions: 'view-lppi',
 					},
 					{
 						_name: 'CSidebarNavItem',
 						name: 'LKAI',
 						to: '/lkai',
-						icon: 'cil-file'
+						icon: 'cil-file',
+						permissions: 'view-lkai',
 					},
 					{
 						_name: 'CSidebarNavItem',
 						name: 'NHI',
 						to: '/nhi',
-						icon: 'cil-file'
+						icon: 'cil-file',
+						permissions: 'view-nhi',
 					},
 					{
 						_name: 'CSidebarNavItem',
 						name: 'NI',
 						to: '/ni',
-						icon: 'cil-file'
+						icon: 'cil-file',
+						permissions: 'view-ni',
 					},
 				]
 			},
@@ -52,28 +54,32 @@ export default [
 						_name: 'CSidebarNavItem',
 						name: 'LPPI-N',
 						to: '/lppin',
-						icon: 'cil-file'
+						icon: 'cil-file',
+						permissions: 'view-lppin',
 					},
 					{
 						_name: 'CSidebarNavItem',
 						name: 'LKAI-N',
 						to: '/lkain',
-						icon: 'cil-file'
+						icon: 'cil-file',
+						permissions: 'view-lkain',
 					},
 					{
 						_name: 'CSidebarNavItem',
 						name: 'NHI-N',
 						to: '/nhin',
-						icon: 'cil-file'
+						icon: 'cil-file',
+						permissions: 'view-nhin',
 					},
 					{
 						_name: 'CSidebarNavItem',
 						name: 'NI-N',
 						to: '/nin',
-						icon: 'cil-file'
+						icon: 'cil-file',
+						permissions: 'view-nin',
 					},
 				]
-			}
+			},
 		]
 	}
 ]

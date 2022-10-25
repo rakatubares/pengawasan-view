@@ -108,13 +108,13 @@ router.beforeEach(async (to, from, next) => {
 			token = cookies[token_name]
 		} else {
 			// Store user info
-			Store.getters.sso.getUserInfo()
+			await Store.getters.sso.getUserInfo()
 				.then((e) => {
 					if (!e.data) {
 						let login_url = process.env.VUE_APP_LOGIN_URL + '?appid=' + process.env.VUE_APP_ID
 						window.location.replace(login_url);
 					} else {
-						Store.commit('set', ['userInfo', e.data])
+						Store.commit('set', ['userInfo', JSON.parse(JSON.stringify(e.data))])
 					}
 				})
 
