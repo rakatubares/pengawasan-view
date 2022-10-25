@@ -66,6 +66,8 @@ import PdfTegah from './PdfTegah.js'
 import PdfTolak1 from './PdfTolak1.js'
 import PdfTolak2 from './PdfTolak2.js'
 import MyAlert from '../components/AlertSubmit.vue'
+import PdfBukaSegel from './PdfBukaSegel.js'
+import PdfSegel from './PdfSegel.js'
 
 export default {
 	name: "DisplayPdf",
@@ -124,6 +126,11 @@ export default {
 				case 'bukapengaman':
 					let pdfBukaPengaman = new PdfBukaPengaman(this.data)
 					this.src_pdf = pdfBukaPengaman.generatePdf()
+					break;
+
+				case 'bukasegel':
+					let pdfBukaSegel = new PdfBukaSegel(this.data)
+					this.src_pdf = pdfBukaSegel.generatePdf()
 					break;
 
 				case 'contoh':
