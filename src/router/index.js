@@ -10,13 +10,25 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
+const PageBast = () => import('@/views/penindakan/bast/PageBast')
 const PageBhp = () => import('@/views/monitoring/penarikan_bhp/PageBhp')
+const PageBukaPengaman = () => import('@/views/penindakan/bukapengaman/PageBukaPengaman')
+const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
+const PageContoh = () => import('@/views/penindakan/contoh/PageContoh')
+const PageLap = () => import('@/views/penindakan/lap/PageLap')
+const PageLi = () => import('@/views/penindakan/li/PageLi')
 const PageLp = () => import('@/views/penindakan/lp/PageLp')
 const PageLpN = () => import('@/views/penindakan/lpn/PageLpN')
 const PageLphp = () => import('@/views/penindakan/lphp/PageLphp')
 const PageLphpN = () => import('@/views/penindakan/lphp/PageLphpN')
+const PagePengaman = () => import('@/views/penindakan/pengaman/PagePengaman')
+const PageReekspor = () => import('@/views/penindakan/reekspor/PageReekspor')
+const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
+const PageRiksaBadan = () => import('@/views/penindakan/riksabadan/PageRiksaBadan')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageSbpN = () => import('@/views/penindakan/sbp/PageSbpN')
+const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
+const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
 const PageTolak1 = () => import('@/views/penindakan/tolak1/PageTolak1')
 const PageTolak2 = () => import('@/views/penindakan/tolak2/PageTolak2')
 
@@ -43,29 +55,49 @@ function configRoutes () {
 					component: Homepage
 				},
 				{
+					path: 'bast',
+					name: 'BAST',
+					component: PageBast
+				},
+				{
 					path: 'bhp',
 					name: 'Penarikan BHP',
 					component: PageBhp
 				},
 				{
-					path: 'sbp',
-					name: 'SBP',
-					component: PageSbp
+					path: 'bukapengaman',
+					name: 'BA Pembukaan Tanda Pengaman',
+					component: PageBukaPengaman
 				},
 				{
-					path: 'sbpn',
-					name: 'SBP-N',
-					component: PageSbpN
+					path: 'bukasegel',
+					name: 'BA Buka Segel',
+					component: PageBukaSegel
 				},
 				{
-					path: 'tolak1',
-					name: 'BA Penolakan SBP',
-					component: PageTolak1
+					path: 'contoh',
+					name: 'BA Contoh Barang',
+					component: PageContoh
 				},
 				{
-					path: 'tolak2',
-					name: 'BA Penolakan TTD BA Penolakan SBP',
-					component: PageTolak2
+					path: 'lap',
+					name: 'LAP',
+					component: PageLap
+				},
+				{
+					path: 'li',
+					name: 'LI-1',
+					component: PageLi
+				},
+				{
+					path: 'lp',
+					name: 'LP',
+					component: PageLp
+				},
+				{
+					path: 'lpn',
+					name: 'LP-N',
+					component: PageLpN
 				},
 				{
 					path: 'lphp',
@@ -78,14 +110,54 @@ function configRoutes () {
 					component: PageLphpN
 				},
 				{
-					path: 'lp',
-					name: 'LP',
-					component: PageLp
+					path: 'pengaman',
+					name: 'BA Tanda Pengaman',
+					component: PagePengaman
 				},
 				{
-					path: 'lpn',
-					name: 'LP-N',
-					component: PageLpN
+					path: 'reekspor',
+					name: 'BA Pengawasan Reekspor',
+					component: PageReekspor
+				},
+				{
+					path: 'riksa',
+					name: 'Periksa',
+					component: PageRiksa
+				},
+				{
+					path: 'riksabadan',
+					name: 'BA Pemeriksaan Badan',
+					component: PageRiksaBadan
+				},
+				{
+					path: 'sbp',
+					name: 'SBP',
+					component: PageSbp
+				},
+				{
+					path: 'sbpn',
+					name: 'SBP-N',
+					component: PageSbpN
+				},
+				{
+					path: 'segel',
+					name: 'BA Segel',
+					component: PageSegel
+				},
+				{
+					path: 'titip',
+					name: 'BA Penitipan',
+					component: PageTitip
+				},
+				{
+					path: 'tolak1',
+					name: 'BA Penolakan SBP',
+					component: PageTolak1
+				},
+				{
+					path: 'tolak2',
+					name: 'BA Penolakan TTD BA Penolakan SBP',
+					component: PageTolak2
 				},
 			]
 		},
@@ -114,13 +186,13 @@ router.beforeEach(async (to, from, next) => {
 			token = cookies[token_name]
 		} else {
 			// Store user info
-			Store.getters.sso.getUserInfo()
+			await Store.getters.sso.getUserInfo()
 				.then((e) => {
 					if (!e.data) {
 						let login_url = process.env.VUE_APP_LOGIN_URL + '?appid=' + process.env.VUE_APP_ID
 						window.location.replace(login_url);
 					} else {
-						Store.commit('set', ['userInfo', e.data])
+						Store.commit('set', ['userInfo', JSON.parse(JSON.stringify(e.data))])
 					}
 				})
 
