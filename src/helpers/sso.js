@@ -26,7 +26,8 @@ class SSO {
 		console.log('clearing cookies. before: ', document.cookie)
 		const cookie = require('cookie')
 
-		document.cookie = cookie.serialize('sso_token_3','',{
+		let token_name = 'sso_token_' + process.env.VUE_APP_ID
+		document.cookie = cookie.serialize(token_name,'',{
 			expires: new Date(0),
 			sameSite: 'none'
 		})
