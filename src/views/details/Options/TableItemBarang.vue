@@ -223,6 +223,9 @@ export default {
 			return btn
 		}
 	},
+	mounted() {
+		this.getData()
+	}
 }
 </script>
 

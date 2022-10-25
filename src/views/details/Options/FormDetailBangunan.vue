@@ -31,8 +31,7 @@
 								label="Nama pemilik/yang menguasai"
 								description="Nama pemilik/yang menguasai tempat/bangunan"
 								:id.sync="data_objek.pemilik.id"
-							>
-							</MySelectEntitas>
+							/>
 						</CCol>
 					</CRow>
 
@@ -52,7 +51,7 @@
 		</CRow>
 
 		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
+		<MyAlert ref="alert"/>
 	</div>
 </template>
 

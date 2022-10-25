@@ -33,7 +33,7 @@
 		</CRow>
 
 		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
+		<MyAlert ref="alert"/>
 	</div>
 </template>
 
