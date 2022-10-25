@@ -47,6 +47,7 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfBast from './PdfBast.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLpN from './PdfLpN.js'
@@ -105,6 +106,11 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
+				case 'bast':
+					let pdfBast = new PdfBast(this.data)
+					this.src_pdf = pdfBast.generatePdf()
+					break;
+					
 				case 'lp':
 					let pdfLp = new PdfLp(this.data)
 					this.src_pdf = pdfLp.generatePdf()
