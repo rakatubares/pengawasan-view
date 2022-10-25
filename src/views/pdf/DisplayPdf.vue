@@ -48,6 +48,7 @@
 <script>
 import api from '../../router/api2.js'
 import PdfBast from './PdfBast.js'
+import PdfBukaPengaman from './PdfBukaPengaman.js'
 import PdfContoh from './PdfContoh.js'
 import PdfLap from './PdfLap.js'
 import PdfLi from './PdfLi.js'
@@ -55,6 +56,7 @@ import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLpN from './PdfLpN.js'
 import PdfLptp from './PdfLptp.js'
+import PdfPengaman from './PdfPengaman.js'
 import PdfRiksa from './PdfRiksa.js'
 import PdfRiksaBadan from './PdfRiksaBadan.js'
 import PdfSbp from './PdfSbp.js'
@@ -118,6 +120,11 @@ export default {
 					this.src_pdf = pdfBast.generatePdf()
 					break;
 
+				case 'bukapengaman':
+					let pdfBukaPengaman = new PdfBukaPengaman(this.data)
+					this.src_pdf = pdfBukaPengaman.generatePdf()
+					break;
+
 				case 'contoh':
 					let pdfContoh = new PdfContoh(this.data)
 					this.src_pdf = pdfContoh.generatePdf()
@@ -174,6 +181,11 @@ export default {
 						{start: 58, end: 152}
 					)
 					this.src_pdf = pdfLptpn.generatePdf()
+					break;
+
+				case 'pengaman':
+					let pdfPengaman = new PdfPengaman(this.data)
+					this.src_pdf = pdfPengaman.generatePdf()
 					break;
 
 				case 'riksa':
