@@ -49,6 +49,8 @@
 import api from '../../router/api2.js'
 import PdfBast from './PdfBast.js'
 import PdfContoh from './PdfContoh.js'
+import PdfLap from './PdfLap.js'
+import PdfLi from './PdfLi.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLpN from './PdfLpN.js'
@@ -119,6 +121,16 @@ export default {
 				case 'contoh':
 					let pdfContoh = new PdfContoh(this.data)
 					this.src_pdf = pdfContoh.generatePdf()
+					break;
+
+				case 'lap':
+					let pdfLap = new PdfLap(this.data)
+					this.src_pdf = pdfLap.generatePdf()
+					break;
+					
+				case 'li':
+					let pdfLi = new PdfLi(this.data)
+					this.src_pdf = pdfLi.generatePdf()
 					break;
 					
 				case 'lp':
