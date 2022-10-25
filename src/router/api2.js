@@ -183,6 +183,34 @@ class API {
 		return await this.getApi('/lokasi')
 	}
 
+	async searchSatuan(data) {
+		return await this.postApi('/satuan/search', data)
+	}
+
+	async getSatuanById(id) {
+		return await this.getApi(`/satuan/${id}`)
+	}
+
+	async searchKemasan(data) {
+		return await this.postApi('/kemasan/search', data)
+	}
+
+	async getKemasanById(id) {
+		return await this.getApi(`/kemasan/${id}`)
+	}
+
+	async searchKategori(data) {
+		return await this.postApi('/kategori/search', data)
+	}
+
+	async getKategori() {
+		return await this.getApi(`/kategori`)
+	}
+
+	async getKategoriById(id) {
+		return await this.getApi(`/kategori/${id}`)
+	}
+	
 	async searchNegara(data) {
 		return await this.postApi('/negara/search', data)
 	}

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-const data_default = {
+const default_data = {
 	name: null,
 	nip: null,
 	pangkat: null,
@@ -49,17 +49,22 @@ export default {
 		data: Object
 	},
 	watch: {
-		data(val) { 
+		data(val) {
 			if (val != null) {
 				this.data_pegawai = JSON.parse(JSON.stringify(val))
 			}
-		 }
+		}
 	},
 	data() {
 		return {
-			data_pegawai: JSON.parse(JSON.stringify(data_default))
+			data_pegawai: JSON.parse(JSON.stringify(default_data))
 		}
 	},
+	mounted() {
+		if (this.data != null) {
+			this.data_pegawai = JSON.parse(JSON.stringify(this.data))
+		}
+	}
 }
 </script>
 
