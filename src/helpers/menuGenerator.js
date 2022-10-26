@@ -6,7 +6,7 @@ class menuGenerator {
 		this.defaultNav = nav
 		this.validNav = this.constructInitialNav()
 		this.userInfo = JSON.parse(JSON.stringify(store.getters.userInfo))
-		this.userPermissions = this.userInfo['apps_data'][3]['permissions']
+		this.userPermissions = this.userInfo['apps_data'][process.env.VUE_APP_ID]['permissions']
 	}
 
 	constructInitialNav() {
