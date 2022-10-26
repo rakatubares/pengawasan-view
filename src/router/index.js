@@ -2,6 +2,7 @@ import Cookie from 'cookie'
 import Vue from 'vue'
 import Router from 'vue-router'
 import Store from '../store'
+import Permission from '../helpers/permission'
 
 // Containers
 const TheContainer = () => import('@/containers/TheContainer')
@@ -36,6 +37,15 @@ function configRoutes () {
 	]
 }
 
+function checkRoutePermission(routePermissions, next, redirectRoute='Homepage') {
+	let isPermitted = Permission.checkPermission(routePermissions)
+	if (isPermitted) {
+		next()
+	} else {
+		next({name: redirectRoute})
+	}
+}
+
 router.beforeEach(async (to, from, next) => {
 	var env = process.env.VUE_APP_MODE
 
@@ -58,13 +68,13 @@ router.beforeEach(async (to, from, next) => {
 			token = cookies[token_name]
 		} else {
 			// Store user info
-			Store.getters.sso.getUserInfo()
+			await Store.getters.sso.getUserInfo()
 				.then((e) => {
 					if (!e.data) {
 						let login_url = process.env.VUE_APP_LOGIN_URL + '?appid=' + process.env.VUE_APP_ID
 						window.location.replace(login_url);
 					} else {
-						Store.commit('set', ['userInfo', e.data])
+						Store.commit('set', ['userInfo', JSON.parse(JSON.stringify(e.data))])
 					}
 				})
 
