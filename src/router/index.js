@@ -2,6 +2,7 @@ import Cookie from 'cookie'
 import Vue from 'vue'
 import Router from 'vue-router'
 import Store from '../store'
+import Permission from '../helpers/permission'
 
 // Containers
 const TheContainer = () => import('@/containers/TheContainer')
@@ -102,12 +103,18 @@ function configRoutes () {
 				{
 					path: 'lkai',
 					name: 'LKAI',
-					component: PageLkai
+					component: PageLkai,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lkai', next)
+					},
 				},
 				{
 					path: 'lkain',
 					name: 'LKAI-N',
-					component: PageLkaiN
+					component: PageLkaiN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lkain', next)
+					},
 				},
 				{
 					path: 'lp',
@@ -132,32 +139,50 @@ function configRoutes () {
 				{
 					path: 'lppi',
 					name: 'LPPI',
-					component: PageLppi
+					component: PageLppi,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lppi', next)
+					},
 				},
 				{
 					path: 'lppin',
 					name: 'LPPI-N',
-					component: PageLppiN
+					component: PageLppiN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lppin', next)
+					},
 				},
 				{
 					path: 'nhi',
 					name: 'NHI',
-					component: PageNhi
+					component: PageNhi,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-nhi', next)
+					},
 				},
 				{
 					path: 'nhin',
 					name: 'NHI-N',
-					component: PageNhiN
+					component: PageNhiN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-nhin', next)
+					},
 				},
 				{
 					path: 'ni',
 					name: 'NI',
-					component: PageNi
+					component: PageNi,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-ni', next)
+					},
 				},
 				{
 					path: 'nin',
 					name: 'NI-N',
-					component: PageNiN
+					component: PageNiN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-nin', next)
+					},
 				},
 				{
 					path: 'pengaman',
@@ -212,6 +237,15 @@ function configRoutes () {
 			]
 		},
 	]
+}
+
+function checkRoutePermission(routePermissions, next, redirectRoute='Homepage') {
+	let isPermitted = Permission.checkPermission(routePermissions)
+	if (isPermitted) {
+		next()
+	} else {
+		next({name: redirectRoute})
+	}
 }
 
 router.beforeEach(async (to, from, next) => {
