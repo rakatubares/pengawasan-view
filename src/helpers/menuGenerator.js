@@ -1,12 +1,10 @@
-import store from '../store.js'
+import permission from './permission.js'
 import nav from '../containers/_mynav.js'
 
 class menuGenerator {
 	constructor() {
 		this.defaultNav = nav
 		this.validNav = this.constructInitialNav()
-		this.userInfo = JSON.parse(JSON.stringify(store.getters.userInfo))
-		this.userPermissions = this.userInfo['apps_data'][process.env.VUE_APP_ID]['permissions']
 	}
 
 	constructInitialNav() {
@@ -33,7 +31,7 @@ class menuGenerator {
 	}
 
 	checkMenuTitle(menu) {
-		let isPermitted = this.checkPermission(menu['permissions'])
+		let isPermitted = permission.checkPermission(menu['permissions'])
 		if (isPermitted) {
 			this.validNav[0]['_children'].push(menu)
 		}
@@ -60,25 +58,9 @@ class menuGenerator {
 				menu['_children'] = permittedChildren
 			});
 		} else {
-			isPermitted = this.checkPermission(menu['permissions'])
+			isPermitted = permission.checkPermission(menu['permissions'])
 		}
 		return {'permission': isPermitted, 'menu': menu}
-	}
-
-	checkPermission(menuPermissions) {
-		let isPermitted = false
-		if (typeof menuPermissions === 'string' || menuPermissions instanceof String) {
-			if (this.userPermissions.indexOf(menuPermissions) > -1) {
-				isPermitted = true
-			}
-		} else {
-			menuPermissions.forEach(permission => {
-				if (this.userPermissions.indexOf(permission) > -1) {
-					isPermitted = true
-				}
-			});
-		}
-		return isPermitted
 	}
 }
 
