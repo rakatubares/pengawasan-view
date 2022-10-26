@@ -2,6 +2,7 @@ import Cookie from 'cookie'
 import Vue from 'vue'
 import Router from 'vue-router'
 import Store from '../store'
+import Permission from '../helpers/permission'
 
 // Containers
 const TheContainer = () => import('@/containers/TheContainer')
@@ -162,6 +163,15 @@ function configRoutes () {
 			]
 		},
 	]
+}
+
+function checkRoutePermission(routePermissions, next, redirectRoute='Homepage') {
+	let isPermitted = Permission.checkPermission(routePermissions)
+	if (isPermitted) {
+		next()
+	} else {
+		next({name: redirectRoute})
+	}
 }
 
 router.beforeEach(async (to, from, next) => {
