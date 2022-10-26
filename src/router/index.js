@@ -58,107 +58,170 @@ function configRoutes () {
 				{
 					path: 'bast',
 					name: 'BAST',
-					component: PageBast
+					component: PageBast,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-bast', next)
+					},
 				},
 				{
 					path: 'bhp',
 					name: 'Penarikan BHP',
-					component: PageBhp
+					component: PageBhp,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-bhp', next)
+					},
 				},
 				{
 					path: 'bukapengaman',
 					name: 'BA Pembukaan Tanda Pengaman',
-					component: PageBukaPengaman
+					component: PageBukaPengaman,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-buka-pengaman', next)
+					},
 				},
 				{
 					path: 'bukasegel',
 					name: 'BA Buka Segel',
-					component: PageBukaSegel
+					component: PageBukaSegel,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-buka-segel', next)
+					},
 				},
 				{
 					path: 'contoh',
 					name: 'BA Contoh Barang',
-					component: PageContoh
+					component: PageContoh,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-contoh', next)
+					},
 				},
 				{
 					path: 'lap',
 					name: 'LAP',
-					component: PageLap
+					component: PageLap,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lap', next)
+					},
 				},
 				{
 					path: 'li',
 					name: 'LI-1',
-					component: PageLi
+					component: PageLi,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-li', next)
+					},
 				},
 				{
 					path: 'lp',
 					name: 'LP',
-					component: PageLp
+					component: PageLp,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lp', next)
+					},
 				},
 				{
 					path: 'lpn',
 					name: 'LP-N',
-					component: PageLpN
+					component: PageLpN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lpn', next)
+					},
 				},
 				{
 					path: 'lphp',
 					name: 'LPHP',
-					component: PageLphp
+					component: PageLphp,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lphp', next)
+					},
 				},
 				{
 					path: 'lphpn',
 					name: 'LPHP-N',
-					component: PageLphpN
+					component: PageLphpN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lphpn', next)
+					},
 				},
 				{
 					path: 'pengaman',
 					name: 'BA Tanda Pengaman',
-					component: PagePengaman
+					component: PagePengaman,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-pengaman', next)
+					},
 				},
 				{
 					path: 'reekspor',
 					name: 'BA Pengawasan Reekspor',
-					component: PageReekspor
+					component: PageReekspor,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-reekspor', next)
+					},
 				},
 				{
 					path: 'riksa',
 					name: 'Periksa',
-					component: PageRiksa
+					component: PageRiksa,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-riksa', next)
+					},
 				},
 				{
 					path: 'riksabadan',
 					name: 'BA Pemeriksaan Badan',
-					component: PageRiksaBadan
+					component: PageRiksaBadan,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-riksa-badan', next)
+					},
 				},
 				{
 					path: 'sbp',
 					name: 'SBP',
-					component: PageSbp
+					component: PageSbp,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-sbp', next)
+					},
 				},
 				{
 					path: 'sbpn',
 					name: 'SBP-N',
-					component: PageSbpN
+					component: PageSbpN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-sbpn', next)
+					},
 				},
 				{
 					path: 'segel',
 					name: 'BA Segel',
-					component: PageSegel
+					component: PageSegel,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-segel', next)
+					},
 				},
 				{
 					path: 'titip',
 					name: 'BA Penitipan',
-					component: PageTitip
+					component: PageTitip,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-titip', next)
+					},
 				},
 				{
 					path: 'tolak1',
 					name: 'BA Penolakan SBP',
-					component: PageTolak1
+					component: PageTolak1,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission(['view-tolak1', 'view-tolak1n'], next)
+					},
 				},
 				{
 					path: 'tolak2',
 					name: 'BA Penolakan TTD BA Penolakan SBP',
-					component: PageTolak2
+					component: PageTolak2,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission(['view-tolak2', 'view-tolak2n'], next)
+					},
 				},
 			]
 		},
