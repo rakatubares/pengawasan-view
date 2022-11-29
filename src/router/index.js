@@ -10,6 +10,11 @@ const TheContainer = () => import('@/containers/TheContainer')
 // Views
 const Homepage = () => import('@/views/Homepage')
 
+// Views - Penindakan
+const PageBhp = () => import('@/views/monitoring/penarikan_bhp/PageBhp')
+const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
+const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
+
 Vue.use(Router)
 
 const router =  new Router({
@@ -31,6 +36,30 @@ function configRoutes () {
 					path: 'homepage',
 					name: 'Homepage',
 					component: Homepage
+				},
+				{
+					path: 'bhp',
+					name: 'Penarikan BHP',
+					component: PageBhp,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-bhp', next)
+					},
+				},
+				{
+					path: 'sbp',
+					name: 'SBP',
+					component: PageSbp,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-sbp', next)
+					},
+				},
+				{
+					path: 'segel',
+					name: 'BA Segel',
+					component: PageSegel,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-segel', next)
+					},
 				},
 			]
 		},

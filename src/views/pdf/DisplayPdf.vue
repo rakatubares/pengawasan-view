@@ -47,6 +47,8 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfSbp from './PdfSbp.js'
+import PdfSegel from './PdfSegel.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -94,6 +96,15 @@ export default {
 			await this.getData()
 			
 			switch (this.active_pdf) {
+				case 'sbp':
+					let pdfSbp = new PdfSbp(this.data)
+					this.src_pdf = pdfSbp.generatePdf()
+					break;
+
+				case 'segel':
+					let pdfSegel = new PdfSegel(this.data)
+					this.src_pdf = pdfSegel.generatePdf()
+					break;
 
 				default:
 					break;
