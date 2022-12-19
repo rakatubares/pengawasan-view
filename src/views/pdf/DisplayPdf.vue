@@ -3,16 +3,16 @@
 		<CRow v-if="show_button">
 			<CCol>
 				<CButton 
-					v-for="doc_type in list_pdf"
-					:key="doc_type"
+					v-for="pdf in list_pdf"
+					:key="pdf.doc_type"
 					class="mt-3 mx-1"
 					shape="pill"
 					variant="outline"
 					color="info"
-					@click="changePdf(doc_type)"
-					:pressed="active_pdf == doc_type"
+					@click="changePdf(pdf.doc_type)"
+					:pressed="active_pdf == pdf.doc_type"
 				>
-					{{ doc_type }}
+					{{ pdf.doc_type }}
 				</CButton>
 			</CCol>
 		</CRow>
@@ -89,7 +89,10 @@ export default {
 			show_pdf: false,
 			src_pdf: null,
 			status_pdf: null,
-			list_pdf: [this.doc_type],
+			list_pdf: [{
+				'doc_type': this.doc_type,
+				'doc_id': this.doc_id,
+			}],
 			active_pdf: this.doc_type
 		}
 	},
@@ -104,157 +107,131 @@ export default {
 		}
 	},
 	methods: {
-		async getData() {
-			this.data = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.list_pdf = [this.doc_type]
-			for (const key in this.data.dokumen) {
-				if (!this.list_pdf.includes(key)) {
-					this.list_pdf.push(key)
-				}
-			}
-			this.status_pdf = this.data.dokumen[this.doc_type]['kode_status']
+		async listPdf() {
+			let response = await api.getRelatedDocuments(this.doc_type, this.doc_id)
+			this.list_pdf = response.data
 		},
-		async getPdf() {
-			await this.getData()
-			
-			switch (this.active_pdf) {
+		async getPdf(doc_type, doc_id) {
+			let pdf = null
+			let response = await api.getPdfDataById(doc_type, doc_id)
+			let pdfData = response.data.data
+
+			switch (doc_type) {
 				case 'bast':
-					let pdfBast = new PdfBast(this.data)
-					this.src_pdf = pdfBast.generatePdf()
+					pdf = new PdfBast(pdfData)
 					break;
 
 				case 'bukapengaman':
-					let pdfBukaPengaman = new PdfBukaPengaman(this.data)
-					this.src_pdf = pdfBukaPengaman.generatePdf()
+					pdf = new PdfBukaPengaman(pdfData)
 					break;
 
 				case 'bukasegel':
-					let pdfBukaSegel = new PdfBukaSegel(this.data)
-					this.src_pdf = pdfBukaSegel.generatePdf()
+					pdf = new PdfBukaSegel(pdfData)
 					break;
 
 				case 'contoh':
-					let pdfContoh = new PdfContoh(this.data)
-					this.src_pdf = pdfContoh.generatePdf()
+					pdf = new PdfContoh(pdfData)
 					break;
 
 				case 'lap':
-					let pdfLap = new PdfLap(this.data)
-					this.src_pdf = pdfLap.generatePdf()
+					pdf = new PdfLap(pdfData)
 					break;
 					
 				case 'li':
-					let pdfLi = new PdfLi(this.data)
-					this.src_pdf = pdfLi.generatePdf()
+					pdf = new PdfLi(pdfData)
 					break;
 					
 				case 'lp':
-					let pdfLp = new PdfLp(this.data)
-					this.src_pdf = pdfLp.generatePdf()
+					pdf = new PdfLp(pdfData)
 					break;
 
 				case 'lpn':
-					let pdfLpN = new PdfLpN(this.data)
-					this.src_pdf = pdfLpN.generatePdf()
+					pdf = new PdfLpN(pdfData)
 					break;
 
 				case 'lphp':
-					let pdfLphp = new PdfLphp(this.data)
-					this.src_pdf = pdfLphp.generatePdf()
+					pdf = new PdfLphp(pdfData)
 					break;
 
 				case 'lphpn':
-					let pdfLphpn = new PdfLphp(
-						this.data, 
+					pdf = new PdfLphp(
+						pdfData, 
 						this.active_pdf, 
 						'lptpn', 
 						'sbpn', 
 						'LEMBAR PENENTUAN HASIL PENINDAKAN NPP', 
 						{start: 63, end: 147}
 					)
-					this.src_pdf = pdfLphpn.generatePdf()
 					break;
 
 				case 'lptp':
-					let pdfLptp = new PdfLptp(this.data)
-					this.src_pdf = pdfLptp.generatePdf()
+					pdf = new PdfLptp(pdfData)
 					break;
 
 				case 'lptpn':
-					let pdfLptpn = new PdfLptp(
-						this.data, 
+					pdf = new PdfLptp(
+						pdfData, 
 						this.active_pdf, 
 						'sbpn', 
 						'LAPORAN PELAKSANAAN TUGAS PENINDAKAN NPP', 
 						{start: 58, end: 152}
 					)
-					this.src_pdf = pdfLptpn.generatePdf()
 					break;
 
 				case 'pengaman':
-					let pdfPengaman = new PdfPengaman(this.data)
-					this.src_pdf = pdfPengaman.generatePdf()
+					pdf = new PdfPengaman(pdfData)
 					break;
 
 				case 'reekspor':
-					let pdfReekspor = new PdfReekspor(this.data)
-					this.src_pdf = pdfReekspor.generatePdf()
+					pdf = new PdfReekspor(pdfData)
 					break;
 
 				case 'riksa':
-					let pdfRiksa = new PdfRiksa(this.data)
-					this.src_pdf = pdfRiksa.generatePdf()
+					pdf = new PdfRiksa(pdfData)
 					break;
 
 				case 'riksabadan':
-					let pdfRiksaBadan = new PdfRiksaBadan(this.data)
-					this.src_pdf = pdfRiksaBadan.generatePdf()
+					pdf = new PdfRiksaBadan(pdfData)
 					break;
 
 				case 'sbp':
-					let pdfSbp = new PdfSbp(this.data)
-					this.src_pdf = pdfSbp.generatePdf()
+					pdf = new PdfSbp(pdfData)
 					break;
 
 				case 'sbpn':
-					let pdfSbpn = new PdfSbp(
-						this.data, 
+					pdf = new PdfSbp(
+						pdfData, 
 						this.active_pdf, 
 						'SURAT BUKTI PENINDAKAN NPP', 
 						{start: 76, end: 134}
 					)
-					this.src_pdf = pdfSbpn.generatePdf()
 					break;
 
 				case 'segel':
-					let pdfSegel = new PdfSegel(this.data)
-					this.src_pdf = pdfSegel.generatePdf()
+					pdf = new PdfSegel(pdfData)
 					break;
 
 				case 'tegah':
-					let pdfTegah = new PdfTegah(this.data)
-					this.src_pdf = pdfTegah.generatePdf()
+					pdf = new PdfTegah(pdfData)
 					break;
 
 				case 'titip':
-					let pdfTitip = new PdfTitip(this.data)
-					this.src_pdf = pdfTitip.generatePdf()
+					pdf = new PdfTitip(pdfData)
 					break;
 
 				case 'tolak1':
-					let pdfTolak1 = new PdfTolak1(this.data)
-					this.src_pdf = pdfTolak1.generatePdf()
+					pdf = new PdfTolak1(pdfData)
 					break;
 
 				case 'tolak2':
-					let pdfTolak2 = new PdfTolak2(this.data)
-					this.src_pdf = pdfTolak2.generatePdf()
+					pdf = new PdfTolak2(pdfData)
 					break;
-			
+
 				default:
 					break;
 			}
 
+			this.src_pdf = pdf.generatePdf()
 			this.show_pdf = true
 		},
 		changePdf(doc_type) {
@@ -270,7 +247,8 @@ export default {
 		}
 	},
 	mounted() {
-		this.getPdf()
+		this.listPdf()
+		this.getPdf(this.doc_type, this.doc_id)
 	}
 }
 </script>

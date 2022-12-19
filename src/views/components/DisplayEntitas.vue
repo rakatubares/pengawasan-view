@@ -6,7 +6,7 @@
 			</CCol>
 		</CRow>
 		<CRow class="mb-1">
-			<CCol md="3" class="pt-1">
+			<CCol md="3" class="py-1">
 				<b>Nama</b>
 			</CCol>
 			<CCol md="9" class="py-1">
@@ -124,7 +124,7 @@
 const default_data = {
 	nama: null,
 	alias: null,
-	jenis_kelamin: null,
+	jenis_kelamin: { uraian: null },
 	tempat_lahir: null,
 	tanggal_lahir: null,
 	warga_negara: null,
@@ -158,20 +158,7 @@ export default {
 	},
 	computed: {
 		disp_jenis_kelamin() {
-			let txt_jenis_kelamin = ''
-			switch (this.data_entitas.jenis_kelamin) {
-				case 'F':
-					txt_jenis_kelamin = 'Perempuan'
-					break;
-
-				case 'M':
-					txt_jenis_kelamin = 'Laki-laki'
-					break;
-			
-				default:
-					break;
-			}
-			return txt_jenis_kelamin
+			return this.data_entitas.jenis_kelamin.uraian || '-'
 		},
 		disp_warga_negara() {
 			let txt_warga_negara = ''
