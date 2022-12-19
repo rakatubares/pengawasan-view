@@ -43,6 +43,9 @@ const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
 const PageTolak1 = () => import('@/views/penindakan/tolak1/PageTolak1')
 const PageTolak2 = () => import('@/views/penindakan/tolak2/PageTolak2')
 
+// Views - Penyidikan
+const PageLpp = () => import('@/views/penyidikan/lpp/PageLpp.vue')
+
 Vue.use(Router)
 
 const router =  new Router({
@@ -167,6 +170,14 @@ function configRoutes () {
 					component: PageLphpN,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-lphpn', next)
+					},
+				},
+				{
+					path: 'lpp',
+					name: 'Input LPP',
+					component: PageLpp,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lpp', next)
 					},
 				},
 				{

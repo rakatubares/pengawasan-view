@@ -36,6 +36,7 @@ export default [
 					'view-tolak2n',
 					'view-lphpn',
 					'view-lpn',
+					'view-lpp',
 				]
 			},
 			{
@@ -167,7 +168,7 @@ export default [
 								icon: 'cil-file',
 								permissions: 'view-bast',
 							}
-						]
+						],
 					},
 					{
 						_name: 'CSidebarNavDropdown',
@@ -291,6 +292,20 @@ export default [
 				]
 			},
 			{
+				_name: 'CSidebarNavDropdown',
+				name: 'PENYIDIKAN',
+				icon: 'cil-contact',
+				_children: [
+					{
+						_name: 'CSidebarNavItem',
+						name: 'Input LPP',
+						to: '/lpp',
+						icon: 'cil-file',
+						permissions: 'view-lpp',
+					},
+				],
+			},
+			{
 				_name: 'CSidebarNavTitle',
 				_children: ['Monitoring'],
 				permissions: 'view-bhp'
@@ -302,6 +317,6 @@ export default [
 				icon: 'cil-clipboard',
 				permissions: 'view-bhp',
 			},
-		]
+		],
 	}
 ]

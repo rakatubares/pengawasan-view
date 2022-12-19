@@ -4,10 +4,10 @@ import 'jspdf-autotable'
 import converters from "../../helpers/converter"
 
 class Pdf {
-	constructor(props) {
+	constructor(props, ln=50) {
 		this.props = props
 		this.pdf = new jsPDF('p', 'mm', [297, 210]);
-		this.ln = 50
+		this.ln = ln
 	}
 
 	prepareDocDate(tgl_dok=this.data.penindakan.tanggal_penindakan) {
@@ -55,6 +55,15 @@ class Pdf {
 
 		// Underline
 		this.pdf.line(10,41,200,41)
+	}
+
+	createHeaderSimple() {
+		this.pdf.setFont('Helvetica', 'bold')
+		this.pdf.setFontSize('10')
+		this.pdf.text('Kementerian Keuangan Republik Indonesia', 15, 10)
+		this.pdf.text('Direktorat Jenderal Bea dan Cukai', 15, 15)
+		this.pdf.text('Kantor Pelayana Utama Bea dan Cukai Tipe C Soekarno Hatta', 15, 20)
+		this.pdf.line(15,21,120,21)
 	}
 
 	/**

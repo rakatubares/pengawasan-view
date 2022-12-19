@@ -1,40 +1,19 @@
 <template>
 	<div class="wrapper sep">
 		<CRow class="mt-2">
-			<CCol>
-				<h4><b>{{ title }}</b></h4>
+			<CCol md="3" class="py-1">
+				<h5 class="mb-0"><b>{{ title }}</b></h5>
+			</CCol>
+			<CCol md="9" class="py-1">
+				{{ disp_pegawai }}
 			</CCol>
 		</CRow>
-		<CRow class="mb-1">
+		<CRow class="mb-2">
 			<CCol md="3" class="py-1">
 				<b>Jabatan</b>
 			</CCol>
 			<CCol md="9" class="py-1">
 				{{ disp_jabatan }}
-			</CCol>
-		</CRow>
-		<CRow class="mb-1">
-			<CCol md="3" class="py-1">
-				<b>Nama</b>
-			</CCol>
-			<CCol md="9" class="py-1">
-				{{ data.user.name }}
-			</CCol>
-		</CRow>
-		<CRow class="mb-1">
-			<CCol md="3" class="py-1">
-				<b>NIP</b>
-			</CCol>
-			<CCol md="9" class="py-1">
-				{{ data.user.nip }}
-			</CCol>
-		</CRow>
-		<CRow class="mb-1">
-			<CCol md="3" class="py-1">
-				<b>Pangkat</b>
-			</CCol>
-			<CCol md="9" class="py-1">
-				{{ data.user.pangkat }}
 			</CCol>
 		</CRow>
 	</div>
@@ -47,7 +26,6 @@ const default_data = {
 	user: {
 		name: null,
 		nip: null,
-		pangkat: null,
 	},
 }
 
@@ -64,6 +42,9 @@ export default {
 		}
 	},
 	computed: {
+		disp_pegawai() {
+			return `${this.data.user.name} - ${this.data.user.nip}`
+		},
 		disp_jabatan() {
 			let jabatan = null
 

@@ -82,6 +82,10 @@ class API {
 		return await this.getApi(`/${doc_type}/${doc_id}/form`)
 	}
 
+	async getPdfDataById(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/pdf`)
+	}
+
 	async getObjek(doc_type, doc_id) {
 		let response = await this.getApi(`/${doc_type}/${doc_id}/objek`)
 		let objek = response.data
@@ -115,6 +119,10 @@ class API {
 
 	async deleteDoc(doc_type, doc_id) {
 		return await this.delApi(`/${doc_type}/${doc_id}`)
+	}
+
+	async getRelatedDocuments(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/docs`)
 	}
 
 	/*
