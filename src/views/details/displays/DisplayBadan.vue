@@ -112,7 +112,7 @@ export default {
 		disp_nama() { return this.data.nama || '-' },
 		disp_alias() { return this.data.alias || '-' },
 		disp_tanggal_lahir() { return this.data.tanggal_lahir || '-' },
-		disp_warga_negara() { return this.data.warga_negara || '-' },
+		disp_warga_negara() { return this.data.warga_negara.nama_negara || '-' },
 		disp_alamat_tinggal() { return this.data.alamat_tinggal || '-' },
 		disp_alamat() { return this.data.alamat || '-' },
 		disp_identitas() { return (this.data.jenis_identitas || '') + ' ' + (this.data.nomor_identitas || '-') },

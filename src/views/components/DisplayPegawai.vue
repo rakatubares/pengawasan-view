@@ -1,32 +1,11 @@
 <template>
 	<div class="wrapper sep">
-		<CRow class="mt-2">
-			<CCol>
-				<h4><b>{{ title }}</b></h4>
-			</CCol>
-		</CRow>
-		<CRow class="mb-1">
+		<CRow class="my-2">
 			<CCol md="3" class="py-1">
-				<b>Nama</b>
+				<h5 class="mb-0"><b>{{ title }}</b></h5>
 			</CCol>
 			<CCol md="9" class="py-1">
-				{{ data_pegawai.name }}
-			</CCol>
-		</CRow>
-		<CRow class="mb-1">
-			<CCol md="3" class="py-1">
-				<b>NIP</b>
-			</CCol>
-			<CCol md="9" class="py-1">
-				{{ data_pegawai.nip }}
-			</CCol>
-		</CRow>
-		<CRow class="mb-1">
-			<CCol md="3" class="py-1">
-				<b>Pangkat</b>
-			</CCol>
-			<CCol md="9" class="py-1">
-				{{ data_pegawai.pangkat }}
+				{{ disp_pegawai }}
 			</CCol>
 		</CRow>
 	</div>
@@ -64,6 +43,11 @@ export default {
 		if (this.data != null) {
 			this.data_pegawai = JSON.parse(JSON.stringify(this.data))
 		}
+	},
+	computed: {
+		disp_pegawai() {
+			return `${this.data_pegawai.name} - ${this.data_pegawai.nip}`
+		},
 	}
 }
 </script>
