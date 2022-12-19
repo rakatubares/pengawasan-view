@@ -67,7 +67,6 @@ import PdfTolak1 from './PdfTolak1.js'
 import PdfTolak2 from './PdfTolak2.js'
 import MyAlert from '../components/AlertSubmit.vue'
 import PdfBukaSegel from './PdfBukaSegel.js'
-import PdfSegel from './PdfSegel.js'
 import PdfTitip from './PdfTitip.js'
 
 export default {
