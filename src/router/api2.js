@@ -191,6 +191,14 @@ class API {
 		return await this.getApi('/lokasi')
 	}
 
+	async searchKantorBC(data) {
+		return await this.postApi('/kantor/search', data)
+	}
+
+	async getKantorByCode(code) {
+		return await this.getApi(`/kantor/kode/${code}`)
+	}
+
 	async searchSatuan(data) {
 		return await this.postApi('/satuan/search', data)
 	}
@@ -225,6 +233,22 @@ class API {
 
 	async getNegaraByCode(code) {
 		return await this.getApi(`/negara/${code}`)
+	}
+
+	async searchBandara(data) {
+		return await this.postApi('/bandara/search', data)
+	}
+
+	async getBandaraByCode(code) {
+		return await this.getApi(`/bandara/${code}`)
+	}
+
+	async getKlasifikasiKepercayaan() {
+		return await this.getApi(`/kepercayaan`)
+	}
+
+	async getKlasifikasiValiditas() {
+		return await this.getApi(`/validitas`)
 	}
 }
 

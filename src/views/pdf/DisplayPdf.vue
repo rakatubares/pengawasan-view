@@ -1,6 +1,6 @@
 <template>
 	<div class="wrapper">
-		<CRow>
+		<CRow v-if="show_button">
 			<CCol>
 				<CButton 
 					v-for="pdf in list_pdf"
@@ -61,6 +61,10 @@ export default {
 		state: String,
 		doc_type: String,
 		doc_id: Number,
+		show_button: {
+			type: Boolean,
+			default: true
+		}
 	},
 	data() {
 		return {
@@ -88,19 +92,7 @@ export default {
 	methods: {
 		async listPdf() {
 			let response = await api.getRelatedDocuments(this.doc_type, this.doc_id)
-			console.log('RESPONSE LIST PDF', JSON.parse(JSON.stringify(response)))
 			this.list_pdf = response.data
-			console.log('LIST PDF', JSON.parse(JSON.stringify(this.list_pdf)))
-		},
-		async getData() {
-			this.data = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.list_pdf = [this.doc_type]
-			for (const key in this.data.dokumen) {
-				if (!this.list_pdf.includes(key)) {
-					this.list_pdf.push(key)
-				}
-			}
-			this.status_pdf = this.data.dokumen[this.doc_type]['kode_status']
 		},
 		async getPdf(doc_type, doc_id) {
 			let pdf = null
@@ -121,27 +113,6 @@ export default {
 			}
 
 			this.src_pdf = pdf.generatePdf()
-			
-			// switch (this.active_pdf) {
-			// 	case 'lpp':
-			// 		let pdfLpp = new PdfLpp(this.data)
-			// 		this.src_pdf = pdfLpp.generatePdf()
-			// 		break;
-				
-			// 	case 'sbp':
-			// 		let pdfSbp = new PdfSbp(this.data)
-			// 		this.src_pdf = pdfSbp.generatePdf()
-			// 		break;
-
-			// 	case 'segel':
-			// 		let pdfSegel = new PdfSegel(this.data)
-			// 		this.src_pdf = pdfSegel.generatePdf()
-			// 		break;
-
-			// 	default:
-			// 		break;
-			// }
-
 			this.show_pdf = true
 		},
 		changePdf(doc_type) {
@@ -151,13 +122,12 @@ export default {
 			this.show_pdf = true
 		},
 		async publishDoc() {
-			await api.publishDoc(this.doc_type, this.doc_id)
+			await api.publishDoc(this.doc_type, this.doc_id)	
 			await this.getPdf()
 			this.$emit('update:state', 'show')
 		}
 	},
 	mounted() {
-		console.log('DISPLAY PDF - MOUNTED')
 		this.listPdf()
 		this.getPdf(this.doc_type, this.doc_id)
 	}

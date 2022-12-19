@@ -24,11 +24,6 @@ class Pdf {
 		this.full_tgl_sprint = converters.fullDate(this.tgl_sprint)
 	}
 
-	prepareSprintDate(tgl_sprint=this.data.penindakan.sprint.tanggal_sprint) {
-		this.tgl_sprint = converters.date(tgl_sprint, 'DD-MM-YYYY')
-		this.full_tgl_sprint = converters.fullDate(this.tgl_sprint)
-	}
-
 	/**
 	 * Generate kop surat
 	 */
@@ -333,8 +328,8 @@ class Pdf {
 		this.ln_lamp += this.props.font.height*3
 	}
 
-	tabelBarang(item=this.data.objek.data.item) {
-		const tabelData = converters.item_barang(item)
+	tabelBarang(items=this.data.objek.data.item) {
+		const tabelData = converters.item_barang(items)
 		const tabelHead = [
 			{header: 'No', dataKey: 'no'},
 			{header: 'Uraian Barang', dataKey: 'uraian'},
