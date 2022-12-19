@@ -1,18 +1,18 @@
 <template>
 	<div class="wrapper">
-		<CRow>
+		<CRow v-if="show_button">
 			<CCol>
 				<CButton 
-					v-for="doc_type in list_pdf"
-					:key="doc_type"
+					v-for="pdf in list_pdf"
+					:key="pdf.doc_type"
 					class="mt-3 mx-1"
 					shape="pill"
 					variant="outline"
 					color="info"
-					@click="changePdf(doc_type)"
-					:pressed="active_pdf == doc_type"
+					@click="changePdf(pdf.doc_type)"
+					:pressed="active_pdf == pdf.doc_type"
 				>
-					{{ doc_type }}
+					{{ pdf.doc_type }}
 				</CButton>
 			</CCol>
 		</CRow>
@@ -58,6 +58,10 @@ export default {
 		state: String,
 		doc_type: String,
 		doc_id: Number,
+		show_button: {
+			type: Boolean,
+			default: true
+		}
 	},
 	data() {
 		return {
@@ -65,7 +69,10 @@ export default {
 			show_pdf: false,
 			src_pdf: null,
 			status_pdf: null,
-			list_pdf: [this.doc_type],
+			list_pdf: [{
+				'doc_type': this.doc_type,
+				'doc_id': this.doc_id,
+			}],
 			active_pdf: this.doc_type
 		}
 	},
@@ -80,25 +87,22 @@ export default {
 		}
 	},
 	methods: {
-		async getData() {
-			this.data = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.list_pdf = [this.doc_type]
-			for (const key in this.data.dokumen) {
-				if (!this.list_pdf.includes(key)) {
-					this.list_pdf.push(key)
-				}
-			}
-			this.status_pdf = this.data.dokumen[this.doc_type]['kode_status']
+		async listPdf() {
+			let response = await api.getRelatedDocuments(this.doc_type, this.doc_id)
+			this.list_pdf = response.data
 		},
-		async getPdf() {
-			await this.getData()
-			
-			switch (this.active_pdf) {
+		async getPdf(doc_type, doc_id) {
+			let pdf = null
+			let response = await api.getPdfDataById(doc_type, doc_id)
+			let pdfData = response.data.data
 
+			switch (doc_type) {
+			
 				default:
 					break;
 			}
 
+			this.src_pdf = pdf.generatePdf()
 			this.show_pdf = true
 		},
 		changePdf(doc_type) {
@@ -108,13 +112,14 @@ export default {
 			this.show_pdf = true
 		},
 		async publishDoc() {
-			await api.publishDoc(this.doc_type, this.doc_id)
+			await api.publishDoc(this.doc_type, this.doc_id)	
 			await this.getPdf()
 			this.$emit('update:state', 'show')
 		}
 	},
 	mounted() {
-		this.getPdf()
+		this.listPdf()
+		this.getPdf(this.doc_type, this.doc_id)
 	}
 }
 </script>
