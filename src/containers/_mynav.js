@@ -48,8 +48,15 @@ export default [
 			{
 				_name: 'CSidebarNavDropdown',
 				name: 'PENYIDIKAN',
-				icon: 'cil-clone',
+				icon: 'cil-contact',
 				_children: [
+					{
+						_name: 'CSidebarNavItem',
+						name: 'Input LPP',
+						to: '/lpp',
+						icon: 'cil-file',
+						permissions: 'view-lpp',
+					},
 				],
 			},
 		],
