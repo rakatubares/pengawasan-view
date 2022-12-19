@@ -115,19 +115,7 @@ export default {
 	methods: {
 		async listPdf() {
 			let response = await api.getRelatedDocuments(this.doc_type, this.doc_id)
-			console.log('RESPONSE LIST PDF', JSON.parse(JSON.stringify(response)))
 			this.list_pdf = response.data
-			console.log('LIST PDF', JSON.parse(JSON.stringify(this.list_pdf)))
-		},
-		async getData() {
-			this.data = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.list_pdf = [this.doc_type]
-			for (const key in this.data.dokumen) {
-				if (!this.list_pdf.includes(key)) {
-					this.list_pdf.push(key)
-				}
-			}
-			this.status_pdf = this.data.dokumen[this.doc_type]['kode_status']
 		},
 		async getPdf(doc_type, doc_id) {
 			let pdf = null
@@ -319,7 +307,6 @@ export default {
 		}
 	},
 	mounted() {
-		console.log('DISPLAY PDF - MOUNTED')
 		this.listPdf()
 		this.getPdf(this.doc_type, this.doc_id)
 	}

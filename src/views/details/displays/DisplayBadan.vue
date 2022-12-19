@@ -121,20 +121,7 @@ export default {
 		disp_alias() { return this.data.alias || '-' },
 		disp_tanggal_lahir() { return this.data.tanggal_lahir || '-' },
 		disp_jenis_kelamin() {
-			let txt_jenis_kelamin = ''
-			switch (this.data.jenis_kelamin) {
-				case 'F':
-					txt_jenis_kelamin = 'Perempuan'
-					break;
-
-				case 'M':
-					txt_jenis_kelamin = 'Laki-laki'
-					break;
-			
-				default:
-					break;
-			}
-			return txt_jenis_kelamin
+			return this.data.jenis_kelamin.uraian || '-'
 		},
 		disp_warga_negara() { 
 			let txt_warga_negara = '-'
