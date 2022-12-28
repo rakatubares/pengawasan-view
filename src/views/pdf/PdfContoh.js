@@ -59,7 +59,7 @@ class PdfContoh extends Pdf {
 		this.pdf.text(':', this.props.ind.cln, this.ln)
 		if (this.data.objek != null) {
 			if (this.data.objek.data.item.length > 5) {
-				this.pdf.text('LIHAT LAMPIRAN', this.props.ind.itm, this.ln)
+				this.pdf.text(`${this.data.objek.data.item.length} ITEM, LIHAT LAMPIRAN`, this.props.ind.txt, this.ln)
 				this.ln += this.props.font.height
 			} else if (this.data.objek.data.item.length > 1) {
 				this.data.objek.data.item.forEach(brg => {
@@ -173,7 +173,7 @@ class PdfContoh extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.contoh.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 

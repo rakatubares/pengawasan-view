@@ -5,6 +5,7 @@
 			:state.sync="modal_state"
 			:doc_type="doc_type"
 			:doc_id.sync="doc_id"
+			:tabs_visibility="tabs_visibility"
 			@close-modal="closeModal"
 		>
 			<template #tab-uraian>
@@ -13,14 +14,14 @@
 					:doc_id.sync="doc_id"
 				/>
 				<MyFormBukaPengaman
-					v-if="['insert','edit','edit-header'].includes(modal_state)"
+					v-if="['insert','edit','edit_header'].includes(modal_state)"
 					:state.sync="modal_state"
 					:doc_id.sync="doc_id"
 				/>
 			</template>
 			<template #tab-object>
 				<MyDisplayDetail 
-					v-if="['show','edit-header'].includes(modal_state)"
+					v-if="['show','edit_header'].includes(modal_state)"
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
@@ -33,7 +34,7 @@
 			</template>
 			<template #tab-pdf>
 				<MyDisplayPdf 
-					v-if="['show','edit','edit-header'].includes(modal_state)"
+					v-if="['show','edit','edit_header'].includes(modal_state)"
 					:state.sync="modal_state"
 					:doc_type="doc_type" 
 					:doc_id.sync="doc_id"
@@ -69,7 +70,13 @@ export default {
 		return {
 			doc_type: 'bukapengaman',
 			doc_id: this.id,
-			modal_state: this.state
+			modal_state: this.state,
+			tabs_visibility: {
+				show: ['tab-object', 'tab-pdf'],
+				insert: [],
+				edit: ['tab-object', 'tab-pdf'],
+				edit_header: ['tab-object', 'tab-pdf'],
+			},
 		}
 	},
 	methods: {

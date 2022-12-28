@@ -224,7 +224,8 @@ export default {
 		async changeValueSegel(id) {
 			if (id != null) {
 				// Get data segel
-				let segel = await api.getDocumentById('segel', id)
+				let response = await api.getDisplayDataById('segel', id)
+				let segel = response.data.data
 				
 				// Change current data according to segel
 				this.data.segel.tanggal = segel.penindakan.tanggal_penindakan
@@ -234,7 +235,7 @@ export default {
 			}
 		},
 		async search_segel(search) {
-			let data = {'s': search, 'e': this.segel_search_exception}
+			let data = {'src': search, 'exc': this.segel_search_exception}
 			let responses = await api.searchDoc('segel', data)
 			this.segel_search_items = responses.data.data
 		}

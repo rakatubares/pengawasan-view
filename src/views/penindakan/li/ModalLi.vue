@@ -99,9 +99,6 @@ export default {
 			}
 			this.$refs.modal_tabs.getNavs(this.current_tab)
 		},
-		doc_id: function(val) {
-			console.log('modal li - doc id', val)
-		}
 	},
 	mounted() {
 		this.modal_state = this.state

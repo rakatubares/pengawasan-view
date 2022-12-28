@@ -340,24 +340,15 @@ export default {
 		},
 		async saveData() {
 			if (this.state == 'insert') {
-				console.log('form riksa badan - save data', JSON.parse(JSON.stringify(this.data)))
-				try {
-					this.data = await api.storeDoc('riksabadan', this.data)
-					this.fillDefaultData()
+				this.data = await api.storeDoc('riksabadan', this.data)
+				this.fillDefaultData()
 
-					this.$emit('update:doc_id', this.data.id)
-					this.$emit('update:state', 'edit')
-					this.alert('Data BA Pemeriksaan Badan berhasil disimpan')
-				} catch (error) {
-					console.log('form riksa badan - save data - error', error)
-				}
+				this.$emit('update:doc_id', this.data.id)
+				this.$emit('update:state', 'edit')
+				this.alert('Data BA Pemeriksaan Badan berhasil disimpan')
 			} else if (this.state == 'edit') {
-				try {
-					await api.updateDoc('riksabadan', this.doc_id, this.data)
-					this.alert('Data BA Pemeriksaan Badan berhasil diubah')
-				} catch (error) {
-					console.log('form riksa badan - update data - error', error)
-				}
+				await api.updateDoc('riksabadan', this.doc_id, this.data)
+				this.alert('Data BA Pemeriksaan Badan berhasil diubah')
 			}
 		},
 		alert(text, color, time) {

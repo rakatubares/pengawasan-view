@@ -1,7 +1,6 @@
 <template>
 	<div class="wrapper">
 		<MyModalDoc
-			ref="modal_doc"
 			title="Data BA Segel"
 			:state.sync="modal_state"
 			@close-modal="closeModal"
@@ -79,7 +78,6 @@ export default {
 	},
 	watch: {
 		modal_state: function(val) {
-			this.$refs.modal_doc.changeState(val)
 			this.$emit('update:state', val)
 		}
 	},

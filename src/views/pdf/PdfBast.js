@@ -31,19 +31,19 @@ class PdfSegel extends Pdf {
 		super(props);
 		this.jenis_dok = 'BERITA ACARA SERAH TERIMA'
 		this.data = data
-		this.prepareDocDate(this.data.dokumen.bast.tanggal_dokumen)
+		this.prepareDocDate(this.data.tanggal_dokumen)
 	}
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen.bast.no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.no_dok_lengkap)
 
 		////// URAIAN TOP //////
 		let txt_waktu = 'Pada hari ini ' + this.hr + ' tanggal ' + this.tgl + ' bulan ' + this.bln + ' tahun ' + this.thn + '.'
 		this.pdf.text(txt_waktu, this.props.ind.lbl, this.ln)
 		this.ln += this.props.font.height
 
-		let txt_menyerahkan = 'Saya/Kami* yang bertanda tangan di bawah bertindak untuk/atas nama ' + this.data.dokumen.bast.yang_menyerahkan.atas_nama + ', telah menyerahkan:'
+		let txt_menyerahkan = 'Saya/Kami* yang bertanda tangan di bawah bertindak untuk/atas nama ' + this.data.yang_menyerahkan.atas_nama + ', telah menyerahkan:'
 		let arr_menyerahkan = converters.array_text(txt_menyerahkan, 110)
 		this.pdf.text(arr_menyerahkan, this.props.ind.num, this.ln)
 		this.ln += this.props.font.height*(arr_menyerahkan.length + 1)
@@ -116,7 +116,7 @@ class PdfSegel extends Pdf {
 			});
 			this.ln += this.props.font.height*0.5
 		} else if (create_barang == false) {
-			this.pdf.text('LIHAT LAMPIRAN', this.props.ind.txt, this.ln)
+			this.pdf.text(`${this.data.objek.data.item.length} ITEM, LIHAT LAMPIRAN`, this.props.ind.txt, this.ln)
 			this.ln += this.props.font.height*1.5
 		} else {
 			this.pdf.text('', this.props.ind.txt, this.ln)
@@ -177,13 +177,13 @@ class PdfSegel extends Pdf {
 		
 		let nama_penerima = null
 		let id_penerima = null
-		if (this.data.dokumen.bast.yang_menerima.type == 'orang') {
-			nama_penerima = this.data.dokumen.bast.yang_menerima.data.nama
-			id_penerima = this.data.dokumen.bast.yang_menerima.data.jenis_identitas 
-				+ ' ' + this.data.dokumen.bast.yang_menerima.data.nomor_identitas 
+		if (this.data.yang_menerima.type == 'orang') {
+			nama_penerima = this.data.yang_menerima.data.nama
+			id_penerima = this.data.yang_menerima.data.jenis_identitas 
+				+ ' ' + this.data.yang_menerima.data.nomor_identitas 
 		} else {
-			nama_penerima = this.data.dokumen.bast.yang_menerima.data.name
-			id_penerima = this.data.dokumen.bast.yang_menerima.data.nip 
+			nama_penerima = this.data.yang_menerima.data.name
+			id_penerima = this.data.yang_menerima.data.nip 
 		}
 
 		this.pdf.text('Nama', this.props.ind.num, this.ln)
@@ -196,13 +196,13 @@ class PdfSegel extends Pdf {
 		this.pdf.text(id_penerima, this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 
-		let txt_menerima = 'Menerima penyerahan untuk/atas nama: ' + this.data.dokumen.bast.yang_menerima.atas_nama
+		let txt_menerima = 'Menerima penyerahan untuk/atas nama: ' + this.data.yang_menerima.atas_nama
 		let arr_menerima = converters.array_text(txt_menerima, 110)
 		this.pdf.text(arr_menerima, this.props.ind.num, this.ln)
 		this.ln += this.props.font.height*(arr_menerima.length + 1)
 
 		// DALAM RANGKA
-		let txt_dalam_rangka = 'Penyerahan dilaksanakan dalam rangka: ' + this.data.dokumen.bast.dalam_rangka
+		let txt_dalam_rangka = 'Penyerahan dilaksanakan dalam rangka: ' + this.data.dalam_rangka
 		let arr_dalam_rangka = converters.array_text(txt_dalam_rangka, 110)
 		this.pdf.text(arr_dalam_rangka, this.props.ind.num, this.ln)
 		this.ln += this.props.font.height*(arr_dalam_rangka.length + 1)
@@ -217,25 +217,25 @@ class PdfSegel extends Pdf {
 		let ln_ttd_nip = ln_ttd_nama + this.props.font.height
 		this.ln = ln_ttd_nip + this.props.font.height*3
 
-		let nip_penerima = this.data.dokumen.bast.yang_menerima.type == 'pegawai'
-			? 'NIP. ' + this.data.dokumen.bast.yang_menerima.data.nip
+		let nip_penerima = this.data.yang_menerima.type == 'pegawai'
+			? 'NIP. ' + this.data.yang_menerima.data.nip
 			: ''
 		
 		let nama_yg_menyerahkan = null
 		let nip_yg_menyerahkan = null
-		if (this.data.dokumen.bast.yang_menyerahkan.type == 'orang') {
-			nama_yg_menyerahkan = this.data.dokumen.bast.yang_menyerahkan.data.nama
+		if (this.data.yang_menyerahkan.type == 'orang') {
+			nama_yg_menyerahkan = this.data.yang_menyerahkan.data.nama
 			nip_yg_menyerahkan = ''
 		} else {
-			nama_yg_menyerahkan = this.data.dokumen.bast.yang_menyerahkan.data.name
-			nip_yg_menyerahkan = 'NIP. ' + this.data.dokumen.bast.yang_menyerahkan.data.nip
+			nama_yg_menyerahkan = this.data.yang_menyerahkan.data.name
+			nip_yg_menyerahkan = 'NIP. ' + this.data.yang_menyerahkan.data.nip
 		}
 
 		this.pdf.text('Yang menerima,', this.props.ind.lbl, ln_ttd_jabatan)
 		this.pdf.text(nama_penerima, this.props.ind.lbl, ln_ttd_nama)
 		this.pdf.text(nip_penerima, this.props.ind.lbl, ln_ttd_nip)
 		
-		this.pdf.text('Tangerang, ' + this.data.dokumen.bast.tanggal_dokumen, this.props.ind.ttd, ln_tgl_ttd)
+		this.pdf.text('Tangerang, ' + this.data.tanggal_dokumen, this.props.ind.ttd, ln_tgl_ttd)
 		this.pdf.text('Yang menyerahkan,', this.props.ind.ttd, ln_ttd_jabatan)
 		this.pdf.text(nama_yg_menyerahkan, this.props.ind.ttd, ln_ttd_nama)
 		this.pdf.text(nip_yg_menyerahkan, this.props.ind.ttd, ln_ttd_nip)
@@ -250,7 +250,7 @@ class PdfSegel extends Pdf {
 					this.pdf.setFont('Helvetica', 'normal')
 					this.pdf.addPage()
 					// Header
-					this.headerLampiran(this.data.dokumen.bast.no_dok_lengkap)
+					this.headerLampiran(this.data.no_dok_lengkap)
 					// Tabel barang
 					this.tabelBarang()
 				}
@@ -258,7 +258,7 @@ class PdfSegel extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.bast.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 

@@ -43,19 +43,19 @@ class PdfLptp extends Pdf {
 		this.sbp_type = sbp_type
 		this.jenis_dok = jenis_dok
 		this.props.title_line = title_line_indent
-		this.prepareDocDate()
-		this.prepareSprintDate()
+		this.prepareDocDate(this.data.tanggal_penindakan)
+		this.prepareSprintDate(this.data.tanggal_sprint)
 	}
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen[this.lptp_type].no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.no_dok_lengkap)
 
 		////// URAIAN TOP //////
 		this.pdf.text('1.', this.props.ind.num, this.ln)
 		this.pdf.text('Surat Perintah', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.penindakan.sprint.nomor_sprint, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.no_sprint, this.props.ind.txt, this.ln)
 		this.pdf.text('Tanggal', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
 		this.pdf.text(this.full_tgl_sprint, this.props.ind.txt2, this.ln)
@@ -66,10 +66,10 @@ class PdfLptp extends Pdf {
 		this.pdf.text('2.', this.props.ind.num, this.ln)
 		this.pdf.text('Locus', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_lokasi = converters.array_text(this.data.penindakan.lokasi_penindakan.replace('\n', ' '), 40)
+		let txt_lokasi = converters.array_text(this.data.locus.replace('\n', ' '), 40)
 		this.pdf.text(txt_lokasi, this.props.ind.txt, this.ln)
-		let txt_tanggal_tempus = this.data.dokumen[this.sbp_type].wkt_mulai_penindakan.substring(0,10)
-		let txt_waktu_tempus = this.data.dokumen[this.sbp_type].wkt_mulai_penindakan.substring(11)
+		let txt_tanggal_tempus = this.data.tempus.substring(0,10)
+		let txt_waktu_tempus = this.data.tempus.substring(11)
 		this.pdf.text('Tempus', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
 		this.pdf.text(txt_tanggal_tempus, this.props.ind.txt2, this.ln)
@@ -84,7 +84,7 @@ class PdfLptp extends Pdf {
 		let lng_lbl_uraian = lbl_uraian.length
 		this.pdf.text(lbl_uraian, this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_uraian = converters.array_text(this.data.dokumen[this.sbp_type].uraian_penindakan, 90)
+		let txt_uraian = converters.array_text(this.data.uraian_penindakan, 90)
 		let lng_txt_uraian = txt_uraian.length
 		this.pdf.text(txt_uraian, this.props.ind.txt, this.ln)
 		let lng_uraian = lng_txt_uraian > lng_lbl_uraian ? lng_txt_uraian : lng_lbl_uraian
@@ -127,18 +127,18 @@ class PdfLptp extends Pdf {
 			? this.data.objek.type == 'barang' 
 				? this.data.objek.data.item.length == 1
 					? this.data.objek.data.item[0].uraian_barang
-					: ('riksa' in this.data.dokumen)
-						? 'LIHAT LAMPIRAN BA PEMERIKSAAN'
-						: 'LIHAT LAMPIRAN'
+					: ('riksa' in this.data)
+						? `${this.data.objek.data.item.length} ITEM, LIHAT LAMPIRAN BA ${this.data.riksa}`
+						: `${this.data.objek.data.item.length} ITEM, LIHAT LAMPIRAN`
 				: ''
 			: ''
 		let jumlah_barang = this.data.objek != null
 			? this.data.objek.type == 'barang' 
 				? this.data.objek.data.item.length == 1
 					? this.data.objek.data.item[0].jumlah_barang + ' ' + this.data.objek.data.item[0]['satuan']['kode_satuan']
-					: ('riksa' in this.data.dokumen)
-						? 'LIHAT LAMPIRAN BA PEMERIKSAAN'
-						: 'LIHAT LAMPIRAN'
+					: ('riksa' in this.data)
+					? `${this.data.objek.data.item.length} ITEM, LIHAT LAMPIRAN BA ${this.data.riksa}`
+					: `${this.data.objek.data.item.length} ITEM, LIHAT LAMPIRAN`
 				: ''
 			: ''
 
@@ -258,15 +258,16 @@ class PdfLptp extends Pdf {
 		let len_alamat_orang = alamat_orang.length > 0 ? alamat_orang.length : 1
 		this.ln += this.props.font.height*len_alamat_orang
 
-		////// URAIAN BOTTOM //////
+		//// URAIAN BOTTOM //////
 		this.pdf.text('4.', this.props.ind.num, this.ln)
 		let lbl_sbp = this.sbp_type == 'sbp' ? 'SB Penindakan' : 'SB Penindakan NPP'
 		this.pdf.text(lbl_sbp, this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.dokumen[this.sbp_type].no_dok_lengkap, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.no_sbp, this.props.ind.txt, this.ln)
 		this.pdf.text('Tanggal', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(this.full_tgl_dok, this.props.ind.txt2, this.ln)
+		let txt_tanggal_penindakan = this.data.tanggal_penindakan != null ? this.data.tanggal_penindakan : ''
+		this.pdf.text(txt_tanggal_penindakan, this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('5.', this.props.ind.num, this.ln)
@@ -275,17 +276,17 @@ class PdfLptp extends Pdf {
 		this.ln += this.props.font.height
 		this.pdf.text('Nama', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.penindakan.saksi.nama, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.saksi.nama, this.props.ind.txt, this.ln)
 		this.pdf.text('Selaku', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
 		this.pdf.text('Pemilik/Kuasanya*', this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
-		let txt_alamat_saksi = converters.array_text(this.data.penindakan.saksi.alamat_identitas.replace('\n', ' '), 90)
+		let txt_alamat_saksi = converters.array_text(this.data.saksi.alamat_identitas.replace('\n', ' '), 90)
 		this.pdf.text('Alamat', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
 		this.pdf.text(txt_alamat_saksi, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
-		let txt_identitas_saksi = this.data.penindakan.saksi.nomor_identitas + ' (' + this.data.penindakan.saksi.jenis_identitas + ')'
+		let txt_identitas_saksi = this.data.saksi.nomor_identitas + ' (' + this.data.saksi.jenis_identitas + ')'
 		this.pdf.text('Identitas', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
 		this.pdf.text(txt_identitas_saksi, this.props.ind.txt, this.ln)
@@ -294,7 +295,7 @@ class PdfLptp extends Pdf {
 		this.pdf.text('6.', this.props.ind.num, this.ln)
 		this.pdf.text('Hal yang terjadi', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_hal_terjadi = converters.array_text(this.data.dokumen[this.sbp_type].hal_terjadi, 90)
+		let txt_hal_terjadi = converters.array_text(this.data.hal_terjadi, 90)
 		this.pdf.text(txt_hal_terjadi, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height*((txt_hal_terjadi.length) > 0 ? txt_hal_terjadi.length : 1)
 
@@ -311,21 +312,21 @@ class PdfLptp extends Pdf {
 		this.ln = ln_ttd_nip + this.props.font.height*3
 		
 		if (this.lptp_type == 'lptp') {
-			let plh_atasan = this.data.dokumen[this.lptp_type].atasan.plh ? 'Plh.' : ''
+			let plh_atasan = this.data.atasan.plh ? 'Plh.' : ''
 			this.pdf.text(plh_atasan, this.props.ind.num, ln_ttd_jabatan)
-			this.pdf.text(this.data.dokumen[this.lptp_type].atasan.jabatan.jabatan, this.props.ind.ttd1, ln_ttd_jabatan)
-			this.pdf.text(this.data.dokumen[this.lptp_type].atasan.user.name, this.props.ind.ttd1, ln_ttd_nama)
-			this.pdf.text('NIP. ' + this.data.dokumen[this.lptp_type].atasan.user.nip, this.props.ind.ttd1, ln_ttd_nip)	
+			this.pdf.text(this.data.atasan.jabatan.jabatan, this.props.ind.ttd1, ln_ttd_jabatan)
+			this.pdf.text(this.data.atasan.user.name, this.props.ind.ttd1, ln_ttd_nama)
+			this.pdf.text('NIP. ' + this.data.atasan.user.nip, this.props.ind.ttd1, ln_ttd_nip)	
 		}
 		
 		this.pdf.text('Petugas yang melakukan penindakan', this.props.ind.ttd2, ln_ttd_jabatan)
-		this.pdf.text(this.data.penindakan.petugas1.name, this.props.ind.ttd2, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.penindakan.petugas1.nip, this.props.ind.ttd2, ln_ttd_nip)
+		this.pdf.text(this.data.petugas.name, this.props.ind.ttd2, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.petugas.nip, this.props.ind.ttd2, ln_ttd_nip)
 
 		////// KETERANGAN //////
 		this.pdf.text('Catatan', this.props.ind.num, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		let txt_catatan = converters.array_text(this.data.dokumen[this.lptp_type].catatan, 100)
+		let txt_catatan = converters.array_text(this.data.catatan, 100)
 		this.pdf.text(txt_catatan, this.props.ind.txt3, this.ln)
 		let height_catatan = txt_catatan.length > 0 ? txt_catatan.length : 1
 		this.ln += this.props.font.height*(height_catatan + 1)
@@ -335,11 +336,11 @@ class PdfLptp extends Pdf {
 		////// LAMPIRAN //////
 		if (this.data.objek != null) {
 			if (this.data.objek.type == 'barang') {
-				if ((this.data.objek.data.item.length > 1) && !('riksa' in this.data.dokumen)) {
+				if ((this.data.objek.data.item.length > 1) && !('riksa' in this.data)) {
 					this.pdf.setFont('Helvetica', 'normal')
 					this.pdf.addPage()
 					// Header
-					this.headerLampiran(this.data.dokumen[this.lptp_type].no_dok_lengkap)
+					this.headerLampiran(this.data.no_dok_lengkap)
 					// Tabel barang
 					this.tabelBarang()
 				}
@@ -347,7 +348,7 @@ class PdfLptp extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen[this.lptp_type].kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 

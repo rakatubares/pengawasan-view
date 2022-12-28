@@ -33,14 +33,14 @@ class PdfTolak1 extends Pdf {
 		super(props);
 		this.jenis_dok = ['BERITA ACARA', 'PENOLAKAN TANDA TANGAN SURAT BUKTI PENINDAKAN']
 		this.data = data
-		this.sbp_type = data.dokumen.tolak1.sbp_type
-		this.prepareDocDate()
-		this.prepareSprintDate()
+		this.sbp_type = data.sbp_type
+		this.prepareDocDate(this.data.tanggal_dokumen)
+		this.prepareSprintDate(this.data.sprint.tanggal_sprint)
 	}
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen.tolak1.no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.no_dok_lengkap)
 
 		////// URAIAN TOP //////
 		let txt_waktu = 'Pada hari ini ' + this.hr + ' tanggal ' + this.tgl + ' bulan ' + this.bln + ' tahun ' + this.thn + '.'
@@ -48,15 +48,15 @@ class PdfTolak1 extends Pdf {
 		this.ln += this.props.font.height
 
 		let txt_sprint = 'Berdasarkan Surat Perintah : Kepala Bidang Penindakan dan Penyidikan Nomor ' 
-			+ this.data.penindakan.sprint.nomor_sprint 
+			+ this.data.sprint.nomor_sprint 
 			+ ' tanggal ' + this.full_tgl_sprint + '.'
 		let arr_sprint = converters.array_text(txt_sprint, 105)
 		this.pdf.text(arr_sprint, this.props.ind.alp, this.ln)
 		this.ln += this.props.font.height*arr_sprint.length
 
 		let txt_pernyataan = 'Kami yang bertanda tangan di bawah ini menyatakan bahwa setelah dibacakan Surat Bukti Penindakan '
-			+ this.data.dokumen[this.sbp_type].no_dok_lengkap
-			+ ' tanggal ' + this.full_tgl_dok + '.'
+			+ this.data.nomor_sbp
+			+ ' tanggal ' + this.data.tanggal_sbp + '.'
 		let arr_pernyataan = converters.array_text(txt_pernyataan, 105)
 		this.pdf.text(arr_pernyataan, this.props.ind.alp, this.ln)
 		this.ln += this.props.font.height*(arr_pernyataan.length+1)
@@ -66,61 +66,48 @@ class PdfTolak1 extends Pdf {
 
 		this.pdf.text('Nama', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.penindakan.saksi.nama, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.saksi.nama, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Tempat/tanggal lahir', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.penindakan.saksi.tanggal_lahir, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.saksi.tanggal_lahir, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Jenis kelamin', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_jenis_kelamin = ''
-		switch (this.data.penindakan.saksi.jenis_kelamin) {
-			case 'F':
-				txt_jenis_kelamin = 'Perempuan'
-				break;
-
-			case 'M':
-				txt_jenis_kelamin = 'Laki-laki'
-				break;
-		
-			default:
-				break;
-		}
-		this.pdf.text(txt_jenis_kelamin, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.saksi.jenis_kelamin.uraian, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Agama', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.penindakan.saksi.agama, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.saksi.agama, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Kewarganegaraan', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
 		let txt_warga_negara = ''
-		if (this.data.penindakan.saksi.warga_negara) {
-			txt_warga_negara = this.data.penindakan.saksi.warga_negara.nama_negara
+		if (this.data.saksi.warga_negara) {
+			txt_warga_negara = this.data.saksi.warga_negara.nama_negara
 		}
 		this.pdf.text(txt_warga_negara, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Pekerjaan', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.penindakan.saksi.pekerjaan, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.saksi.pekerjaan, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Alamat', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.penindakan.saksi.alamat_identitas.replace('\n', ' '), this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.saksi.alamat_identitas.replace('\n', ' '), this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		let txt_penolakan = 'menolak untuk menandatangani Surat Bukti Penindakan tersebut di atas dengan alasan:'
 		this.pdf.text(txt_penolakan, this.props.ind.alp, this.ln)
 		this.ln += this.props.font.height
 
-		let arr_alasan = converters.array_text(this.data.dokumen.tolak1.alasan, 105)
+		let arr_alasan = converters.array_text(this.data.alasan, 105)
 		this.pdf.text(arr_alasan, this.props.ind.alp, this.ln)
 		this.ln += this.props.font.height*arr_alasan.length
 
@@ -135,7 +122,7 @@ class PdfTolak1 extends Pdf {
 		////// TTD //////
 		let txt_saksi = 'Pemilik/Pengangkut/Kuasanya*'
 		let txt_pejabat = 'Pejabat Bea dan Cukai,'
-		this.ttd(txt_saksi, txt_pejabat, undefined, this.data.dokumen.tolak1.petugas1, this.data.dokumen.tolak1.petugas2)
+		this.ttd(txt_saksi, txt_pejabat, this.data.saksi, this.data.petugas1, this.data.petugas2)
 
 		////// KETERANGAN //////
 		this.ln + this.props.font.height
@@ -144,7 +131,7 @@ class PdfTolak1 extends Pdf {
 		this.pdf.text('*Coret yang tidak perlu', this.props.ind.alp, this.ln)
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.tolak1.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 

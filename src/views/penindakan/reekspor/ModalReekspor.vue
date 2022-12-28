@@ -109,7 +109,6 @@ export default {
 	},
 	mounted() {
 		this.modal_state = this.state
-		console.log('modal reeskpor - state', this.modal_state)
 	}
 }
 </script>
