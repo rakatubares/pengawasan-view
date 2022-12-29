@@ -187,9 +187,9 @@ class Pdf {
 					? item_barang[0]['jumlah_barang'] + ' '
 						+ item_barang[0]['satuan']['kode_satuan'] + ' '
 						+ item_barang[0]['uraian_barang']
-					: (doc_type != 'riksa') && ('riksa' in this.data.dokumen)
-						? 'LIHAT LAMPIRAN BA PEMERIKSAAN'
-						: 'LIHAT LAMPIRAN'
+					: (doc_type != 'riksa') && ('riksa' in this.data)
+						? `${item_barang.length} ITEM, LIHAT LAMPIRAN ${this.data.riksa}`
+						: `${item_barang.length} ITEM, LIHAT LAMPIRAN`
 				: ''
 			: ''
 		let txt_barang = converters.array_text(barang, 65)
