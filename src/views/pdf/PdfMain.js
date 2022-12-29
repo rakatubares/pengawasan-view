@@ -4,10 +4,10 @@ import 'jspdf-autotable'
 import converters from "../../helpers/converter"
 
 class Pdf {
-	constructor(props) {
+	constructor(props, ln=50) {
 		this.props = props
 		this.pdf = new jsPDF('p', 'mm', [297, 210]);
-		this.ln = 50
+		this.ln = ln
 	}
 
 	prepareDocDate(tgl_dok=this.data.penindakan.tanggal_penindakan) {
@@ -17,11 +17,6 @@ class Pdf {
 		this.tgl = this.tgl_dok != null ? converters.numTerbilang(this.tgl_dok.getDate()) : ''
 		this.bln = this.tgl_dok != null ? converters.monthName(this.tgl_dok) : ''
 		this.thn = this.tgl_dok != null ? converters.numTerbilang(this.tgl_dok.getFullYear()) : ''
-	}
-
-	prepareSprintDate(tgl_sprint=this.data.penindakan.sprint.tanggal_sprint) {
-		this.tgl_sprint = converters.date(tgl_sprint, 'DD-MM-YYYY')
-		this.full_tgl_sprint = converters.fullDate(this.tgl_sprint)
 	}
 
 	prepareSprintDate(tgl_sprint=this.data.penindakan.sprint.tanggal_sprint) {
@@ -60,6 +55,15 @@ class Pdf {
 
 		// Underline
 		this.pdf.line(10,41,200,41)
+	}
+
+	createHeaderSimple() {
+		this.pdf.setFont('Helvetica', 'bold')
+		this.pdf.setFontSize('10')
+		this.pdf.text('Kementerian Keuangan Republik Indonesia', 15, 10)
+		this.pdf.text('Direktorat Jenderal Bea dan Cukai', 15, 15)
+		this.pdf.text('Kantor Pelayana Utama Bea dan Cukai Tipe C Soekarno Hatta', 15, 20)
+		this.pdf.line(15,21,120,21)
 	}
 
 	/**
@@ -183,9 +187,9 @@ class Pdf {
 					? item_barang[0]['jumlah_barang'] + ' '
 						+ item_barang[0]['satuan']['kode_satuan'] + ' '
 						+ item_barang[0]['uraian_barang']
-					: (doc_type != 'riksa') && ('riksa' in this.data.dokumen)
-						? 'LIHAT LAMPIRAN BA PEMERIKSAAN'
-						: 'LIHAT LAMPIRAN'
+					: (doc_type != 'riksa') && ('riksa' in this.data)
+						? `${item_barang.length} ITEM, LIHAT LAMPIRAN ${this.data.riksa}`
+						: `${item_barang.length} ITEM, LIHAT LAMPIRAN`
 				: ''
 			: ''
 		let txt_barang = converters.array_text(barang, 65)

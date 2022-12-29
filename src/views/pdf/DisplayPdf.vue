@@ -1,18 +1,18 @@
 <template>
 	<div class="wrapper">
-		<CRow>
+		<CRow v-if="show_button">
 			<CCol>
 				<CButton 
-					v-for="doc_type in list_pdf"
-					:key="doc_type"
+					v-for="pdf in list_pdf"
+					:key="pdf.doc_type"
 					class="mt-3 mx-1"
 					shape="pill"
 					variant="outline"
 					color="info"
-					@click="changePdf(doc_type)"
-					:pressed="active_pdf == doc_type"
+					@click="changePdf(pdf.doc_type, pdf.doc_id)"
+					:pressed="active_pdf == pdf.doc_type"
 				>
-					{{ doc_type }}
+					{{ pdf.doc_type }}
 				</CButton>
 			</CCol>
 		</CRow>
@@ -63,120 +63,131 @@ export default {
 		state: String,
 		doc_type: String,
 		doc_id: Number,
+		show_button: {
+			type: Boolean,
+			default: true
+		}
 	},
 	data() {
 		return {
 			data: null,
 			show_pdf: false,
 			src_pdf: null,
+			is_publishable: false,
 			status_pdf: null,
-			list_pdf: [this.doc_type],
+			list_pdf: [{
+				'doc_type': this.doc_type,
+				'doc_id': this.doc_id,
+			}],
 			active_pdf: this.doc_type
 		}
 	},
 	computed: {
 		show_publish_button() {
 			let show = false
-			if (this.status_pdf == 100) {
-				show = true
+			if (this.is_publishable) {
+				if (this.status_pdf == 100) {
+					show = true
+				}	
 			}
 
 			return show
 		}
 	},
 	methods: {
-		async getData() {
-			this.data = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.list_pdf = [this.doc_type]
-			for (const key in this.data.dokumen) {
-				if (!this.list_pdf.includes(key)) {
-					this.list_pdf.push(key)
-				}
-			}
-			this.status_pdf = this.data.dokumen[this.doc_type]['kode_status']
+		async listPdf() {
+			let response = await api.getRelatedDocuments(this.doc_type, this.doc_id)
+			this.list_pdf = response.data
 		},
-		async getPdf() {
-			await this.getData()
-			
-			switch (this.active_pdf) {
+		async getPdf(doc_type, doc_id) {
+			let pdf = null
+			let response = await api.getPdfDataById(doc_type, doc_id)
+			let pdfData = response.data.data
+
+			switch (doc_type) {
 				case 'lkai':
-					let pdfLkai = new PdfLkai(this.data)
-					this.src_pdf = pdfLkai.generatePdf()
+					pdf = new PdfLkai(pdfData)
 					break;
 
 				case 'lkain':
-					let pdfLkain = new PdfLkai(
-						this.data,
+					pdf = new PdfLkai(
+						pdfData,
 						this.active_pdf,
 						'LEMBAR KERJA ANALISIS INTELIJEN NPP (LKAI-N)',
 						'lppin',
 						'LPPI-N',
 						{start: 60, end: 150}
 					)
-					this.src_pdf = pdfLkain.generatePdf()
 					break;
 
 				case 'lppi':
-					let pdfLppi = new PdfLppi(this.data)
-					this.src_pdf = pdfLppi.generatePdf()
+					pdf = new PdfLppi(pdfData)
 					break;
 
 				case 'lppin':
-					let pdfLppin = new PdfLppi(
-						this.data,
+					pdf = new PdfLppi(
+						pdfData,
 						this.active_pdf,
 						'LEMBAR PENGUMPULAN DAN PENILAIAN INFORMASI NPP',
 						{start: 53, end: 157}
 					)
-					this.src_pdf = pdfLppin.generatePdf()
 					break;
 
 				case 'nhi':
-					let pdfNhi = new PdfNhi(this.data)
-					this.src_pdf = pdfNhi.generatePdf()
+					pdf = new PdfNhi(pdfData)
 					break;
 
 				case 'nhin':
-					let pdfNhin = new PdfNhiN(this.data)
-					this.src_pdf = pdfNhin.generatePdf()
+					pdf = new PdfNhiN(pdfData)
 					break;
 
 				case 'ni':
-					let pdfNi = new PdfNi(this.data)
-					this.src_pdf = pdfNi.generatePdf()
+					pdf = new PdfNi(pdfData)
 					break;
 
 				case 'nin':
-					let pdfNiN = new PdfNi(
-						this.data,
+					pdf = new PdfNi(
+						pdfData,
 						this.active_pdf,
 						'NOTA INFORMASI NPP',
 						'LKAI-N',
 						{start: 85, end: 125}
 					)
-					this.src_pdf = pdfNiN.generatePdf()
 					break;
-
+			
 				default:
 					break;
 			}
 
+			this.src_pdf = pdf.generatePdf()
 			this.show_pdf = true
+			this.status_pdf = pdfData.kode_status
+			if (doc_type == this.doc_type) {
+				if (this.status_pdf == 100) {
+					this.is_publishable = true
+				} else {
+					this.is_publishable = false
+				}
+			}
 		},
-		changePdf(doc_type) {
+		changePdf(doc_type, doc_id) {
 			this.active_pdf = doc_type
 			this.show_pdf = false
-			this.getPdf()
+			this.getPdf(doc_type, doc_id)
 			this.show_pdf = true
 		},
 		async publishDoc() {
 			await api.publishDoc(this.doc_type, this.doc_id)
-			await this.getPdf()
+			await this.getPdf(this.doc_type, this.doc_id)
+			this.active_pdf = this.doc_type
 			this.$emit('update:state', 'show')
 		}
 	},
 	mounted() {
-		this.getPdf()
+		if (this.show_button == true) {
+			this.listPdf()	
+		}
+		this.getPdf(this.doc_type, this.doc_id)
 	}
 }
 </script>
