@@ -80,7 +80,7 @@
 			<CCol md="6">
 				<CInput
 					label="Kewarganegaraan"
-					:value.sync="entitas.warga_negara"
+					:value.sync="entitas.warga_negara.nama_negara"
 					disabled
 				/>
 			</CCol>

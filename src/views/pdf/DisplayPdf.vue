@@ -9,7 +9,7 @@
 					shape="pill"
 					variant="outline"
 					color="info"
-					@click="changePdf(pdf.doc_type)"
+					@click="changePdf(pdf.doc_type, pdf.doc_id)"
 					:pressed="active_pdf == pdf.doc_type"
 				>
 					{{ pdf.doc_type }}
@@ -88,6 +88,7 @@ export default {
 			data: null,
 			show_pdf: false,
 			src_pdf: null,
+			is_publishable: false,
 			status_pdf: null,
 			list_pdf: [{
 				'doc_type': this.doc_type,
@@ -99,8 +100,10 @@ export default {
 	computed: {
 		show_publish_button() {
 			let show = false
-			if (this.status_pdf == 100) {
-				show = true
+			if (this.is_publishable) {
+				if (this.status_pdf == 100) {
+					show = true
+				}	
 			}
 
 			return show
@@ -233,21 +236,32 @@ export default {
 
 			this.src_pdf = pdf.generatePdf()
 			this.show_pdf = true
+			this.status_pdf = pdfData.kode_status
+			if (doc_type == this.doc_type) {
+				if (this.status_pdf == 100) {
+					this.is_publishable = true
+				} else {
+					this.is_publishable = false
+				}
+			}
 		},
-		changePdf(doc_type) {
+		changePdf(doc_type, doc_id) {
 			this.active_pdf = doc_type
 			this.show_pdf = false
-			this.getPdf()
+			this.getPdf(doc_type, doc_id)
 			this.show_pdf = true
 		},
 		async publishDoc() {
-			await api.publishDoc(this.doc_type, this.doc_id)	
-			await this.getPdf()
+			await api.publishDoc(this.doc_type, this.doc_id)
+			await this.getPdf(this.doc_type, this.doc_id)
+			this.active_pdf = this.doc_type
 			this.$emit('update:state', 'show')
 		}
 	},
 	mounted() {
-		this.listPdf()
+		if (this.show_button == true) {
+			this.listPdf()	
+		}
 		this.getPdf(this.doc_type, this.doc_id)
 	}
 }
