@@ -89,10 +89,7 @@ export default {
 	methods: {
 		saveData() {
 			this.$emit('save-data', JSON.parse(JSON.stringify(this.form_data)))
-			if (this.state == 'insert') {
-				this.state = 'edit'
-			}
-			this.show = false
+			this.closeModal()
 		},
 		showModal(state, data=null) {
 			this.state = state
@@ -105,12 +102,13 @@ export default {
 		},
 		closeModal() {
 			this.show = false
-			this.form_data = JSON.parse(JSON.stringify(default_data))
+			this.resetData()
 		},
 		update_index(idx) {
 			this.form_data.index = idx
 		},
 		resetData() {
+			this.form_data = JSON.parse(JSON.stringify(default_data))
 			this.$refs.select_kepercayaan.resetSelection()
 			this.$refs.select_validitas.resetSelection()
 		}

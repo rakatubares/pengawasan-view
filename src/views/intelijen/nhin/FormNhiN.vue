@@ -324,7 +324,7 @@
 					<CCol md="2" sm="12">
 						<CInput
 							label="Flight / Voyage"
-							:value.sync="data.no_flight_trayek_sarkut"
+							:value.sync="data.flight_voyage_orang"
 						/>
 					</CCol>
 				</CRow>
@@ -626,7 +626,7 @@ export default {
 			this.$refs.selectKantor.getData(this.data.kantor_bc.kd_kantor)
 
 			// Get data orang
-			if (this.data.orang) {
+			if (this.data.flag_orang) {
 				this.$refs.selectOrang.getEntitas(this.data.orang.id, true)	
 			}
 

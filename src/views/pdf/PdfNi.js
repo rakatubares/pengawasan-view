@@ -30,12 +30,12 @@ class PdfNi extends Pdf {
 		title_line_position = {start: 88, end: 122}
 	) {
 		super(props);
+		this.data = data
 		this.ni_type = ni_type
-		this.ni = data.dokumen[this.ni_type]
 		this.jenis_dok = jenis_dok
 		this.lkai_label = lkai_label
 		this.props.title_line = title_line_position
-		this.prepareDocDate(this.ni.tanggal_dokumen)
+		this.prepareDocDate(this.data.tanggal_dokumen)
 	}
 
 	generatePdf() {
@@ -45,7 +45,7 @@ class PdfNi extends Pdf {
 		// No & tanggal
 		this.pdf.text('Nomor', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln1, this.ln)
-		this.pdf.text(this.ni.no_dok_lengkap, this.props.ind.val1, this.ln)
+		this.pdf.text(this.data.no_dok_lengkap, this.props.ind.val1, this.ln)
 
 		this.pdf.text('Referensi', this.props.ind.lbl2, this.ln)
 		this.ln += this.props.font.height
@@ -56,25 +56,25 @@ class PdfNi extends Pdf {
 
 		this.pdf.text(`Nomor ${this.lkai_label}`, this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(this.ni.nomor_lkai, this.props.ind.val2, this.ln)
+		this.pdf.text(this.data.nomor_lkai, this.props.ind.val2, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Sifat', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln1, this.ln)
-		this.pdf.text(this.ni.sifat, this.props.ind.val1, this.ln)
+		this.pdf.text(this.data.sifat, this.props.ind.val1, this.ln)
 
 		this.pdf.text(`Tanggal ${this.lkai_label}`, this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(converters.fullDate(this.ni.tanggal_lkai), this.props.ind.val2, this.ln)
+		this.pdf.text(converters.fullDate(this.data.tanggal_lkai), this.props.ind.val2, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Klasifikasi', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln1, this.ln)
-		this.pdf.text(this.ni.klasifikasi, this.props.ind.val1, this.ln)
+		this.pdf.text(this.data.klasifikasi, this.props.ind.val1, this.ln)
 		this.ln += this.props.font.height*2
 
 		// Uraian
-		let txt_tujuan = this.ni.tujuan || ''
+		let txt_tujuan = this.data.tujuan || ''
 		this.pdf.text(`Yth. ${txt_tujuan}`, this.props.ind.sta, this.ln)
 		this.ln += this.props.font.height
 
@@ -88,7 +88,7 @@ class PdfNi extends Pdf {
 		this.pdf.text(txt_op, this.props.ind.sta, this.ln, {align: 'justify', maxWidth: 185})
 		this.ln += this.props.font.height*3
 
-		let arr_uraian = this.ni.uraian.split('\n')
+		let arr_uraian = this.data.uraian.split('\n')
 		arr_uraian.forEach(par => {
 			let text = converters.array_text(par, 120)
 			this.pdf.text(par, this.props.ind.sta, this.ln, {align: 'left', maxWidth: 185})	
@@ -106,24 +106,24 @@ class PdfNi extends Pdf {
 		this.ln += this.props.font.height*4
 
 		// TTD
-		let txt_plh = this.ni.penerbit.plh == true ? 'Plh.' : ''
+		let txt_plh = this.data.penerbit.plh == true ? 'Plh.' : ''
 		this.pdf.text(txt_plh, this.props.ind.plh, this.ln)
-		this.pdf.text(this.ni.penerbit.jabatan.jabatan, this.props.ind.ttd, this.ln)
+		this.pdf.text(this.data.penerbit.jabatan.jabatan, this.props.ind.ttd, this.ln)
 		this.ln += this.props.font.height*5
-		this.pdf.text(this.ni.penerbit.user.name, this.props.ind.ttd, this.ln)
+		this.pdf.text(this.data.penerbit.user.name, this.props.ind.ttd, this.ln)
 		this.ln += this.props.font.height
 
 		// CC
 		this.pdf.text('Tembusan:', this.props.ind.sta, this.ln)
 		let cc_num = 1
-		this.ni.tembusan.forEach(element => {
+		this.data.tembusan.forEach(element => {
 			this.ln += this.props.font.height
 			this.pdf.text(`${cc_num}. ${element}`, this.props.ind.sta, this.ln)
 			cc_num += 1
 		});
 
 		////// WATERMARK //////
-		if ([100].includes(this.ni.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 
