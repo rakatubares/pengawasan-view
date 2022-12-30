@@ -36,6 +36,7 @@
 					:state.sync="modal_state"
 					:doc_type="doc_type" 
 					:doc_id.sync="doc_id"
+					:show_button="false"
 				/>
 			</template>
 		</MyModalDoc>

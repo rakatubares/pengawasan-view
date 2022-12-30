@@ -272,7 +272,7 @@ export default {
 				
 				// Set filter exception
 				this.pengaman_search_exception = this.data.pengaman.id
-				this.$emit('update:state', 'edit-header')
+				this.$emit('update:state', 'edit_header')
 				this.data_source = 'Load Data'
 			}
 
@@ -293,7 +293,7 @@ export default {
 					this.$emit('update:doc_id', response.id)
 
 					if (response.pengaman != null) {
-						this.$emit('update:state', 'edit-header')	
+						this.$emit('update:state', 'edit_header')	
 					} else {
 						this.$emit('update:state', 'edit')
 					}
@@ -302,11 +302,11 @@ export default {
 				} catch (error) {
 					console.log('form buka pengaman - save data - error', error)
 				}
-			} else if (['edit', 'edit-header'].includes(this.state)) {
+			} else if (['edit', 'edit_header'].includes(this.state)) {
 				try {
 					let response = await api.updateDoc('bukapengaman', this.doc_id, this.data)
 					if (response.pengaman != null) {
-						this.$emit('update:state', 'edit-header')
+						this.$emit('update:state', 'edit_header')
 					} else {
 						this.$emit('update:state', 'edit')
 					}
@@ -344,16 +344,17 @@ export default {
 		async changeValuePengaman(id) {
 			if (id != null) {
 				// Get data pengaman
-				let pengaman = await api.getDocumentById('pengaman', id)
+				let response = await api.getDisplayDataById('pengaman', id)
+				let pengaman = response.data.data
 
 				// Change current data according to pengaman
-				this.data.nomor_pengaman = pengaman.main.data.nomor_pengaman
+				this.data.nomor_pengaman = pengaman.nomor_pengaman
 				this.data.tanggal_pengaman = pengaman.penindakan.tanggal_penindakan
-				this.data.jenis_pengaman = pengaman.main.data.jenis_pengaman
-				this.data.jumlah_pengaman = pengaman.main.data.jumlah_pengaman
-				this.data.satuan_pengaman = pengaman.main.data.satuan_pengaman
-				this.data.tempat_pengaman = pengaman.main.data.tempat_pengaman
-				this.data.dasar_pengamanan = pengaman.main.data.alasan_pengamanan
+				this.data.jenis_pengaman = pengaman.jenis_pengaman
+				this.data.jumlah_pengaman = pengaman.jumlah_pengaman
+				this.data.satuan_pengaman = pengaman.satuan_pengaman
+				this.data.tempat_pengaman = pengaman.tempat_pengaman
+				this.data.dasar_pengamanan = pengaman.alasan_pengamanan
 				
 				// Specify pengaman id
 				this.data.pengaman.id = id
@@ -371,7 +372,7 @@ export default {
 		}
 	},
 	async mounted() {
-		if (['edit', 'edit-header'].includes(this.state)) {
+		if (['edit', 'edit_header'].includes(this.state)) {
 			await this.getData()
 		}
 	}

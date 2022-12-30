@@ -33,7 +33,7 @@ class PdfSegel extends Pdf {
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen.segel.no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.no_dok_lengkap)
 
 		////// URAIAN TOP //////
 		let txt_waktu = 'Pada hari ini ' + this.hr + ' tanggal ' + this.tgl + ' bulan ' + this.bln + ' tahun ' + this.thn + '.'
@@ -64,15 +64,15 @@ class PdfSegel extends Pdf {
 		////// URAIAN BOTTOM //////
 		this.ln += this.props.font.height
 		let txt_segel = 'dengan menggunakan segel/tanda pengaman ' 
-			+ converters.string(this.data.dokumen.segel.jenis_segel)
+			+ converters.string(this.data.jenis_segel)
 			+ ' sebanyak ' 
-			+ converters.string(this.data.dokumen.segel.jumlah_segel)
+			+ converters.string(this.data.jumlah_segel)
 			+ ' '
-			+ converters.string(this.data.dokumen.segel.satuan_segel)
+			+ converters.string(this.data.satuan_segel)
 			+ ' Nomor ' 
-			+ converters.string(this.data.dokumen.segel.nomor_segel)
+			+ converters.string(this.data.nomor_segel)
 			+ ' penempatan/pelekatan segel sebagai berikut: '
-			+ converters.string(this.data.dokumen.segel.tempat_segel)
+			+ converters.string(this.data.tempat_segel)
 			+ '.'
 		let arr_segel = converters.array_text(txt_segel, 100)
 		this.pdf.text(arr_segel, this.props.ind.alp, this.ln)
@@ -121,11 +121,11 @@ class PdfSegel extends Pdf {
 		////// LAMPIRAN //////
 		if (this.data.objek != null) {
 			if (this.data.objek.type == 'barang') {
-				if ((this.data.objek.data.item.length > 1) && !('riksa' in this.data.dokumen)) {
+				if ((this.data.objek.data.item.length > 1) && !('riksa' in this.data)) {
 					this.pdf.setFont('Helvetica', 'normal')
 					this.pdf.addPage()
 					// Header
-					this.headerLampiran(this.data.dokumen.segel.no_dok_lengkap)
+					this.headerLampiran(this.data.no_dok_lengkap)
 					// Tabel barang
 					this.tabelBarang()
 				}
@@ -133,7 +133,7 @@ class PdfSegel extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.segel.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 

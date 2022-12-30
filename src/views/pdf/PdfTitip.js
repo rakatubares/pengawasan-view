@@ -27,13 +27,13 @@ class PdfTitip extends Pdf {
 		super(props);
 		this.jenis_dok = 'BERITA ACARA PENITIPAN'
 		this.data = data
-		this.prepareDocDate(this.data.dokumen.titip.tanggal_dokumen)
-		this.prepareSprintDate(this.data.dokumen.titip.sprint.tanggal_sprint)
+		this.prepareDocDate(this.data.tanggal_dokumen)
+		this.prepareSprintDate(this.data.sprint.tanggal_sprint)
 	}
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen.titip.no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.no_dok_lengkap)
 
 		////// URAIAN TOP //////
 		let txt_waktu = 'Pada hari ini ' + this.hr + ' tanggal ' + this.tgl + ' bulan ' + this.bln + ' tahun ' + this.thn + '.'
@@ -41,7 +41,7 @@ class PdfTitip extends Pdf {
 		this.ln += this.props.font.height
 
 		let txt_sprint = 'Berdasarkan Surat Perintah : Kepala Bidang Penindakan dan Penyidikan Nomor ' 
-				+ this.data.dokumen.titip.sprint.nomor_sprint 
+				+ this.data.sprint.nomor_sprint 
 				+ ' tanggal ' + this.full_tgl_sprint + '.'
 		let arr_sprint = converters.array_text(txt_sprint, 105)
 		this.pdf.text(arr_sprint, this.props.ind.alp, this.ln)
@@ -65,7 +65,7 @@ class PdfTitip extends Pdf {
 		this.ln += this.props.font.height
 		this.pdf.text('Lokasi Penitipan', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(converters.string(this.data.dokumen.titip.lokasi_titip).replace('\n', ' '), this.props.ind.txt2, this.ln)
+		this.pdf.text(converters.string(this.data.lokasi_titip).replace('\n', ' '), this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 
 		let txt_penerima = 'Dititipkan kepada pengangkut/pemilik/importir/eksportir '
@@ -76,21 +76,21 @@ class PdfTitip extends Pdf {
 
 		this.pdf.text('Nama', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(converters.string(this.data.dokumen.titip.penerima.nama), this.props.ind.txt2, this.ln)
+		this.pdf.text(converters.string(this.data.penerima.nama), this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('Alamat', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(converters.string(this.data.dokumen.titip.penerima.alamat_identitas).replace('\n', ' '), this.props.ind.txt2, this.ln)
+		this.pdf.text(converters.string(this.data.penerima.alamat_identitas).replace('\n', ' '), this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('Jabatan', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(converters.string(this.data.dokumen.titip.penerima.pekerjaan), this.props.ind.txt2, this.ln)
+		this.pdf.text(converters.string(this.data.penerima.pekerjaan), this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 
 		let txt_segel = 'Sesuai dengan BA Penyegelan Nomor : '
-			+ this.data.dokumen.segel.no_dok_lengkap
+			+ this.data.nomor_segel
 			+ ' tanggal '
-			+ this.data.penindakan.tanggal_penindakan
+			+ this.data.tanggal_segel
 			+ '.'
 		let arr_segel = converters.array_text(txt_segel, 110)
 		this.pdf.text(arr_segel, this.props.ind.alp, this.ln)
@@ -110,12 +110,12 @@ class PdfTitip extends Pdf {
 
 		// Pemilik/kuasa
 		this.pdf.text('Orang yang menerima penitipan,', this.props.ind.alp, ln_jabatan_1)
-		this.pdf.text(this.data.dokumen.titip.penerima.nama, this.props.ind.alp, ln_nama_1)
+		this.pdf.text(this.data.penerima.nama, this.props.ind.alp, ln_nama_1)
 		this.pdf.text('Pemilik/kuasanya', this.props.ind.alp, ln_nip_1)
 
 		// Saksi
-		if (this.data.dokumen.titip.saksi != null) {
-			var txt_nama_saksi = this.data.dokumen.titip.saksi.nama
+		if (this.data.saksi != null) {
+			var txt_nama_saksi = this.data.saksi.nama
 		} else {
 			var txt_nama_saksi = '...........................................'
 		}
@@ -125,11 +125,11 @@ class PdfTitip extends Pdf {
 		// Pejabat
 		this.pdf.text('Tangerang, ' + this.full_tgl_dok, this.props.ind.ttd, ln_tgl)
 		this.pdf.text('Pejabat yang melakukan penitipan,', this.props.ind.ttd, ln_jabatan_1)
-		this.pdf.text(this.data.dokumen.titip.petugas1.name, this.props.ind.ttd, ln_nama_1)
-		this.pdf.text('NIP ' + this.data.dokumen.titip.petugas1.nip, this.props.ind.ttd, ln_nip_1)
-		if (this.data.dokumen.titip.petugas2 != null) {
-			var txt_nama_pejabat2 = this.data.dokumen.titip.petugas2.name
-			var txt_nip_pejabat2 = this.data.dokumen.titip.petugas2.nip
+		this.pdf.text(this.data.petugas1.name, this.props.ind.ttd, ln_nama_1)
+		this.pdf.text('NIP ' + this.data.petugas1.nip, this.props.ind.ttd, ln_nip_1)
+		if (this.data.petugas2 != null) {
+			var txt_nama_pejabat2 = this.data.petugas2.name
+			var txt_nip_pejabat2 = this.data.petugas2.nip
 		} else {
 			var txt_nama_pejabat2 = '...........................................'
 			var txt_nip_pejabat2 = '....................................'
@@ -146,11 +146,11 @@ class PdfTitip extends Pdf {
 		////// LAMPIRAN //////
 		if (this.data.objek != null) {
 			if (this.data.objek.type == 'barang') {
-				if ((this.data.objek.data.item.length > 1) && !('riksa' in this.data.dokumen)) {
+				if ((this.data.objek.data.item.length > 1) && !('riksa' in this.data)) {
 					this.pdf.setFont('Helvetica', 'normal')
 					this.pdf.addPage()
 					// Header
-					this.headerLampiran(this.data.dokumen.titip.no_dok_lengkap)
+					this.headerLampiran(this.data.no_dok_lengkap)
 					// Tabel barang
 					this.tabelBarang()
 				}
@@ -158,7 +158,7 @@ class PdfTitip extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.titip.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 

@@ -39,23 +39,23 @@ class PdfLap extends Pdf {
 		super(props);
 		this.jenis_dok = 'LEMBAR ANALISIS PRA PENINDAKAN'
 		this.data = data
-		this.prepareDocDate(this.data.dokumen.lap.tanggal_dokumen)
+		this.prepareDocDate(this.data.tanggal_dokumen)
 	}
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen.lap.no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.no_dok_lengkap)
 
 		this.pdf.text(`Sumber Informasi : NHI/LI-1/Info lain* No`, this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.dokumen.lap.nomor_sumber, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.nomor_sumber, this.props.ind.txt, this.ln)
 		this.pdf.text('Tanggal :', this.props.ind.lbl2, this.ln)
-		this.pdf.text(this.data.dokumen.lap.tanggal_sumber, this.props.ind.txt2, this.ln)
+		this.pdf.text(this.data.tanggal_sumber, this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Kategori Dugaan Pelanggaran', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.dokumen.lap.dugaan_pelanggaran.kategori, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.dugaan_pelanggaran.kategori, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		////// URAIAN //////
@@ -70,65 +70,65 @@ class PdfLap extends Pdf {
 		// Pelaku
 		this.constructUraian(
 			'1.', 'num', 'Pelaku', 'lbl', 
-			this.data.dokumen.lap.flag_pelaku, 
+			this.data.flag_pelaku, 
 			'Diketahui', 'Tidak Diketahui', 
-			this.data.dokumen.lap.keterangan_pelaku
+			this.data.keterangan_pelaku
 		)
 
 		// Pelanggaran
 		this.constructUraian(
 			'2.', 'num', 'Pelanggaran', 'lbl', 
-			this.data.dokumen.lap.flag_pelanggaran, 
+			this.data.flag_pelanggaran, 
 			'Diketahui', 'Tidak Diketahui', 
-			this.data.dokumen.lap.keterangan_pelanggaran
+			this.data.keterangan_pelanggaran
 		)
 
 		// Locus
 		this.constructUraian(
 			'3.', 'num', 'Locus', 'lbl', 
-			this.data.dokumen.lap.flag_locus, 
+			this.data.flag_locus, 
 			'Diketahui', 'Tidak Diketahui', 
-			this.data.dokumen.lap.keterangan_locus
+			this.data.keterangan_locus
 		)
 
 		// Tempus
 		this.constructUraian(
 			'4.', 'num', 'Tempus', 'lbl', 
-			this.data.dokumen.lap.flag_tempus, 
+			this.data.flag_tempus, 
 			'Diketahui', 'Tidak Diketahui', 
-			this.data.dokumen.lap.keterangan_tempus
+			this.data.keterangan_tempus
 		)
 
 		// Prosedural
 		this.constructUraian(
 			'-', 'alp', 'Prosedural', 'num', 
-			this.data.dokumen.lap.flag_kewenangan, 
+			this.data.flag_kewenangan, 
 			'Kewenangan DJBC', 'Bukan Kewenangan DJBC', 
-			this.data.dokumen.lap.keterangan_kewenangan
+			this.data.keterangan_kewenangan
 		)
 
 		// SDM
 		this.constructUraian(
 			'-', 'alp', 'SDM', 'num', 
-			this.data.dokumen.lap.flag_sdm, 
+			this.data.flag_sdm, 
 			'Tersedia', 'Tidak tersedia', 
-			this.data.dokumen.lap.keterangan_sdm
+			this.data.keterangan_sdm
 		)
 
 		// Sarpras
 		this.constructUraian(
 			'-', 'alp', 'Sarana Prasarana', 'num', 
-			this.data.dokumen.lap.flag_sarpras, 
+			this.data.flag_sarpras, 
 			'Tersedia', 'Tidak tersedia', 
-			this.data.dokumen.lap.keterangan_sarpras
+			this.data.keterangan_sarpras
 		)
 
 		// Anggaran
 		this.constructUraian(
 			'-', 'alp', 'Anggaran', 'num', 
-			this.data.dokumen.lap.flag_anggaran, 
+			this.data.flag_anggaran, 
 			'Tersedia', 'Tidak tersedia', 
-			this.data.dokumen.lap.keterangan_anggaran
+			this.data.keterangan_anggaran
 		)
 
 		////// KELAYAKAN //////
@@ -137,7 +137,7 @@ class PdfLap extends Pdf {
 		this.ln += this.props.font.height
 
 		// Layak Penindakan
-		let chk_layak_penindakan = this.data.dokumen.lap.flag_layak_penindakan == 1 ? '( V )' : '(    )'
+		let chk_layak_penindakan = this.data.flag_layak_penindakan == 1 ? '( V )' : '(    )'
 		this.pdf.text(chk_layak_penindakan, this.props.ind.alp, this.ln)
 		this.pdf.text('Layak Dilakukan Operasi Penindakan', this.props.ind.lbl, this.ln)
 		this.ln += this.props.font.height
@@ -150,7 +150,7 @@ class PdfLap extends Pdf {
 		this.constructSkema(5, 'Perbantuan dgn Instansi lain')
 
 		// Tidak Layak Penindakan
-		let chk_tidak_layak_penindakan = this.data.dokumen.lap.flag_layak_penindakan == 0 ? '( V )' : '(    )'
+		let chk_tidak_layak_penindakan = this.data.flag_layak_penindakan == 0 ? '( V )' : '(    )'
 		this.pdf.text(chk_tidak_layak_penindakan, this.props.ind.alp, this.ln)
 		this.pdf.text('Tidak / Belum Layak Dilakukan Operasi Penindakan', this.props.ind.lbl, this.ln)
 		this.ln += this.props.font.height
@@ -161,7 +161,7 @@ class PdfLap extends Pdf {
 
 		////// KESIMPULAN //////
 		this.pdf.text('Kesimpulan:', this.props.ind.alp, this.ln)
-		let arr_kesimpulan = converters.array_text(this.data.dokumen.lap.kesimpulan, 100)
+		let arr_kesimpulan = converters.array_text(this.data.kesimpulan, 100)
 		this.pdf.text(arr_kesimpulan, this.props.ind.lbl3, this.ln)
 		let height_kesimpulan = arr_kesimpulan.length > 0 ? arr_kesimpulan.length : 1
 		this.ln += this.props.font.height*(height_kesimpulan + 1)
@@ -172,23 +172,23 @@ class PdfLap extends Pdf {
 		let ln_ttd_nama = ln_ttd_jabatan + this.props.font.height*5
 		let ln_ttd_nip = ln_ttd_nama + this.props.font.height
 		this.ln = ln_ttd_nip + this.props.font.height*3
-		let tgl_lap = converters.fullDate(converters.date(this.data.dokumen.lap.tanggal_dokumen, 'DD-MM-YYYY'))
+		let tgl_lap = converters.fullDate(converters.date(this.data.tanggal_dokumen, 'DD-MM-YYYY'))
 
-		let plh_atasan = this.data.dokumen.lap.atasan.plh ? 'Plh.' : ''
+		let plh_atasan = this.data.atasan.plh ? 'Plh.' : ''
 		this.pdf.text(plh_atasan, this.props.ind.alp, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.lap.atasan.jabatan.jabatan, this.props.ind.ttd1, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.lap.atasan.user.name, this.props.ind.ttd1, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen.lap.atasan.user.nip, this.props.ind.ttd1, ln_ttd_nip)
+		this.pdf.text(this.data.atasan.jabatan.jabatan, this.props.ind.ttd1, ln_ttd_jabatan)
+		this.pdf.text(this.data.atasan.user.name, this.props.ind.ttd1, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.atasan.user.nip, this.props.ind.ttd1, ln_ttd_nip)
 		
 		this.pdf.text('Tangerang, ' + tgl_lap, this.props.ind.ttd2, ln_tgl_ttd)
-		let plh_penerbit = this.data.dokumen.lap.penerbit.plh ? 'Plh.' : ''
+		let plh_penerbit = this.data.penerbit.plh ? 'Plh.' : ''
 		this.pdf.text(plh_penerbit, this.props.ind.plh2, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.lap.penerbit.jabatan.jabatan, this.props.ind.ttd2, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.lap.penerbit.user.name, this.props.ind.ttd2, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen.lap.penerbit.user.nip, this.props.ind.ttd2, ln_ttd_nip)
+		this.pdf.text(this.data.penerbit.jabatan.jabatan, this.props.ind.ttd2, ln_ttd_jabatan)
+		this.pdf.text(this.data.penerbit.user.name, this.props.ind.ttd2, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.penerbit.user.nip, this.props.ind.ttd2, ln_ttd_nip)
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.lap.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 
@@ -214,8 +214,8 @@ class PdfLap extends Pdf {
 	}
 
 	constructSkema(id_skema, lbl) {
-		let chk_skema = this.data.dokumen.lap.skema_penindakan != null
-			? this.data.dokumen.lap.skema_penindakan.id == id_skema 
+		let chk_skema = this.data.skema_penindakan != null
+			? this.data.skema_penindakan.id == id_skema 
 				? '( V )' 
 				: '(    )'
 			: '(    )'
@@ -223,9 +223,9 @@ class PdfLap extends Pdf {
 		this.pdf.text(lbl, this.props.ind.lbl3, this.ln)
 		this.pdf.text('Keterangan', this.props.ind.chk2, this.ln)
 		this.pdf.text(':', this.props.ind.cln4, this.ln)
-		let txt_ket_skema = this.data.dokumen.lap.skema_penindakan != null
-			? this.data.dokumen.lap.skema_penindakan.id == id_skema
-				? this.data.dokumen.lap.keterangan_skema_penindakan 
+		let txt_ket_skema = this.data.skema_penindakan != null
+			? this.data.skema_penindakan.id == id_skema
+				? this.data.keterangan_skema_penindakan 
 				: ''
 			: ''
 		let arr_ket_skema = converters.array_text(txt_ket_skema, 50)
@@ -235,8 +235,8 @@ class PdfLap extends Pdf {
 	}
 
 	constructPatroli(status, lbl) {
-		let chk_patroli = this.data.dokumen.lap.flag_layak_patroli != null
-			? this.data.dokumen.lap.flag_layak_patroli == status 
+		let chk_patroli = this.data.flag_layak_patroli != null
+			? this.data.flag_layak_patroli == status 
 				? '( V )' 
 				: '(    )'
 			: '(    )'
@@ -244,9 +244,9 @@ class PdfLap extends Pdf {
 		this.pdf.text(lbl, this.props.ind.lbl3, this.ln)
 		this.pdf.text('Keterangan', this.props.ind.chk2, this.ln)
 		this.pdf.text(':', this.props.ind.cln4, this.ln)
-		let txt_ket_patroli = this.data.dokumen.lap.flag_layak_patroli != null
-			? this.data.dokumen.lap.flag_layak_patroli == status
-				? this.data.dokumen.lap.keterangan_patroli 
+		let txt_ket_patroli = this.data.flag_layak_patroli != null
+			? this.data.flag_layak_patroli == status
+				? this.data.keterangan_patroli 
 				: ''
 			: ''
 		let arr_ket_patroli = converters.array_text(txt_ket_patroli, 50)

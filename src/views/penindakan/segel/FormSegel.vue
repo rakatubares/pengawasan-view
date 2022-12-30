@@ -189,10 +189,5 @@ export default {
 </script>
 
 <style>
-/* .form-segel .row+.row {
-	margin-top:0;
-}
-.form-segel .v-text-field__details {
-	display: none;
-} */
+
 </style>

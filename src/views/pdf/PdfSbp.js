@@ -41,7 +41,7 @@ class PdfSbp extends Pdf {
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen[this.sbp_type].no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.no_dok_lengkap)
 
 		////// URAIAN TOP //////
 		let txt_sprint = 'Dasar penindakan, Surat Perintah Nomor : ' 
@@ -88,14 +88,14 @@ class PdfSbp extends Pdf {
 		this.pdf.text(this.data.penindakan.lokasi_penindakan.replace('\n', ' '), this.props.ind.num_txt, this.ln)
 		this.ln += this.props.font.height
 
-		let txt_uraian = converters.array_text(this.data.dokumen[this.sbp_type].uraian_penindakan, 90)
+		let txt_uraian = converters.array_text(this.data.uraian_penindakan, 90)
 		this.pdf.text('5.', this.props.ind.num, this.ln)
 		this.pdf.text('Uraian Penindakan', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.num_cln, this.ln)
 		this.pdf.text(txt_uraian, this.props.ind.num_txt, this.ln)
 		this.ln += this.props.font.height*((txt_uraian.length) > 0 ? txt_uraian.length : 1)
 
-		let txt_alasan = converters.array_text(this.data.dokumen[this.sbp_type].alasan_penindakan, 90)
+		let txt_alasan = converters.array_text(this.data.alasan_penindakan, 90)
 		this.pdf.text('6.', this.props.ind.num, this.ln)
 		this.pdf.text('Alasan Penindakan', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.num_cln, this.ln)
@@ -105,7 +105,7 @@ class PdfSbp extends Pdf {
 		this.pdf.text('7.', this.props.ind.num, this.ln)
 		this.pdf.text('Jenis Pelanggaran', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.num_cln, this.ln)
-		this.pdf.text(this.data.dokumen[this.sbp_type].jenis_pelanggaran, this.props.ind.num_txt, this.ln)
+		this.pdf.text(this.data.jenis_pelanggaran, this.props.ind.num_txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('8.', this.props.ind.num, this.ln)
@@ -115,8 +115,8 @@ class PdfSbp extends Pdf {
 		this.pdf.text(tindakan, this.props.ind.alp, this.ln,{maxWidth: 180})
 		this.ln += this.props.font.height*3
 
-		let txt_mulai_penindakan = this.data.dokumen[this.sbp_type].wkt_mulai_penindakan.replace(" ", " jam ")
-		let txt_selesai_penindakan = this.data.dokumen[this.sbp_type].wkt_selesai_penindakan.replace(" ", " jam ")
+		let txt_mulai_penindakan = this.data.wkt_mulai_penindakan.replace(" ", " jam ")
+		let txt_selesai_penindakan = this.data.wkt_selesai_penindakan.replace(" ", " jam ")
 		this.pdf.text('9.', this.props.ind.num, this.ln)
 		this.pdf.text('Waktu Penindakan', this.props.ind.alp, this.ln)
 		this.ln += this.props.font.height
@@ -129,7 +129,7 @@ class PdfSbp extends Pdf {
 		this.pdf.text(txt_selesai_penindakan, this.props.ind.num_txt, this.ln)
 		this.ln += this.props.font.height
 
-		let txt_hal_terjadi = converters.array_text(this.data.dokumen[this.sbp_type].hal_terjadi, 90)
+		let txt_hal_terjadi = converters.array_text(this.data.hal_terjadi, 90)
 		this.pdf.text('10.', this.props.ind.num, this.ln)
 		this.pdf.text('Hal yang terjadi', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.num_cln, this.ln)
@@ -162,11 +162,11 @@ class PdfSbp extends Pdf {
 		////// LAMPIRAN //////
 		if (this.data.objek != null) {
 			if (this.data.objek.type == 'barang') {
-				if ((this.data.objek.data.item.length > 1) && !('riksa' in this.data.dokumen)) {
+				if ((this.data.objek.data.item.length > 1) && !('riksa' in this.data)) {
 					this.pdf.setFont('Helvetica', 'normal')
 					this.pdf.addPage()
 					// Header
-					this.headerLampiran(this.data.dokumen[this.sbp_type].no_dok_lengkap)
+					this.headerLampiran(this.data.no_dok_lengkap)
 					// Tabel barang
 					this.tabelBarang()
 				}
@@ -174,7 +174,7 @@ class PdfSbp extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen[this.sbp_type].kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 		

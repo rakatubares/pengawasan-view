@@ -37,7 +37,7 @@ class PdfRiksa extends Pdf {
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen.riksa.no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.no_dok_lengkap)
 
 		////// URAIAN TOP //////
 		let txt_waktu = 'Pada hari ini ' + this.hr + ' tanggal ' + this.tgl + ' bulan ' + this.bln + ' tahun ' + this.thn + '.'
@@ -126,7 +126,7 @@ class PdfRiksa extends Pdf {
 				this.ln_lamp += this.props.font.height
 				this.pdf.text('Nomor', this.props.ind.alp, this.ln_lamp)
 				this.pdf.text(':', this.props.ind.cln4, this.ln_lamp)
-				this.pdf.text(this.data.dokumen.riksa.no_dok_lengkap, this.props.ind.txt4, this.ln_lamp)
+				this.pdf.text(this.data.no_dok_lengkap, this.props.ind.txt4, this.ln_lamp)
 				this.ln_lamp += this.props.font.height
 				this.pdf.text('Tanggal', this.props.ind.alp, this.ln_lamp)
 				this.pdf.text(':', this.props.ind.cln4, this.ln_lamp)
@@ -169,7 +169,7 @@ class PdfRiksa extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.riksa.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 

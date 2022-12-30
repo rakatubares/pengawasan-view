@@ -32,17 +32,17 @@ class PdfBukaPengaman extends Pdf {
 		super(props);
 		this.jenis_dok = 'BERITA ACARA PEMBUKAAN TANDA PENGAMAN'
 		this.data = data
-		this.prepareDocDate(this.data.dokumen.bukapengaman.tanggal_dokumen)
-		this.prepareSprintDate(this.data.dokumen.bukapengaman.sprint.tanggal_sprint)
+		this.prepareDocDate(this.data.tanggal_dokumen)
+		this.prepareSprintDate(this.data.sprint.tanggal_sprint)
 	}
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen.bukapengaman.no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.no_dok_lengkap)
 
 		////// URAIAN TOP //////
 		let txt_sprint = 'Berdasarkan Surat Perintah/Surat Tugas Kepala Bidang Penindakan dan Penyidikan Nomor: ' 
-			+ this.data.dokumen.bukapengaman.sprint.nomor_sprint 
+			+ this.data.sprint.nomor_sprint 
 			+ ' tanggal ' + this.full_tgl_sprint + '.'
 		let arr_sprint = converters.array_text(txt_sprint, 105)
 		this.pdf.text(arr_sprint, this.props.ind.alp, this.ln)
@@ -55,21 +55,21 @@ class PdfBukaPengaman extends Pdf {
 		this.pdf.text('1.', this.props.ind.alp, this.ln)
 		this.pdf.text('Nama', this.props.ind.dtl, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(this.data.dokumen.bukapengaman.petugas1.name, this.props.ind.txt2, this.ln)
+		this.pdf.text(this.data.petugas1.name, this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('Pangkat', this.props.ind.dtl, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(this.data.dokumen.bukapengaman.petugas1.pangkat, this.props.ind.txt2, this.ln)
+		this.pdf.text(this.data.petugas1.pangkat, this.props.ind.txt2, this.ln)
 		this.pdf.text('NIP', this.props.ind.lbl3, this.ln)
 		this.pdf.text(':', this.props.ind.cln3, this.ln)
-		this.pdf.text(this.data.dokumen.bukapengaman.petugas1.nip, this.props.ind.txt3, this.ln)
+		this.pdf.text(this.data.petugas1.nip, this.props.ind.txt3, this.ln)
 		this.ln += this.props.font.height*2
 
 		// Petugas 2
-		if (this.data.dokumen.bukapengaman.petugas2 != null) {
-			var txt_nama_petugas2 = this.data.dokumen.bukapengaman.petugas2.name
-			var txt_pangkat_petugas2 = this.data.dokumen.bukapengaman.petugas2.pangkat
-			var txt_nip_petugas2 = this.data.dokumen.bukapengaman.petugas2.nip
+		if (this.data.petugas2 != null) {
+			var txt_nama_petugas2 = this.data.petugas2.name
+			var txt_pangkat_petugas2 = this.data.petugas2.pangkat
+			var txt_nip_petugas2 = this.data.petugas2.nip
 		} else {
 			var txt_nama_petugas2 = ''
 			var txt_pangkat_petugas2 = ''
@@ -105,17 +105,17 @@ class PdfBukaPengaman extends Pdf {
 		////// URAIAN BOTTOM //////
 		this.ln += this.props.font.height
 		let txt_pengaman = 'Sebanyak ' 
-			+ converters.string(this.data.dokumen.bukapengaman.jumlah_pengaman)
+			+ converters.string(this.data.jumlah_pengaman)
 			+ ' '
-			+ converters.string(this.data.dokumen.bukapengaman.satuan_pengaman)
+			+ converters.string(this.data.satuan_pengaman)
 			+ ' Nomor ' 
-			+ converters.string(this.data.dokumen.bukapengaman.nomor_pengaman)
+			+ converters.string(this.data.nomor_pengaman)
 			+ ' tanggal '
-			+ converters.string(this.data.dokumen.bukapengaman.tanggal_pengaman)
+			+ converters.string(this.data.tanggal_pengaman)
 			+ ' pada tempat-tempat sebagai berikut: '
-			+ converters.string(this.data.dokumen.bukapengaman.tempat_pengaman)
+			+ converters.string(this.data.tempat_pengaman)
 			+ ' dengan dasar: '
-			+ converters.string(this.data.dokumen.bukapengaman.dasar_pengamanan)
+			+ converters.string(this.data.dasar_pengamanan)
 			+ '.'
 		let arr_pengaman = converters.array_text(txt_pengaman, 105)
 		this.pdf.text(arr_pengaman, this.props.ind.alp, this.ln)
@@ -127,15 +127,15 @@ class PdfBukaPengaman extends Pdf {
 
 		this.pdf.text('Nama', this.props.ind.dtl, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(converters.string(this.data.dokumen.bukapengaman.saksi.nama), this.props.ind.txt2, this.ln)
+		this.pdf.text(converters.string(this.data.saksi.nama), this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('Alamat', this.props.ind.dtl, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(converters.string(this.data.dokumen.bukapengaman.saksi.alamat_identitas).replace('\n', ' '), this.props.ind.txt2, this.ln)
+		this.pdf.text(converters.string(this.data.saksi.alamat_identitas).replace('\n', ' '), this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('Pekerjaan', this.props.ind.dtl, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		this.pdf.text(converters.string(this.data.dokumen.bukapengaman.saksi.pekerjaan), this.props.ind.txt2, this.ln)
+		this.pdf.text(converters.string(this.data.saksi.pekerjaan), this.props.ind.txt2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('Selaku pemilik / kuasa sarana pengangkut / barang* yang ditegah.', this.props.ind.alp, this.ln)
 		this.ln += this.props.font.height*2
@@ -146,7 +146,7 @@ class PdfBukaPengaman extends Pdf {
 		////// TTD //////
 		let txt_saksi = 'Yang Menyaksikan'
 		let txt_pejabat = 'Yang Melakukan Pembukaan Tanda Pengaman'
-		this.ttd(txt_saksi, txt_pejabat, this.data.dokumen.bukapengaman.saksi, this.data.dokumen.bukapengaman.petugas1, this.data.dokumen.bukapengaman.petugas2)
+		this.ttd(txt_saksi, txt_pejabat, this.data.saksi, this.data.petugas1, this.data.petugas2)
 
 		////// LAMPIRAN //////
 		if (this.data.objek != null) {
@@ -155,7 +155,7 @@ class PdfBukaPengaman extends Pdf {
 					this.pdf.setFont('Helvetica', 'normal')
 					this.pdf.addPage()
 					// Header
-					this.headerLampiran(this.data.dokumen.bukapengaman.no_dok_lengkap)
+					this.headerLampiran(this.data.no_dok_lengkap)
 					// Tabel barang
 					this.tabelBarang()
 				}
@@ -163,7 +163,7 @@ class PdfBukaPengaman extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.bukapengaman.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 

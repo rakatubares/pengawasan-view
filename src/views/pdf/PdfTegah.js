@@ -33,7 +33,7 @@ class PdfTegah extends Pdf {
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen.tegah.no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.no_dok_lengkap)
 
 		////// URAIAN TOP //////
 		let txt_waktu = 'Pada hari ini ' + this.hr + ' tanggal ' + this.tgl + ' bulan ' + this.bln + ' tahun ' + this.thn + '.'
@@ -107,18 +107,18 @@ class PdfTegah extends Pdf {
 
 		////// LAMPIRAN //////
 		if (this.data.objek.type == 'barang') {
-			if ((this.data.objek.data.item.length > 1) && !('riksa' in this.data.dokumen)) {
+			if ((this.data.objek.data.item.length > 1) && !('riksa' in this.data)) {
 				this.pdf.setFont('Helvetica', 'normal')
 				this.pdf.addPage()
 				// Header
-				this.headerLampiran(this.data.dokumen.tegah.no_dok_lengkap)
+				this.headerLampiran(this.data.no_dok_lengkap)
 				// Tabel barang
 				this.tabelBarang()
 			}
 		}
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.tegah.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 

@@ -256,7 +256,7 @@ export default {
 				await this.search_segel(this.data.segel.no_dok_lengkap)
 				this.segel_search_value = this.segel_search_items[0]
 
-				this.$emit('update:state', 'edit-header')
+				this.$emit('update:state', 'edit_header')
 				this.data_source = 'Load Segel'
 			} else {
 				this.data.segel = {id: null}
@@ -279,7 +279,7 @@ export default {
 					this.$emit('update:doc_id', response.id)
 
 					if (response.segel != null) {
-						this.$emit('update:state', 'edit-header')
+						this.$emit('update:state', 'edit_header')
 					} else {
 						this.$emit('update:state', 'edit')
 					}
@@ -288,12 +288,12 @@ export default {
 				} catch (error) {
 					console.log('form buka segel - save data - error', error)
 				}
-			} else if (['edit', 'edit-header'].includes(this.state)) {
+			} else if (['edit', 'edit_header'].includes(this.state)) {
 				try {
 					let response = await api.updateDoc('bukasegel', this.doc_id, this.data)
 
 					if (response.segel != null) {
-						this.$emit('update:state', 'edit-header')
+						this.$emit('update:state', 'edit_header')
 					} else {
 						this.$emit('update:state', 'edit')
 					}
@@ -330,15 +330,16 @@ export default {
 		async changeValueSegel(id) {
 			if (id != null) {
 				// Get data segel
-				let segel = await api.getDocumentById('segel', id)
+				let response = await api.getDisplayDataById('segel', id)
+				let segel = response.data.data
 
 				// Change current data according to segel
-				this.data.nomor_segel = segel.main.data.nomor_segel
+				this.data.nomor_segel = segel.nomor_segel
 				this.data.tanggal_segel = segel.penindakan.tanggal_penindakan
-				this.data.jenis_segel = segel.main.data.jenis_segel
-				this.data.jumlah_segel = segel.main.data.jumlah_segel
-				this.data.satuan_segel = segel.main.data.satuan_segel
-				this.data.tempat_segel = segel.main.data.tempat_segel
+				this.data.jenis_segel = segel.jenis_segel
+				this.data.jumlah_segel = segel.jumlah_segel
+				this.data.satuan_segel = segel.satuan_segel
+				this.data.tempat_segel = segel.tempat_segel
 
 				// Specify segel id
 				this.data.segel.id = id
@@ -359,7 +360,7 @@ export default {
 		},
 	},
 	async mounted() {
-		if (['edit', 'edit-header'].includes(this.state)) {
+		if (['edit', 'edit_header'].includes(this.state)) {
 			await this.getData()
 		}
 	}

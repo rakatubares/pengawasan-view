@@ -38,7 +38,7 @@ class PdfPengaman extends Pdf {
 
 	generatePdf() {
 		this.createHeader()
-		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.dokumen.pengaman.no_dok_lengkap)
+		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.no_dok_lengkap)
 
 		////// URAIAN TOP //////
 		let txt_waktu = 'Pada hari ini ' + this.hr + ' tanggal ' + this.tgl + ' bulan ' + this.bln + ' tahun ' + this.thn + '.'
@@ -108,14 +108,14 @@ class PdfPengaman extends Pdf {
 		this.pdf.text(txt_lokasi, this.props.ind.txt4, this.ln)
 		this.ln += this.props.font.height
 
-		let txt_alasan = converters.array_text(this.data.dokumen.pengaman.alasan_pengamanan, 90)
+		let txt_alasan = converters.array_text(this.data.alasan_pengamanan, 90)
 		let len_alasan = txt_alasan.length > 0 ? txt_alasan.length : 1
 		this.pdf.text('Alasan pengamanan', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln4, this.ln)
 		this.pdf.text(txt_alasan, this.props.ind.txt4, this.ln)
 		this.ln += this.props.font.height*len_alasan
 
-		let txt_keterangan = converters.array_text(this.data.dokumen.pengaman.keterangan, 90)
+		let txt_keterangan = converters.array_text(this.data.keterangan, 90)
 		let len_keterangan = txt_keterangan.length > 0 ? txt_keterangan.length : 1
 		this.pdf.text('Keterangan', this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln4, this.ln)
@@ -123,15 +123,15 @@ class PdfPengaman extends Pdf {
 		this.ln += this.props.font.height*(len_keterangan + 1)
 
 		let txt_pengaman = 'Dengan menggunakan tanda pengaman ' 
-			+ converters.string(this.data.dokumen.pengaman.jenis_pengaman)
+			+ converters.string(this.data.jenis_pengaman)
 			+ ' sebanyak ' 
-			+ converters.string(this.data.dokumen.pengaman.jumlah_pengaman)
+			+ converters.string(this.data.jumlah_pengaman)
 			+ ' '
-			+ converters.string(this.data.dokumen.pengaman.satuan_pengaman)
+			+ converters.string(this.data.satuan_pengaman)
 			+ ' Nomor ' 
-			+ converters.string(this.data.dokumen.pengaman.nomor_pengaman)
+			+ converters.string(this.data.nomor_pengaman)
 			+ '. Penempatan/pelekatan tanda pengamanan dilakukan pada: '
-			+ converters.string(this.data.dokumen.pengaman.tempat_pengaman)
+			+ converters.string(this.data.tempat_pengaman)
 			+ '.'
 		let arr_pengaman = converters.array_text(txt_pengaman, 95)
 		this.pdf.text(arr_pengaman, this.props.ind.alp, this.ln)
@@ -171,7 +171,7 @@ class PdfPengaman extends Pdf {
 					this.pdf.setFont('Helvetica', 'normal')
 					this.pdf.addPage()
 					// Header
-					this.headerLampiran(this.data.dokumen.pengaman.no_dok_lengkap)
+					this.headerLampiran(this.data.no_dok_lengkap)
 					// Tabel barang
 					this.tabelBarang()
 				}
@@ -179,7 +179,7 @@ class PdfPengaman extends Pdf {
 		}
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.pengaman.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 

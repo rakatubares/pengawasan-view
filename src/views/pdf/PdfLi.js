@@ -29,7 +29,7 @@ class PdfLi extends Pdf {
 		super(props);
 		this.jenis_dok = 'LEMBAR INFORMASI'
 		this.data = data
-		this.prepareDocDate(this.data.dokumen.li.tanggal_dokumen)
+		this.prepareDocDate(this.data.tanggal_dokumen)
 	}
 
 	generatePdf() {
@@ -45,7 +45,7 @@ class PdfLi extends Pdf {
 		// Nomor
 		this.pdf.text('Nomor', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.dokumen.li.no_dok_lengkap, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.no_dok_lengkap, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Tanggal', this.props.ind.sta, this.ln)
@@ -56,28 +56,28 @@ class PdfLi extends Pdf {
 		// Uraian
 		this.pdf.text('SUMBER / MEDIA INFORMASI', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		let arr_sumber = converters.array_text(this.data.dokumen.li.sumber, 85)
+		let arr_sumber = converters.array_text(this.data.sumber, 85)
 		this.pdf.text(arr_sumber, this.props.ind.txt2, this.ln)
 		let height_sumber = arr_sumber.length > 1 ? arr_sumber.length : 1
 		this.ln += this.props.font.height*(height_sumber + 0.5)
 
 		this.pdf.text('ISI INFORMASI', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		let arr_informasi = converters.array_text(this.data.dokumen.li.informasi, 85)
+		let arr_informasi = converters.array_text(this.data.informasi, 85)
 		this.pdf.text(arr_informasi, this.props.ind.txt2, this.ln)
 		let height_informasi = arr_informasi.length > 1 ? arr_informasi.length : 1
 		this.ln += this.props.font.height*(height_informasi + 0.5)
 
 		this.pdf.text('TINDAK LANJUT', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		let arr_tindak_lanjut = converters.array_text(this.data.dokumen.li.tindak_lanjut, 85)
+		let arr_tindak_lanjut = converters.array_text(this.data.tindak_lanjut, 85)
 		this.pdf.text(arr_tindak_lanjut, this.props.ind.txt2, this.ln)
 		let height_tindak_lanjut = arr_tindak_lanjut.length > 1 ? arr_tindak_lanjut.length : 1
 		this.ln += this.props.font.height*(height_tindak_lanjut + 0.5)
 
 		this.pdf.text('CATATAN', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		let arr_catatan = converters.array_text(this.data.dokumen.li.catatan, 85)
+		let arr_catatan = converters.array_text(this.data.catatan, 85)
 		this.pdf.text(arr_catatan, this.props.ind.txt2, this.ln)
 		let height_catatan = arr_catatan.length > 1 ? arr_catatan.length : 1
 		this.ln += this.props.font.height*(height_catatan + 2)
@@ -89,20 +89,20 @@ class PdfLi extends Pdf {
 		let ln_ttd_nip = ln_ttd_nama + this.props.font.height
 		this.ln = ln_ttd_nip + this.props.font.height*3
 
-		let plh_atasan = this.data.dokumen.li.atasan.plh ? 'Plh.' : ''
+		let plh_atasan = this.data.atasan.plh ? 'Plh.' : ''
 		this.pdf.text(plh_atasan, this.props.ind.sta, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.li.atasan.jabatan.jabatan, this.props.ind.ttd1, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.li.atasan.user.name, this.props.ind.ttd1, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen.li.atasan.user.nip, this.props.ind.ttd1, ln_ttd_nip)
+		this.pdf.text(this.data.atasan.jabatan.jabatan, this.props.ind.ttd1, ln_ttd_jabatan)
+		this.pdf.text(this.data.atasan.user.name, this.props.ind.ttd1, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.atasan.user.nip, this.props.ind.ttd1, ln_ttd_nip)
 		
-		let plh_penerbit = this.data.dokumen.li.penerbit.plh ? 'Plh.' : ''
+		let plh_penerbit = this.data.penerbit.plh ? 'Plh.' : ''
 		this.pdf.text(plh_penerbit, this.props.ind.plh2, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.li.penerbit.jabatan.jabatan, this.props.ind.ttd2, ln_ttd_jabatan)
-		this.pdf.text(this.data.dokumen.li.penerbit.user.name, this.props.ind.ttd2, ln_ttd_nama)
-		this.pdf.text('NIP. ' + this.data.dokumen.li.penerbit.user.nip, this.props.ind.ttd2, ln_ttd_nip)
+		this.pdf.text(this.data.penerbit.jabatan.jabatan, this.props.ind.ttd2, ln_ttd_jabatan)
+		this.pdf.text(this.data.penerbit.user.name, this.props.ind.ttd2, ln_ttd_nama)
+		this.pdf.text('NIP. ' + this.data.penerbit.user.nip, this.props.ind.ttd2, ln_ttd_nip)
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.dokumen.li.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 
