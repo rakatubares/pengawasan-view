@@ -541,14 +541,15 @@ export default {
 		async changeValueLppi(id) {
 			if (id != null) {
 				// Get data lppi
-				let lppi = await api.getDocumentById(this.lppi_type, id)
+				let response = await api.getFormDataById(this.lppi_type, id)
+				let lppi = response.data.data
 				
 				// Specify lppi data
 				this.data.lppi_id = id
-				this.data.tanggal_lppi = lppi.main.data.tanggal_dokumen
+				this.data.tanggal_lppi = lppi.tanggal_dokumen
 
 				// Data ikhtisar
-				this.data.ikhtisar = lppi.main.data.ikhtisar
+				this.data.ikhtisar = lppi.ikhtisar
 			} else {
 				this.data.lppi_id = null
 				this.data.tanggal_lppi = null

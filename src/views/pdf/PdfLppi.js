@@ -37,11 +37,10 @@ class PdfLppi extends Pdf {
 	) {
 		super(props);
 		this.data = data
-		this.lppi = this.data.dokumen[lppi_type]
 		this.lppi_type = lppi_type
 		this.jenis_dok = jenis_dok
 		this.props.title_line = title_line_indent
-		this.prepareDocDate(this.lppi.tanggal_dokumen)
+		this.prepareDocDate(this.data.tanggal_dokumen)
 	}
 
 	generatePdf() {
@@ -56,7 +55,7 @@ class PdfLppi extends Pdf {
 		// No & tanggal
 		this.pdf.text('Nomor', this.props.ind.sta, this.ln)
 		this.pdf.text(':', this.props.ind.cln1, this.ln)
-		this.pdf.text(this.lppi.no_dok_lengkap, this.props.ind.val1, this.ln)
+		this.pdf.text(this.data.no_dok_lengkap, this.props.ind.val1, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('Tanggal', this.props.ind.sta, this.ln)
@@ -69,58 +68,58 @@ class PdfLppi extends Pdf {
 		this.pdf.setFont('Helvetica', 'bold')
 		this.pdf.text('SUMBER INFORMASI:', this.props.ind.sta, this.ln)
 		this.pdf.setFont('Helvetica', 'normal')
-		let checkbox_internal = this.lppi.flag_info_internal == true ? checked_checkbox : empty_checkbox
+		let checkbox_internal = this.data.flag_info_internal == true ? checked_checkbox : empty_checkbox
 		this.pdf.addImage(checkbox_internal, 'png', this.props.ind.chk, this.ln-4, 5, 5);
 		this.pdf.text('Internal', this.props.ind.lbl2, this.ln)
 		let y_rect_internal = this.ln+3
 		this.ln += this.props.font.height*2
 		this.pdf.text('Media', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		let txt_media_internal = this.lppi.media_info_internal != null ? this.lppi.media_info_internal : '-'
+		let txt_media_internal = this.data.media_info_internal != null ? this.data.media_info_internal : '-'
 		this.pdf.text(txt_media_internal, this.props.ind.val2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('Tanggal terima', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		let txt_tgl_terima_internal = this.lppi.tgl_terima_info_internal != null ? this.lppi.tgl_terima_info_internal : '-'
+		let txt_tgl_terima_internal = this.data.tgl_terima_info_internal != null ? this.data.tgl_terima_info_internal : '-'
 		this.pdf.text(txt_tgl_terima_internal, this.props.ind.val2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('No. Dokumen', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		let txt_no_dok_internal = this.lppi.no_dok_info_internal != null ? this.lppi.no_dok_info_internal : '-'
+		let txt_no_dok_internal = this.data.no_dok_info_internal != null ? this.data.no_dok_info_internal : '-'
 		this.pdf.text(txt_no_dok_internal, this.props.ind.val2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('Tanggal', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		let txt_tgl_dok_internal = this.lppi.tgl_dok_info_internal != null ? this.lppi.tgl_dok_info_internal : '-'
+		let txt_tgl_dok_internal = this.data.tgl_dok_info_internal != null ? this.data.tgl_dok_info_internal : '-'
 		this.pdf.text(txt_tgl_dok_internal, this.props.ind.val2, this.ln)
 		let h_rect_internal = this.ln - y_rect_internal + 2
 		this.pdf.rect(this.props.ind.lbl2-2, y_rect_internal, 140, h_rect_internal, 'D');
 		this.ln += this.props.font.height*2
 
 		// Eksternal
-		let checkbox_eksternal = this.lppi.flag_info_eksternal == true ? checked_checkbox : empty_checkbox
+		let checkbox_eksternal = this.data.flag_info_eksternal == true ? checked_checkbox : empty_checkbox
 		this.pdf.addImage(checkbox_eksternal, 'png', this.props.ind.chk, this.ln-4, 5, 5)
 		this.pdf.text('Eksternal', this.props.ind.lbl2, this.ln)
 		let y_rect_eksternal = this.ln+3
 		this.ln += this.props.font.height*2
 		this.pdf.text('Media', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		let txt_media_eksternal = this.lppi.media_info_eksternal != null ? this.lppi.media_info_eksternal : '-'
+		let txt_media_eksternal = this.data.media_info_eksternal != null ? this.data.media_info_eksternal : '-'
 		this.pdf.text(txt_media_eksternal, this.props.ind.val2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('Tanggal terima', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		let txt_tgl_terima_eksternal = this.lppi.tgl_terima_info_eksternal != null ? this.lppi.tgl_terima_info_eksternal : '-'
+		let txt_tgl_terima_eksternal = this.data.tgl_terima_info_eksternal != null ? this.data.tgl_terima_info_eksternal : '-'
 		this.pdf.text(txt_tgl_terima_eksternal, this.props.ind.val2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('No. Dokumen', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		let txt_no_dok_eksternal = this.lppi.no_dok_info_eksternal != null ? this.lppi.no_dok_info_eksternal : '-'
+		let txt_no_dok_eksternal = this.data.no_dok_info_eksternal != null ? this.data.no_dok_info_eksternal : '-'
 		this.pdf.text(txt_no_dok_eksternal, this.props.ind.val2, this.ln)
 		this.ln += this.props.font.height
 		this.pdf.text('Tanggal', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln2, this.ln)
-		let txt_tgl_dok_eksternal = this.lppi.tgl_dok_info_eksternal != null ? this.lppi.tgl_dok_info_eksternal : '-'
+		let txt_tgl_dok_eksternal = this.data.tgl_dok_info_eksternal != null ? this.data.tgl_dok_info_eksternal : '-'
 		this.pdf.text(txt_tgl_dok_eksternal, this.props.ind.val2, this.ln)
 		let h_rect_eksternal = this.ln - y_rect_eksternal + 2
 		this.pdf.rect(this.props.ind.lbl2-2, y_rect_eksternal, 140, h_rect_eksternal, 'D');
@@ -129,18 +128,18 @@ class PdfLppi extends Pdf {
 		///// Ikhtisar /////
 		// Tabel ikhtisar
 		let ikhtisar = []
-		for (let i = 0; i < this.lppi.ikhtisar.length; i++) {
+		for (let i = 0; i < this.data.ikhtisar.length; i++) {
 			let data = {
 				no: i+1,
-				ikhtisar: this.lppi.ikhtisar[i]['ikhtisar'],
-				sumber: this.lppi.ikhtisar[i]['kode_kepercayaan'],
-				validitas: this.lppi.ikhtisar[i]['kode_validitas'],
+				ikhtisar: this.data.ikhtisar[i]['ikhtisar'],
+				sumber: this.data.ikhtisar[i]['kode_kepercayaan'],
+				validitas: this.data.ikhtisar[i]['kode_validitas'],
 			}
 			ikhtisar.push(data)
 		}
 		const tabelData = ikhtisar
-		let txt_nama_penerima = this.lppi.penerima_info != null ? this.lppi.penerima_info.name : '-'
-		let txt_nama_penilai = this.lppi.penilai_info != null ? this.lppi.penilai_info.name : '-'
+		let txt_nama_penerima = this.data.penerima_info != null ? this.data.penerima_info.name : '-'
+		let txt_nama_penilai = this.data.penilai_info != null ? this.data.penilai_info.name : '-'
 		tabelData.push([
 			{content: ''},
 			{content: `Penerima Informasi\n\n\n\n${txt_nama_penerima}`},
@@ -201,7 +200,7 @@ class PdfLppi extends Pdf {
 		this.pdf.setFont('Helvetica', 'bold')
 		this.pdf.text('KESIMPULAN', this.props.ind.sta, this.ln)
 		this.pdf.setFont('Helvetica', 'normal')
-		let txt_kesimpulan = this.lppi.kesimpulan != null ? this.lppi.kesimpulan : '-'
+		let txt_kesimpulan = this.data.kesimpulan != null ? this.data.kesimpulan : '-'
 		let arr_kesimpulan = converters.array_text(txt_kesimpulan, 90)
 		this.pdf.text(arr_kesimpulan, this.props.ind.txt, this.ln)
 		let h_rect_kesimpulan = arr_kesimpulan.length*this.props.font.height+4
@@ -210,9 +209,9 @@ class PdfLppi extends Pdf {
 
 		// Disposisi
 		this.pdf.text('Disposisi Kepada:', this.props.ind.sta, this.ln)
-		this.pdf.text(this.lppi.disposisi.name, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.disposisi.name, this.props.ind.txt, this.ln)
 		this.pdf.text('Tanggal Disposisi:', this.props.ind.lbl_tgl_dis, this.ln)
-		let txt_tanggal_disposisi = this.lppi.tanggal_disposisi != null ? this.lppi.tanggal_disposisi : ''
+		let txt_tanggal_disposisi = this.data.tanggal_disposisi != null ? this.data.tanggal_disposisi : ''
 		this.pdf.text(txt_tanggal_disposisi, this.props.ind.txt_tgl_dis, this.ln)
 		this.ln += this.props.font.height*1.5
 
@@ -220,11 +219,11 @@ class PdfLppi extends Pdf {
 		this.pdf.setFont('Helvetica', 'bold')
 		this.pdf.text('TINDAK LANJUT:', this.props.ind.sta, this.ln)
 		this.pdf.setFont('Helvetica', 'normal')
-		let checkbox_analisis = this.lppi.flag_analisis == true ? checked_checkbox : empty_checkbox
+		let checkbox_analisis = this.data.flag_analisis == true ? checked_checkbox : empty_checkbox
 		this.pdf.addImage(checkbox_analisis, 'png', this.props.ind.txt, this.ln-3.5, 4, 4)
 		this.pdf.text('Analisis', this.props.ind.txt+5, this.ln)
 		this.ln += this.props.font.height
-		let checkbox_arsip = this.lppi.flag_arsip == true ? checked_checkbox : empty_checkbox
+		let checkbox_arsip = this.data.flag_arsip == true ? checked_checkbox : empty_checkbox
 		this.pdf.addImage(checkbox_arsip, 'png', this.props.ind.txt, this.ln-3.5, 4, 4)
 		this.pdf.text('Arsip', this.props.ind.txt+5, this.ln)
 		this.ln += this.props.font.height*2.5
@@ -233,7 +232,7 @@ class PdfLppi extends Pdf {
 		this.pdf.setFont('Helvetica', 'bold')
 		this.pdf.text('CATATAN', this.props.ind.sta, this.ln)
 		this.pdf.setFont('Helvetica', 'normal')
-		let txt_catatan = this.lppi.catatan != null ? this.lppi.catatan : '-'
+		let txt_catatan = this.data.catatan != null ? this.data.catatan : '-'
 		let arr_catatan = converters.array_text(txt_catatan, 90)
 		this.pdf.text(arr_catatan, this.props.ind.txt, this.ln)
 		let h_rect_catatan = arr_catatan.length*this.props.font.height+4
@@ -241,15 +240,15 @@ class PdfLppi extends Pdf {
 		this.ln += this.props.font.height*(arr_catatan.length+2)
 
 		// TTD
-		let txt_jabatan = this.lppi.pejabat.plh == true 
-			? `Plh. ${this.lppi.pejabat.jabatan.jabatan}` 
-			: this.lppi.pejabat.jabatan.jabatan
+		let txt_jabatan = this.data.pejabat.plh == true 
+			? `Plh. ${this.data.pejabat.jabatan.jabatan}` 
+			: this.data.pejabat.jabatan.jabatan
 		this.pdf.text(txt_jabatan, this.props.ind.sta, this.ln)
 		this.ln += this.props.font.height*5
-		this.pdf.text(this.lppi.pejabat.user.name, this.props.ind.sta, this.ln)
+		this.pdf.text(this.data.pejabat.user.name, this.props.ind.sta, this.ln)
 
 		////// WATERMARK //////
-		if ([100].includes(this.lppi.kode_status)) {
+		if ([100].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 
