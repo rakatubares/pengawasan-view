@@ -80,7 +80,6 @@ export default {
 			this.alert('Data orang berhasil disimpan')
 		},
 		parseData(objek) {
-			console.log('form detail badan - parse data', objek)
 			if (objek == null) {
 				this.orang_id = null
 			}
