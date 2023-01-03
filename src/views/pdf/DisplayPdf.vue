@@ -47,9 +47,11 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfLp from './PdfLp.js'
+import PdfLphp from './PdfLphp.js'
 import PdfLpp from './PdfLpp.js'
+import PdfLptp from './PdfLptp.js'
 import PdfSbp from './PdfSbp.js'
-import PdfSegel from './PdfSegel.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -103,8 +105,20 @@ export default {
 			let pdfData = response.data.data
 
 			switch (doc_type) {
+				case 'lp':
+					pdf = new PdfLp(pdfData)
+					break;
+
+				case 'lphp':
+					pdf = new PdfLphp(pdfData)
+					break;
+
 				case 'lpp':
 					pdf = new PdfLpp(pdfData)
+					break;
+
+				case 'lptp':
+					pdf = new PdfLptp(pdfData)
 					break;
 
 				case'sbp':

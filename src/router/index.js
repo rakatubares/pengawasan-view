@@ -12,6 +12,8 @@ const Homepage = () => import('@/views/Homepage')
 
 // Views - Penindakan
 const PageBhp = () => import('@/views/monitoring/penarikan_bhp/PageBhp')
+const PageLp = () => import('@/views/penindakan/lp/PageLp')
+const PageLphp = () => import('@/views/penindakan/lphp/PageLphp')
 const PageLpp = () => import('@/views/penyidikan/lpp/PageLpp.vue')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
@@ -44,6 +46,22 @@ function configRoutes () {
 					component: PageBhp,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-bhp', next)
+					},
+				},
+				{
+					path: 'lp',
+					name: 'LP',
+					component: PageLp,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lp', next)
+					},
+				},
+				{
+					path: 'lphp',
+					name: 'LPHP',
+					component: PageLphp,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lphp', next)
 					},
 				},
 				{

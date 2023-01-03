@@ -8,6 +8,8 @@ export default [
 				permissions: [
 					'view-segel', 
 					'view-sbp',
+					'view-lphp',
+					'view-lp',
 				],
 			},
 			{
@@ -42,6 +44,20 @@ export default [
 								permissions: 'view-sbp',
 							},
 						],
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LPHP',
+						to: '/lphp',
+						icon: 'cil-file',
+						permissions: 'view-lphp',
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LP',
+						to: '/lp',
+						icon: 'cil-file',
+						permissions: 'view-lp',
 					},
 				],
 			},
