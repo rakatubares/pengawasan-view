@@ -205,11 +205,7 @@ class PdfLptp extends Pdf {
 			: ''
 		let jenis_kelamin = this.data.objek != null
 			? this.data.objek.type == 'orang' 
-				? this.data.objek.data.jenis_kelamin == 'F'
-					? 'Perempuan' 
-					: this.data.objek.data.jenis_kelamin == 'M'
-						? 'Laki-laki'
-						: ''
+				? this.data.objek.data.jenis_kelamin.uraian
 				: ''
 			: ''
 		let identitas = this.data.objek != null
