@@ -13,10 +13,15 @@ const Homepage = () => import('@/views/Homepage')
 // Views - Penindakan
 const PageBhp = () => import('@/views/monitoring/penarikan_bhp/PageBhp')
 const PageLp = () => import('@/views/penindakan/lp/PageLp')
+const PageLpN = () => import('@/views/penindakan/lpn/PageLpN')
 const PageLphp = () => import('@/views/penindakan/lphp/PageLphp')
-const PageLpp = () => import('@/views/penyidikan/lpp/PageLpp.vue')
+const PageLphpN = () => import('@/views/penindakan/lphp/PageLphpN')
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
+const PageSbpN = () => import('@/views/penindakan/sbp/PageSbpN')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
+
+// View - Penyidikan
+const PageLpp = () => import('@/views/penyidikan/lpp/PageLpp.vue')
 
 Vue.use(Router)
 
@@ -57,6 +62,14 @@ function configRoutes () {
 					},
 				},
 				{
+					path: 'lpn',
+					name: 'LP-N',
+					component: PageLpN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lpn', next)
+					},
+				},
+				{
 					path: 'lphp',
 					name: 'LPHP',
 					component: PageLphp,
@@ -65,8 +78,16 @@ function configRoutes () {
 					},
 				},
 				{
+					path: 'lphpn',
+					name: 'LPHP-N',
+					component: PageLphpN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lphpn', next)
+					},
+				},
+				{
 					path: 'lpp',
-					name: 'Input LPP',
+					name: 'LPP',
 					component: PageLpp,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-lpp', next)
@@ -78,6 +99,14 @@ function configRoutes () {
 					component: PageSbp,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-sbp', next)
+					},
+				},
+				{
+					path: 'sbpn',
+					name: 'SBP-N',
+					component: PageSbpN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-sbpn', next)
 					},
 				},
 				{

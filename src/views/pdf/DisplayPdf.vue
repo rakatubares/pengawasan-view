@@ -48,6 +48,7 @@
 <script>
 import api from '../../router/api2.js'
 import PdfLp from './PdfLp.js'
+import PdfLpN from './PdfLpN.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLpp from './PdfLpp.js'
 import PdfLptp from './PdfLptp.js'
@@ -109,8 +110,23 @@ export default {
 					pdf = new PdfLp(pdfData)
 					break;
 
+				case 'lpn':
+					pdf = new PdfLpN(pdfData)
+					break;
+
 				case 'lphp':
 					pdf = new PdfLphp(pdfData)
+					break;
+
+				case 'lphpn':
+					pdf = new PdfLphp(
+						pdfData, 
+						this.active_pdf, 
+						'lptpn', 
+						'sbpn', 
+						'LEMBAR PENENTUAN HASIL PENINDAKAN NPP', 
+						{start: 63, end: 147}
+					)
 					break;
 
 				case 'lpp':
@@ -121,8 +137,27 @@ export default {
 					pdf = new PdfLptp(pdfData)
 					break;
 
+				case 'lptpn':
+					pdf = new PdfLptp(
+						pdfData, 
+						this.active_pdf, 
+						'sbpn', 
+						'LAPORAN PELAKSANAAN TUGAS PENINDAKAN NPP', 
+						{start: 58, end: 152}
+					)
+					break;
+
 				case'sbp':
 					pdf = new PdfSbp(pdfData)
+					break;
+
+				case 'sbpn':
+					pdf = new PdfSbp(
+						pdfData, 
+						this.active_pdf, 
+						'SURAT BUKTI PENINDAKAN NPP', 
+						{start: 76, end: 134}
+					)
 					break;
 			
 				default:

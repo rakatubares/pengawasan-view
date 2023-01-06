@@ -1,21 +1,23 @@
 <template>
 	<div class="wrapper">
 		<MyModalDoc
-			:title="`Data ${tipe_surat}`"
+			ref="modal_doc"
+			title="Data LP-N"
 			:state.sync="modal_state"
 			@close-modal="closeModal"
 		>
+
+			<!-- Documents' components -->
 			<template #tab-uraian>
-				<MyDisplayLpp 
+				<MyDisplayLpN
 					v-if="modal_state == 'show'"
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
-				<MyFormLpp
-					ref="form_lpp"
-					v-if="['insert','edit'].includes(modal_state)"
+				<MyFormLpN
+					v-else-if="['insert','edit'].includes(modal_state)"
 					:state.sync="modal_state"
-					:doc_type.sync="doc_type"
+					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
 			</template>
@@ -40,38 +42,41 @@
 
 <script>
 import MyDisplayDetail from '../../details/displays/DisplayDetail.vue'
-import MyDisplayLpp from './DisplayLpp.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
-import MyFormLpp from './FormLpp.vue'
+import MyDisplayLpN from './DisplayLpN.vue'
+import MyFormLpN from './FormLpN.vue'
 import MyModalDoc from '../../components/ModalDoc2.vue'
 
 export default {
-	name: 'ModalLpp',
+	name: 'ModalLp',
 	components: {
 		MyDisplayDetail,
-		MyDisplayLpp,
 		MyDisplayPdf,
-		MyFormLpp,
-		MyModalDoc,
+		MyDisplayLpN,
+		MyFormLpN,
+		MyModalDoc
 	},
 	props: {
-		doc_type: String,
-		tipe_surat: String,
 		state: String,
-		id: Number,
+		doc_type: String,
+		id: Number
 	},
 	data() {
 		return {
 			doc_id: this.id,
 			modal_state: this.state,
-			show_tindakan: false,
-			active_details: null
 		}
 	},
 	methods: {
 		closeModal() {
 			this.$emit('close-modal')
 		},
+	},
+	watch: {
+		modal_state: function(val) {
+			this.$refs.modal_doc.modal_state = val
+			this.$emit('update:state', val)
+		}
 	}
 }
 </script>

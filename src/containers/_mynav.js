@@ -63,12 +63,47 @@ export default [
 			},
 			{
 				_name: 'CSidebarNavDropdown',
+				name: 'NPP',
+				icon: 'cil-blur',
+				_children: [
+					{
+						_name: 'CSidebarNavDropdown',
+						name: 'SBP-N',
+						icon: 'cil-list',
+						_children: [
+							{
+								_name: 'CSidebarNavItem',
+								name: 'Input SBP-N',
+								to: '/sbpn',
+								icon: 'cil-file',
+								permissions: 'view-sbpn',
+							},
+						]
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LPHP-N',
+						to: '/lphpn',
+						icon: 'cil-file',
+						permissions: 'view-lphpn',
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LP-N',
+						to: '/lpn',
+						icon: 'cil-file',
+						permissions: 'view-lpn',
+					},
+				]
+			},
+			{
+				_name: 'CSidebarNavDropdown',
 				name: 'PENYIDIKAN',
 				icon: 'cil-contact',
 				_children: [
 					{
 						_name: 'CSidebarNavItem',
-						name: 'Input LPP',
+						name: 'LPP',
 						to: '/lpp',
 						icon: 'cil-file',
 						permissions: 'view-lpp',
