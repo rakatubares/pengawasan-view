@@ -173,7 +173,7 @@ export default {
 		disp_asal_perkara() { return this.data_lpp.asal_perkara || '-' },
 		disp_jenis_penindakan() { return this.data_lpp.jenis_penindakan || '-' },
 		disp_jenis_perkara() { return this.data_lpp.jenis_perkara || '-' },
-		disp_status_pelanggaran() { return this.data_lpp.status_pelanggaran || '-' },
+		disp_status_pelanggaran() { return this.data_lpp.penyidikan.status_penangkapan || '-' },
 		disp_jenis_pelanggaran() { return this.data_lpp.penyidikan.jenis_pelanggaran || '-' },
 		disp_modus_operandi() { return this.data_lpp.penyidikan.modus || '-' },
 		disp_tempat() { return this.data_lpp.penyidikan.tempat_pelanggaran || '-' },

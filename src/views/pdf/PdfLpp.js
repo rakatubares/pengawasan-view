@@ -79,7 +79,7 @@ class PdfLpp extends Pdf {
 		this.pdf.text('D.', this.props.ind.alp, this.ln)
 		this.pdf.text('Status Pelanggaran', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.status_pelanggaran, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.penyidikan.status_penangkapan, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('E.', this.props.ind.alp, this.ln)

@@ -55,7 +55,7 @@
 					<CSelect
 						label="Status Pelanggaran"
 						:options="['tertangkap tangan', 'tidak tertangkap tangan']"
-						:value.sync="data.status_pelanggaran"
+						:value.sync="data.status_penangkapan"
 					/>
 				</CCol>
 			</CRow>
@@ -208,7 +208,7 @@ const default_data = {
 	id_lp: null,
 	jenis_penindakan: 'penghentian sarana pengangkut',
 	jenis_perkara: 'impor umum',
-	status_pelanggaran: 'tertangkap tangan',
+	status_penangkapan: 'tertangkap tangan',
 	pelaku: {id: null},
 	petugas: {user_id: null},
 	atasan1: {
