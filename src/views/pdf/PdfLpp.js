@@ -177,7 +177,12 @@ class PdfLpp extends Pdf {
 		this.pdf.text('3.', this.props.ind.lbl, this.ln)
 		this.pdf.text('Pengangkut/Nopol-Voy-Flight', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text('-', this.props.ind.txt, this.ln)
+		let txt_pengangkut = '-'
+		if (this.data.penyidikan.sarkut != null) {
+			let sarkut = this.data.penyidikan.sarkut
+			txt_pengangkut = `${sarkut.jenis_sarkut} / ${sarkut.no_flight_trayek}`
+		}
+		this.pdf.text(txt_pengangkut, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('4.', this.props.ind.lbl, this.ln)

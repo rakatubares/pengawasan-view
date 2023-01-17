@@ -104,6 +104,13 @@
 					title="Pelaku"
 					:data.sync="data_lpp.penyidikan.pelaku"
 				/>
+				<div
+					v-if="data_lpp.penyidikan.sarkut != null"
+				>
+					<MyDisplaySarkut 
+						:data_objek="{data: data_lpp.penyidikan.sarkut}"
+					/>
+				</div>
 				<MyDisplayPegawai
 					title="Petugas"
 					:data.sync="data_lpp.petugas"
@@ -126,6 +133,7 @@ import api from '../../../router/api2.js'
 import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
+import MyDisplaySarkut from '../../details/displays/DisplaySarkut.vue'
 
 const default_data = {
 	no_dok_lengkap: null,
@@ -155,6 +163,7 @@ export default {
 		MyDisplayEntitas,
 		MyDisplayPegawai,
 		MyDisplayPejabat,
+		MyDisplaySarkut,
 	},
 	props: {
 		doc_type: String,

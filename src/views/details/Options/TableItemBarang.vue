@@ -117,16 +117,33 @@ export default {
 		state: String,
 		doc_type: String,
 		doc_id: Number,
-		data_objek: Object
+		data_objek: Object,
+		bhp: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	computed: {
 		list_barang_table() {
 			let arr = this.list_barang
 			let data_barang = []
 			for (let idx in arr) {
+				let uraian_barang = arr[idx]['uraian_barang']
+				if (this.bhp) {
+					let merk = arr[idx]['merk'] || '- '
+					let kondisi = arr[idx]['kondisi'] || '- '
+					let tipe = arr[idx]['tipe'] || '- '
+					let spesifikasi_lain = arr[idx]['spesifikasi_lain'] || '- '
+					
+					uraian_barang += `; MERK: ${merk}`
+					uraian_barang += `; KONDISI: ${kondisi}`
+					uraian_barang += `; TIPE: ${tipe}`
+					uraian_barang += `; SPESIFIKASI LAIN: ${spesifikasi_lain}`
+				}
+
 				let temp_barang = {
 					id: arr[idx]['id'],
-					uraian_barang: arr[idx]['uraian_barang'],
+					uraian_barang: uraian_barang,
 					jumlah: (arr[idx]['jumlah_barang'] || '-') + ' ' + (arr[idx]['satuan']['kode_satuan'] || ''),
 					kategori: arr[idx]['kategori'] ? arr[idx]['kategori']['kategori'] : '-'
 				}

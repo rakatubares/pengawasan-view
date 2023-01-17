@@ -181,6 +181,10 @@ class API {
 		return await this.postApi('/entitas/search', data)
 	}
 
+	async getBhpByDocId(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/bhp`)
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| API for references

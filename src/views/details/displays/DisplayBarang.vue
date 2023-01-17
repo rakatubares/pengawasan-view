@@ -42,6 +42,7 @@
 							:doc_type="doc_type"
 							:doc_id="doc_id"
 							:data_objek="data_objek"
+							:bhp="bhp"
 						>
 						</MyTableBarang>
 					</CCol>
@@ -62,7 +63,11 @@ export default {
 	props: {
 		doc_type: String,
 		doc_id: Number,
-		data_objek: Object
+		data_objek: Object,
+		bhp: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	computed: {
 		disp_kemasan() {
@@ -86,6 +91,9 @@ export default {
 			data: this.data_objek,
 		}
 	},
+	mounted() {
+		console.log('DISPLAY BARANG - MOUNTED', JSON.parse(JSON.stringify(this.data)))
+	}
 }
 </script>
 
