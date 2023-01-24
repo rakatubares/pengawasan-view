@@ -23,9 +23,15 @@
 			</template>
 			<template #tab-bhp>
 				<MyDisplayBhp
-					v-if="['show','edit'].includes(modal_state)"
+					v-if="modal_state == 'show'"
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
+				/>
+				<MyFormBhp
+					v-if="modal_state == 'edit'"
+					:doc_type="doc_type"
+					:doc_id.sync="doc_id"
+					:data="data_bhp"
 				/>
 			</template>
 			<template #tab-pdf>
@@ -41,9 +47,12 @@
 </template>
 
 <script>
-import MyDisplayBhp from '../../details/displays/DisplayBhp.vue'
+import api from '../../../router/api2.js'
+import MyDisplayBhp from '../../details/displays/DisplayBhp.vue' 
 import MyDisplayLpp from './DisplayLpp.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
+import MyFormBhp from '../../details/Options/FormBhp.vue'
+import MyFormDetailBarang from '../../details/Options/FormDetailBarang.vue'
 import MyFormLpp from './FormLpp.vue'
 import MyModalDoc from '../../components/ModalDoc2.vue'
 
@@ -53,6 +62,8 @@ export default {
 		MyDisplayBhp,
 		MyDisplayLpp,
 		MyDisplayPdf,
+		MyFormBhp,
+		MyFormDetailBarang,
 		MyFormLpp,
 		MyModalDoc,
 	},
@@ -88,12 +99,33 @@ export default {
 				insert: [],
 				edit: ['tab-bhp', 'tab-pdf'],
 			},
+			data_bhp: null,
+		}
+	},
+	watch: {
+		modal_state(oldState, newState) {
+			if (newState == 'edit') {
+				this.getBhp()
+			}
 		}
 	},
 	methods: {
 		closeModal() {
 			this.$emit('close-modal')
 		},
+		async getBhp() {
+			let response = await api.getBhpByDocId(this.doc_type, this.doc_id)
+			if (response != null) {
+				this.data_bhp = response.data.data	
+			} else {
+				this.data_bhp = null
+			}
+		}
+	},
+	async mounted() {
+		if (this.modal_state == 'edit') {
+			await this.getBhp()
+		}
 	}
 }
 </script>

@@ -68,6 +68,7 @@
 			:id.sync="item_to_edit"
 			:doc_type="doc_type"
 			:doc_id="doc_id"
+			:bhp="bhp"
 			:state.sync="item_state"
 			@submit-data="saveItem"
 		>
@@ -76,7 +77,7 @@
 		<!-- Modal konfirmasi delete -->
 		<MyModalDelete
 			v-if="modal_delete_props.show"
-			target="item"
+			:target="delete_target"
 			:doc_type="doc_type"
 			:doc_id="doc_id"
 			:item_id="modal_delete_props.item_id"
@@ -151,6 +152,10 @@ export default {
 			}
 			return data_barang
 		},
+		delete_target() {
+			let target = this.bhp ? 'bhp' : 'item'
+			return target
+		}
 	},
 	data() {
 		return {
@@ -173,13 +178,19 @@ export default {
 			list_barang: this.data_objek.item,
 			show_modal_barang: false,
 			item_state: 'insert',
-			item_to_edit: null
+			item_to_edit: null,
 		}
 	},
 	methods: {
 		async getData() {
-			let response = await api.getObjek(this.doc_type, this.doc_id)
-			this.list_barang = response.data.item
+			let response = null
+			if (!this.bhp) {
+				response = await api.getObjek(this.doc_type, this.doc_id)
+				this.list_barang = response.data.item
+			} else {
+				response = await api.getBhpByDocId(this.doc_type, this.doc_id)
+				this.list_barang = response.data.data.item
+			}
 		},
 		inputNewBarang() {
 			this.show_modal_barang = true

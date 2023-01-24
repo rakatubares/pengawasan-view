@@ -98,8 +98,9 @@ class PdfLpp extends Pdf {
 		this.pdf.text('Modus Operandi', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
 		let arr_modus = converters.array_text(this.data.penyidikan.modus, 70)
+		let hgt_modus = arr_modus.length > 0 ? arr_modus.length : 1
 		this.pdf.text(arr_modus, this.props.ind.txt, this.ln)
-		this.ln += this.props.font.height*arr_modus.length
+		this.ln += this.props.font.height*hgt_modus
 
 		this.pdf.text('3.', this.props.ind.lbl, this.ln)
 		this.pdf.text('Lokasi', this.props.ind.lbl2, this.ln)
@@ -200,10 +201,12 @@ class PdfLpp extends Pdf {
 		let txt_barang = '-'
 		let hgt_barang = 1
 		if (this.data.barang != null) {
-			if (this.data.barang.item.length > 1) {
+			if (this.data.barang.item.length == 0) {
+				txt_barang = '-'
+			} else if (this.data.barang.item.length > 1) {
 				txt_barang = 'LIHAT LAMPIRAN'
 			} else {
-				txt_barang = this.data.barang.item[0]
+				txt_barang = this.data.barang.item[0].uraian_barang
 			}	
 		}
 		let h_rect_barang = this.props.font.height*(hgt_barang+1)

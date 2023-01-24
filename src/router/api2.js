@@ -185,6 +185,18 @@ class API {
 		return await this.getApi(`/${doc_type}/${doc_id}/bhp`)
 	}
 
+	async insertBhp(doc_type, doc_id, data) {
+		return await this.postApi(`/${doc_type}/${doc_id}/bhp`, data)
+	}
+
+	async updateBhp(doc_type, doc_id, detail_id, data) {
+		return await this.putApi(`/${doc_type}/${doc_id}/bhp/${detail_id}`, data)
+	}
+
+	async delItemBhp(doc_type, doc_id, item_id) {
+		await this.delApi(`/${doc_type}/${doc_id}/bhp/item/${item_id}`)
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| API for references

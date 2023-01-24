@@ -57,6 +57,8 @@ export default {
 		async deleteData() {
 			if (this.target == 'item') {
 				await api.delItemBarang(this.doc_type, this.doc_id, this.item_id)
+			} else if (this.target == 'bhp') {
+				await api.delItemBhp(this.doc_type, this.doc_id, this.item_id)
 			} else {
 				await api.deleteDoc(this.doc_type, this.doc_id)
 			}
