@@ -17,6 +17,38 @@
 						/>
 					</CCol>
 				</CRow>
+				<CRow v-if="bhp">
+					<CCol>
+						<CInput
+							label="Merk"
+							:value.sync="data.merk"
+						/>
+					</CCol>
+				</CRow>
+				<CRow v-if="bhp">
+					<CCol>
+						<CInput
+							label="Kondisi"
+							:value.sync="data.kondisi"
+						/>
+					</CCol>
+				</CRow>
+				<CRow v-if="bhp">
+					<CCol>
+						<CInput
+							label="Tipe"
+							:value.sync="data.tipe"
+						/>
+					</CCol>
+				</CRow>
+				<CRow v-if="bhp">
+					<CCol>
+						<CTextarea
+							label="Spesifikasi Lain"
+							:value.sync="data.spesifikasi_lain"
+						/>
+					</CCol>
+				</CRow>
 				<CRow>
 					<CCol md="6">
 						<CInput
@@ -84,6 +116,9 @@ import MyUploadImage from '../../components/UploadImage.vue'
 const data_default = {
 	uraian_barang: null,
 	jumlah_barang: null,
+	merk: null,
+	tipe: null,
+	spesifikasi_lain: null,
 	satuan: {id: null},
 	kategori: {id: null},
 	image_list: []
@@ -110,9 +145,21 @@ export default {
 		id: Number,
 		doc_type: String,
 		doc_id: Number,
+		bhp: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	computed: {
-		API_BARANG() { return process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/barang/item' },
+		API_BARANG() { 
+			let api = null
+			if (!this.bhp) {
+				api = process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/barang/item'
+			} else {
+				api = process.env.VUE_APP_BASEAPI + '/' + this.doc_type + '/' + this.doc_id + '/bhp/item'
+			}
+			return api
+		},
 		API_BARANG_ID() { return this.API_BARANG + '/' + this.id },
 	},
 	data() {

@@ -69,6 +69,7 @@
 			:id.sync="item_to_edit"
 			:doc_type="doc_type"
 			:doc_id="doc_id"
+			:bhp="bhp"
 			:state.sync="item_state"
 			@submit-data="saveItem"
 		>
@@ -77,7 +78,7 @@
 		<!-- Modal konfirmasi delete -->
 		<MyModalDelete
 			v-if="modal_delete_props.show"
-			target="item"
+			:target="delete_target"
 			:doc_type="doc_type"
 			:doc_id="doc_id"
 			:item_id="modal_delete_props.item_id"
@@ -122,25 +123,44 @@ export default {
 		with_photo: {
 			type: Boolean,
 			default: true
-		}
+		},
+		bhp: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	computed: {
 		list_barang_table() {
 			let data_barang = []
-			if (this.list_barang != null) {
-				let arr = this.list_barang
-				for (let idx in arr) {
-					let temp_barang = {
-						id: arr[idx]['id'],
-						uraian_barang: arr[idx]['uraian_barang'],
-						jumlah: (arr[idx]['jumlah_barang'] || '-') + ' ' + (arr[idx]['satuan']['kode_satuan'] || ''),
-						kategori: arr[idx]['kategori'] ? arr[idx]['kategori']['kategori'] : '-'
-					}
-					data_barang.push(temp_barang)
-				}	
+			let arr = this.list_barang
+			for (let idx in arr) {
+				let uraian_barang = arr[idx]['uraian_barang']
+				if (this.bhp) {
+					let merk = arr[idx]['merk'] || '- '
+					let kondisi = arr[idx]['kondisi'] || '- '
+					let tipe = arr[idx]['tipe'] || '- '
+					let spesifikasi_lain = arr[idx]['spesifikasi_lain'] || '- '
+					
+					uraian_barang += `; MERK: ${merk}`
+					uraian_barang += `; KONDISI: ${kondisi}`
+					uraian_barang += `; TIPE: ${tipe}`
+					uraian_barang += `; SPESIFIKASI LAIN: ${spesifikasi_lain}`
+				}
+
+				let temp_barang = {
+					id: arr[idx]['id'],
+					uraian_barang: uraian_barang,
+					jumlah: (arr[idx]['jumlah_barang'] || '-') + ' ' + (arr[idx]['satuan']['kode_satuan'] || ''),
+					kategori: arr[idx]['kategori'] ? arr[idx]['kategori']['kategori'] : '-'
+				}
+				data_barang.push(temp_barang)
 			}
 			return data_barang
 		},
+		delete_target() {
+			let target = this.bhp ? 'bhp' : 'item'
+			return target
+		}
 	},
 	data() {
 		return {
@@ -163,16 +183,18 @@ export default {
 			list_barang: this.data_objek.item,
 			show_modal_barang: false,
 			item_state: 'insert',
-			item_to_edit: null
+			item_to_edit: null,
 		}
 	},
 	methods: {
 		async getData() {
-			let response = await api.getObjek(this.doc_type, this.doc_id)
-			if (response.data != null) {
+			let response = null
+			if (!this.bhp) {
+				response = await api.getObjek(this.doc_type, this.doc_id)
 				this.list_barang = response.data.item
 			} else {
-				this.list_barang = null
+				response = await api.getBhpByDocId(this.doc_type, this.doc_id)
+				this.list_barang = response.data.data.item
 			}
 		},
 		inputNewBarang() {

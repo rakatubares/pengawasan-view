@@ -79,7 +79,7 @@ class PdfLpp extends Pdf {
 		this.pdf.text('D.', this.props.ind.alp, this.ln)
 		this.pdf.text('Status Pelanggaran', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text(this.data.status_pelanggaran, this.props.ind.txt, this.ln)
+		this.pdf.text(this.data.penyidikan.status_penangkapan, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('E.', this.props.ind.alp, this.ln)
@@ -98,8 +98,9 @@ class PdfLpp extends Pdf {
 		this.pdf.text('Modus Operandi', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
 		let arr_modus = converters.array_text(this.data.penyidikan.modus, 70)
+		let hgt_modus = arr_modus.length > 0 ? arr_modus.length : 1
 		this.pdf.text(arr_modus, this.props.ind.txt, this.ln)
-		this.ln += this.props.font.height*arr_modus.length
+		this.ln += this.props.font.height*hgt_modus
 
 		this.pdf.text('3.', this.props.ind.lbl, this.ln)
 		this.pdf.text('Lokasi', this.props.ind.lbl2, this.ln)
@@ -177,7 +178,12 @@ class PdfLpp extends Pdf {
 		this.pdf.text('3.', this.props.ind.lbl, this.ln)
 		this.pdf.text('Pengangkut/Nopol-Voy-Flight', this.props.ind.lbl2, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		this.pdf.text('-', this.props.ind.txt, this.ln)
+		let txt_pengangkut = '-'
+		if (this.data.penyidikan.sarkut != null) {
+			let sarkut = this.data.penyidikan.sarkut
+			txt_pengangkut = `${sarkut.jenis_sarkut} / ${sarkut.no_flight_trayek}`
+		}
+		this.pdf.text(txt_pengangkut, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('4.', this.props.ind.lbl, this.ln)
@@ -195,10 +201,12 @@ class PdfLpp extends Pdf {
 		let txt_barang = '-'
 		let hgt_barang = 1
 		if (this.data.barang != null) {
-			if (this.data.barang.item.length > 1) {
+			if (this.data.barang.item.length == 0) {
+				txt_barang = '-'
+			} else if (this.data.barang.item.length > 1) {
 				txt_barang = 'LIHAT LAMPIRAN'
 			} else {
-				txt_barang = this.data.barang.item[0]
+				txt_barang = this.data.barang.item[0].uraian_barang
 			}	
 		}
 		let h_rect_barang = this.props.font.height*(hgt_barang+1)

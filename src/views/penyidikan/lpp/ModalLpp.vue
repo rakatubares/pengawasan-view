@@ -3,6 +3,8 @@
 		<MyModalDoc
 			:title="`Data ${tipe_surat}`"
 			:state.sync="modal_state"
+			:tabs="tabs"
+			:tabs_visibility="tabs_visibility"
 			@close-modal="closeModal"
 		>
 			<template #tab-uraian>
@@ -11,12 +13,25 @@
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
+				<MyFormLpp
+					ref="form_lpp"
+					v-if="['insert','edit'].includes(modal_state)"
+					:state.sync="modal_state"
+					:doc_type.sync="doc_type"
+					:doc_id.sync="doc_id"
+				/>
 			</template>
-			<template #tab-object>
-				<MyDisplayDetail 
+			<template #tab-bhp>
+				<MyDisplayBhp
 					v-if="modal_state == 'show'"
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
+				/>
+				<MyFormBhp
+					v-if="modal_state == 'edit'"
+					:doc_type="doc_type"
+					:doc_id.sync="doc_id"
+					:data="data_bhp"
 				/>
 			</template>
 			<template #tab-pdf>
@@ -32,17 +47,24 @@
 </template>
 
 <script>
-import MyDisplayDetail from '../../details/displays/DisplayDetail.vue'
+import api from '../../../router/api2.js'
+import MyDisplayBhp from '../../details/displays/DisplayBhp.vue' 
 import MyDisplayLpp from './DisplayLpp.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
+import MyFormBhp from '../../details/Options/FormBhp.vue'
+import MyFormDetailBarang from '../../details/Options/FormDetailBarang.vue'
+import MyFormLpp from './FormLpp.vue'
 import MyModalDoc from '../../components/ModalDoc2.vue'
 
 export default {
 	name: 'ModalLpp',
 	components: {
-		MyDisplayDetail,
+		MyDisplayBhp,
 		MyDisplayLpp,
 		MyDisplayPdf,
+		MyFormBhp,
+		MyFormDetailBarang,
+		MyFormLpp,
 		MyModalDoc,
 	},
 	props: {
@@ -55,14 +77,55 @@ export default {
 		return {
 			doc_id: this.id,
 			modal_state: this.state,
-			show_tindakan: false,
-			active_details: null
+			tabs: [
+				{
+					title: 'Uraian',
+					visibility: true,
+					name: 'tab-uraian',
+				}, 
+				{
+					title: 'BHP',
+					visibility: false,
+					name: 'tab-bhp',
+				}, 
+				{
+					title: 'Print',
+					visibility: false,
+					name: 'tab-pdf',
+				}
+			],
+			tabs_visibility: {
+				show: ['tab-bhp', 'tab-pdf'],
+				insert: [],
+				edit: ['tab-bhp', 'tab-pdf'],
+			},
+			data_bhp: null,
+		}
+	},
+	watch: {
+		modal_state(oldState, newState) {
+			if (newState == 'edit') {
+				this.getBhp()
+			}
 		}
 	},
 	methods: {
 		closeModal() {
 			this.$emit('close-modal')
 		},
+		async getBhp() {
+			let response = await api.getBhpByDocId(this.doc_type, this.doc_id)
+			if (response != null) {
+				this.data_bhp = response.data.data	
+			} else {
+				this.data_bhp = null
+			}
+		}
+	},
+	async mounted() {
+		if (this.modal_state == 'edit') {
+			await this.getBhp()
+		}
 	}
 }
 </script>

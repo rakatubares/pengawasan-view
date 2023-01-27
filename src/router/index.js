@@ -174,7 +174,7 @@ function configRoutes () {
 				},
 				{
 					path: 'lpp',
-					name: 'Input LPP',
+					name: 'LPP',
 					component: PageLpp,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-lpp', next)

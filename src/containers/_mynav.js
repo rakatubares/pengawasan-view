@@ -289,7 +289,7 @@ export default [
 						icon: 'cil-file',
 						permissions: 'view-lpn',
 					},
-				]
+				],
 			},
 			{
 				_name: 'CSidebarNavDropdown',
@@ -298,7 +298,7 @@ export default [
 				_children: [
 					{
 						_name: 'CSidebarNavItem',
-						name: 'Input LPP',
+						name: 'LPP',
 						to: '/lpp',
 						icon: 'cil-file',
 						permissions: 'view-lpp',

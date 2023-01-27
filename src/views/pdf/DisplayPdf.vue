@@ -290,7 +290,6 @@ export default {
 					pdf = new PdfTolak2(pdfData)
 					break;
 
-			
 				default:
 					break;
 			}
