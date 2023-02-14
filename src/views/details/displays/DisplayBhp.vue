@@ -33,7 +33,6 @@ export default {
 		async getData() {
 			let response = await api.getBhpByDocId(this.doc_type, this.doc_id)
 			this.data_bhp = response.data.data
-			console.log('DISPLAY BHP - GET DATA', JSON.parse(JSON.stringify(this.data_bhp)))
 		}
 	},
 	async mounted() {

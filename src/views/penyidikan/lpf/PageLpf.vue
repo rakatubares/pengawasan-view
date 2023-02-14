@@ -2,7 +2,7 @@
 	<div class="wrapper" data-app>
 		<MyPageDoc
 			ref="page_doc"
-			doc_type="lpp"
+			:doc_type="doc_type"
 			:table_title="table_title"
 			:table_fields="table_fields"
 			:custom_fields="custom_fields"
@@ -11,7 +11,7 @@
 			:construct_delete_text="constructDeleteText"
 		>
 			<template #modal-data>
-				<MyModalLpp 
+				<MyModalLpf 
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:tipe_surat="tipe_surat"
@@ -24,29 +24,29 @@
 </template>
 
 <script>
-import MyModalLpp from './ModalLpp.vue'
+import MyModalLpf from './ModalLpf.vue'
 import MyPageDoc from '../../components/PageDoc.vue'
 
-const tipe_surat = 'LPP'
+const tipe_surat = 'LPF'
 
 export default {
-	name: 'PageLpp',
+	name: 'PageLpf',
 	components: {
-		MyModalLpp,
+		MyModalLpf,
 		MyPageDoc,
 	},
 	data() {
 		return {
+			doc_type: 'lpf',
 			tipe_surat: tipe_surat,
 			table_title: `Daftar ${tipe_surat}`,
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: `No ${tipe_surat}` },
 				{ key: 'tanggal_dokumen', label: `Tgl ${tipe_surat}` },
-				{ key: 'sbp', label: 'SBP' },
-				{ key: 'lp', label: 'LP' },
-				{ key: 'petugas', label: 'Petugas' },
+				{ key: 'lpp', label: 'LPP' },
+				{ key: 'peneliti', label: 'Peneliti' },
 			],
-			custom_fields: ['sbp', 'lp'],
+			custom_fields: ['lpp'],
 			modal_data_props: {
 				show: false,
 				state: null,
@@ -59,8 +59,7 @@ export default {
 			return list.map(item => {
 				return {
 					...item,
-					sbp: item.no_sbp + '</br>' + item.tanggal_sbp,
-					lp: item.no_lp + '</br>' + item.tanggal_lp
+					lpp: item.no_lpp + '</br>' + item.tanggal_lpp,
 				}
 			})
 		},
@@ -73,8 +72,6 @@ export default {
 		constructDeleteText(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
-				+ " atas LP nomor " 
-				+ item.no_lp.bold() 
 				+ "?"
 
 			return text

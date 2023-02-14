@@ -62,8 +62,8 @@ class Pdf {
 		this.pdf.setFontSize('10')
 		this.pdf.text('Kementerian Keuangan Republik Indonesia', 15, 10)
 		this.pdf.text('Direktorat Jenderal Bea dan Cukai', 15, 15)
-		this.pdf.text('Kantor Pelayana Utama Bea dan Cukai Tipe C Soekarno Hatta', 15, 20)
-		this.pdf.line(15,21,120,21)
+		this.pdf.text('Kantor Pelayanan Utama Bea dan Cukai Tipe C Soekarno Hatta', 15, 20)
+		this.pdf.line(15,21,122,21)
 	}
 
 	/**
@@ -328,8 +328,8 @@ class Pdf {
 		this.ln_lamp += this.props.font.height*3
 	}
 
-	tabelBarang(items=this.data.objek.data.item) {
-		const tabelData = converters.item_barang(items)
+	tabelBarang(items=this.data.objek.data.item, withDetails=false) {
+		const tabelData = converters.item_barang(items, withDetails)
 		const tabelHead = [
 			{header: 'No', dataKey: 'no'},
 			{header: 'Uraian Barang', dataKey: 'uraian'},

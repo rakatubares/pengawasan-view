@@ -21,6 +21,7 @@ const PageSbpN = () => import('@/views/penindakan/sbp/PageSbpN')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 
 // View - Penyidikan
+const PageLpf = () => import('@/views/penyidikan/lpf/PageLpf')
 const PageLpp = () => import('@/views/penyidikan/lpp/PageLpp.vue')
 
 Vue.use(Router)
@@ -59,6 +60,14 @@ function configRoutes () {
 					component: PageLp,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-lp', next)
+					},
+				},
+				{
+					path: 'lpf',
+					name: 'LPF',
+					component: PageLpf,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lpf', next)
 					},
 				},
 				{

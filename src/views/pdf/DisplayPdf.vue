@@ -48,6 +48,7 @@
 <script>
 import api from '../../router/api2.js'
 import PdfLp from './PdfLp.js'
+import PdfLpf from './PdfLpf.js'
 import PdfLpN from './PdfLpN.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLpp from './PdfLpp.js'
@@ -112,6 +113,10 @@ export default {
 
 				case 'lpn':
 					pdf = new PdfLpN(pdfData)
+					break;
+
+				case 'lpf':
+					pdf = new PdfLpf(pdfData)
 					break;
 
 				case 'lphp':

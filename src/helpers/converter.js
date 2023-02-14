@@ -253,12 +253,25 @@ converters.badan = (data) => {
 	return parsedData
 }
 
-converters.item_barang = (data) => {
+converters.item_barang = (data, withDetails) => {
 	let preparedData = []
 	for (let index = 0; index < data.length; index++) {
+		let uraian = data[index]['uraian_barang']
+		if (withDetails) {
+			let merk = data[index]['merk'] ||'-'
+			let kondisi = data[index]['kondisi'] ||'-'
+			let tipe = data[index]['tipe'] ||'-'
+			let spesifikasi = data[index]['spesifikasi_lain'] ||'-'
+
+			uraian = `${uraian}\n\n` +
+				`MERK: ${merk}\n` +
+				`KONDISI: ${kondisi}\n` +
+				`TIPE: ${tipe}\n` +
+				`SPESIFIKASI LAIN: ${spesifikasi}`
+		}
 		let entry = {
 			no: (index+1).toString(),
-			uraian: data[index]['uraian_barang'],
+			uraian: uraian,
 			jumlah: data[index]['jumlah_barang'] + ' ' + data[index]['satuan']['kode_satuan']
 		}
 
