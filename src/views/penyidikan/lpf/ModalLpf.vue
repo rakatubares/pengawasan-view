@@ -8,13 +8,13 @@
 			@close-modal="closeModal"
 		>
 			<template #tab-uraian>
-				<MyDisplayLpp 
+				<MyDisplayLpf
 					v-if="modal_state == 'show'"
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
-				<MyFormLpp
-					ref="form_lpp"
+				<MyFormLpf
+					ref="form_lpf"
 					v-if="['insert','edit'].includes(modal_state)"
 					:state.sync="modal_state"
 					:doc_type.sync="doc_type"
@@ -23,16 +23,15 @@
 			</template>
 			<template #tab-bhp>
 				<MyDisplayBhp
-					v-if="modal_state == 'show'"
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
-				<MyFormBhp
+				<!-- <MyFormBhp
 					v-if="modal_state == 'edit'"
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 					:data="data_bhp"
-				/>
+				/> -->
 			</template>
 			<template #tab-pdf>
 				<MyDisplayPdf 
@@ -49,22 +48,18 @@
 <script>
 import api from '../../../router/api2.js'
 import MyDisplayBhp from '../../details/displays/DisplayBhp.vue' 
-import MyDisplayLpp from './DisplayLpp.vue'
+import MyDisplayLpf from './DisplayLpf.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
-import MyFormBhp from '../../details/Options/FormBhp.vue'
-import MyFormDetailBarang from '../../details/Options/FormDetailBarang.vue'
-import MyFormLpp from './FormLpp.vue'
+import MyFormLpf from './FormLpf.vue'
 import MyModalDoc from '../../components/ModalDoc2.vue'
 
 export default {
-	name: 'ModalLpp',
+	name: 'ModalLpf',
 	components: {
 		MyDisplayBhp,
-		MyDisplayLpp,
+		MyDisplayLpf,
 		MyDisplayPdf,
-		MyFormBhp,
-		MyFormDetailBarang,
-		MyFormLpp,
+		MyFormLpf,
 		MyModalDoc,
 	},
 	props: {
@@ -74,7 +69,7 @@ export default {
 	},
 	data() {
 		return {
-			doc_type: 'lpp',
+			doc_type: 'lpf',
 			doc_id: this.id,
 			modal_state: this.state,
 			tabs: [
@@ -102,13 +97,6 @@ export default {
 			data_bhp: null,
 		}
 	},
-	watch: {
-		modal_state(oldState, newState) {
-			if (newState == 'edit') {
-				this.getBhp()
-			}
-		}
-	},
 	methods: {
 		closeModal() {
 			this.$emit('close-modal')
@@ -120,11 +108,6 @@ export default {
 			} else {
 				this.data_bhp = null
 			}
-		}
-	},
-	async mounted() {
-		if (this.modal_state == 'edit') {
-			await this.getBhp()
 		}
 	}
 }

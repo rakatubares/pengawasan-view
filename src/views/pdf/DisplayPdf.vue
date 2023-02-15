@@ -55,6 +55,7 @@ import PdfLap from './PdfLap.js'
 import PdfLi from './PdfLi.js'
 import PdfLkai from './PdfLkai.js'
 import PdfLp from './PdfLp.js'
+import PdfLpf from './PdfLpf.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLpN from './PdfLpN.js'
 import PdfLpp from './PdfLpp.js'
@@ -171,6 +172,10 @@ export default {
 
 				case 'lpn':
 					pdf = new PdfLpN(pdfData)
+					break;
+
+				case 'lpf':
+					pdf = new PdfLpf(pdfData)
 					break;
 
 				case 'lphp':

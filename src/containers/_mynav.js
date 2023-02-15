@@ -303,6 +303,13 @@ export default [
 						icon: 'cil-file',
 						permissions: 'view-lpp',
 					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LPF',
+						to: '/lpf',
+						icon: 'cil-file',
+						permissions: 'view-lpf',
+					},
 				],
 			},
 			{

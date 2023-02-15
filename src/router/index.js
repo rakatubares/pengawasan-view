@@ -44,6 +44,7 @@ const PageTolak1 = () => import('@/views/penindakan/tolak1/PageTolak1')
 const PageTolak2 = () => import('@/views/penindakan/tolak2/PageTolak2')
 
 // Views - Penyidikan
+const PageLpf = () => import('@/views/penyidikan/lpf/PageLpf')
 const PageLpp = () => import('@/views/penyidikan/lpp/PageLpp.vue')
 
 Vue.use(Router)
@@ -146,6 +147,14 @@ function configRoutes () {
 					component: PageLp,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-lp', next)
+					},
+				},
+				{
+					path: 'lpf',
+					name: 'LPF',
+					component: PageLpf,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lpf', next)
 					},
 				},
 				{
