@@ -13,13 +13,13 @@
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
-				<!-- <MyFormLpp
-					ref="form_lpp"
+				<MyFormLpf
+					ref="form_lpf"
 					v-if="['insert','edit'].includes(modal_state)"
 					:state.sync="modal_state"
 					:doc_type.sync="doc_type"
 					:doc_id.sync="doc_id"
-				/> -->
+				/>
 			</template>
 			<template #tab-bhp>
 				<MyDisplayBhp
@@ -50,6 +50,7 @@ import api from '../../../router/api2.js'
 import MyDisplayBhp from '../../details/displays/DisplayBhp.vue' 
 import MyDisplayLpf from './DisplayLpf.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
+import MyFormLpf from './FormLpf.vue'
 import MyModalDoc from '../../components/ModalDoc2.vue'
 
 export default {
@@ -58,6 +59,7 @@ export default {
 		MyDisplayBhp,
 		MyDisplayLpf,
 		MyDisplayPdf,
+		MyFormLpf,
 		MyModalDoc,
 	},
 	props: {

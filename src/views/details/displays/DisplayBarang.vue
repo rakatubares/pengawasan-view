@@ -91,9 +91,6 @@ export default {
 			data: this.data_objek,
 		}
 	},
-	mounted() {
-		console.log('DISPLAY BARANG - MOUNTED', JSON.parse(JSON.stringify(this.data)))
-	}
 }
 </script>
 

@@ -72,6 +72,10 @@ export default {
 		constructDeleteText(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
+				+ " atas "
+				+ item.no_lpp.bold()
+				+ " tanggal "
+				+ item.tanggal_lpp.bold()
 				+ "?"
 
 			return text

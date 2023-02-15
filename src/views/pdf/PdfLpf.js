@@ -154,37 +154,91 @@ class PdfLpf extends Pdf {
 		this.pdf.text('4.', this.props.ind.num, this.ln)
 		this.pdf.text('BAP Saksi atas nama', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_nama_saksi = this.data.saksi.nama || '-'
-		let txt_tgl_bap_saksi = this.data.tanggal_bap_saksi || '-'
-		let txt_saksi = txt_nama_saksi + ' Tanggal ' + txt_tgl_bap_saksi
+		let txt_saksi = '-'
+		if (
+			(this.data.saksi != null) || 
+			(this.data.tanggal_bap_saksi != null)
+		) {
+			let txt_nama_saksi = '-'
+			if (this.data.saksi != null) {
+				txt_nama_saksi = this.data.saksi.nama
+			}
+			let txt_tgl_bap_saksi = this.data.tanggal_bap_saksi || '-'
+			txt_saksi = txt_nama_saksi + ' Tanggal ' + txt_tgl_bap_saksi
+		}
 		this.pdf.text(txt_saksi, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('5.', this.props.ind.num, this.ln)
 		this.pdf.text('BAP Tersangka atas nama', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_nama_tersangka = this.data.tersangka.nama || '-'
-		let txt_tgl_bap_tersangka = this.data.tanggal_bap_tersangka || '-'
-		let txt_tersangka = txt_nama_tersangka + ' Tanggal ' + txt_tgl_bap_tersangka
+		let txt_tersangka = '-'
+		if (
+			(this.data.tersangka != null) || 
+			(this.data.tanggal_bap_tersangka != null)
+		) {
+			let txt_nama_tersangka = '-'
+			if (this.data.tersangka != null) {
+				txt_nama_tersangka = this.data.tersangka.nama
+			}
+			let txt_tgl_bap_tersangka = this.data.tanggal_bap_tersangka || '-'
+			txt_tersangka = txt_nama_tersangka + ' Tanggal ' + txt_tgl_bap_tersangka
+		}
 		this.pdf.text(txt_tersangka, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('6.', this.props.ind.num, this.ln)
 		this.pdf.text('Resume Perkara', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_no_resume = this.data.resume_perkara || '-'
-		let txt_tgl_resume = this.data.tanggal_resume_perkara || '-'
-		let txt_resume = txt_no_resume + ' Tanggal ' + txt_tgl_resume
+		let txt_resume = '-'
+		if (
+			(this.data.resume_perkara != null) || 
+			(this.data.tanggal_resume_perkara != null)
+		) {
+			let txt_no_resume = this.data.resume_perkara || '-'
+			let txt_tgl_resume = this.data.tanggal_resume_perkara || '-'
+			txt_resume = txt_no_resume + ' Tanggal ' + txt_tgl_resume
+		}
 		this.pdf.text(txt_resume, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('7.', this.props.ind.num, this.ln)
 		this.pdf.text('Dokumen lain', this.props.ind.lbl, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
-		let txt_jenis_dokumen_lain = this.data.jenis_dokumen_lain || ''
-		let txt_nomor_dokumen_lain = this.data.nomor_dokumen_lain || '-'
-		let txt_tgl_dokumen_lain = this.data.tanggal_resume_perkara || '-'
-		let txt_dokumen_lain = txt_jenis_dokumen_lain + ' ' + txt_nomor_dokumen_lain + ' Tanggal ' + txt_tgl_dokumen_lain
+		let txt_dokumen_lain = '-'
+		if (
+			(this.data.jenis_dokumen_lain != null) || 
+			(this.data.nomor_dokumen_lain != null) || 
+			(this.data.tanggal_resume_perkara != null)
+		) {
+			let txt_jenis_nomor_dokumen_lain = '-'
+			if (
+				(this.data.jenis_dokumen_lain != null) ||
+				(this.data.nomor_dokumen_lain != null)
+			) {
+				let txt_jenis_dokumen_lain = ''
+				if (this.data.jenis_dokumen_lain != null) {
+					txt_jenis_dokumen_lain = this.data.jenis_dokumen_lain + ' '	
+				}
+				
+				let txt_nomor_dokumen_lain = ''
+				if (this.data.nomor_dokumen_lain != null) {
+					txt_nomor_dokumen_lain = this.data.nomor_dokumen_lain
+				}
+
+				if (
+					(this.data.jenis_dokumen_lain != null) &&
+					(this.data.nomor_dokumen_lain != null)
+				) {
+					txt_jenis_nomor_dokumen_lain = txt_jenis_dokumen_lain + ' ' + txt_nomor_dokumen_lain
+				} else {
+					txt_jenis_nomor_dokumen_lain = txt_jenis_dokumen_lain + txt_nomor_dokumen_lain
+				}
+			}
+
+			let txt_tgl_dokumen_lain = this.data.tanggal_resume_perkara || '-'
+			txt_dokumen_lain = txt_jenis_nomor_dokumen_lain + ' Tanggal ' + txt_tgl_dokumen_lain
+		}
 		this.pdf.text(txt_dokumen_lain, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
@@ -372,7 +426,8 @@ class PdfLpf extends Pdf {
 		this.ln += this.props.font.height*2
 
 		let y_rect_catatan = this.ln - 5
-		let arr_catatan = converters.array_text(this.data.catatan, 110)
+		let txt_catatan = this.data.catatan || '-'
+		let arr_catatan = converters.array_text(txt_catatan, 110)
 		this.pdf.text(arr_catatan, this.props.ind.lbl, this.ln)
 		let h_rect_catatan = this.props.font.height*(arr_catatan.length+1)
 		this.pdf.rect(this.props.ind.num, y_rect_catatan, 180, h_rect_catatan, 'D')
