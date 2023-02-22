@@ -461,16 +461,14 @@ class PdfLpf extends Pdf {
 
 		////// LAMPIRAN //////
 		if (this.data.barang != null) {
-			// if (this.data.objek.type == 'barang') {
-				if (this.data.barang.item.length > 1) {
-					this.pdf.setFont('Helvetica', 'normal')
-					this.pdf.addPage()
-					// Header
-					this.headerLampiran(this.data.no_dok_lengkap)
-					// Tabel barang
-					this.tabelBarang(this.data.barang.item, true)
-				}
-			// }
+			if (this.data.barang.item.length > 1) {
+				this.pdf.setFont('Helvetica', 'normal')
+				this.pdf.addPage()
+				// Header
+				this.headerLampiran(this.data.no_dok_lengkap)
+				// Tabel barang
+				this.tabelBarang(this.data.barang.item, true)
+			}
 		}
 
 		////// WATERMARK //////

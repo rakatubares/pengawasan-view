@@ -54,6 +54,7 @@ import PdfLphp from './PdfLphp.js'
 import PdfLpp from './PdfLpp.js'
 import PdfLptp from './PdfLptp.js'
 import PdfSbp from './PdfSbp.js'
+import PdfSplit from './PdfSplit.js'
 import MyAlert from '../components/AlertSubmit.vue'
 
 export default {
@@ -163,6 +164,10 @@ export default {
 						'SURAT BUKTI PENINDAKAN NPP', 
 						{start: 76, end: 134}
 					)
+					break;
+
+				case 'split':
+					pdf = new PdfSplit(pdfData)
 					break;
 			
 				default:
