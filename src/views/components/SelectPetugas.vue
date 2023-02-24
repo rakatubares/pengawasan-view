@@ -41,6 +41,9 @@
 				>
 				</CInput>
 			</CCol>
+			<CCol  md="1" sm="12">
+				<slot name="button"></slot>
+			</CCol>
 		</CRow>
 	</div>
 </template>
@@ -94,13 +97,14 @@ export default {
 		async getPetugas(id, mounted=false) {
 			if (id != null) {
 				this.petugas = await api.getUserById(id)
-				if (mounted == true) {
-					this.items = [this.petugas]
-					this.value = this.items[0]
-				}
 				this.saveCache()
 			} else {
 				this.petugas = JSON.parse(JSON.stringify(default_petugas))
+			}
+
+			if (mounted == true) {
+				this.items = [this.petugas]
+				this.value = this.items[0]
 			}
 		},
 		saveCache() {

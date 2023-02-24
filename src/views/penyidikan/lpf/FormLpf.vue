@@ -208,7 +208,7 @@
 						ref="selectAtasan2"
 						:state.sync="state"
 						:label="{jabatan: 'Jabatan Atasan dari Atasan Langsung Peneliti', nama: 'Nama Pejabat'}"
-						:selectable_jabatan="['bd.05']"
+						:selectable_jabatan="['bd.0505']"
 						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
 						:id_pejabat.sync="data.atasan2.user.user_id"
 						:jabatan.sync="data.atasan2.jabatan.kode"

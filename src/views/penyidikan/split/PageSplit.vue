@@ -73,13 +73,15 @@ export default {
 		constructDeleteText(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
-				+ " atas LP nomor " 
-				+ item.no_lp.bold() 
+				+ " atas LPF nomor " 
+				+ item.no_lpf.bold() 
+				+ " tanggal "
+				+ item.tanggal_lpf.bold()
 				+ "?"
 
 			return text
 		}
-	}
+	},
 }
 </script>
 

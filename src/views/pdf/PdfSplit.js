@@ -215,12 +215,21 @@ class PdfSplit extends Pdf {
 		this.pdf.text(`NIP. ${this.data.pemberi_perintah.user.nip}`, this.props.ind.ttd, this.ln)
 		this.ln += this.props.font.height*2
 
+		////// TEMBUSAN //////
+		this.pdf.text('Tembusan:', this.props.ind.lbl, this.ln)
+		let cc_num = 1
+		this.data.tembusan.forEach(element => {
+			this.ln += this.props.font.height
+			this.pdf.text(`${cc_num}. ${element}`, this.props.ind.lbl, this.ln)
+			cc_num += 1
+		});
+
 		////// LAMPIRAN //////
 		if (this.data.petugas.length > 3) {
 			this.pdf.addPage()
 			// Header
 			this.headerLampiran(this.data.no_dok_lengkap)
-			// Tabel barang
+			// Tabel petugas
 			this.tabelPetugas(this.data.petugas)
 		}
 

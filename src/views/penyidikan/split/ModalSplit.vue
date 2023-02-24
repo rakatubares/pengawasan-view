@@ -13,13 +13,13 @@
 					:doc_type="doc_type"
 					:doc_id.sync="doc_id"
 				/>
-				<!-- <MyFormLpp
-					ref="form_lpp"
+				<MyFormSplit
+					ref="form_split"
 					v-if="['insert','edit'].includes(modal_state)"
 					:state.sync="modal_state"
 					:doc_type.sync="doc_type"
 					:doc_id.sync="doc_id"
-				/> -->
+				/>
 			</template>
 			<template #tab-pdf>
 				<MyDisplayPdf 
@@ -36,6 +36,7 @@
 <script>
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
 import MyDisplaySplit from './DisplaySplit.vue'
+import MyFormSplit from './FormSplit.vue'
 import MyModalDoc from '../../components/ModalDoc2.vue'
 
 export default {
@@ -43,6 +44,7 @@ export default {
 	components: {
 		MyDisplayPdf,
 		MyDisplaySplit,
+		MyFormSplit,
 		MyModalDoc,
 	},
 	props: {
@@ -69,6 +71,7 @@ export default {
 			],
 			tabs_visibility: {
 				show: ['tab-pdf'],
+				insert: [],
 				edit: ['tab-pdf'],
 			},
 		}
