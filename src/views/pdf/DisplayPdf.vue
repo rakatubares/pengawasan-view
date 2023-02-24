@@ -70,6 +70,7 @@ import PdfRiksa from './PdfRiksa.js'
 import PdfRiksaBadan from './PdfRiksaBadan.js'
 import PdfSbp from './PdfSbp.js'
 import PdfSegel from './PdfSegel.js'
+import PdfSplit from './PdfSplit.js'
 import PdfTegah from './PdfTegah.js'
 import PdfTitip from './PdfTitip.js'
 import PdfTolak1 from './PdfTolak1.js'
@@ -279,6 +280,10 @@ export default {
 					pdf = new PdfSegel(pdfData)
 					break;
 
+				case 'split':
+					pdf = new PdfSplit(pdfData)
+					break;
+
 				case 'tegah':
 					pdf = new PdfTegah(pdfData)
 					break;
@@ -294,7 +299,7 @@ export default {
 				case 'tolak2':
 					pdf = new PdfTolak2(pdfData)
 					break;
-
+			
 				default:
 					break;
 			}

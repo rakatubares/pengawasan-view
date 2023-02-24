@@ -46,6 +46,7 @@ const PageTolak2 = () => import('@/views/penindakan/tolak2/PageTolak2')
 // Views - Penyidikan
 const PageLpf = () => import('@/views/penyidikan/lpf/PageLpf')
 const PageLpp = () => import('@/views/penyidikan/lpp/PageLpp.vue')
+const PageSplit = () => import('@/views/penyidikan/split/PageSplit.vue')
 
 Vue.use(Router)
 
@@ -291,6 +292,14 @@ function configRoutes () {
 					component: PageSegel,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-segel', next)
+					},
+				},
+				{
+					path: 'split',
+					name: 'SPLIT',
+					component: PageSplit,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-split', next)
 					},
 				},
 				{

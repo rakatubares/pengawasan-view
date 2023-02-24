@@ -375,6 +375,64 @@ class Pdf {
 		return height
 	}
 
+	tabelPetugas(listPetugas) {
+		for (let index = 0; index < listPetugas.length; index++) {
+			listPetugas[index]['no'] = index + 1
+			listPetugas[index]['jabatan'] = '-'
+		}
+		const tabelData = listPetugas
+		const tabelHead = [
+			{header: 'No', dataKey: 'no'},
+			{header: 'Nama', dataKey: 'name'},
+			{header: 'NIP', dataKey: 'nip'},
+			{header: 'Pangkat / Gol.', dataKey: 'pangkat'},
+			{header: 'jabatan', dataKey: 'jabatan'},
+		]
+
+		let height = 0;
+		let tableMeta = null;
+		this.pdf.autoTable({
+			columns: tabelHead,
+			body: tabelData,
+			margin: {top: this.ln_lamp},
+			theme: 'grid',
+			styles: {
+				fontSize: this.props.font.size,
+				textColor: 20,
+				fillColor: null,
+				lineWidth: 0.25,
+				lineColor: 1,
+			},
+			headStyles: {
+				halign: 'center'
+			},
+			columnStyles: {
+				0: {
+					cellWidth: 10,
+					halign: 'center'
+				},
+				1: {minCellWidth: 20},
+				2: {
+					minCellWidth: 20,
+					halign: 'center'
+				},
+				3: {
+					minCellWidth: 20,
+					halign: 'center'
+				},
+				1: {minCellWidth: 20},
+			},
+			didParseCell: function (HookData) {
+				if (!tableMeta) {
+					tableMeta = HookData.table;
+				}
+			}
+		})
+
+		height = tableMeta.finalY
+		return height
+	}
+
 	watermark() {
 		var totalPages = this.pdf.internal.getNumberOfPages();
 	

@@ -37,6 +37,8 @@ export default [
 					'view-lphpn',
 					'view-lpn',
 					'view-lpp',
+					'view-lpf',
+					'view-split',
 				]
 			},
 			{
@@ -72,7 +74,7 @@ export default [
 						icon: 'cil-file',
 						permissions: 'view-ni',
 					},
-				]
+				],
 			},
 			{
 				_name: 'CSidebarNavDropdown',
@@ -309,6 +311,13 @@ export default [
 						to: '/lpf',
 						icon: 'cil-file',
 						permissions: 'view-lpf',
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'SPLIT',
+						to: '/split',
+						icon: 'cil-file',
+						permissions: 'view-split',
 					},
 				],
 			},
