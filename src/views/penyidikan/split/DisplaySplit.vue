@@ -51,7 +51,8 @@
 				<MyDisplayPegawai
 					v-for="(petugas, index) in data_split.petugas"
 					:title="`Petugas ` + (index+1)"
-					:data.sync="petugas"
+					:data="petugas"
+					:key="index"
 				/>
 				<MyDisplayPejabat
 					title="Pemberi Perintah"
