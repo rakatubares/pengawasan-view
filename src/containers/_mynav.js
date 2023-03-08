@@ -16,6 +16,7 @@ export default [
 					'view-lpp',
 					'view-lpf',
 					'view-split',
+					'view-lhp',
 				],
 			},
 			{
@@ -127,6 +128,13 @@ export default [
 						to: '/split',
 						icon: 'cil-file',
 						permissions: 'view-split',
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LHP',
+						to: '/lhp',
+						icon: 'cil-file',
+						permissions: 'view-lhp',
 					},
 				],
 			},

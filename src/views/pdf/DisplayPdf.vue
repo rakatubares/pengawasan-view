@@ -47,6 +47,7 @@
 
 <script>
 import api from '../../router/api2.js'
+import PdfLhp from './PdfLhp.js'
 import PdfLp from './PdfLp.js'
 import PdfLpf from './PdfLpf.js'
 import PdfLpN from './PdfLpN.js'
@@ -108,6 +109,10 @@ export default {
 			let pdfData = response.data.data
 
 			switch (doc_type) {
+				case 'lhp':
+					pdf = new PdfLhp(pdfData)
+					break;
+
 				case 'lp':
 					pdf = new PdfLp(pdfData)
 					break;

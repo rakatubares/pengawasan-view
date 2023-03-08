@@ -21,6 +21,7 @@ const PageSbpN = () => import('@/views/penindakan/sbp/PageSbpN')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 
 // View - Penyidikan
+const PageLhp = () => import('@/views/penyidikan/lhp/PageLhp')
 const PageLpf = () => import('@/views/penyidikan/lpf/PageLpf')
 const PageLpp = () => import('@/views/penyidikan/lpp/PageLpp.vue')
 const PageSplit = () => import('@/views/penyidikan/split/PageSplit.vue')
@@ -53,6 +54,14 @@ function configRoutes () {
 					component: PageBhp,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-bhp', next)
+					},
+				},
+				{
+					path: 'lhp',
+					name: 'LHP',
+					component: PageLhp,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lhp', next)
 					},
 				},
 				{
