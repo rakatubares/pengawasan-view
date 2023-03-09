@@ -444,9 +444,7 @@ class PdfLhp extends Pdf {
 		let txt_pasal = this.data.penyidikan.pasal || '-'
 		this.pdf.text(txt_pasal, this.props.ind.lbl, this.ln, this.props.font.txt_prop)
 		let hgt_pasal = Math.round(txt_pasal.length / (this.props.font.txt_prop.maxWidth - this.props.font.txt_sub))
-		if (hgt_pasal < 1) {
-			hgt_pasal = 1
-		}
+		if (hgt_pasal < 1) { hgt_pasal = 1 }
 		let h_rect_pasal = this.props.font.height*(hgt_pasal+1)
 		this.pdf.rect(this.props.ind.alp, y_rect_pasal, 180, h_rect_pasal, 'D')
 		this.ln += h_rect_pasal+(this.props.font.height)
@@ -462,9 +460,7 @@ class PdfLhp extends Pdf {
 		let txt_kesimpulan = this.data.kesimpulan || '-'
 		this.pdf.text(txt_kesimpulan, this.props.ind.lbl, this.ln, this.props.font.txt_prop)
 		let hgt_kesimpulan = Math.round(txt_kesimpulan.length / (this.props.font.txt_prop.maxWidth - this.props.font.txt_sub))
-		if (hgt_kesimpulan < 1) {
-			hgt_kesimpulan = 1
-		}
+		if (hgt_kesimpulan < 1) { hgt_kesimpulan = 1 }
 		let h_rect_kesimpulan = this.props.font.height*(hgt_kesimpulan+1)
 		this.pdf.rect(this.props.ind.alp, y_rect_kesimpulan, 180, h_rect_kesimpulan, 'D')
 		this.ln += h_rect_kesimpulan+(this.props.font.height)
@@ -480,6 +476,7 @@ class PdfLhp extends Pdf {
 		let txt_alternatif = this.data.alternatif_penyelesaian || '-'
 		this.pdf.text(txt_alternatif, this.props.ind.lbl, this.ln, this.props.font.txt_prop)
 		let hgt_alternatif = Math.round(txt_alternatif.length / (this.props.font.txt_prop.maxWidth - this.props.font.txt_sub))
+		if (hgt_alternatif < 1) { hgt_alternatif = 1 }
 		let h_rect_alternatif = this.props.font.height*(hgt_alternatif+1)
 		this.pdf.rect(this.props.ind.alp, y_rect_alternatif, 180, h_rect_alternatif, 'D')
 		this.ln += h_rect_alternatif+(this.props.font.height)
@@ -495,6 +492,7 @@ class PdfLhp extends Pdf {
 		let txt_informasi = this.data.informasi_lain || '-'
 		this.pdf.text(txt_informasi, this.props.ind.lbl, this.ln, this.props.font.txt_prop)
 		let hgt_informasi = Math.round(txt_informasi.length / (this.props.font.txt_prop.maxWidth - this.props.font.txt_sub))
+		if (hgt_informasi < 1) { hgt_informasi = 1 }
 		let h_rect_informasi = this.props.font.height*(hgt_informasi+1)
 		this.pdf.rect(this.props.ind.alp, y_rect_informasi, 180, h_rect_informasi, 'D')
 		this.ln += h_rect_informasi+(this.props.font.height)
@@ -510,6 +508,7 @@ class PdfLhp extends Pdf {
 		let txt_catatan = this.data.catatan || '-'
 		this.pdf.text(txt_catatan, this.props.ind.lbl, this.ln, this.props.font.txt_prop)
 		let hgt_catatan = Math.round(txt_catatan.length / (this.props.font.txt_prop.maxWidth - this.props.font.txt_sub))
+		if (hgt_catatan < 1) { hgt_catatan = 1 }
 		let h_rect_catatan = this.props.font.height*(hgt_catatan+1)
 		this.pdf.rect(this.props.ind.alp, y_rect_catatan, 180, h_rect_catatan, 'D')
 		this.ln += h_rect_catatan+(this.props.font.height)
@@ -519,7 +518,6 @@ class PdfLhp extends Pdf {
 			this.ln = this.props.txt_line.sta
 		}
 
-		this.pdf.text(`${this.ln}`, this.props.ind.alp-5, this.ln)
 		this.pdf.text('Demikian lembar hasil penelitian ini dibuat dengan kekuatan sumpah jabatan.', this.props.ind.alp, this.ln)
 		this.ln += this.props.font.height*2
 
@@ -529,7 +527,7 @@ class PdfLhp extends Pdf {
 
 		let plh_atasan1 = (this.data.atasan1.plh == true) ? 'Plh. ' : '';
 		let txt_jabatan_atasan1 = `${plh_atasan1}${this.data.atasan1.jabatan.jabatan}`
-		let arr_jabatan_atasan1 = converters.array_text(txt_jabatan_atasan1, 0)
+		let arr_jabatan_atasan1 = converters.array_text(txt_jabatan_atasan1, 30)
 		this.pdf.text(arr_jabatan_atasan1, this.props.ind.alp, this.ln)
 		this.pdf.text(`Ketua Tim Peneliti,`, this.props.ind.ttd, this.ln)
 		this.ln += this.props.font.height*5
@@ -552,6 +550,23 @@ class PdfLhp extends Pdf {
 		this.ln += this.props.font.height
 
 		this.pdf.text(`NIP. ${this.data.atasan2.user.nip}`, this.props.ind.ttd2, this.ln)
+
+		////// LAMPIRAN //////
+		if (this.data.barang != null) {
+			if (this.data.barang.item.length > 1) {
+				this.pdf.setFont('Helvetica', 'normal')
+				this.pdf.addPage()
+				// Header
+				this.headerLampiran(this.data.no_dok_lengkap)
+				// Tabel barang
+				this.tabelBarang(this.data.barang.item, true)
+			}
+		}
+
+		////// WATERMARK //////
+		if ([100].includes(this.data.kode_status)) {
+			this.watermark()
+		}
 
 		return this.pdf.output('datauristring')
 	}
