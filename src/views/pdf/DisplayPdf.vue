@@ -52,6 +52,7 @@ import PdfBukaPengaman from './PdfBukaPengaman.js'
 import PdfBukaSegel from './PdfBukaSegel.js'
 import PdfContoh from './PdfContoh.js'
 import PdfLap from './PdfLap.js'
+import PdfLhp from './PdfLhp.js'
 import PdfLi from './PdfLi.js'
 import PdfLkai from './PdfLkai.js'
 import PdfLp from './PdfLp.js'
@@ -147,6 +148,10 @@ export default {
 				case 'lap':
 					pdf = new PdfLap(pdfData)
 					break;
+
+				case 'lhp':
+					pdf = new PdfLhp(pdfData)
+					break;
 					
 				case 'li':
 					pdf = new PdfLi(pdfData)
@@ -166,7 +171,7 @@ export default {
 						{start: 60, end: 150}
 					)
 					break;
-
+				
 				case 'lp':
 					pdf = new PdfLp(pdfData)
 					break;

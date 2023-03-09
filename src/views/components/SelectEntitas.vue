@@ -50,6 +50,9 @@
 					<small class="form-text text-muted w-100">{{ description }}</small>
 				</div>
 			</CCol>
+			<CCol  md="1" sm="0">
+				<slot name="button"></slot>
+			</CCol>
 		</CRow>
 		<CRow>
 			<CCol md="3" sm="5">
@@ -101,6 +104,12 @@
 					:value.sync="entitas.alamat_identitas"
 					disabled
 				/>
+			</CCol>
+		</CRow>
+
+		<CRow>
+			<CCol md="0" sm="12">
+				<slot name="button"></slot>
 			</CCol>
 		</CRow>
 
@@ -374,6 +383,8 @@ export default {
 				this.editable = true
 			} else {
 				this.entitas = JSON.parse(JSON.stringify(default_entitas))
+				this.items = [this.entitas]
+				this.value = null
 				this.editable = false
 			}
 		},

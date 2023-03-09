@@ -44,6 +44,7 @@ const PageTolak1 = () => import('@/views/penindakan/tolak1/PageTolak1')
 const PageTolak2 = () => import('@/views/penindakan/tolak2/PageTolak2')
 
 // Views - Penyidikan
+const PageLhp = () => import('@/views/penyidikan/lhp/PageLhp')
 const PageLpf = () => import('@/views/penyidikan/lpf/PageLpf')
 const PageLpp = () => import('@/views/penyidikan/lpp/PageLpp.vue')
 const PageSplit = () => import('@/views/penyidikan/split/PageSplit.vue')
@@ -116,6 +117,14 @@ function configRoutes () {
 					component: PageLap,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-lap', next)
+					},
+				},
+				{
+					path: 'lhp',
+					name: 'LHP',
+					component: PageLhp,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lhp', next)
 					},
 				},
 				{
