@@ -24,6 +24,7 @@ const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
 const PageLhp = () => import('@/views/penyidikan/lhp/PageLhp')
 const PageLpf = () => import('@/views/penyidikan/lpf/PageLpf')
 const PageLpp = () => import('@/views/penyidikan/lpp/PageLpp.vue')
+const PageLrp = () => import('@/views/penyidikan/lrp/PageLrp.vue')
 const PageSplit = () => import('@/views/penyidikan/split/PageSplit.vue')
 
 Vue.use(Router)
@@ -110,6 +111,14 @@ function configRoutes () {
 					component: PageLpp,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-lpp', next)
+					},
+				},
+				{
+					path: 'lrp',
+					name: 'LRP',
+					component: PageLrp,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lrp', next)
 					},
 				},
 				{
