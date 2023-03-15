@@ -54,6 +54,7 @@ import PdfLpN from './PdfLpN.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLpp from './PdfLpp.js'
 import PdfLptp from './PdfLptp.js'
+import PdfLrp from './PdfLrp.js'
 import PdfSbp from './PdfSbp.js'
 import PdfSplit from './PdfSplit.js'
 import MyAlert from '../components/AlertSubmit.vue'
@@ -156,6 +157,10 @@ export default {
 						'LAPORAN PELAKSANAAN TUGAS PENINDAKAN NPP', 
 						{start: 58, end: 152}
 					)
+					break;
+
+				case 'lrp':
+					pdf = new PdfLrp(pdfData)
 					break;
 
 				case'sbp':

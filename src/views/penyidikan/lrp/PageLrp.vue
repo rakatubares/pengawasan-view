@@ -11,20 +11,20 @@
 			:construct_delete_text="constructDeleteText"
 		>
 			<template #modal-data>
-				<!-- <MyModalLrp 
+				<MyModalLrp 
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:tipe_surat="tipe_surat"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
-				/> -->
+				/>
 			</template>
 		</MyPageDoc>
 	</div>
 </template>
 
 <script>
-// import MyModalLrp from './ModalLrp.vue'
+import MyModalLrp from './ModalLrp.vue'
 import MyPageDoc from '../../components/PageDoc.vue'
 
 const tipe_surat = 'LRP'
@@ -32,7 +32,7 @@ const tipe_surat = 'LRP'
 export default {
 	name: 'PageLrp',
 	components: {
-		// MyModalLrp,
+		MyModalLrp,
 		MyPageDoc,
 	},
 	data() {
