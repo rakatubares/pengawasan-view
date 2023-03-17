@@ -431,7 +431,7 @@ class PdfLrp extends Pdf {
 				txt_jenis = this.data.barang.item[0].uraian_barang
 			}	
 		}
-		this.pdf.text(txt_komoditas, this.props.ind.txt, this.ln)
+		this.pdf.text(txt_jenis, this.props.ind.txt, this.ln)
 		this.ln += this.props.font.height
 
 		this.pdf.text('d.', this.props.ind.lbl, this.ln)
@@ -619,7 +619,7 @@ class PdfLrp extends Pdf {
 		this.pdf.rect(this.props.ind.alp, y_rect_catatan, 180, h_rect_catatan, 'D')
 		this.ln += h_rect_catatan+(this.props.font.height)*2
 
-		if (this.ln > 220) {
+		if (this.ln > 230) {
 			this.pdf.addPage()
 			this.ln = this.props.txt_line.sta
 		}

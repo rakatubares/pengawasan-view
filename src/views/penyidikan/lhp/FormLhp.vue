@@ -24,7 +24,6 @@
 								:ref="`selectEntitas${index}`"
 								label="Nama Saksi"
 								:id.sync="data.saksi[index]['id']"
-								role="p2vue.penindakan"
 							>
 								<template #button v-if="index > 0">
 									<div class="form-group">
@@ -89,7 +88,7 @@
 			</CRow>
 			
 			<!-- TTD -->
-			<CRow class="pt-3">
+			<CRow class="sep mt-3">
 				<CCol md="12">
 					<MySelectPetugas
 						ref="selectPeneliti"
