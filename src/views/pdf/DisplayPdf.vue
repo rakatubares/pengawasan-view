@@ -62,6 +62,7 @@ import PdfLpN from './PdfLpN.js'
 import PdfLpp from './PdfLpp.js'
 import PdfLppi from './PdfLppi.js'
 import PdfLptp from './PdfLptp.js'
+import PdfLrp from './PdfLrp.js'
 import PdfNhi from './PdfNhi.js'
 import PdfNhiN from './pdfNhiN.js'
 import PdfNi from './PdfNi.js'
@@ -230,6 +231,10 @@ export default {
 					)
 					break;
 
+				case 'lrp':
+					pdf = new PdfLrp(pdfData)
+					break;
+
 				case 'nhi':
 					pdf = new PdfNhi(pdfData)
 					break;
@@ -268,7 +273,7 @@ export default {
 					pdf = new PdfRiksaBadan(pdfData)
 					break;
 
-				case 'sbp':
+				case'sbp':
 					pdf = new PdfSbp(pdfData)
 					break;
 

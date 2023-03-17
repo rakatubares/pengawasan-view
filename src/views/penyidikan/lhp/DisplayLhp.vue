@@ -116,7 +116,7 @@
 						:title="`Saksi ` + (index+1)"
 						:data="saksi"
 						:key="index"
-					/>	
+					/>
 				</div>
 				<MyDisplayPegawai
 					title="Peneliti"
