@@ -52,10 +52,13 @@ import PdfBukaPengaman from './PdfBukaPengaman.js'
 import PdfContoh from './PdfContoh.js'
 import PdfLap from './PdfLap.js'
 import PdfLi from './PdfLi.js'
+import PdfLkai from './PdfLkai.js'
 import PdfLp from './PdfLp.js'
 import PdfLphp from './PdfLphp.js'
 import PdfLpN from './PdfLpN.js'
+import PdfLppi from './PdfLppi.js'
 import PdfLptp from './PdfLptp.js'
+import PdfNhi from './PdfNhi.js'
 import PdfPengaman from './PdfPengaman.js'
 import PdfReekspor from './PdfReekspor.js'
 import PdfRiksa from './PdfRiksa.js'
@@ -143,6 +146,10 @@ export default {
 				case 'li':
 					pdf = new PdfLi(pdfData)
 					break;
+
+				case 'lkai':
+					pdf = new PdfLkai(pdfData)
+					break;
 					
 				case 'lp':
 					pdf = new PdfLp(pdfData)
@@ -167,6 +174,10 @@ export default {
 					)
 					break;
 
+				case 'lppi':
+					pdf = new PdfLppi(pdfData)
+					break;
+
 				case 'lptp':
 					pdf = new PdfLptp(pdfData)
 					break;
@@ -179,6 +190,10 @@ export default {
 						'LAPORAN PELAKSANAAN TUGAS PENINDAKAN NPP', 
 						{start: 58, end: 152}
 					)
+					break;
+
+				case 'nhi':
+					pdf = new PdfNhi(pdfData)
 					break;
 
 				case 'pengaman':

@@ -10,6 +10,11 @@ const TheContainer = () => import('@/containers/TheContainer')
 // Views
 const Homepage = () => import('@/views/Homepage')
 
+// Views - Intelijen
+const PageLkai = () => import('@/views/intelijen/lkai/PageLkai.vue')
+const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
+const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
+
 // Views - Penindakan
 const PageBast = () => import('@/views/penindakan/bast/PageBast')
 const PageBhp = () => import('@/views/monitoring/penarikan_bhp/PageBhp')
@@ -112,6 +117,14 @@ function configRoutes () {
 					},
 				},
 				{
+					path: 'lkai',
+					name: 'LKAI',
+					component: PageLkai,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lkai', next)
+					},
+				},
+				{
 					path: 'lp',
 					name: 'LP',
 					component: PageLp,
@@ -141,6 +154,22 @@ function configRoutes () {
 					component: PageLphpN,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-lphpn', next)
+					},
+				},
+				{
+					path: 'lppi',
+					name: 'LPPI',
+					component: PageLppi,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lppi', next)
+					},
+				},
+				{
+					path: 'nhi',
+					name: 'NHI',
+					component: PageNhi,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-nhi', next)
 					},
 				},
 				{

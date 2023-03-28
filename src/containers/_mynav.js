@@ -6,6 +6,9 @@ export default [
 				_name: 'CSidebarNavTitle',
 				_children: ['Form'],
 				permissions: [
+					'view-lppi', 
+					'view-lkai', 
+					'view-nhi', 
 					'view-li', 
 					'view-lap', 
 					'view-riksa', 
@@ -29,6 +32,34 @@ export default [
 					'view-lphpn',
 					'view-lpn',
 				]
+			},
+			{
+				_name: 'CSidebarNavDropdown',
+				name: 'INTELIJEN',
+				icon: 'cil-zoom',
+				_children: [
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LPPI',
+						to: '/lppi',
+						icon: 'cil-file',
+						permissions: 'view-lppi',
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LKAI',
+						to: '/lkai',
+						icon: 'cil-file',
+						permissions: 'view-lkai',
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'NHI',
+						to: '/nhi',
+						icon: 'cil-file',
+						permissions: 'view-nhi',
+					},
+				],
 			},
 			{
 				_name: 'CSidebarNavDropdown',
