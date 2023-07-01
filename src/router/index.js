@@ -361,41 +361,43 @@ function checkRoutePermission(routePermissions, next, redirectRoute='Homepage') 
 router.beforeEach(async (to, from, next) => {
 	var env = process.env.VUE_APP_MODE
 
-	if (env != 'development') {
-		let token_name = 'sso_token_' + process.env.VUE_APP_ID
-		var cookies = Cookie.parse(document.cookie)
-		var token = cookies[token_name]
+	let token_name = 'sso_token_' + process.env.VUE_APP_ID
+	var cookies = Cookie.parse(document.cookie)
+	var token = cookies[token_name]
 
-		var tries = 0
-		while ((typeof token === 'undefined' || !token) && tries <= 100) {
-			// welp, not attached yet. force attachment
-			await Store.getters.sso.attach()
-			cookies = Cookie.parse(document.cookie)
-			token = cookies[token_name]
-		}
+	var tries = 0
+	while ((typeof token === 'undefined' || !token) && tries <= 100) {
+		// welp, not attached yet. force attachment
+		await Store.getters.sso.attach()
+		cookies = Cookie.parse(document.cookie)
+		token = cookies[token_name]
 
-		if (typeof token === 'undefined' || !token) {
-			await Store.getters.sso.attach()
-			cookies = Cookie.parse(document.cookie)
-			token = cookies[token_name]
-		} else {
-			// Store user info
-			await Store.getters.sso.getUserInfo()
-				.then((e) => {
-					if (!e.data) {
-						let login_url = process.env.VUE_APP_LOGIN_URL + '?appid=' + process.env.VUE_APP_ID
-						window.location.replace(login_url);
-					} else {
-						Store.commit('set', ['userInfo', JSON.parse(JSON.stringify(e.data))])
-					}
-				})
-
-			// Store token
-			Store.commit('set', ['token', token])
-		}
-	} else {
-		console.log('DEVELOPMENT - NO SSO')
+		// Store token
+		Store.commit('set', ['token', token])
 	}
+
+	// Get user info
+	var user = Store.getters.userInfo
+	if (user == null) {
+		if (env == 'development') {
+			// Login for development environment
+			Store.getters.sso.login()
+		}
+
+		// Store user info
+		await Store.getters.sso.getUserInfo()
+			.then((e) => {
+				if (!e.data) {
+					// Login for production environment
+					let login_url = process.env.VUE_APP_LOGIN_URL + '?appid=' + process.env.VUE_APP_ID
+					window.location.replace(login_url);
+				} else {
+					Store.commit('set', ['userInfo', JSON.parse(JSON.stringify(e.data))])
+				}
+			})
+	}
+
+	
 	
 	next()
 })
