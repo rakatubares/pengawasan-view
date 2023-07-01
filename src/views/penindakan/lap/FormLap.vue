@@ -37,17 +37,17 @@
 			<CRow>
 				<CCol md="9" sm="12">
 					<!-- Load data LI -->
-					<div v-if="data.jenis_sumber == 'LI-1'" class="form-group">
+					<div v-if="(data.jenis_sumber == 'LI-1') || (data.jenis_sumber == 'NHI')" class="form-group">
 						<label>Sumber informasi</label>
 						<v-autocomplete
-							v-model="li_search_value"
+							v-model="search_value"
 							outlined
 							dense
-							:items.sync="li_search_items"
-							:search-input.sync="li_search_query"
+							:items.sync="search_items"
+							:search-input.sync="search_query"
 							item-text="no_dok_lengkap"
 							item-value="id"
-							@change="changeValueLi"
+							@change="changeValueSumber"
 						>
 							<template v-slot:prepend>
 								<CDropdown
@@ -68,14 +68,14 @@
 							<template v-slot:no-data>
 								<v-list-item>
 									<v-list-item-title>
-										Data LI-1 tidak ditemukan
+										Data tidak ditemukan
 									</v-list-item-title>
 								</v-list-item>
 							</template>
 							<template v-slot:item="{ item }">
 								<v-list-item-content>
-									<h3><v-list-item-title v-text="item.no_dok_lengkap"></v-list-item-title></h3>
-									<v-list-item-subtitle v-text="item.tanggal_dokumen"></v-list-item-subtitle>
+									<h3><v-list-item-title>{{ item.no_dok_lengkap }}</v-list-item-title></h3>
+									<v-list-item-subtitle>{{ item.tanggal_dokumen }}</v-list-item-subtitle>
 								</v-list-item-content>
 							</template>
 						</v-autocomplete>
@@ -122,7 +122,7 @@
 							"
 						>
 							<template v-slot:input="slotProps">
-								<div v-if="data.jenis_sumber == 'LI-1'">
+								<div v-if="(data.jenis_sumber == 'LI-1') || (data.jenis_sumber == 'NHI')">
 									<input
 										class="form-control" 
 										type="text" 
@@ -489,10 +489,11 @@ export default {
 			doc_type: 'lap',
 			data: JSON.parse(JSON.stringify(default_data)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
-			li_search_query: null,
-			li_search_value: null,
-			li_search_items: [],
-			li_search_exception: null,
+			tipe_sumber: 'nhi',
+			search_query: null,
+			search_value: null,
+			search_items: [],
+			search_exception: null,
 			dugaan_pelanggaran_options: [],
 			skema_penindakan_options: [],
 			labelIcon: {
@@ -511,9 +512,10 @@ export default {
 				this.data.skema_penindakan = {id: null}
 			}
 			if (this.data.sumber_id != null) {
-				this.li_search_exception = this.data.sumber_id
-				await this.search_li(this.data.nomor_sumber)
-				this.li_search_value = this.li_search_items[0]
+				this.changeTipeSumber(this.data.jenis_sumber)
+				this.search_exception = this.data.sumber_id
+				await this.search_sumber(this.data.nomor_sumber)
+				this.search_value = this.search_items[0]
 				this.data_source = this.data.jenis_sumber
 			}
 			
@@ -588,31 +590,43 @@ export default {
 			});
 		},
 		toggleSource(val) {
-			// Nullify related data
 			this.data.jenis_sumber = val
+			this.changeTipeSumber(val)
+
+			// Nullify related data
 			this.data.nomor_sumber = null
 			this.data.tanggal_sumber = null
 			this.data.sumber_id = null
-			this.li_search_value = null
+			this.search_value = null			
 		},
-		async changeValueLi(id) {
+		changeTipeSumber(val) {
+			// Change source document
+			if (val == 'NHI') {
+				this.tipe_sumber = 'nhi'
+			} else if (val == 'LI-1') {
+				this.tipe_sumber = 'li'
+			} else {
+				this.tipe_sumber = null
+			}
+		},
+		async changeValueSumber(id) {
 			if (id != null) {
-				// Get data li
-				let response = await api.getDisplayDataById('li', id)
-				let li = response.data.data
+				// Get data sumber
+				let response = await api.getDisplayDataById(this.tipe_sumber, id)
+				let doc = response.data.data
 				
 				// Change current data according to li
-				this.data.nomor_sumber = li.no_dok_lengkap
-				this.data.tanggal_sumber = li.tanggal_dokumen
+				this.data.nomor_sumber = doc.no_dok_lengkap
+				this.data.tanggal_sumber = doc.tanggal_dokumen
 				
 				// Specify sumber id
 				this.data.sumber_id = id
 			}
 		},
-		async search_li(search) {
-			let data = {'src': search, 'flt': {kode_status: 200}, 'exc': this.li_search_exception}
-			let responses = await api.searchDoc('li', data)
-			this.li_search_items = responses.data.data
+		async search_sumber(search) {
+			let data = {'src': search, 'flt': {kode_status: 200}, 'exc': this.search_exception}
+			let responses = await api.searchDoc(this.tipe_sumber, data)
+			this.search_items = responses.data.data
 		},
 		togglePenindakan(val) {
 			if (val == true) {
@@ -630,8 +644,8 @@ export default {
 		data: function(val) {
 			this.renderData()
 		},
-		async li_search_query (val) {
-			await this.search_li(val)
+		async search_query (val) {
+			await this.search_sumber(val)
 		},
 	},
 	async mounted() {
