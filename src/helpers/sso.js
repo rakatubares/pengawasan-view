@@ -62,6 +62,19 @@ class SSO {
 			url: '/sso/api.php?command=getUserInfo'
 		})
 	}
+
+	// test login
+	login() {
+		console.log('TEST LOGIN')
+		const params = new URLSearchParams();
+		params.append('username', process.env.VUE_APP_USERNAME);
+		params.append('password', process.env.VUE_APP_PASSWORD);
+		return axios({
+			method: 'post',
+			url: '/sso/api.php?command=login',
+			data: params
+		})
+	}
 }
 
 export default SSO 
