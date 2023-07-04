@@ -11,6 +11,7 @@ export default [
 					'view-nhi', 
 					'view-li', 
 					'view-lap', 
+					'view-lapn', 
 					'view-riksa', 
 					'view-riksa-badan', 
 					'view-segel', 
@@ -26,6 +27,7 @@ export default [
 					'view-tolak2',
 					'view-lphp',
 					'view-lp',
+					'view-nhin',
 					'view-sbpn',
 					'view-tolak1n',
 					'view-tolak2n',
@@ -206,6 +208,20 @@ export default [
 				name: 'NPP',
 				icon: 'cil-blur',
 				_children: [
+					{
+						_name: 'CSidebarNavItem',
+						name: 'NHI-N',
+						to: '/nhin',
+						icon: 'cil-file',
+						permissions: 'view-nhin',
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LAP-N',
+						to: '/lapn',
+						icon: 'cil-file',
+						permissions: 'view-lapn',
+					},
 					{
 						_name: 'CSidebarNavDropdown',
 						name: 'SBP-N',

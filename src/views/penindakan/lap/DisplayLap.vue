@@ -204,11 +204,11 @@ export default {
 		MyDisplayPejabat
 	},
 	props: {
+		doc_type: String,
 		doc_id: Number
 	},
 	data() {
 		return {
-			doc_type: 'lap',
 			data_doc: JSON.parse(JSON.stringify(default_data))
 		}
 	},

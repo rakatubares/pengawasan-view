@@ -14,6 +14,7 @@ const Homepage = () => import('@/views/Homepage')
 const PageLkai = () => import('@/views/intelijen/lkai/PageLkai.vue')
 const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
 const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
+const PageNhiN = () => import('@/views/intelijen/nhin/PageNhiN.vue')
 
 // Views - Penindakan
 const PageBast = () => import('@/views/penindakan/bast/PageBast')
@@ -22,6 +23,7 @@ const PageBukaPengaman = () => import('@/views/penindakan/bukapengaman/PageBukaP
 const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
 const PageContoh = () => import('@/views/penindakan/contoh/PageContoh')
 const PageLap = () => import('@/views/penindakan/lap/PageLap')
+const PageLapN = () => import('@/views/penindakan/lap/PageLapN')
 const PageLi = () => import('@/views/penindakan/li/PageLi')
 const PageLp = () => import('@/views/penindakan/lp/PageLp')
 const PageLpN = () => import('@/views/penindakan/lpn/PageLpN')
@@ -109,6 +111,14 @@ function configRoutes () {
 					},
 				},
 				{
+					path: 'lapn',
+					name: 'LAP-N',
+					component: PageLapN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lapn', next)
+					},
+				},
+				{
 					path: 'li',
 					name: 'LI-1',
 					component: PageLi,
@@ -170,6 +180,14 @@ function configRoutes () {
 					component: PageNhi,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-nhi', next)
+					},
+				},
+				{
+					path: 'nhin',
+					name: 'NHI-N',
+					component: PageNhiN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-nhin', next)
 					},
 				},
 				{

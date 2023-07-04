@@ -59,6 +59,7 @@ import PdfLpN from './PdfLpN.js'
 import PdfLppi from './PdfLppi.js'
 import PdfLptp from './PdfLptp.js'
 import PdfNhi from './PdfNhi.js'
+import PdfNhiN from './pdfNhiN.js'
 import PdfPengaman from './PdfPengaman.js'
 import PdfReekspor from './PdfReekspor.js'
 import PdfRiksa from './PdfRiksa.js'
@@ -142,6 +143,15 @@ export default {
 				case 'lap':
 					pdf = new PdfLap(pdfData)
 					break;
+
+				case 'lapn':
+					pdf = new PdfLap(
+						pdfData, 
+						this.active_pdf, 
+						'LEMBAR ANALISIS PRA PENINDAKAN', 
+						{start: 63, end: 147}
+					)
+					break;
 					
 				case 'li':
 					pdf = new PdfLi(pdfData)
@@ -149,6 +159,17 @@ export default {
 
 				case 'lkai':
 					pdf = new PdfLkai(pdfData)
+					break;
+
+				case 'lkain':
+					pdf = new PdfLkai(
+						pdfData,
+						this.active_pdf,
+						'LEMBAR KERJA ANALISIS INTELIJEN NPP (LKAI-N)',
+						'lppin',
+						'LPPI-N',
+						{start: 60, end: 150}
+					)
 					break;
 					
 				case 'lp':
@@ -178,6 +199,15 @@ export default {
 					pdf = new PdfLppi(pdfData)
 					break;
 
+				case 'lppin':
+					pdf = new PdfLppi(
+						pdfData,
+						this.active_pdf,
+						'LEMBAR PENGUMPULAN DAN PENILAIAN INFORMASI NPP',
+						{start: 53, end: 157}
+					)
+					break;
+
 				case 'lptp':
 					pdf = new PdfLptp(pdfData)
 					break;
@@ -194,6 +224,10 @@ export default {
 
 				case 'nhi':
 					pdf = new PdfNhi(pdfData)
+					break;
+
+				case 'nhin':
+					pdf = new PdfNhiN(pdfData)
 					break;
 
 				case 'pengaman':
