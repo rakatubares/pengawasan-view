@@ -4,7 +4,7 @@
 			<CRow>
 				<CCol md="3" sm="12">
 					<div class="form-group">
-						<label class="w-100">Tanggal LAP</label>
+						<label class="w-100">Tanggal {{ doc_name }}</label>
 						<date-picker 
 							v-model="data.tanggal_dokumen"
 							format="DD-MM-YYYY"
@@ -30,14 +30,13 @@
 							<i slot="icon-calendar"></i>
 							<i slot="icon-clear"></i>
 						</date-picker>
-						<small class="form-text text-muted w-100">Tanggal LAP</small>
 					</div>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="9" sm="12">
-					<!-- Load data LI -->
-					<div v-if="(data.jenis_sumber == 'LI-1') || (data.jenis_sumber == 'NHI')" class="form-group">
+					<!-- Load data sumber -->
+					<div v-if="['LI-1', 'NHI', 'NHI-N'].includes(data.jenis_sumber)" class="form-group">
 						<label>Sumber informasi</label>
 						<v-autocomplete
 							v-model="search_value"
@@ -54,11 +53,14 @@
 									:togglerText.sync="data.jenis_sumber"
 									color="primary"
 								>
-									<CDropdownItem @click="toggleSource('NHI')">
+									<CDropdownItem v-if="doc_type == 'lap'" @click="toggleSource('NHI')">
 										NHI
 									</CDropdownItem>
-									<CDropdownItem @click="toggleSource('LI-1')">
+									<CDropdownItem v-if="doc_type == 'lap'" @click="toggleSource('LI-1')">
 										LI-1
+									</CDropdownItem>
+									<CDropdownItem v-if="doc_type == 'lapn'" @click="toggleSource('NHI-N')">
+										NHI-N
 									</CDropdownItem>
 									<CDropdownItem @click="toggleSource('Lainnya')">
 										Lainnya
@@ -79,14 +81,15 @@
 								</v-list-item-content>
 							</template>
 						</v-autocomplete>
-						<small class="form-text text-muted w-100">Nomor NHI / LI-1 / Informasi lain</small>
+						<small v-if="doc_type == 'lapn'" class="form-text text-muted w-100">Nomor NHI-N / Informasi lain</small>
+						<small v-else class="form-text text-muted w-100">Nomor NHI / LI-1 / Informasi lain</small>
 					</div>
 
-					<!-- Input LI -->
+					<!-- Input data sumber -->
 					<CInput
 						v-else
 						label="Sumber informasi"
-						description="Nomor NHI / LI-1 / Informasi lain"
+						:description="(doc_type == 'lapn') ? `Nomor NHI-N / Informasi lain` : `Nomor NHI / LI-1 / Informasi lain`"
 						:value.sync="data.nomor_sumber"
 						:is-valid="validatorRequired"
 						invalid-feedback="Sumber informasi wajib diisi"
@@ -96,11 +99,14 @@
 								:togglerText.sync="data.jenis_sumber"
 								color="primary"
 							>
-								<CDropdownItem @click="toggleSource('NHI')">
+								<CDropdownItem v-if="doc_type == 'lap'" @click="toggleSource('NHI')">
 									NHI
 								</CDropdownItem>
-								<CDropdownItem @click="toggleSource('LI-1')">
+								<CDropdownItem v-if="doc_type == 'lap'" @click="toggleSource('LI-1')">
 									LI-1
+								</CDropdownItem>
+								<CDropdownItem v-if="doc_type == 'lapn'" @click="toggleSource('NHI-N')">
+									NHI-N
 								</CDropdownItem>
 								<CDropdownItem @click="toggleSource('Lainnya')">
 									Lainnya
@@ -122,7 +128,7 @@
 							"
 						>
 							<template v-slot:input="slotProps">
-								<div v-if="(data.jenis_sumber == 'LI-1') || (data.jenis_sumber == 'NHI')">
+								<div v-if="['LI-1', 'NHI', 'NHI-N'].includes(data.jenis_sumber)">
 									<input
 										class="form-control" 
 										type="text" 
@@ -148,7 +154,8 @@
 							<i slot="icon-calendar"></i>
 							<i slot="icon-clear"></i>
 						</date-picker>
-						<small class="form-text text-muted w-100">Tanggal NHI / LI-1 / Informasi lain</small>
+						<small v-if="doc_type == 'lapn'" class="form-text text-muted w-100">Tanggal NHI-N / Informasi lain</small>
+						<small v-else class="form-text text-muted w-100">Tanggal NHI / LI-1 / Informasi lain</small>
 					</div>
 				</CCol>
 			</CRow>
@@ -465,7 +472,7 @@ const default_data = {
 const custom_validations_default = {
 	tanggal_dokumen: {
 		state: false,
-		text: 'Tanggal LAP wajib diisi'
+		text: 'Tanggal wajib diisi'
 	},
 	tanggal_sumber: {
 		state: false,
@@ -482,11 +489,12 @@ export default {
 	},
 	props: {
 		state: String,
+		doc_type: String,
 		doc_id: Number,
+		doc_name: String,
 	},
 	data() {
 		return {
-			doc_type: 'lap',
 			data: JSON.parse(JSON.stringify(default_data)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 			tipe_sumber: 'nhi',
@@ -543,7 +551,7 @@ export default {
 					this.fillDefault()
 					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
-					this.alert('Data LAP berhasil disimpan')
+					this.alert(`Data ${this.doc_name} berhasil disimpan`)
 				} catch (error) {
 					console.log('form lap - save data - error', error)
 				}
@@ -551,7 +559,7 @@ export default {
 				try {
 					this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 					this.fillDefault()
-					this.alert('Data LAP berhasil diubah')
+					this.alert(`Data ${this.doc_name} berhasil diubah`)
 				} catch (error) {
 					console.log('form lap - update data - error', error)
 				}
@@ -605,6 +613,8 @@ export default {
 				this.tipe_sumber = 'nhi'
 			} else if (val == 'LI-1') {
 				this.tipe_sumber = 'li'
+			} else if (val == 'NHI-N') {
+				this.tipe_sumber = 'nhin'
 			} else {
 				this.tipe_sumber = null
 			}
@@ -651,8 +661,13 @@ export default {
 	async mounted() {
 		this.getKategoriPelanggaran()
 		this.getSkemaPenindakan()
+
 		if (this.state == 'edit') {
 			await this.getData()
+		} else {
+			if (this.doc_type == 'lapn') {
+				this.toggleSource('NHI-N')
+			}
 		}
 	}
 }

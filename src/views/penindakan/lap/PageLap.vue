@@ -3,7 +3,7 @@
 		<MyPageDoc 
 			ref="page_doc"
 			:doc_type="doc_type"
-			table_title="Daftar LAP"
+			:table_title="table_title"
 			:table_fields="table_fields"
 			:custom_fields="custom_fields"
 			:compute_list="computeList"
@@ -33,12 +33,22 @@ export default {
 		MyModalLap,
 		MyPageDoc,
 	},
+	props: {
+		doc_type: {
+			type: String,
+			default: 'lap'
+		},
+		tipe_surat: {
+			type: String,
+			default: 'LAP'
+		},
+	},
 	data() {
 		return {
-			doc_type: 'lap',
+			table_title: `Daftar ${this.tipe_surat}`,
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: 'No LAP' },
-				{ key: 'tanggal_dokumen', label: 'Tgl LAP' },
+				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
+				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
 				{ key: 'dokumen_sumber', label: 'Sumber Informasi' },
 			],
 			custom_fields: ['dokumen_sumber'],
@@ -65,7 +75,7 @@ export default {
 			this.modal_data_props.show = false
 		},
 		constructDeleteText(item) {
-			let text = "Apakah Anda yakin untuk menghapus data LAP atas " 
+			let text = `Apakah Anda yakin untuk menghapus data ${this.tipe_surat} atas ` 
 				+ item.nomor_sumber.bold() 
 				+ ' tanggal ' + item.tanggal_sumber.bold()  
 				+ "?"

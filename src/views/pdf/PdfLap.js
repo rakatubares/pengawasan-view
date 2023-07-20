@@ -35,10 +35,15 @@ const props = {
 }
 
 class PdfLap extends Pdf {
-	constructor(data) {
+	constructor(
+		data,
+		lap_type = 'lap',
+		jenis_dok = 'LEMBAR ANALISIS PRA PENINDAKAN'
+	) {
 		super(props);
-		this.jenis_dok = 'LEMBAR ANALISIS PRA PENINDAKAN'
 		this.data = data
+		this.lap_type = lap_type
+		this.jenis_dok = jenis_dok
 		this.prepareDocDate(this.data.tanggal_dokumen)
 	}
 
@@ -46,7 +51,8 @@ class PdfLap extends Pdf {
 		this.createHeader()
 		this.createNomor(this.jenis_dok, 'Nomor: ' + this.data.no_dok_lengkap)
 
-		this.pdf.text(`Sumber Informasi : NHI/LI-1/Info lain* No`, this.props.ind.alp, this.ln)
+		const pilihan_sumber_informasi = this.lap_type == 'lap' ? 'NHI/LI-1/Info lain*' : 'NHI-N/Info lain*'
+		this.pdf.text(`Sumber Informasi : ${pilihan_sumber_informasi} No`, this.props.ind.alp, this.ln)
 		this.pdf.text(':', this.props.ind.cln, this.ln)
 		this.pdf.text(this.data.nomor_sumber, this.props.ind.txt, this.ln)
 		this.pdf.text('Tanggal :', this.props.ind.lbl2, this.ln)

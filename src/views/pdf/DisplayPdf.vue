@@ -150,10 +150,19 @@ export default {
 					pdf = new PdfLap(pdfData)
 					break;
 
+				case 'lapn':
+					pdf = new PdfLap(
+						pdfData, 
+						this.active_pdf, 
+						'LEMBAR ANALISIS PRA PENINDAKAN', 
+						{start: 63, end: 147}
+					)
+					break;
+
 				case 'lhp':
 					pdf = new PdfLhp(pdfData)
 					break;
-					
+	
 				case 'li':
 					pdf = new PdfLi(pdfData)
 					break;
@@ -172,7 +181,7 @@ export default {
 						{start: 60, end: 150}
 					)
 					break;
-				
+					
 				case 'lp':
 					pdf = new PdfLp(pdfData)
 					break;

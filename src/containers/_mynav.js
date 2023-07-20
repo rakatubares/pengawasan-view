@@ -12,6 +12,7 @@ export default [
 					'view-ni',
 					'view-li', 
 					'view-lap', 
+					'view-lapn', 
 					'view-riksa', 
 					'view-riksa-badan', 
 					'view-segel', 
@@ -250,6 +251,13 @@ export default [
 						to: '/nin',
 						icon: 'cil-file',
 						permissions: 'view-nin',
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LAP-N',
+						to: '/lapn',
+						icon: 'cil-file',
+						permissions: 'view-lapn',
 					},
 					{
 						_name: 'CSidebarNavDropdown',

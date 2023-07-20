@@ -2,7 +2,7 @@
 	<div class="wrapper">
 		<MyModalTabs
 			ref="modal_tabs"
-			title="Data LAP"
+			:title="`Data ${this.doc_name}`"
 			:tabs_list.sync="tabs_list"
 			:current_tab.sync="current_tab"
 			@close-modal="closeModal"
@@ -12,7 +12,9 @@
 					<MyFormLap
 						v-if="['insert','edit'].includes(modal_state)"
 						:state.sync="modal_state"
+						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
+						:doc_name="doc_name"
 					/>
 					<MyDisplayLap
 						v-else-if="modal_state == 'show'"
@@ -59,6 +61,7 @@ export default {
 	},
 	data() {
 		return {
+			doc_name: 'LAP',
 			doc_id: this.id,
 			modal_state: null,
 			tabs_list: [
@@ -100,6 +103,7 @@ export default {
 	},
 	mounted() {
 		this.modal_state = this.state
+		this.doc_name = (this.doc_type == 'lapn') ? 'LAP-N' : 'LAP'
 	}
 }
 </script>

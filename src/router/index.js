@@ -27,6 +27,7 @@ const PageBukaPengaman = () => import('@/views/penindakan/bukapengaman/PageBukaP
 const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
 const PageContoh = () => import('@/views/penindakan/contoh/PageContoh')
 const PageLap = () => import('@/views/penindakan/lap/PageLap')
+const PageLapN = () => import('@/views/penindakan/lap/PageLapN')
 const PageLi = () => import('@/views/penindakan/li/PageLi')
 const PageLp = () => import('@/views/penindakan/lp/PageLp')
 const PageLpN = () => import('@/views/penindakan/lpn/PageLpN')
@@ -118,6 +119,14 @@ function configRoutes () {
 					component: PageLap,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-lap', next)
+					},
+				},
+				{
+					path: 'lapn',
+					name: 'LAP-N',
+					component: PageLapN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lapn', next)
 					},
 				},
 				{
