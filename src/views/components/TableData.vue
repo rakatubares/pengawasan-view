@@ -171,8 +171,8 @@ export default {
 					btn = [100].includes(item.status.kode_status)
 				} else if (type == 'show') {
 					btn = [
-						101, 102, 103, 104, 105, 106, 111, 112, 
-						200, 201, 202, 203, 204, 205, 206, 211, 212,
+						101, 102, 103, 104, 105, 106, 107, 111, 112, 
+						200, 201, 202, 203, 204, 205, 206, 207, 211, 212,
 					].includes(item.status.kode_status)
 				} else {
 					btn = false
