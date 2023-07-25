@@ -12,6 +12,47 @@
 				</CCol>
 			</CRow>
 			<CRow>
+				<CCol md="6" sm="12">
+					<div class="form-group">
+						<label>Nomor LAP</label>
+						<v-autocomplete
+							class="no-message"
+							v-model="lap_search_value"
+							outlined
+							dense
+							:items.sync="lap_search_items"
+							:search-input.sync="lap_search_query"
+							item-text="no_dok_lengkap"
+							item-value="id"
+							@change="changeValueLap"
+						>
+							<template v-slot:no-data>
+								<v-list-item>
+									<v-list-item-title>
+										Data LAP tidak ditemukan
+									</v-list-item-title>
+								</v-list-item>
+							</template>
+							<template v-slot:item="{ item }">
+								<v-list-item-content>
+									<h3><v-list-item-title>{{ item.no_dok_lengkap }}</v-list-item-title></h3>
+									<v-list-item-subtitle>{{ item.tanggal_dokumen }}</v-list-item-subtitle>
+								</v-list-item-content>
+							</template>
+						</v-autocomplete>
+						<small class="form-text text-muted w-100">Nomor LAP sebagai sumber penindakan</small>
+					</div>
+				</CCol>
+				<CCol md="3" sm="12">
+					<CInput
+						label="Tanggal LAP"
+						:value.sync="data.tanggal_lap"
+						disabled
+					>
+					</CInput>
+				</CCol>
+			</CRow>
+			<CRow>
 				<CCol sm="12">
 					<MySelectLokasi
 						:state.sync="state"
@@ -231,6 +272,7 @@ import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
 const default_data = {
+	lap_id: null,
 	uraian_penindakan: null,
 	alasan_penindakan: null,
 	jenis_pelanggaran: 'kepabeanan',
@@ -297,6 +339,10 @@ export default {
 	data() {
 		return {
 			data: JSON.parse(JSON.stringify(default_data)),
+			lap_search_value: null,
+			lap_search_items: [],
+			lap_search_query: null,
+			lap_search_exception: null,
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 			jenis_pelanggaran_options: [ ...jenis_pelanggaran ],
 		}
@@ -305,6 +351,12 @@ export default {
 		async getData() {
 			let response = await api.getFormDataById(this.doc_type, this.doc_id)
 			this.data = response.data.data
+
+			if (this.data.lap_id != null) {
+				this.lap_search_exception = this.data.lap_id
+				await this.search_lap(this.data.nomor_lap)
+				this.lap_search_value = this.lap_search_items[0]
+			}
 
 			if (this.data.penindakan.petugas2 == null) {
 				this.data.penindakan.petugas2 = {user_id: null}
@@ -380,7 +432,31 @@ export default {
 				_.set(this, validasiNameFinal+'.state', valid)
 				_.set(this, validasiNameFinal+'.text', textFinal)
 			}
-		}
+		},
+		async changeValueLap(id) {
+			console.log(`LAP ID: ${id}`)
+			if (id != null) {
+				// Get data LAP
+				let response = await api.getDisplayDataById('lap', id)
+				let lap = response.data.data
+				
+				// Change current data according to lap
+				this.data.tanggal_lap = lap.tanggal_dokumen
+				
+				// Specify lap id
+				this.data.lap_id = id
+			}
+		},
+		async search_lap(search) {
+			let data = {'src': search, 'exc': this.lap_search_exception, 'flt': {kode_status: 200}}
+			let responses = await api.searchDoc('lap', data)
+			this.lap_search_items = responses.data.data
+		},
+	},
+	watch: {
+		async lap_search_query (val) {
+			await this.search_lap(val)
+		},
 	},
 	async mounted() {
 		if (this.state == 'edit') {

@@ -25,8 +25,8 @@
 							</template>
 							<template v-slot:item="{ item }">
 								<v-list-item-content>
-									<h3><v-list-item-title v-text="item.no_dok_lengkap"></v-list-item-title></h3>
-									<v-list-item-subtitle v-text="item.tanggal_dokumen"></v-list-item-subtitle>
+									<h3><v-list-item-title>{{ item.no_dok_lengkap }}</v-list-item-title></h3>
+									<v-list-item-subtitle>{{ item.tanggal_dokumen }}</v-list-item-subtitle>
 								</v-list-item-content>
 							</template>
 						</v-autocomplete>
