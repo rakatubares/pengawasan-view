@@ -35,7 +35,9 @@ import { mapState } from 'vuex'
 
 import store from '../store.js'
 
+export const env = process.env.VUE_APP_MODE;
 export default {
+	env,
 	name: 'TheHeaderDropdownAccnt',
 	data () {
 		return { 
@@ -47,9 +49,12 @@ export default {
 	},
 	methods: {
 		logout() {
-			console.log('logout')
+			console.log('logout' + env)
 			store.getters.sso.logout()
-			this.$router.push('Home')
+			if (env == 'production') {
+				let login_url = process.env.VUE_APP_LOGIN_URL + '?appid=' + process.env.VUE_APP_ID
+				window.location.replace(login_url);
+			}
 		}
 	}
 }
