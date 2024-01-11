@@ -9,6 +9,7 @@
 			:compute_list="computeList"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
+			:permission_to_create="permission_to_create"
 		>
 			<template #modal-data>
 				<MyModalLhp 
@@ -53,6 +54,7 @@ export default {
 				state: null,
 				doc_id: null
 			},
+			permission_to_create: 'create-lhp',
 		}
 	},
 	methods: {
