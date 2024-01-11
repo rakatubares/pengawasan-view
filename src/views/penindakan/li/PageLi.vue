@@ -8,6 +8,7 @@
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
 			:status_filter_options="status_filter_options"
+			:permission_to_create="permission_to_create"
 		>
 			<template #modal-data>
 				<MyModalLi 
@@ -48,7 +49,8 @@ export default {
 			status_filter_options: [
 				{ value: 'draft lap', label: 'Draft LAP' }, 
 				{ value: 'lap', label: 'LAP' }, 
-			]
+			],
+			permission_to_create: 'create-li',
 		}
 	},
 	methods: {

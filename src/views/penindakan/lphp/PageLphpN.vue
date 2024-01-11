@@ -4,6 +4,7 @@
 		:tipe_surat="tipe_surat"
 		:sbp_type="sbp_type"
 		:tipe_surat_sbp="tipe_surat_sbp"
+		:permission_to_create="permission_to_create"
 	/>
 </template>
 
@@ -20,7 +21,8 @@ export default {
 			doc_type: 'lphpn',
 			tipe_surat: 'LPHP-N',
 			sbp_type: 'sbpn',
-			tipe_surat_sbp: 'SBP-N'
+			tipe_surat_sbp: 'SBP-N',
+			permission_to_create: 'create-lphpn'
 		}
 	},
 }

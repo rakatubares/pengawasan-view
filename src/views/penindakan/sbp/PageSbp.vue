@@ -10,6 +10,7 @@
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
 			:status_filter_options="status_filter_options"
+			:permission_to_create="permission_to_create"
 		>
 			<template #modal-data>
 				<MyModalSbp 
@@ -44,9 +45,13 @@ export default {
 			type: String,
 			default: 'SBP'
 		},
+		permission_to_create: {
+			type: String,
+			default: 'create-sbp'
+		},
 		custom_filters: [
 			{'status-filter': '<input type="date">'}
-		]
+		],
 	},
 	data() {
 		return {
@@ -68,7 +73,7 @@ export default {
 				{ value: 'lphp', label: 'LPHP' }, 
 				{ value: 'draft lp', label: 'Draft LP' }, 
 				{ value: 'lp', label: 'LP' }, 
-			]
+			],
 		}
 	},
 	methods: {
