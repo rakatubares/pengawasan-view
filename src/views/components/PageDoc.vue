@@ -20,6 +20,7 @@
 								color="primary" 
 								@click="createDoc"
 								class="mr-1"
+								v-if="checkCreatePermission"
 							>
 								+ Buat Baru
 							</CButton>
@@ -48,6 +49,7 @@
 </template>
 
 <script>
+import permission from '../../helpers/permission'
 import api2 from '../../router/api2.js'
 import MyModalDelete from './ModalDelete.vue'
 import MyTableData from './TableData.vue'
@@ -75,6 +77,7 @@ export default {
 	components: {
 		MyModalDelete,
 		MyTableData,
+		permission,
 	},
 	props: {
 		doc_type: String,
@@ -86,6 +89,7 @@ export default {
 		status_filter_options: Array,
 		modal_data_props: Object,
 		construct_delete_text: Function,
+		permission_to_create: String,
 	},
 	data() {
 		return {
@@ -158,6 +162,11 @@ export default {
 		displayTab(tab_index) {
 			this.modal_props.tabs.list[tab_index]['visibility'] = true
 		},
+	},
+	computed: {
+		checkCreatePermission() {
+			return permission.checkPermission(this.permission_to_create)
+		}
 	},
 	created() {
 		this.getDataTable()
