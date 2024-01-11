@@ -9,6 +9,7 @@
 			:compute_list="computeList"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
+			:permission_to_create="permission_to_create"
 		>
 			<template #modal-data>
 				<MyModalNi 
@@ -53,6 +54,10 @@ export default {
 			type: String,
 			default: 'LKAI'
 		},
+		permission_to_create: {
+			type: String,
+			default: 'create-ni'
+		}
 	},
 	data() {
 		return {

@@ -2,6 +2,7 @@
 	<MyPageLppi
 		:doc_type="doc_type"
 		:tipe_surat="tipe_surat"
+		:permission_to_create="permission_to_create"
 	/>
 </template>
 
@@ -16,7 +17,8 @@ export default {
 	data() {
 		return {
 			doc_type: 'lppin',
-			tipe_surat: 'LPPI-N'
+			tipe_surat: 'LPPI-N',
+			permission_to_create: 'create-lppin'
 		}
 	}
 }
