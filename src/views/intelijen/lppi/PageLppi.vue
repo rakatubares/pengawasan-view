@@ -7,6 +7,7 @@
 			:table_fields="table_fields"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
+			:permission_to_create="permission_to_create"
 		>
 			<template #modal-data>
 				<MyModalLppi 
@@ -40,7 +41,11 @@ export default {
 		tipe_surat: {
 			type: String,
 			default: 'LPPI'
-		}
+		},
+		permission_to_create: {
+			type: String,
+			default: 'create-lppi'
+		},
 	},
 	data() {
 		return {
