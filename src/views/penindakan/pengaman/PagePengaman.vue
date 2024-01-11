@@ -10,6 +10,7 @@
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
 			:status_filter_options="status_filter_options"
+			:permission_to_create="permission_to_create"
 		>
 			<template #modal-data>
 				<MyModalPengaman
@@ -51,7 +52,8 @@ export default {
 			status_filter_options: [
 				{ value: 'draft buka pengaman', label: 'Draft Buka Pengaman' }, 
 				{ value: 'buka pengaman', label: 'Buka Pengaman' }, 
-			]
+			],
+			permission_to_create: 'create-pengaman',
 		}
 	},
 	methods: {

@@ -7,6 +7,7 @@
 			:table_fields="table_fields"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
+			:permission_to_create="permission_to_create"
 		>
 			<template #modal-data>
 				<MyModalLphp 
@@ -49,7 +50,11 @@ export default {
 		tipe_surat_sbp: {
 			type: String,
 			default: 'SBP'
-		}
+		},
+		permission_to_create: {
+			type: String,
+			default: 'create-lphp'
+		},
 	},
 	data() {
 		return {
