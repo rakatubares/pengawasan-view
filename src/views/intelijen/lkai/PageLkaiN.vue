@@ -2,6 +2,7 @@
 	<MyPageLkai
 		:doc_type="doc_type"
 		:tipe_surat="tipe_surat"
+		:permission_to_create="permission_to_create"
 	/>
 </template>
 
@@ -16,7 +17,8 @@ export default {
 	data() {
 		return {
 			doc_type: 'lkain',
-			tipe_surat: 'LKAI-N'
+			tipe_surat: 'LKAI-N',
+			permission_to_create: 'create-lkain',
 		}
 	}
 }
