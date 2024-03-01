@@ -4,7 +4,7 @@
 			<label>{{ label }}</label>
 			<v-autocomplete
 				class="no-message"
-				v-model="value"
+				v-model="kode"
 				no-filter
 				outlined
 				dense
@@ -22,8 +22,8 @@
 				</template>
 				<template v-slot:item="{ item }">
 					<v-list-item-content>
-						<v-list-item-title v-text="item.nama_negara"></v-list-item-title>
-						<v-list-item-subtitle v-text="`${item.kode_2} / ${item.kode_3}`"></v-list-item-subtitle>
+						<v-list-item-title>{{ item.nama_negara }}</v-list-item-title>
+						<v-list-item-subtitle>{{ `${item.kode_2} / ${item.kode_3}` }}</v-list-item-subtitle>
 					</v-list-item-content>
 				</template>
 			</v-autocomplete>
@@ -41,13 +41,13 @@ export default {
 			type: String,
 			default: 'Negara'
 		},
-		kode: String,
+		value: String,
 	},
 	data() {
 		return {
 			items: [],
 			search: null,
-			value: null,
+			kode: null,
 		}
 	},
 	watch: {
@@ -56,8 +56,8 @@ export default {
 			let response = await api.searchNegara(data)
 			this.items = response.data.data
 		},
-		value(val) {
-			this.$emit('update:kode', val)
+		kode(val) {
+			this.$emit('update:value', val)
 		}
 	},
 	methods: {
@@ -66,10 +66,10 @@ export default {
 				let response = await api.getNegaraByCode(code)
 				let negara = response.data.data
 				this.items = [negara]
-				this.value = this.items[0]['kode_2']	
+				this.kode = this.items[0]['kode_2']	
 			} else {
 				this.items = []
-				this.value = null
+				this.kode = null
 			}
 		}
 	}

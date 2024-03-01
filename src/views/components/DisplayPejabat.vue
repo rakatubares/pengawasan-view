@@ -43,18 +43,18 @@ export default {
 	},
 	computed: {
 		disp_pegawai() {
-			return `${this.data.user.name} - ${this.data.user.nip}`
+			if (this.data != null) {
+				return `${this.data.name} - ${this.data.nip}`	
+			} else {
+				return '-'
+			}
 		},
 		disp_jabatan() {
-			let jabatan = null
-
-			if (this.data.plh == 0) {
-				jabatan = this.data.jabatan.jabatan	
+			if (this.data != null) {
+				return this.data.txt_tipe_ttd + this.data.jabatan
 			} else {
-				jabatan = 'Plh. ' + this.data.jabatan.jabatan
+				return '-'
 			}
-
-			return jabatan
 		}
 	}
 }

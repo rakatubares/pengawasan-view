@@ -42,6 +42,7 @@
 							:doc_type="doc_type"
 							:doc_id="doc_id"
 							:data_objek="data_objek"
+							:bhp="bhp"
 						>
 						</MyTableBarang>
 					</CCol>
@@ -52,7 +53,7 @@
 </template>
 
 <script>
-import MyTableBarang from '../Options/TableItemBarang.vue'
+import MyTableBarang from '../../components/barang/TableItemBarang.vue'
 
 export default {
 	name: 'DisplayBarang',
@@ -62,7 +63,11 @@ export default {
 	props: {
 		doc_type: String,
 		doc_id: Number,
-		data_objek: Object
+		data_objek: Object,
+		bhp: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	computed: {
 		disp_kemasan() {

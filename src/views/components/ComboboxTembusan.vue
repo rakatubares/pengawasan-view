@@ -1,22 +1,22 @@
 <template>
-  <div class="wrapper">
-	<v-combobox
-		v-model="selected"
-		outlined
-		:items.sync="options"
-		@update:search-input="search($event)"
-	>
-		<template #append>
-			<CButton 
-				class="no-rounded rounded-right"
-				color="danger"
-				@click="remove"
-			>
-				<CIcon name="cil-trash"/>
-			</CButton>
-		</template>
-	</v-combobox>
-  </div>
+	<div class="wrapper">
+		<v-combobox
+			v-model="selected"
+			outlined
+			:items.sync="options"
+			@update:search-input="search($event)"
+		>
+			<template #append>
+				<CButton 
+					class="no-rounded rounded-right"
+					color="danger"
+					@click="remove"
+				>
+					<CIcon name="cil-trash"/>
+				</CButton>
+			</template>
+		</v-combobox>
+	</div>
 </template>
 
 <script>
@@ -38,8 +38,8 @@ export default {
 		async search(string) {
 			this.$emit('update:value', string)
 			let data = {'src': string, 'exc': this.except}
-			let responses = await api.searchDoc('tembusan', data)
-			this.options = responses.data.data
+			let responses = await api.searchTembusan(data)
+			this.options = responses.data
 		},
 		remove() {
 			this.$emit('delete-data')

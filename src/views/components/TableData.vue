@@ -28,7 +28,7 @@
 
 				<template #status="{item}">
 					<td>
-						<CBadge :color="item.status.color">{{item.status.short_status}}</CBadge>
+						<CBadge :color="item.status_color">{{item.status}}</CBadge>
 					</td>
 				</template>
 				
@@ -42,7 +42,6 @@
 								color="success"
 								@click="editData(item.id)"
 							>
-							<!-- v-if="[100, 101].includes(item.status.kode_status)" -->
 								Edit
 							</CButton>
 							<CButton 
@@ -66,15 +65,6 @@
 						</td>
 					</slot>
 				</template>
-
-				<template #status-filter>
-					<CSelect
-						class="mb-0"
-						:options="mutable_status_options"
-						:value.sync="filtered_status"
-					/>
-				</template>
-				
 			</CDataTable>
 		</CCardBody>
 	</CCard>
@@ -168,12 +158,9 @@ export default {
 				}
 			} else if (this.state == 'list') {
 				if ((type == 'edit') || (type == 'delete')) {
-					btn = [100].includes(item.status.kode_status)
+					btn = ['draft'].includes(item.status_dokumen)
 				} else if (type == 'show') {
-					btn = [
-						101, 102, 111, 112, 113, 121, 122, 123,
-						200, 201, 202, 211, 212, 213, 221, 222, 223
-					].includes(item.status.kode_status)
+					btn = !['draft'].includes(item.status_dokumen)
 				} else {
 					btn = false
 				}
