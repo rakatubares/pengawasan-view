@@ -24,8 +24,8 @@
 							</template>
 							<template v-slot:item="{ item }">
 								<v-list-item-content>
-									<h3><v-list-item-title v-text="item.no_dok_lengkap"></v-list-item-title></h3>
-									<v-list-item-subtitle v-text="item.tanggal_dokumen"></v-list-item-subtitle>
+									<h3><v-list-item-title>{{ item.no_dok_lengkap }}</v-list-item-title></h3>
+									<v-list-item-subtitle>{{ item.tanggal_dokumen }}</v-list-item-subtitle>
 								</v-list-item-content>
 							</template>
 						</v-autocomplete>
@@ -313,7 +313,7 @@
 			<div v-if="selected_nhi == 'orang'">
 				<CRow>
 					<CCol md="12">
-						<MySelectEntitas
+						<MySelectEntitasOrang
 							ref="selectOrang"
 							label="Nama Orang"
 							:id.sync="data.orang.id"
@@ -480,7 +480,7 @@ import api from '../../../router/api2.js'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MyComboboxTembusan from '../../components/ComboboxTembusan.vue'
 import MySelectBandara from '../../components/SelectBandara.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectKantorBC from '../../components/SelectKantorBC.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 
@@ -546,7 +546,7 @@ export default {
 		MyAlert,
 		MyComboboxTembusan,
 		MySelectBandara,
-		MySelectEntitas,
+		MySelectEntitasOrang,
 		MySelectKantorBC,
 		MySelectPejabat,
 	},

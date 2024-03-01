@@ -70,7 +70,7 @@
 				</CRow>
 
 				<!-- Barang Exim -->
-				<div class="sep" v-if="data_doc.flag_exim">
+				<div class="sep" v-if="data_doc.detail.type == 'nhi-exim'">
 					<CRow class="mt-2">
 						<CCol>
 							<h4><b>Barang Impor/Ekspor</b></h4>
@@ -113,7 +113,7 @@
 							<b>Importir/Eksportir/PPJK</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_importir_ppjk }}
+							{{ disp_entitas_exim }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
@@ -121,7 +121,7 @@
 							<b>NPWP</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_npwp }}
+							{{ disp_npwp_exim }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
@@ -135,7 +135,7 @@
 				</div>
 
 				<!-- BKC -->
-				<div class="sep" v-if="data_doc.flag_bkc">
+				<div class="sep" v-if="data_doc.detail.type == 'nhi-bkc'">
 					<CRow class="mt-2">
 						<CCol>
 							<h4><b>Barang Kena Cukai</b></h4>
@@ -192,7 +192,7 @@
 				</div>
 
 				<!-- Barang Tertentu -->
-				<div class="sep" v-if="data_doc.flag_tertentu">
+				<div class="sep" v-if="data_doc.detail.type == 'nhi-tertentu'">
 					<CRow class="mt-2">
 						<CCol>
 							<h4><b>Barang Tertentu</b></h4>
@@ -235,7 +235,7 @@
 							<b>Orang Pribadi/Badan Hukum</b>
 						</CCol>
 						<CCol md="9" class="py-1">
-							{{ disp_orang_badan_hukum }}
+							{{ disp_entitas_tertentu }}
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
@@ -257,10 +257,12 @@
 						{{ disp_indikasi }}
 					</CCol>
 				</CRow>
+
 				<MyDisplayPejabat
 					title="Penerbit"
-					:data.sync="data_doc.penerbit"
+					:data.sync="data_doc.petugas.penerbit"
 				/>
+				
 				<div class="sep mt-4">
 					<CRow class="mb-1 mt-2">
 						<CCol md="3" class="py-1">
@@ -286,6 +288,7 @@
 
 <script>
 import api from '../../../router/api2.js'
+import DefaultNhi from './DefaultNhi'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
 
@@ -301,7 +304,7 @@ export default {
 	},
 	data() {
 		return {
-			data_doc: {}
+			data_doc: JSON.parse(JSON.stringify(DefaultNhi.data)),
 		}
 	},
 	computed: {
@@ -334,33 +337,78 @@ export default {
 
 			return waktu
 		},
-		disp_kantor() { return this.data_doc.kantor || '-' },
-		disp_dok_exim() { return `${this.data_doc.jenis_dok_exim} ${this.data_doc.nomor_dok_exim} tanggal ${this.data_doc.tanggal_dok_exim}` },
-		disp_sarkut_exim() { return `${this.data_doc.nama_sarkut_exim} Voy/Flight/No. Pol ${this.data_doc.no_flight_trayek_exim}` },
-		disp_awb_exim() { return `${this.data_doc.nomor_awb_exim} tanggal ${this.data_doc.tanggal_awb_exim}`},
-		disp_merek_koli_exim() { return this.data_doc.merek_koli_exim || '-' },
-		disp_importir_ppjk() { return this.data_doc.importir_ppjk || '-' },
-		disp_npwp() { return this.data_doc.npwp || '-' },
-		disp_data_lain_exim() { return this.data_doc.data_lain_exim || '-' },
-		disp_penimbunan() { return this.data_doc.tempat_penimbunan || '-' },
-		disp_penyalur() { return this.data_doc.penyalur || '-' },
-		disp_tempat_penjualan() { return this.data_doc.tempat_penjualan || '-' },
-		disp_nppbkc() { return this.data_doc.nppbkc || '-' },
-		disp_sarkut_bkc() { return `${this.data_doc.nama_sarkut_bkc} Voy/Flight/No. Pol ${this.data_doc.no_flight_trayek_bkc}` },
-		disp_data_lain_bkc() { return this.data_doc.no_flight_trayek_bkc || '-' },
-		disp_dok_tertentu() { return `${this.data_doc.jenis_dok_tertentu} ${this.data_doc.nomor_dok_tertentu} tanggal ${this.data_doc.tanggal_dok_tertentu}` },
-		disp_sarkut_tertentu() { return `${this.data_doc.nama_sarkut_tertentu} Voy/Flight/No. Pol ${this.data_doc.no_flight_trayek_tertentu}` },
-		disp_awb_tertentu() { return `${this.data_doc.nomor_awb_tertentu} tanggal ${this.data_doc.tanggal_awb_tertentu}`},
-		disp_merek_koli_tertentu() { return this.data_doc.merek_koli_tertentu || '-' },
-		disp_orang_badan_hukum() { return this.data_doc.orang_badan_hukum || '-' },
-		disp_data_lain_tertentu() { return this.data_doc.data_lain_tertentu || '-' },
+		disp_kantor() { return this.data_doc.kantor.nama_kantor || '-' },
+
+		detail_type() { return this.data_doc.detail.type },
+		detail_data() { return this.data_doc.detail.data },
+
+		// Detail exim
+		disp_dok_exim() { return (this.detail_type == 'nhi-exim') ? `${this.detail_data.jenis_dok || ''} ${this.detail_data.nomor_dok || '-'} tanggal ${this.detail_data.tanggal_dok || '-'}` : '-' },
+		disp_sarkut_exim() { return (this.detail_type == 'nhi-exim') ?  `${this.detail_data.nama_sarkut || ''} Voy/Flight/No. Pol ${this.detail_data.no_flight_trayek} || '-'` : '-' },
+		disp_awb_exim() { return (this.detail_type == 'nhi-exim') ? `${this.detail_data.nomor_awb || '-'} tanggal ${this.detail_data.tanggal_awb || '-'}` : '-' },
+		disp_merek_koli_exim() { return (this.detail_type == 'nhi-exim') ? this.detail_data.merek_koli : '-' },
+		disp_entitas_exim() { 
+			let txt= '-'
+			if (this.detail_type == 'nhi-exim') {
+				if (this.detail_data.entitas != null) {
+					txt = this.detail_data.entitas.data.nama
+				}	
+			}
+			return txt
+		},
+		disp_npwp_exim() { 
+			let txt = '-'
+			if (this.detail_type == 'nhi-exim') {
+				// Filter identitas dengan jenis NPWP
+				let npwp = []
+				if (this.detail_data.entitas) {
+					if (this.detail_data.entitas.data.identitas != undefined) {
+						npwp = this.detail_data.entitas.data.identitas.filter(function (id) {
+							if (id.jenis == 'NPWP') {
+								return id
+							}
+						})	
+					}	
+				}
+
+				// Tampilkan NPWP bila ketemu
+				if (npwp.length > 0) { txt = npwp[0].nomor }
+			}
+			return txt
+		},
+		disp_data_lain_exim() { return (this.detail_type == 'nhi-exim') ? this.detail_data.data_lain : '-' },
+
+		// Detail BKC
+		disp_penimbunan() { return (this.detail_type == 'nhi-bkc') ? this.detail_data.tempat_penimbunan : '-' },
+		disp_penyalur() { return (this.detail_type == 'nhi-bkc') ? this.detail_data.penyalur : '-' },
+		disp_tempat_penjualan() { return (this.detail_type == 'nhi-bkc') ? this.detail_data.tempat_penjualan : '-' },
+		disp_nppbkc() { return (this.detail_type == 'nhi-bkc') ? this.detail_data.nppbkc : '-' },
+		disp_sarkut_bkc() { return (this.detail_type == 'nhi-bkc') ? `${this.detail_data.nama_sarkut} Voy/Flight/No. Pol ${this.detail_data.no_flight_trayek}` : '-' },
+		disp_data_lain_bkc() { return (this.detail_type == 'nhi-bkc') ? this.detail_data.data_lain : '-' },
+
+		// Detail tertentu
+		disp_dok_tertentu() { return (this.detail_type == 'nhi-tertentu') ? `${this.detail_data.jenis_dok} ${this.detail_data.nomor_dok} tanggal ${this.detail_data.tanggal_dok}` : '-' },
+		disp_sarkut_tertentu() { return (this.detail_type == 'nhi-tertentu') ? `${this.detail_data.nama_sarkut} Voy/Flight/No. Pol ${this.detail_data.no_flight_trayek}` : '-' },
+		disp_awb_tertentu() { return (this.detail_type == 'nhi-tertentu') ? `${this.detail_data.nomor_awb} tanggal ${this.detail_data.tanggal_awb}` : '-'},
+		disp_merek_koli_tertentu() { return (this.detail_type == 'nhi-tertentu') ? this.detail_data.merek_koli : '-' },
+		disp_entitas_tertentu() {
+			let txt= '-'
+			if (this.detail_type == 'nhi-tertentu') {
+				if (this.detail_data.entitas != null) {
+					txt = this.detail_data.entitas.data.nama
+				}	
+			}
+			return txt
+		},
+		disp_data_lain_tertentu() { return (this.detail_type == 'nhi-tertentu') ? this.detail_data.data_lain : '-' },
+
 		disp_indikasi() { return this.data_doc.indikasi || '-' },
 		data_tembusan() { return  this.data_doc.tembusan || null }
 	},
 	methods: {
 		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_doc = response.data.data
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data_doc = response.data
 		}
 	},
 	async mounted() {

@@ -85,7 +85,7 @@
 					<CDataTable
 						class="my-2 mr-3"
 						:items="data_doc.ikhtisar"
-						:fields="ikhtisar_table_fields"
+						:fields="informasi_table_fields"
 						:items-per-page="5"
 						pagination
 					/>
@@ -110,15 +110,15 @@
 				</div>
 				<MyDisplayPegawai
 					title="Penerima Informasi"
-					:data.sync="data_doc.penerima_info"
+					:data.sync="data_doc.petugas.penerima_informasi"
 				/>
 				<MyDisplayPegawai
 					title="Penilai Informasi"
-					:data.sync="data_doc.penilai_info"
+					:data.sync="data_doc.petugas.penilai_informasi"
 				/>
 				<MyDisplayPegawai
 					title="Tujuan Disposisi"
-					:data.sync="data_doc.disposisi"
+					:data.sync="data_doc.petugas.penerima_disposisi"
 				/>
 				<CRow class="mb-1 mt-2">
 					<CCol md="3" class="py-1">
@@ -130,7 +130,7 @@
 				</CRow>
 				<MyDisplayPejabat
 					title="Pejabat"
-					:data.sync="data_doc.pejabat"
+					:data.sync="data_doc.petugas.pejabat"
 				/>
 			</CCol>
 		</CRow>
@@ -158,6 +158,7 @@ const default_data = {
 	kesimpulan: null,
 	catatan: null,
 	tanggal_disposisi: null,
+	petugas: {},
 }
 
 export default {
@@ -173,8 +174,8 @@ export default {
 	data() {
 		return {
 			data_doc: JSON.parse(JSON.stringify(default_data)),
-			ikhtisar_table_fields: [
-				{ key: 'ikhtisar', label: 'Ikhtisar' },
+			informasi_table_fields: [
+				{ key: 'informasi', label: 'Informasi' },
 				{ key: 'kode_kepercayaan', label: 'Sumber' },
 				{ key: 'kode_validitas', label: 'Validitas' },
 			]
@@ -207,8 +208,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_doc = response.data.data
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data_doc = response.data
 		}
 	},
 	async mounted() {

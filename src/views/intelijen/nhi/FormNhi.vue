@@ -25,8 +25,8 @@
 							</template>
 							<template v-slot:item="{ item }">
 								<v-list-item-content>
-									<h3><v-list-item-title v-text="item.no_dok_lengkap"></v-list-item-title></h3>
-									<v-list-item-subtitle v-text="item.tanggal_dokumen"></v-list-item-subtitle>
+									<h3><v-list-item-title>{{ item.no_dok_lengkap }}</v-list-item-title></h3>
+									<v-list-item-subtitle>{{ item.tanggal_dokumen }}</v-list-item-subtitle>
 								</v-list-item-content>
 							</template>
 						</v-autocomplete>
@@ -64,14 +64,16 @@
 				<CCol sm="8">
 					<CInput
 						label="Penerima"
-						description="Jabatan penerima NHI"
+						description="Tujuan penerima NHI"
 						:value.sync="data.tujuan"
+						:is-valid="validatorRequired('tujuan', data.tujuan)"
+						invalid-feedback="Pihak penerima wajib diisi"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol sm="8">
-					<CTextarea
+					<MyComboboxLokasi
 						label="Tempat"
 						description="Tempat terjadinya atau akan terjadinya indikasi pelanggaran"
 						:value.sync="data.tempat_indikasi"
@@ -112,10 +114,10 @@
 			</CRow>
 			<CRow>
 				<CCol sm="8">
-					<CInput
-						label="Kantor Bea dan Cukai"
+					<MySelectKantor
+						:kode_kantor.sync="data.kantor.kode_kantor"
+						:default_kantor="default_kantor"
 						description="Kantor Wilayah atau Kantor Pelayanan yang membawahi pengawasan atas wilayah terjadinya atau akan terjadinya indikasi pelanggaran"
-						:value.sync="data.kantor"
 					/>
 				</CCol>
 			</CRow>
@@ -125,32 +127,41 @@
 					<CSelect
 						label="Jenis Barang"
 						:options="nhi_options"
-						:value.sync="selected_nhi"
-						@update:value="updateJenisBarang"
+						:value.sync="selected_nhi"	
+						@update:value="toggleJenisBarang"
 					/>
 				</CCol>
 			</CRow>
 
 			<!-- Barang EXIM -->
-			<div v-if="selected_nhi == 'exim'">
+			<div v-if="selected_nhi == 'nhi-exim'">
+				<CRow>
+					<CCol md="4">
+						<CSelect
+							label="Jenis Kegiatan"
+							:options="jenis_kegiatan"
+							:value.sync="data.detail.data.tipe"
+						/>
+					</CCol>
+				</CRow>
 				<CRow>
 					<CCol md="2" sm="12">
 						<CInput
 							label="Jenis Dokumen Pabean"
-							:value.sync="data.jenis_dok_exim"
+							:value.sync="data.detail.data.jenis_dok"
 						/>
 					</CCol>
 					<CCol md="6" sm="12">
 						<CInput
 							label="Nomor Dokumen"
-							:value.sync="data.nomor_dok_exim"
+							:value.sync="data.detail.data.nomor_dok"
 						/>
 					</CCol>
 					<CCol md="2" sm="12">
 						<div class="form-group">
 							<label class="w-100">Tanggal Dokumen</label>
 							<date-picker 
-								v-model="data.tanggal_dok_exim"
+								v-model="data.detail.data.tanggal_dok"
 								format="DD-MM-YYYY" 
 								value-type="format"
 								type="date"
@@ -174,28 +185,28 @@
 					<CCol md="6" sm="12">
 						<CInput
 							label="Nama Sarana Pengangkut"
-							:value.sync="data.nama_sarkut_exim"
+							:value.sync="data.detail.data.nama_sarkut"
 						/>
 					</CCol>
 					<CCol md="2" sm="12">
 						<CInput
 							label="Voy./Flight/Nopol"
-							:value.sync="data.no_flight_trayek_exim"
+							:value.sync="data.detail.data.no_flight_trayek"
 						/>
 					</CCol>
 				</CRow>
 				<CRow>
-					<CCol md="4" sm="12">
+					<CCol md="6" sm="12">
 						<CInput
 							label="No. BL/AWB"
-							:value.sync="data.nomor_awb_exim"
+							:value.sync="data.detail.data.nomor_awb"
 						/>
 					</CCol>
 					<CCol md="2" sm="12">
 						<div class="form-group">
 							<label class="w-100">Tanggal AWB</label>
 							<date-picker 
-								v-model="data.tanggal_awb_exim"
+								v-model="data.detail.data.tanggal_awb"
 								format="DD-MM-YYYY" 
 								value-type="format"
 								type="date"
@@ -216,26 +227,20 @@
 					</CCol>
 				</CRow>
 				<CRow>
-					<CCol md="6" sm="12">
+					<CCol md="8" sm="12">
 						<CInput
 							label="No. Container/Merek Koli"
-							:value.sync="data.merek_koli_exim"
+							:value.sync="data.detail.data.merek_koli"
 						/>
 					</CCol>
 				</CRow>
 				<CRow>
-					<CCol md="6" sm="12">
-						<CInput
+					<CCol md="12">
+						<MySelectEntitas
 							label="Importir/Eksportir/PPJK"
-							:value.sync="data.importir_ppjk"
-						/>
-					</CCol>
-				</CRow>
-				<CRow>
-					<CCol md="4" sm="12">
-						<CInput
-							label="NPWP"
-							:value.sync="data.npwp"
+							:entity_type.sync="data.detail.data.entitas.type"
+							:entity_id.sync="data.detail.data.entitas.data.id"	
+							default_type="entitas-badan-hukum"
 						/>
 					</CCol>
 				</CRow>
@@ -243,43 +248,43 @@
 					<CCol md="8" sm="12">
 						<CTextarea
 							label="Data Lainnya"
-							:value.sync="data.data_lain_exim"
+							:value.sync="data.detail.data.data_lain"
 						/>
 					</CCol>
 				</CRow>
 			</div>
 
 			<!-- Barang BKC -->
-			<div v-if="selected_nhi == 'bkc'">
+			<div v-if="selected_nhi == 'nhi-bkc'">
 				<CRow>
-					<CCol md="6" sm="12">
+					<CCol md="8" sm="12">
 						<CInput
 							label="Pabrik/Tempat Penyimpanan/Tempat Penimbunan"
-							:value.sync="data.tempat_penimbunan"
+							:value.sync="data.detail.data.tempat_penimbunan"
 						/>
 					</CCol>
 				</CRow>
 				<CRow>
-					<CCol md="6" sm="12">
+					<CCol md="8" sm="12">
 						<CInput
 							label="Penyalur"
-							:value.sync="data.penyalur"
+							:value.sync="data.detail.data.penyalur"
 						/>
 					</CCol>
 				</CRow>
 				<CRow>
-					<CCol md="6" sm="12">
+					<CCol md="8" sm="12">
 						<CInput
 							label="Tempat Penjualan Eceran"
-							:value.sync="data.tempat_penjualan"
+							:value.sync="data.detail.data.tempat_penjualan"
 						/>
 					</CCol>
 				</CRow>
 				<CRow>
-					<CCol md="4" sm="12">
+					<CCol md="8" sm="12">
 						<CInput
 							label="NPPBKC"
-							:value.sync="data.nppbkc"
+							:value.sync="data.detail.data.nppbkc"
 						/>
 					</CCol>
 				</CRow>
@@ -287,13 +292,13 @@
 					<CCol md="6" sm="12">
 						<CInput
 							label="Nama Sarana Pengangkut"
-							:value.sync="data.nama_sarkut_bkc"
+							:value.sync="data.detail.data.nama_sarkut"
 						/>
 					</CCol>
 					<CCol md="2" sm="12">
 						<CInput
 							label="Voy./Flight/Nopol"
-							:value.sync="data.no_flight_trayek_bkc"
+							:value.sync="data.detail.data.no_flight_trayek"
 						/>
 					</CCol>
 				</CRow>
@@ -301,32 +306,32 @@
 					<CCol md="8" sm="12">
 						<CTextarea
 							label="Data Lainnya"
-							:value.sync="data.data_lain_bkc"
+							:value.sync="data.detail.data.data_lain"
 						/>
 					</CCol>
 				</CRow>
 			</div>
 
 			<!-- Barang Tertentu -->
-			<div v-if="selected_nhi == 'tertentu'">
+			<div v-if="selected_nhi == 'nhi-tertentu'">
 				<CRow>
 					<CCol md="2" sm="12">
 						<CInput
 							label="Jenis Dokumen"
-							:value.sync="data.jenis_dok_tertentu"
+							:value.sync="data.detail.data.jenis_dok"
 						/>
 					</CCol>
 					<CCol md="6" sm="12">
 						<CInput
 							label="Nomor Dokumen"
-							:value.sync="data.nomor_dok_tertentu"
+							:value.sync="data.detail.data.nomor_dok"
 						/>
 					</CCol>
 					<CCol md="2" sm="12">
 						<div class="form-group">
 							<label class="w-100">Tanggal Dokumen</label>
 							<date-picker 
-								v-model="data.tanggal_dok_tertentu"
+								v-model="data.detail.data.tanggal_dok"
 								format="DD-MM-YYYY" 
 								value-type="format"
 								type="date"
@@ -350,28 +355,28 @@
 					<CCol md="6" sm="12">
 						<CInput
 							label="Nama Sarana Pengangkut"
-							:value.sync="data.nama_sarkut_tertentu"
+							:value.sync="data.detail.data.nama_sarkut"
 						/>
 					</CCol>
 					<CCol md="2" sm="12">
 						<CInput
 							label="Voy./Flight/Nopol"
-							:value.sync="data.no_flight_trayek_tertentu"
+							:value.sync="data.detail.data.no_flight_trayek"
 						/>
 					</CCol>
 				</CRow>
 				<CRow>
-					<CCol md="4" sm="12">
+					<CCol md="6" sm="12">
 						<CInput
 							label="No. BL/AWB"
-							:value.sync="data.nomor_awb_tertentu"
+							:value.sync="data.detail.data.nomor_awb"
 						/>
 					</CCol>
 					<CCol md="2" sm="12">
 						<div class="form-group">
 							<label class="w-100">Tanggal AWB</label>
 							<date-picker 
-								v-model="data.tanggal_awb_tertentu"
+								v-model="data.detail.data.tanggal_awb"
 								format="DD-MM-YYYY" 
 								value-type="format"
 								type="date"
@@ -392,18 +397,20 @@
 					</CCol>
 				</CRow>
 				<CRow>
-					<CCol md="6" sm="12">
+					<CCol md="8" sm="12">
 						<CInput
 							label="No. Container/Merek Koli"
-							:value.sync="data.merek_koli_tertentu"
+							:value.sync="data.detail.data.merek_koli"
 						/>
 					</CCol>
 				</CRow>
 				<CRow>
-					<CCol md="6" sm="12">
-						<CInput
+					<CCol md="12">
+						<MySelectEntitas
 							label="Orang Pribadi/Badan Hukum"
-							:value.sync="data.orang_badan_hukum"
+							:entity_type.sync="data.detail.data.entitas.type"
+							:entity_id.sync="data.detail.data.entitas.data.id"	
+							default_type="entitas-badan-hukum"
 						/>
 					</CCol>
 				</CRow>
@@ -411,7 +418,7 @@
 					<CCol md="8" sm="12">
 						<CTextarea
 							label="Data Lainnya"
-							:value.sync="data.data_lain_tertentu"
+							:value.sync="data.detail.data.data_lain"
 						/>
 					</CCol>
 				</CRow>
@@ -432,12 +439,11 @@
 					<MySelectPejabat
 						ref="selectPejabat"
 						:state.sync="state"
-						:label="{jabatan: 'Jabatan Penerbit', nama: 'Nama Penerbit'}"
-						:selectable_jabatan="['bd.05']"
-						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.penerbit.user.user_id"
-						:jabatan.sync="data.penerbit.jabatan.kode"
-						:plh.sync="data.penerbit.plh"
+						:label="{'jabatan': 'Jabatan Penerbit', 'nama': 'Nama Penerbit'}"
+						:default_jabatan.sync="default_penerbit"
+						:jabatan.sync="data.petugas.penerbit.kode_jabatan"
+						:tipe_ttd.sync="data.petugas.penerbit.tipe_ttd"
+						:nip.sync="data.petugas.penerbit.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -448,11 +454,11 @@
 					<label>Tembusan</label>
 					<CRow>
 						<CCol>
-							<div class="input-container" v-for="(val,id) in data.tembusan" :key="id">
+							<div class="input-container" v-for="(val,index) in data.tembusan" :key="index">
 								<MyComboboxTembusan
-									:value.sync="data.tembusan[id]"
+									:value.sync="data.tembusan[index]"
 									:except.sync="data.tembusan"
-									@delete-data="delCc(id)"
+									@delete-data="delCc(index)"
 								/>
 							</div>
 						</CCol>
@@ -487,68 +493,22 @@
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
+import store from '../../../store'
 import api from '../../../router/api2.js'
+import validators from '../../../helpers/validator'
+import DefaultNhi from './DefaultNhi'
 import MyAlert from '../../components/AlertSubmit.vue'
+import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
 import MyComboboxTembusan from '../../components/ComboboxTembusan.vue'
+import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectKantor from '../../components/SelectKantorBC.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 
-const default_sifat_nhi_options = ['segera', 'sangat segera']
-const default_klasifikasi_nhi_options = ['rahasia', 'sangat rahasia']
 const default_zona_waktu_options = ['WIB', 'WITA', 'WIT']
-const default_data = {
-	lkai_id: null,
-	nomor_lkai: null,
-	tanggal_lkai: null,
-	sifat: default_sifat_nhi_options[0],
-	klasifikasi: default_klasifikasi_nhi_options[0],
-	tujuan: null,
-	tempat_indikasi: null,
-	waktu_indikasi: null,
-	zona_waktu: default_zona_waktu_options[0],
-	kantor: null,
-	flag_exim: true,
-	jenis_dok_exim: null,
-	nomor_dok_exim: null,
-	tanggal_dok_exim: null,
-	nama_sarkut_exim: null,
-	no_flight_trayek_exim: null,
-	nomor_awb_exim: null,
-	tanggal_awb_exim: null,
-	merek_koli_exim: null,
-	importir_ppjk: null,
-	npwp: null,
-	data_lain_exim: null,
-	flag_bkc: false,
-	tempat_penimbunan: null,
-	penyalur: null,
-	tempat_penjualan: null,
-	nppbkc: null,
-	nama_sarkut_bkc: null,
-	no_flight_trayek_bkc: null,
-	data_lain_bkc: null,
-	flag_tertentu: false,
-	jenis_dok_tertentu: null,
-	nomor_dok_tertentu: null,
-	tanggal_dok_tertentu: null,
-	nama_sarkut_tertentu: null,
-	no_flight_trayek_tertentu: null,
-	nomor_awb_tertentu: null,
-	tanggal_awb_tertentu: null,
-	merek_koli_tertentu: null,
-	orang_badan_hukum: null,
-	data_lain_tertentu: null,
-	indikasi: null,
-	penerbit: {
-		jabatan: {kode: null},
-		plh: false,
-		user: {user_id: null},
-	},
-	tembusan: []
-}
 const default_nhi_options = [
-	{value: 'exim', label: 'Barang Ekspor/Impor'}, 
-	{value: 'bkc', label: 'Barang BKC'}, 
-	{value: 'tertentu', label: 'Barang Tertentu'}
+	{value: 'nhi-exim', label: 'Barang Ekspor/Impor'}, 
+	{value: 'nhi-bkc', label: 'Barang BKC'}, 
+	{value: 'nhi-tertentu', label: 'Barang Tertentu'}
 ]
 
 export default {
@@ -556,7 +516,10 @@ export default {
 	components: {
 		DatePicker,
 		MyAlert,
+		MyComboboxLokasi,
 		MyComboboxTembusan,
+		MySelectEntitas,
+		MySelectKantor,
 		MySelectPejabat,
 	},
 	props: {
@@ -566,48 +529,51 @@ export default {
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(default_data)),
+			data: JSON.parse(JSON.stringify(DefaultNhi.data)),
 			lkai_search_value: null,
 			lkai_search_items: [],
 			lkai_search_query: null,
 			lkai_search_exception: null,
-			sifat_nhi_options: JSON.parse(JSON.stringify(default_sifat_nhi_options)),
-			klasifikasi_nhi_options: JSON.parse(JSON.stringify(default_klasifikasi_nhi_options)),
+			jenis_kegiatan: JSON.parse(JSON.stringify(store.getters.jenisKegiatan)),
+			sifat_nhi_options: JSON.parse(JSON.stringify(store.getters.sifatSurat)),
+			klasifikasi_nhi_options: JSON.parse(JSON.stringify(store.getters.klasifikasiSurat)),
 			zona_waktu_options: JSON.parse(JSON.stringify(default_zona_waktu_options)),
 			nhi_options: JSON.parse(JSON.stringify(default_nhi_options)),
 			selected_nhi: default_nhi_options[0].value,
+			default_penerbit: 'bd.05',
+			default_kantor: '050100',
+			validations: {
+				tujuan: false,
+			}
 		}
+	},
+	watch: {
+		async lkai_search_query (val) {
+			await this.search_lkai(val)
+		},
 	},
 	methods: {
 		async getData() {
-			let response = await api.getFormDataById('nhi', this.doc_id)
-			this.data = response.data.data
+			let response = await api.getDocumentById('nhi', this.doc_id)
 
+			let detail_type = response.data.detail.type
+			switch (detail_type) {
+				case 'nhi-exim':
+					if (response.data.detail.data.entitas == null) {
+						response.data.detail.data.entitas = JSON.parse(JSON.stringify(DefaultNhi.detail_exim.entitas))
+					}
+					break;
+			
+				default:
+					break;
+			}
+
+			this.data = response.data
 			if (this.data.lkai_id != null) {
 				this.lkai_search_exception = this.data.lkai_id
 				await this.search_lkai(this.data.nomor_lkai)
 				this.lkai_search_value = this.lkai_search_items[0]
 			}
-
-			if (this.data.flag_exim == true) {
-				this.selected_nhi = 'exim'
-				this.updateJenisBarang('exim')
-			} else if (this.data.flag_bkc == true) {
-				this.selected_nhi = 'bkc'
-				this.updateJenisBarang('bkc')
-			} else {
-				this.selected_nhi = 'tertentu'
-				this.updateJenisBarang('tertentu')
-			}
-
-			this.$nextTick(function () {
-				this.renderData()
-			})
-		},
-		renderData() {
-			this.$refs.selectPejabat.selected_jabatan = this.data.penerbit.jabatan.kode
-			this.$refs.selectPejabat.togglePlh(this.data.penerbit.plh)
-			this.$refs.selectPejabat.getPetugas(this.data.penerbit.user.user_id, true)
 		},
 		async saveData() {
 			if (this.state == 'insert') {
@@ -629,6 +595,16 @@ export default {
 					console.log(`form nhi - update data - error`, error)
 				}
 			}
+
+			// Fill null
+			if (['entitas'].includes(this.data.detail.data)) {
+				if (this.data.detail.data.entitas == null) {
+					this.data.detail.data.entitas = {
+						type: 'entitas-orang',
+						data: {}
+					}
+				}
+			}
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
@@ -636,81 +612,49 @@ export default {
 		async changeValueLkai(id) {
 			if (id != null) {
 				// Get data LKAI
-				let response = await api.getDisplayDataById('lkai', id)
-				let lkai = response.data.data
+				let response = await api.getDocumentById('lkai', id)
+				let lkai = response.data
 				
 				// Change current data according to lkai
 				this.data.tanggal_lkai = lkai.tanggal_dokumen
 				
 				// Specify lkai id
 				this.data.lkai_id = id
+			} else {
+				this.data.lkai_id = null
+				this.data.tanggal_lkai = null
 			}
 		},
 		async search_lkai(search) {
-			let data = {'src': search, 'exc': this.lkai_search_exception, 'flt': {kode_status: 200}}
+			let data = {
+				'src': search, 
+				'flt': {'kode_status': ['terbit']},
+				'exc': this.lkai_search_exception,
+			}
 			let responses = await api.searchDoc('lkai', data)
 			this.lkai_search_items = responses.data.data
 		},
-		updateJenisBarang(jenis) {
-			switch (jenis) {
-				case 'exim':
-					this.data.flag_exim = true
-					this.nullifyBkc()
-					this.nullifyTertentu()
+		resetDetailNhi(detail_type) {
+			switch (detail_type) {
+				case 'nhi-exim':
+					this.data.detail.data = JSON.parse(JSON.stringify(DefaultNhi.detail_exim))
 					break;
 
-				case 'bkc':
-					this.data.flag_bkc = true
-					this.nullifyExim()
-					this.nullifyTertentu()
+				case 'nhi-bkc':
+					this.data.detail.data = {}
 					break;
 
-				case 'tertentu':
-					this.data.flag_tertentu = true
-					this.nullifyExim()
-					this.nullifyBkc()
+				case 'nhi-tertentu':
+					this.data.detail.data = JSON.parse(JSON.stringify(DefaultNhi.detail_tertentu))
 					break;
 			
 				default:
 					break;
 			}
 		},
-		nullifyExim() {
-			this.data.flag_exim = false
-			this.data.jenis_dok_exim = null
-			this.data.nomor_dok_exim = null
-			this.data.tanggal_dok_exim = null
-			this.data.nama_sarkut_exim = null
-			this.data.no_flight_trayek_exim = null
-			this.data.nomor_awb_exim = null
-			this.data.tanggal_awb_exim = null
-			this.data.merek_koli_exim = null
-			this.data.importir_ppjk = null
-			this.data.npwp = null
-			this.data.data_lain_exim = null
-		},
-		nullifyBkc() {
-			this.data.flag_bkc = false
-			this.data.tempat_penimbunan = null
-			this.data.penyalur = null
-			this.data.tempat_penjualan = null
-			this.data.nppbkc = null
-			this.data.nama_sarkut_bkc = null
-			this.data.no_flight_trayek_bkc = null
-			this.data.data_lain_bkc = null
-		},
-		nullifyTertentu() {
-			this.data.flag_tertentu = false
-			this.data.jenis_dok_tertentu = null
-			this.data.nomor_dok_tertentu = null
-			this.data.tanggal_dok_tertentu = null
-			this.data.nama_sarkut_tertentu = null
-			this.data.no_flight_trayek_tertentu = null
-			this.data.nomor_awb_tertentu = null
-			this.data.tanggal_awb_tertentu = null
-			this.data.merek_koli_tertentu = null
-			this.data.orang_badan_hukum = null
-			this.data.data_lain_tertentu = null
+		toggleJenisBarang(val) {
+			this.data.detail.type = val
+			this.resetDetailNhi(val)
 		},
 		addCc() {
 			this.data.tembusan.push(null)
@@ -718,10 +662,10 @@ export default {
 		delCc(id) {
 			this.data.tembusan.splice(id,1)
 		},
-	},
-	watch: {
-		async lkai_search_query (val) {
-			await this.search_lkai(val)
+		validatorRequired(field, val) { 
+			let validation = validators.required(val) 
+			this.validations[field] = validation
+			return validation
 		},
 	},
 	async mounted() {

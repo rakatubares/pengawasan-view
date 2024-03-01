@@ -214,8 +214,7 @@
 						ref="selectPenerima"
 						label="Nama Penerima Informasi"
 						description="Pegawai yang menerima informasi"
-						:id.sync="data.penerima_info.user_id"
-						role="p2vue.penindakan"
+						:nip.sync="data.petugas.penerima_informasi.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -225,8 +224,7 @@
 						ref="selectPenilai"
 						label="Nama Penilai Informasi"
 						description="Pegawai yang menilai informasi"
-						:id.sync="data.penilai_info.user_id"
-						role="p2vue.penindakan"
+						:nip.sync="data.petugas.penilai_informasi.nip"	
 					/>
 				</CCol>
 			</CRow>
@@ -259,8 +257,7 @@
 						ref="selectDisposisi"
 						label="Nama Penerima Disposisi"
 						description="Pegawai yang menerima disposisi"
-						:id.sync="data.disposisi.user_id"
-						role="p2vue.penindakan"
+						:nip.sync="data.petugas.penerima_disposisi.nip"	
 					/>
 				</CCol>
 			</CRow>
@@ -269,12 +266,11 @@
 					<MySelectPejabat
 						ref="selectPejabat"
 						:state.sync="state"
+						:label="{'jabatan': 'Pejabat', 'nama': 'Nama Pejabat'}"
 						:default_jabatan.sync="default_jabatan"
-						:selectable_jabatan="['bd.0501', 'bd.0502']"
-						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.pejabat.user.user_id"
-						:jabatan.sync="data.pejabat.jabatan.kode"
-						:plh.sync="data.pejabat.plh"
+						:jabatan.sync="data.petugas.pejabat.kode_jabatan"
+						:tipe_ttd.sync="data.petugas.pejabat.tipe_ttd"
+						:nip.sync="data.petugas.pejabat.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -318,20 +314,23 @@ const default_data = {
 	tgl_terima_info_eksternal: null,
 	no_dok_info_eksternal: null,
 	tgl_dok_info_eksternal: null,
-	penerima_info: {user_id: null},
-	penilai_info: {user_id: null},
 	kesimpulan: null,
-	disposisi: {user_id: null},
 	tanggal_disposisi: null,
 	flag_analisis: false,
 	flag_arsip: false,
 	catatan: null,
-	pejabat: {
-		jabatan: {kode: null},
-		plh: false,
-		user: {user_id: null},
-	},
-	ikhtisar: []
+	ikhtisar: [],
+	petugas: {
+		penerima_informasi: {nip: null},
+		penilai_informasi: {nip: null},
+		penerima_disposisi: {nip: null},
+		pejabat: {
+			kode_jabatan: null,
+			tipe_ttd: null,
+			nip: null,
+			flag_pejabat: true,
+		},
+	}
 }
 
 export default {
@@ -357,40 +356,18 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getFormDataById(this.doc_type, this.doc_id)
-			this.data = response.data.data
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data = response.data
 
 			this.fillNull()
-
-			this.$nextTick(function () {
-				this.renderData()
-			})
 		},
 		fillNull() {
-			if (this.data.penerima_info == null) {
-				this.data.penerima_info = JSON.parse(JSON.stringify(default_data.penerima_info))
+			let posisi =  Object.keys(this.data.petugas)
+			for (const key in default_data.petugas) {
+				if (!posisi.includes(key)) {
+					this.data.petugas[key] = JSON.parse(JSON.stringify(default_data.petugas[key]))
+				}
 			}
-
-			if (this.data.penilai_info == null) {
-				this.data.penilai_info = JSON.parse(JSON.stringify(default_data.penilai_info))
-			}
-
-			if (this.data.disposisi == null) {
-				this.data.disposisi = JSON.parse(JSON.stringify(default_data.disposisi))
-			}
-
-			if (this.data.pejabat == null) {
-				this.data.pejabat = JSON.parse(JSON.stringify(default_data.pejabat))
-			}
-		},
-		renderData() {
-			this.$refs.selectPenerima.getPetugas(this.data.penerima_info.user_id, true)
-			this.$refs.selectPenilai.getPetugas(this.data.penilai_info.user_id, true)
-			this.$refs.selectDisposisi.getPetugas(this.data.disposisi.user_id, true)
-			this.$refs.selectPejabat.selected_jabatan = this.data.pejabat.jabatan.kode
-			this.$refs.selectPejabat.togglePlh(this.data.pejabat.plh)
-			this.$refs.selectPejabat.getPetugas(this.data.pejabat.user.user_id, true)
-			this.$refs.tableIkhtisar.list_ikhtisar = this.data.ikhtisar
 		},
 		updateIkhtisar(val) {
 			this.data.ikhtisar = val

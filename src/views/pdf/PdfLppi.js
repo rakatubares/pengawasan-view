@@ -131,15 +131,18 @@ class PdfLppi extends Pdf {
 		for (let i = 0; i < this.data.ikhtisar.length; i++) {
 			let data = {
 				no: i+1,
-				ikhtisar: this.data.ikhtisar[i]['ikhtisar'],
+				informasi: this.data.ikhtisar[i]['informasi'],
 				sumber: this.data.ikhtisar[i]['kode_kepercayaan'],
 				validitas: this.data.ikhtisar[i]['kode_validitas'],
 			}
 			ikhtisar.push(data)
 		}
 		const tabelData = ikhtisar
-		let txt_nama_penerima = this.data.penerima_info != null ? this.data.penerima_info.name : '-'
-		let txt_nama_penilai = this.data.penilai_info != null ? this.data.penilai_info.name : '-'
+		let penerima = this.data.petugas.penerima_informasi ?? null
+		let penilai = this.data.petugas.penilai_informasi ?? null
+		let txt_nama_penerima = penerima != null ? penerima.name : '-'
+		let txt_nama_penilai = penilai != null ? penilai.name : '-'
+
 		tabelData.push([
 			{content: ''},
 			{content: `Penerima Informasi\n\n\n\n${txt_nama_penerima}`},
@@ -148,7 +151,7 @@ class PdfLppi extends Pdf {
 
 		const tabelHead = [
 			{header: 'NO', dataKey: 'no'},
-			{header: 'IKHTISAR INFORMASI', dataKey: 'ikhtisar'},
+			{header: 'IKHTISAR INFORMASI', dataKey: 'informasi'},
 			{header: 'SUMBER', dataKey: 'sumber'},
 			{header: 'VALIDITAS', dataKey: 'validitas'},
 		]
@@ -209,7 +212,9 @@ class PdfLppi extends Pdf {
 
 		// Disposisi
 		this.pdf.text('Disposisi Kepada:', this.props.ind.sta, this.ln)
-		this.pdf.text(this.data.disposisi.name, this.props.ind.txt, this.ln)
+		let disposisi = this.data.petugas.penerima_disposisi ?? null
+		let txt_nama_disposisi = disposisi != null ? disposisi.name : '-'
+		this.pdf.text(txt_nama_disposisi, this.props.ind.txt, this.ln)
 		this.pdf.text('Tanggal Disposisi:', this.props.ind.lbl_tgl_dis, this.ln)
 		let txt_tanggal_disposisi = this.data.tanggal_disposisi != null ? this.data.tanggal_disposisi : ''
 		this.pdf.text(txt_tanggal_disposisi, this.props.ind.txt_tgl_dis, this.ln)
@@ -240,15 +245,15 @@ class PdfLppi extends Pdf {
 		this.ln += this.props.font.height*(arr_catatan.length+2)
 
 		// TTD
-		let txt_jabatan = this.data.pejabat.plh == true 
-			? `Plh. ${this.data.pejabat.jabatan.jabatan}` 
-			: this.data.pejabat.jabatan.jabatan
+		let pejabat = this.data.petugas.pejabat ?? null
+		let txt_nama_pejabat = pejabat != null ? pejabat.name : '-'
+		let txt_jabatan = pejabat.txt_tipe_ttd + pejabat.jabatan
 		this.pdf.text(txt_jabatan, this.props.ind.sta, this.ln)
 		this.ln += this.props.font.height*5
-		this.pdf.text(this.data.pejabat.user.name, this.props.ind.sta, this.ln)
+		this.pdf.text(txt_nama_pejabat, this.props.ind.sta, this.ln)
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.kode_status)) {
+		if (['draft'].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 

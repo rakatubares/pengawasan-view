@@ -138,7 +138,7 @@ class PdfLkai extends Pdf {
 		let num = 1
 		this.data.ikhtisar.forEach(elm => {
 			this.pdf.text(`${num.toString()}.`, this.props.ind.num, this.ln)
-			let arr_ikhtisar = converters.array_text(elm.ikhtisar, 110)
+			let arr_ikhtisar = converters.array_text(elm.informasi, 110)
 			this.pdf.text(arr_ikhtisar, this.props.ind.txt, this.ln)
 			this.ln += this.props.font.height*arr_ikhtisar.length
 			num += 1
@@ -250,36 +250,60 @@ class PdfLkai extends Pdf {
 		this.pdf.text('Analis,', this.props.ind.sta, this.ln)
 		this.pdf.setFont('Helvetica', 'normal')
 		this.ln += this.props.font.height*5
-		this.pdf.text(this.data.analis.name, this.props.ind.sta, this.ln)
+		let analis = this.data.petugas.analis ?? null
+		let txt_analis = analis != null ? analis.name : '-'
+		this.pdf.text(txt_analis, this.props.ind.sta, this.ln)
 
 		///// TTD /////
 		this.pdf.addPage()
 		this.ln = 20
-		this.generateTtd(this.data.pejabat)
+		this.generateTtd(
+			this.data.petugas.pejabat, 
+			this.data.keputusan_pejabat,
+			this.data.catatan_pejabat,
+			this.data.tanggal_terima_pejabat,
+		)
 		this.ln += this.props.font.height*4
-		this.generateTtd(this.data.atasan)
+		this.generateTtd(
+			this.data.petugas.atasan,
+			this.data.keputusan_atasan,
+			this.data.catatan_atasan,
+			this.data.tanggal_terima_atasan,
+		)
 
 		////// WATERMARK //////
-		if ([100].includes(this.data.kode_status)) {
+		if (['draft'].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 
 		return this.pdf.output('datauristring')
 	}
 
-	generateTtd(data_pejabat) {
+	generateTtd(data_pejabat, keputusan, catatan, tanggal_terima) {
 		this.pdf.setFont('Helvetica', 'bold')
-		let txt_jabatan = data_pejabat.plh == 1 
-			? `Plh. ${data_pejabat.jabatan.jabatan}`
-			: data_pejabat.jabatan.jabatan
+		let txt_tipe_ttd
+		switch (data_pejabat.tipe_ttd) {
+			case 'plh':
+				txt_tipe_ttd = 'Plh. '
+				break;
+
+			case 'plt':
+				txt_tipe_ttd = 'Plt. '
+				break;
+		
+			default:
+				txt_tipe_ttd = ''
+				break;
+		}
+		let txt_jabatan = txt_tipe_ttd + data_pejabat.jabatan
 		this.pdf.text(txt_jabatan, 105, this.ln, 'center')
 		this.pdf.rect(this.props.ind.sta, this.ln-5, 190, 7)
 		this.ln += 8
 		
 		this.pdf.text('Keputusan:', this.props.ind.num, this.ln)
 		this.pdf.setFont('Helvetica', 'normal')
-		let checkbox_y = data_pejabat.keputusan == true ? this.checked_checkbox : this.empty_checkbox
-		let checkbox_n = data_pejabat.keputusan == true ? this.empty_checkbox : this.checked_checkbox
+		let checkbox_y = keputusan == true ? this.checked_checkbox : this.empty_checkbox
+		let checkbox_n = keputusan == true ? this.empty_checkbox : this.checked_checkbox
 		this.pdf.addImage(checkbox_y, 'png', this.props.ind.lbl2, this.ln-3.5, 4, 4)
 		this.pdf.text('Setuju', this.props.ind.lbl2+5, this.ln)
 		this.pdf.addImage(checkbox_n, 'png', this.props.ind.lbl2+30, this.ln-3.5, 4, 4)
@@ -293,7 +317,7 @@ class PdfLkai extends Pdf {
 		this.pdf.setFont('Helvetica', 'bold')
 		this.pdf.text('Catatan:', this.props.ind.num, this.ln)
 		this.pdf.setFont('Helvetica', 'normal')
-		let txt_ctt = data_pejabat.catatan || '-'
+		let txt_ctt = catatan || '-'
 		let arr_ctt = converters.array_text(txt_ctt, 85)
 		this.pdf.text(arr_ctt, this.props.ind.lbl2, this.ln)
 		let y_rect_catatan = this.ln-6
@@ -302,7 +326,7 @@ class PdfLkai extends Pdf {
 		this.pdf.rect(this.props.ind.sta+40, y_rect_catatan, 150, h_rect_catatan)
 		this.ln += h_rect_catatan
 
-		let txt_tgl_terima = data_pejabat.tanggal_terima || '-'
+		let txt_tgl_terima = tanggal_terima || '-'
 		this.pdf.text(`Hasil analisis diterima tanggal: ${txt_tgl_terima}`, this.props.ind.num, this.ln)
 		this.pdf.rect(this.props.ind.sta, this.ln-6, 190, 9)
 		this.ln += 9
@@ -313,7 +337,7 @@ class PdfLkai extends Pdf {
 		let y_rect_pejabat = this.ln-6
 		this.ln += this.props.font.height*4
 		let h_rect_pejabat = this.props.font.height*5+5
-		let txt_pejabat = data_pejabat.user.name || '...................'
+		let txt_pejabat = data_pejabat.name || '...................'
 		this.pdf.text(txt_pejabat, this.props.ind.lbl2, this.ln)
 		this.pdf.rect(this.props.ind.sta, y_rect_pejabat, 40, h_rect_pejabat)
 		this.pdf.rect(this.props.ind.sta+40, y_rect_pejabat, 150, h_rect_pejabat)

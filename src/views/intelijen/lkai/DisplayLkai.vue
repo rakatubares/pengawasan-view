@@ -47,7 +47,7 @@
 					<CDataTable
 						class="my-2 mr-3"
 						:items="data_doc.ikhtisar"
-						:fields="ikhtisar_table_fields"
+						:fields="informasi_table_fields"
 						:items-per-page="5"
 						pagination
 					/>
@@ -131,7 +131,7 @@
 				</CRow>
 				<MyDisplayPegawai
 					title="Analis"
-					:data.sync="data_doc.analis"
+					:data.sync="data_doc.petugas.analis"
 				/>
 				<div class="sep">
 					<CRow class="mt-2">
@@ -237,21 +237,15 @@ const default_data = {
 	rekomendasi_lain: null,
 	informasi_lain: null,
 	tujuan: null,
-	pejabat: {
-		jabatan: null,
-		plh: null,
-		user: {name: null},
-		keputusan: null,
-		catatan: null,
-		tanggal_terima: null,
-	},
-	atasan: {
-		jabatan: null,
-		plh: null,
-		user: {name: null},
-		keputusan: null,
-		catatan: null,
-		tanggal_terima: null,
+	keputusan_pejabat: null,
+	catatan_pejabat: null,
+	tanggal_terima_pejabat: null,
+	keputusan_atasan: null,
+	catatan_atasan: null,
+	tanggal_terima_atasan: null,
+	petugas: {
+		pejabat: {},
+		atasan: {},
 	},
 }
 
@@ -267,8 +261,8 @@ export default {
 	data() {
 		return {
 			data_doc: JSON.parse(JSON.stringify(default_data)),
-			ikhtisar_table_fields: [
-				{ key: 'ikhtisar', label: 'Ikhtisar' },
+			informasi_table_fields: [
+				{ key: 'informasi', label: 'Informasi' },
 				{ key: 'kode_kepercayaan', label: 'Sumber' },
 				{ key: 'kode_validitas', label: 'Validitas' },
 			]
@@ -335,31 +329,31 @@ export default {
 		disp_rekomendasi() { return this.data_doc.rekomendasi_lain || '-' },
 		disp_informasi() { return this.data_doc.informasi_lain || '-' },
 		disp_tujuan() { return this.data_doc.tujuan || '-' },
-		disp_es_4() { return this.data_doc.pejabat.user.name || '-' },
+		disp_es_4() { return this.data_doc.petugas.pejabat.name || '-' },
 		disp_kep_es_4() { 
-			let keputusan = this.data_doc.pejabat.keputusan == true 
+			let keputusan = this.data_doc.keputusan_pejabat == true 
 				? 'Diterima' 
 				: 'Ditolak'
 
 			return keputusan
 		},
-		disp_ctt_es_4() { return this.data_doc.pejabat.catatan || '-' },
-		disp_tgl_es_4() { return this.data_doc.pejabat.tanggal_terima || '-' },
-		disp_es_3() { return this.data_doc.atasan.user.name || '-' },
+		disp_ctt_es_4() { return this.data_doc.catatan_pejabat || '-' },
+		disp_tgl_es_4() { return this.data_doc.tanggal_terima_pejabat || '-' },
+		disp_es_3() { return this.data_doc.petugas.atasan.name || '-' },
 		disp_kep_es_3() { 
-			let keputusan = this.data_doc.atasan.keputusan == true 
+			let keputusan = this.data_doc.keputusan_atasan == true 
 				? 'Diterima' 
 				: 'Ditolak'
 
 			return keputusan
 		},
-		disp_ctt_es_3() { return this.data_doc.atasan.catatan || '-' },
-		disp_tgl_es_3() { return this.data_doc.atasan.tanggal_terima || '-' },
+		disp_ctt_es_3() { return this.data_doc.catatan_atasan || '-' },
+		disp_tgl_es_3() { return this.data_doc.tanggal_terima_atasan || '-' },
 	},
 	methods: {
 		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_doc = response.data.data
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data_doc = response.data
 		}
 	},
 	async mounted() {

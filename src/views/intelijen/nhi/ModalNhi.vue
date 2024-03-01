@@ -26,10 +26,11 @@
 					:title="tabs_list[1]['title']"
 				>
 					<div v-if="current_tab == 1">
-						<MyFormBarangNhi
-							:state.sync="modal_state"
+						<MyTableItemBarang
+							:state.sync="state"
 							:doc_type.sync="doc_type"
 							:doc_id.sync="doc_id"
+							:with_photo="false"
 						/>
 					</div>
 				</CTab>
@@ -54,18 +55,18 @@
 <script>
 import MyDisplayNhi from './DisplayNhi.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
-import MyFormBarangNhi from './FormBarangNhi.vue'
 import MyFormNhi from './FormNhi.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
+import MyTableItemBarang from '../../components/barang/TableItemBarang.vue'
 
 export default {
 	name: 'ModalNhi',
 	components: {
 		MyDisplayNhi,
 		MyDisplayPdf,
-		MyFormBarangNhi,
 		MyFormNhi,
 		MyModalTabs,
+		MyTableItemBarang,
 	},
 	props: {
 		state: String,

@@ -45,8 +45,8 @@
 							</template>
 							<template v-slot:item="{ item }">
 								<v-list-item-content>
-									<h3><v-list-item-title v-text="item.no_dok_lengkap"></v-list-item-title></h3>
-									<v-list-item-subtitle v-text="item.tanggal_dokumen"></v-list-item-subtitle>
+									<h3><v-list-item-title>{{ item.no_dok_lengkap }}</v-list-item-title></h3>
+									<v-list-item-subtitle>{{ item.tanggal_dokumen }}</v-list-item-subtitle>
 								</v-list-item-content>
 							</template>
 						</v-autocomplete>
@@ -255,9 +255,8 @@
 						ref="selectAnalis"
 						label="Analis"
 						description="Pegawai yang melakukan analisis"
-						:id.sync="data.analis.user_id"
-						role="p2vue.penindakan"
 						:currentUser="true"
+						:nip.sync="data.petugas.analis.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -273,7 +272,7 @@
 					<CSelect
 						label="Keputusan"
 						:options="[{value: true, label: 'Setuju'}, {value: false, label: 'Tidak Setuju'}]"
-						:value.sync="data.pejabat.keputusan"
+						:value.sync="data.keputusan_pejabat"
 						@update:value="toggleKeputusan($event, 'pejabat')"
 					/>
 				</CCol>
@@ -281,8 +280,8 @@
 					<CTextarea
 						label="Catatan"
 						description="Catatan pejabat dalam hal keputusan tidak disetujui"
-						:value.sync="data.pejabat.catatan"
-						:disabled="data.pejabat.keputusan == true"
+						:value.sync="data.catatan_pejabat"
+						:disabled="data.catatan_pejabat == true"
 					/>
 				</CCol>
 			</CRow>
@@ -291,7 +290,7 @@
 					<div class="form-group">
 						<label class="w-100">Tgl. Diterima</label>
 						<date-picker
-							v-model="data.pejabat.tanggal_terima"
+							v-model="data.tanggal_terima_pejabat"
 							format="DD-MM-YYYY" 
 							value-type="format"
 							type="date"
@@ -314,12 +313,10 @@
 					<MySelectPejabat
 						ref="selectPejabat"
 						:state.sync="state"
-						:default_jabatan.sync="default_jabatan"
-						:selectable_jabatan="['bd.0501', 'bd.0502']"
-						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.pejabat.user.user_id"
-						:jabatan.sync="data.pejabat.jabatan.kode"
-						:plh.sync="data.pejabat.plh"
+						:default_jabatan.sync="default_pejabat"
+						:jabatan.sync="data.petugas.pejabat.kode_jabatan"
+						:tipe_ttd.sync="data.petugas.pejabat.tipe_ttd"
+						:nip.sync="data.petugas.pejabat.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -335,7 +332,7 @@
 					<CSelect
 						label="Keputusan"
 						:options="[{value: true, label: 'Setuju'}, {value: false, label: 'Tidak Setuju'}]"
-						:value.sync="data.atasan.keputusan"
+						:value.sync="data.keputusan_atasan"
 						@update:value="toggleKeputusan($event, 'atasan')"
 					/>
 				</CCol>
@@ -343,8 +340,8 @@
 					<CTextarea
 						label="Catatan"
 						description="Catatan pejabat dalam hal keputusan tidak disetujui"
-						:value.sync="data.atasan.catatan"
-						:disabled="data.atasan.keputusan == true"
+						:value.sync="data.catatan_atasan"
+						:disabled="data.keputusan_atasan == true"
 					/>
 				</CCol>
 			</CRow>
@@ -353,7 +350,7 @@
 					<div class="form-group">
 						<label class="w-100">Tgl. Diterima</label>
 						<date-picker
-							v-model="data.atasan.tanggal_terima"
+							v-model="data.tanggal_terima_atasan"
 							format="DD-MM-YYYY" 
 							value-type="format"
 							type="date"
@@ -376,11 +373,10 @@
 					<MySelectPejabat
 						ref="selectAtasan"
 						:state.sync="state"
-						:selectable_jabatan="['bd.05']"
-						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.atasan.user.user_id"
-						:jabatan.sync="data.atasan.jabatan.kode"
-						:plh.sync="data.atasan.plh"
+						:default_jabatan.sync="default_atasan"
+						:jabatan.sync="data.petugas.atasan.kode_jabatan"
+						:tipe_ttd.sync="data.petugas.atasan.tipe_ttd"
+						:nip.sync="data.petugas.atasan.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -431,24 +427,28 @@ const default_data = {
 	rekomendasi_lain: null,
 	informasi_lain: null,
 	tujuan: null,
-	analis: {user_id: null},
-	pejabat: {
-		jabatan: {kode: null},
-		plh: false,
-		user: {user_id: null},
-		keputusan: true,
-		catatan: null,
-		tanggal_terima: null,
-	},
-	atasan: {
-		jabatan: {kode: null},
-		plh: false,
-		user: {user_id: null},
-		keputusan: true,
-		catatan: null,
-		tanggal_terima: null,
-	},
-	ikhtisar: []
+	keputusan_pejabat: true,
+	catatan_pejabat: null,
+	tanggal_terima_pejabat: null,
+	keputusan_atasan: true,
+	catatan_atasan: null,
+	tanggal_terima_atasan: null,
+	ikhtisar: [],
+	petugas: {
+		analis: {nip: null},
+		pejabat: {
+			kode_jabatan: null,
+			tipe_ttd: null,
+			nip: null,
+			flag_pejabat: true,
+		},
+		atasan: {
+			kode_jabatan: null,
+			tipe_ttd: null,
+			nip: null,
+			flag_pejabat: true,
+		},
+	}
 }
 
 export default {
@@ -475,7 +475,8 @@ export default {
 			lppi_search_query: null,
 			lppi_search_exception: null,
 			lppi_enabled: false,
-			default_jabatan: 'bd.0501',
+			default_pejabat: 'bd.0501',
+			default_atasan: 'bd.05',
 			ikhtisar_state: 'insert'
 		}
 	},
@@ -486,8 +487,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getFormDataById(this.doc_type, this.doc_id)
-			this.data = response.data.data
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data = response.data
 
 			if (this.data.lppi_id != null) {
 				this.lppi_enabled = true
@@ -496,23 +497,21 @@ export default {
 				this.lppi_search_value = this.lppi_search_items[0]
 				this.ikhtisar_state = 'show'
 			}
-
-			this.$nextTick(function () {
-				this.renderData()
-			})
 		},
-		renderData() {
-			this.$refs.selectPejabat.selected_jabatan = this.data.pejabat.jabatan.kode
-			this.$refs.selectPejabat.togglePlh(this.data.pejabat.plh)
-			this.$refs.selectPejabat.getPetugas(this.data.pejabat.user.user_id, true)
-			this.$refs.selectAtasan.selected_jabatan = this.data.atasan.jabatan.kode
-			this.$refs.selectAtasan.togglePlh(this.data.atasan.plh)
-			this.$refs.selectAtasan.getPetugas(this.data.atasan.user.user_id, true)
+		fillNull() {
+			let posisi = Object.keys(this.data.petugas)
+			for (const key in default_data.petugas) {
+				if (!posisi.includes(key)) {
+					this.data.petugas[key] = JSON.parse(JSON.stringify(default_data.petugas[key]))
+				}
+			}
 		},
 		async saveData() {
 			if (this.state == 'insert') {
 				try {
 					this.data = await api.storeDoc(this.doc_type, this.data)
+					this.fillNull()
+
 					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
 					this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
@@ -528,6 +527,8 @@ export default {
 						return update_ikhtisar
 					})
 					this.data = await api.updateDoc(this.doc_type, update_data.id, update_data)
+					this.fillNull()
+
 					this.$emit('update:doc_id', this.data.id)
 					this.alert(`Data ${this.tipe_surat} berhasil diubah`)
 				} catch (error) {
@@ -541,8 +542,8 @@ export default {
 		async changeValueLppi(id) {
 			if (id != null) {
 				// Get data lppi
-				let response = await api.getFormDataById(this.lppi_type, id)
-				let lppi = response.data.data
+				let response = await api.getDocumentById(this.lppi_type, id)
+				let lppi = response.data
 				
 				// Specify lppi data
 				this.data.lppi_id = id
@@ -557,7 +558,11 @@ export default {
 			}
 		},
 		async search_lppi(search) {
-			let data = {'src': search, 'sta': [200], 'exc': this.lppi_search_exception}
+			let data = {
+				'src': search, 
+				'flt': {'kode_status': ['terbit']}, 
+				'exc': this.lppi_search_exception
+			}
 			let responses = await api.searchDoc(this.lppi_type, data)
 			this.lppi_search_items = responses.data.data
 		},
