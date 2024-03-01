@@ -49,7 +49,7 @@
 					</CRow>
 					<CRow>
 						<CCol md="12">
-							<MySelectEntitas
+							<MySelectEntitasOrang
 								ref="selectPemilik"
 								label="Nama pemilik/importir/eksportir/kuasa"
 								:id.sync="data_objek.pemilik.id"
@@ -94,9 +94,9 @@ import 'vue2-datepicker/index.css'
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectKemasan from '../../components/SelectKemasan.vue'
-import MyTableItemBarang from './TableItemBarang.vue'
+import MyTableItemBarang from '../../components/barang/TableItemBarang.vue'
 
 const data_default = {
 	jumlah_kemasan: null,
@@ -114,7 +114,7 @@ export default {
 	components: {
 		DatePicker,
 		MyAlert,
-		MySelectEntitas,
+		MySelectEntitasOrang,
 		MySelectKemasan,
 		MyTableItemBarang,
 	},

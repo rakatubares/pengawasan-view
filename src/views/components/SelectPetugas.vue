@@ -13,8 +13,9 @@
 						:search-input.sync="search"
 						:disabled="currentUser == true"
 						item-text="name"
-						item-value="user_id"
-						@change="changeValue"
+						item-value="nip"
+						@change="changeOfficer"
+						@keyup="searchOfficer"
 					>
 						<template v-slot:no-data>
 							<v-list-item>
@@ -25,8 +26,8 @@
 						</template>
 						<template v-slot:item="{ item }">
 							<v-list-item-content>
-								<v-list-item-title v-text="item.name"></v-list-item-title>
-								<v-list-item-subtitle v-text="item.nip"></v-list-item-subtitle>
+								<v-list-item-title>{{ item.name }}</v-list-item-title>
+								<v-list-item-subtitle>{{ item.nip }}</v-list-item-subtitle>
 							</v-list-item-content>
 						</template>
 					</v-autocomplete>
@@ -40,6 +41,9 @@
 					disabled
 				>
 				</CInput>
+			</CCol>
+			<CCol  md="1" sm="12">
+				<slot name="button"></slot>
 			</CCol>
 		</CRow>
 	</div>
@@ -65,7 +69,10 @@ export default {
 			type: Boolean,
 			default: false
 		},
-		role: String
+		nip: {
+			type: String,
+			default: null
+		},
 	},
 	computed: {
 		...mapState(['userInfo'])
@@ -75,25 +82,27 @@ export default {
 			items: [],
 			value: null,
 			search: null,
-			petugas: JSON.parse(JSON.stringify(default_petugas))
+			petugas: JSON.parse(JSON.stringify(default_petugas)),
 		}
 	},
 	watch: {
-		async search (val) {
-			if (val != null) {
-				let roles = {roles: [this.role]}
-				this.items = await api.getUserByRole(roles)
-			}
-		}
+		nip(val) {
+			this.getPetugas(val, true)
+		},
 	},
 	methods: {
-		changeValue(id, mounted=false) {
-			this.getPetugas(id, mounted)
-			this.$emit('update:id', id)
+		async searchOfficer() {
+			if ((this.search != null) & (this.search != "")) {
+				this.items = await api.searchUser({query: this.search})
+			}
 		},
-		async getPetugas(id, mounted=false) {
-			if (id != null) {
-				this.petugas = await api.getUserById(id)
+		async changeOfficer(nip, mounted=false) {
+			await this.getPetugas(nip, mounted)
+			this.$emit('update:nip', nip)
+		},
+		async getPetugas(nip, mounted=false) {
+			if (nip != null) {
+				this.petugas = await api.getUserByNip({nip: nip})
 				if (mounted == true) {
 					this.items = [this.petugas]
 					this.value = this.items[0]
@@ -107,9 +116,9 @@ export default {
 			api.saveUser(this.petugas)
 		},
 	},
-	mounted() {
+	async mounted() {
 		if (this.currentUser == true) {
-			this.changeValue(this.userInfo.user_id, true)
+			this.changeOfficer(this.userInfo.nip, true)
 		}
 	}
 }

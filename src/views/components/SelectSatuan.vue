@@ -4,13 +4,11 @@
 			<label>Satuan</label>
 			<v-autocomplete
 				v-model="value"
-				no-filter
 				outlined
 				dense
-				:items.sync="items"
-				:search-input.sync="search"
-				:error="error_state"
-				item-text="kode_satuan"
+				:items.sync="options"
+				:error.sync="error_state"
+				item-text="satuan"
 				item-value="id"
 			>
 				<template v-slot:no-data>
@@ -22,8 +20,7 @@
 				</template>
 				<template v-slot:item="{ item }">
 					<v-list-item-content>
-						<v-list-item-title v-text="item.kode_satuan"></v-list-item-title>
-						<v-list-item-subtitle v-text="item.uraian_satuan"></v-list-item-subtitle>
+						<v-list-item-title>{{ item.satuan }}</v-list-item-title>
 					</v-list-item-content>
 				</template>
 			</v-autocomplete>
@@ -38,27 +35,26 @@
 </template>
 
 <script>
+import store from '../../store'
 import api from '../../router/api2.js'
 
 export default {
 	name: 'SelectSatuan',
 	props: {
-		id: Number
+		id: Number,
+		isValid: false,
 	},
 	data() {
 		return {
-			items: [],
-			search: null,
-			value: null,
+			options: [],
+			value: this.id,
 			error_state: true,
 			display_feedback: 'block'
 		}
 	},
 	watch: {
-		async search (val) {
-			let data = {s: val}
-			let response = await api.searchSatuan(data)
-			this.items = response.data.data
+		id(val) {
+			this.value = val
 		},
 		value(val) {
 			if (val == null) {
@@ -70,16 +66,24 @@ export default {
 			}
 
 			this.$emit('update:id', val)
+		},
+		error_state(val) {
+			this.$emit('update:isValid', !val)
 		}
 	},
 	methods: {
-		async getData(id) {
-			let response = await api.getSatuanById(id)
-			let satuan = response.data.data
-			this.items = [satuan]
-			this.value = this.items[0]['id']
+		async generateSatuanOptions() {
+			if (store.getters.satuanBarang == null) {
+				let response = await api.getSatuanBarang()
+				let kategori = response.data
+				store.commit('set', ['satuanBarang', kategori])
+			}
+			this.options = store.getters.satuanBarang
 		}
 	},
+	mounted() {
+		this.generateSatuanOptions()
+	}
 }
 </script>
 
@@ -95,11 +99,11 @@ export default {
 }
 
 .select-satuan .v-input__slot > fieldset {
-	border: 1px solid #2eb85c;
+	border: 1px solid #2eb85c !important;
 }
 
 .select-satuan .error--text .v-input__slot > fieldset {
-	border: 1px solid #e55353;
+	border: 1px solid #e55353 !important;
 }
 
 .select-satuan .v-text-field__details {

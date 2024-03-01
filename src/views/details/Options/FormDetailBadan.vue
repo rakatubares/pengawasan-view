@@ -1,20 +1,19 @@
 <template>
-	<div class="wrapper form-detail-badan">
+	<div class="wrapper my-form">
 		<!-- Form input penindakan badan -->
 		<CRow>
 			<CCol col="12">
 				<CForm>
 					<CRow>
 						<CCol md="12">
-							<MySelectEntitas
+							<MySelectEntitasOrang
 								ref="selectOrang"
 								label="Nama orang yang ditindak"
 								:id.sync="orang_id"
 								:showTanggalLahir="true"
 								:showWargaNegara="true"
 								:showAlamat="true"
-							>
-							</MySelectEntitas>
+							/>
 						</CCol>
 					</CRow>
 
@@ -34,7 +33,7 @@
 		</CRow>
 
 		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
+		<MyAlert ref="alert"/>
 	</div>
 </template>
 
@@ -42,13 +41,13 @@
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 
 export default {
 	name: 'FormDetailBadan',
 	components: {
 		MyAlert,
-		MySelectEntitas
+		MySelectEntitasOrang
 	},
 	props: {
 		doc_type: String,
@@ -110,21 +109,5 @@ export default {
 </script>
 
 <style>
-.form-detail-badan .v-select__slot > input {
-	font-size: 0.875rem;
-	font-weight: 400;
-	color: #768192;
-}
 
-.form-detail-badan .v-input__slot {
-	min-height: calc(1.5em + 0.75rem) !important;
-}
-
-.form-detail-badan .v-input__slot > fieldset {
-	border: 1px solid;
-}
-
-.form-detail-badan .v-text-field__details {
-	display: none;
-}
 </style>

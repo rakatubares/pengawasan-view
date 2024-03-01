@@ -4,29 +4,29 @@
 			<label>{{ label }}</label>
 			<v-autocomplete
 				class="no-message"
-				v-model="kode"
+				v-model="value"
 				no-filter
 				outlined
 				dense
 				:items.sync="items"
 				:search-input.sync="search"
-				item-text="nama_negara"
-				item-value="kode_2"
+				item-text="nama_kantor"
+				item-value="kode_kantor"
 			>
 				<template v-slot:no-data>
 					<v-list-item>
 						<v-list-item-title>
-							Negara tidak ditemukan
+							Kantor tidak ditemukan
 						</v-list-item-title>
 					</v-list-item>
 				</template>
 				<template v-slot:item="{ item }">
 					<v-list-item-content>
-						<v-list-item-title>{{ item.nama_negara }}</v-list-item-title>
-						<v-list-item-subtitle>{{ `${item.kode_2} / ${item.kode_3}` }}</v-list-item-subtitle>
+						<v-list-item-title>{{ `${item.kode_kantor} - ${item.nama_kantor}` }}</v-list-item-title>
 					</v-list-item-content>
 				</template>
 			</v-autocomplete>
+			<small class="form-text text-muted w-100">{{ description }}</small>
 		</div>
 	</div>
 </template>
@@ -35,42 +35,44 @@
 import api from '../../router/api2.js'
 
 export default {
-	name: 'SelectNegara',
+	name: 'SelectKantor',
 	props: {
 		label: {
 			type: String,
-			default: 'Negara'
+			default: 'Kantor Bea dan Cukai'
 		},
-		value: String,
+		kode_kantor: String,
+		default_kantor: String,
+		description: String,
 	},
 	data() {
 		return {
 			items: [],
 			search: null,
-			kode: null,
+			value: null,
 		}
 	},
 	watch: {
 		async search (val) {
 			let data = {s: val}
-			let response = await api.searchNegara(data)
-			this.items = response.data.data
+			let response = await api.searchKantorBC(data)
+			this.items = response.data
 		},
-		kode(val) {
-			this.$emit('update:value', val)
+		value(val) {
+			this.$emit('update:kode_kantor', val)
 		}
 	},
 	methods: {
 		async getData(code) {
-			if (code != null) {
-				let response = await api.getNegaraByCode(code)
-				let negara = response.data.data
-				this.items = [negara]
-				this.kode = this.items[0]['kode_2']	
-			} else {
-				this.items = []
-				this.kode = null
-			}
+			let response = await api.getKantorByCode(code)
+			let record = response.data
+			this.items = [record]
+			this.value = this.items[0]['kode_kantor']
+		}
+	},
+	async mounted() {
+		if (this.default_kantor != null) {
+			await this.getData(this.default_kantor)
 		}
 	}
 }

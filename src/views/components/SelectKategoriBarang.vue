@@ -6,7 +6,7 @@
 				v-model="value"
 				outlined
 				dense
-				:items="items"
+				:items="options"
 				item-text="kategori"
 				item-value="id"
 			>
@@ -19,7 +19,7 @@
 				</template>
 				<template v-slot:item="{ item }">
 					<v-list-item-content>
-						<v-list-item-title v-text="item.kategori"></v-list-item-title>
+						<v-list-item-title>{{ item.kategori }}</v-list-item-title>
 					</v-list-item-content>
 				</template>
 			</v-autocomplete>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import store from '../../store'
 import api from '../../router/api2.js'
 
 export default {
@@ -37,24 +38,30 @@ export default {
 	},
 	data() {
 		return {
-			items: [],
-			search: null,
+			options: [],
 			value: this.id,
 		}
 	},
 	watch: {
+		id(val) {
+			this.value = val
+		},
 		value(val) {
 			this.$emit('update:id', val)
 		},
 	},
 	methods: {
-		async getCategories() {
-			let response = await api.getKategori()
-			this.items = response.data.data
+		async generateCategoriesOptions() {
+			if (store.getters.kategoriBarang == null) {
+				let response = await api.getKategori()
+				let kategori = response.data
+				store.commit('set', ['kategoriBarang', kategori])
+			}
+			this.options = store.getters.kategoriBarang
 		}
 	},
 	mounted() {
-		this.getCategories()
+		this.generateCategoriesOptions()
 	}
 }
 </script>

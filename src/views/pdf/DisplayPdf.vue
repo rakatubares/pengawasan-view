@@ -58,6 +58,7 @@ export default {
 		state: String,
 		doc_type: String,
 		doc_id: Number,
+		chain_id: Number,
 		show_button: {
 			type: Boolean,
 			default: true
@@ -81,7 +82,7 @@ export default {
 		show_publish_button() {
 			let show = false
 			if (this.is_publishable) {
-				if (this.status_pdf == 100) {
+				if (this.status_pdf == 'draft') {
 					show = true
 				}	
 			}
@@ -91,13 +92,16 @@ export default {
 	},
 	methods: {
 		async listPdf() {
-			let response = await api.getRelatedDocuments(this.doc_type, this.doc_id)
+			let response = await api.getDocumentsChain(this.doc_type, this.doc_id)
 			this.list_pdf = response.data
+		},
+		async getBarang(doc_type, doc_id) {
+			return await api.getBarang(doc_type, doc_id)
 		},
 		async getPdf(doc_type, doc_id) {
 			let pdf = null
-			let response = await api.getPdfDataById(doc_type, doc_id)
-			let pdfData = response.data.data
+			let response = await api.getDocumentById(doc_type, doc_id)
+			let data_pdf = response.data
 
 			switch (doc_type) {
 			
@@ -107,9 +111,9 @@ export default {
 
 			this.src_pdf = pdf.generatePdf()
 			this.show_pdf = true
-			this.status_pdf = pdfData.kode_status
+			this.status_pdf = data_pdf.kode_status
 			if (doc_type == this.doc_type) {
-				if (this.status_pdf == 100) {
+				if (this.status_pdf == 'draft') {
 					this.is_publishable = true
 				} else {
 					this.is_publishable = false

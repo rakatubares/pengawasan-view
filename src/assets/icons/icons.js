@@ -1,11 +1,16 @@
 import {
 	cilBarcode,
 	cilBell,
+	cilBlur,
+	cilBuilding,
 	cilCalculator,
 	cilCalendar,
+	cilClipboard,
 	cilClone,
 	cilCloudDownload,
+	cilContact,
 	cilChartPie,
+	cilCheckCircle,
 	cilChevronCircleLeftAlt,
 	cilChevronCircleRightAlt,
 	cilCursor,
@@ -26,6 +31,8 @@ import {
 	cilTrash,
 	cilUser,
 	cilUserFollow,
+	cilXCircle,
+	cilZoom,
 } from '@coreui/icons'
 import { logo } from './logo'
 
@@ -35,13 +42,18 @@ export const iconsSet = Object.assign(
 	{
 		cilBarcode,
 		cilBell,
+		cilBlur,
+		cilBuilding,
 		cilCalculator,
 		cilCalendar,
 		cilChartPie,
+		cilCheckCircle,
 		cilChevronCircleLeftAlt,
 		cilChevronCircleRightAlt,
+		cilClipboard,
 		cilClone,
 		cilCloudDownload,
+		cilContact,
 		cilCursor,
 		cilDrop,
 		cilEnvelopeOpen,
@@ -60,5 +72,7 @@ export const iconsSet = Object.assign(
 		cilTrash,
 		cilUser,
 		cilUserFollow,
+		cilXCircle,
+		cilZoom,
 	},
 )

@@ -9,6 +9,12 @@ const state = {
   sso: new SSO(false),
   userInfo: null,
   token: null,
+  jabatanOptions: null,
+  jenisKegiatan: ['IMPOR', 'EKSPOR', 'PJT', 'PENUMPANG'],
+  sifatSurat: ['SEGERA', 'SANGAT SEGERA'],
+  klasifikasiSurat: ['RAHASIA', 'SANGAT RAHASIA'],
+  kategoriBarang: null,
+  satuanBarang: null,
 }
 
 const mutations = {
@@ -29,6 +35,12 @@ const getters = {
 	sso: state => { return state.sso },
 	token: state => { return state.token },
 	userInfo: state => { return state.userInfo },
+	jabatanOptions: state => { return state.jabatanOptions },
+	jenisKegiatan: state => { return state.jenisKegiatan },
+	sifatSurat: state => { return state.sifatSurat },
+	klasifikasiSurat: state => { return state.klasifikasiSurat },
+	kategoriBarang: state => { return state.kategoriBarang },
+	satuanBarang: state => { return state.satuanBarang },
 }
 
 export default new Vuex.Store({
