@@ -279,10 +279,10 @@
 				<CCol md="9" sm="12">
 					<CTextarea
 						label="Catatan"
-						description="Catatan pejabat dalam hal keputusan tidak disetujui"
 						:value.sync="data.catatan_pejabat"
-						:disabled="data.catatan_pejabat == true"
 					/>
+					<!-- description="Catatan pejabat dalam hal keputusan tidak disetujui" -->
+					<!-- :disabled="data.catatan_pejabat == true" -->
 				</CCol>
 			</CRow>
 			<CRow>
@@ -339,10 +339,10 @@
 				<CCol md="9" sm="12">
 					<CTextarea
 						label="Catatan"
-						description="Catatan pejabat dalam hal keputusan tidak disetujui"
 						:value.sync="data.catatan_atasan"
-						:disabled="data.keputusan_atasan == true"
 					/>
+					<!-- description="Catatan pejabat dalam hal keputusan tidak disetujui" -->
+					<!-- :disabled="data.keputusan_atasan == true" -->
 				</CCol>
 			</CRow>
 			<CRow>
