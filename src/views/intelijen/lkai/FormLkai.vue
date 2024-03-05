@@ -273,7 +273,6 @@
 						label="Keputusan"
 						:options="[{value: true, label: 'Setuju'}, {value: false, label: 'Tidak Setuju'}]"
 						:value.sync="data.keputusan_pejabat"
-						@update:value="toggleKeputusan($event, 'pejabat')"
 					/>
 				</CCol>
 				<CCol md="9" sm="12">
@@ -283,6 +282,7 @@
 					/>
 					<!-- description="Catatan pejabat dalam hal keputusan tidak disetujui" -->
 					<!-- :disabled="data.catatan_pejabat == true" -->
+					<!-- @update:value="toggleKeputusan($event, 'pejabat')" -->
 				</CCol>
 			</CRow>
 			<CRow>
@@ -333,7 +333,6 @@
 						label="Keputusan"
 						:options="[{value: true, label: 'Setuju'}, {value: false, label: 'Tidak Setuju'}]"
 						:value.sync="data.keputusan_atasan"
-						@update:value="toggleKeputusan($event, 'atasan')"
 					/>
 				</CCol>
 				<CCol md="9" sm="12">
@@ -343,6 +342,7 @@
 					/>
 					<!-- description="Catatan pejabat dalam hal keputusan tidak disetujui" -->
 					<!-- :disabled="data.keputusan_atasan == true" -->
+					<!-- @update:value="toggleKeputusan($event, 'atasan')" -->
 				</CCol>
 			</CRow>
 			<CRow>
@@ -586,10 +586,10 @@ export default {
 			this.data.nomor_npi = null
 			this.data.tanggal_npi = null
 		},
-		toggleKeputusan(val, level) {
-			this.data[level]['keputusan'] = val
-			this.data[level]['catatan'] = null
-		},
+		// toggleKeputusan(val, level) {
+		// 	this.data[level]['keputusan'] = val
+		// 	this.data[level]['catatan'] = null
+		// },
 		updateIkhtisar(val) {
 			this.data.ikhtisar = val
 		},
