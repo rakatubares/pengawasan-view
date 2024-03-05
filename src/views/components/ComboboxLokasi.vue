@@ -9,6 +9,7 @@
 					outlined
 					:items.sync="options"
 					@update:search-input="search"
+					@click="search('')"
 				/>
 			</CCol>
 		</CRow>
