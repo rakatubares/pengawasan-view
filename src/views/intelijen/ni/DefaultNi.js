@@ -4,7 +4,7 @@ export default {
 		tanggal_dokumen: null,
 		sifat: 'segera',
 		klasifikasi: 'rahasia',
-		tujuan: null,
+		tujuan: 'Kepala Seksi Patroli dan Operasi I',
 		petugas: { 
 			penerbit: {
 				kode_jabatan: null,

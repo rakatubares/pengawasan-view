@@ -2,42 +2,13 @@
 	<div class="wrapper my-form">
 		<CForm class="pt-3">
 			<CRow>
-				<CCol md="6" sm="12">
-					<div class="form-group">
-						<label>Nomor LKAI</label>
-						<v-autocomplete
-							class="no-message"
-							v-model="lkai_search_value"
-							outlined
-							dense
-							:items.sync="lkai_search_items"
-							:search-input.sync="lkai_search_query"
-							item-text="no_dok_lengkap"
-							item-value="id"
-							@change="changeValueLkai"
-						>
-							<template v-slot:no-data>
-								<v-list-item>
-									<v-list-item-title>
-										Data LKAI tidak ditemukan
-									</v-list-item-title>
-								</v-list-item>
-							</template>
-							<template v-slot:item="{ item }">
-								<v-list-item-content>
-									<h3><v-list-item-title>{{ item.no_dok_lengkap }}</v-list-item-title></h3>
-									<v-list-item-subtitle>{{ item.tanggal_dokumen }}</v-list-item-subtitle>
-								</v-list-item-content>
-							</template>
-						</v-autocomplete>
-						<small class="form-text text-muted w-100">Nomor LKAI sebagai sumber penerbitan NI</small>
-					</div>
-				</CCol>
-				<CCol md="3" sm="12">
-					<CInput
-						:label="`Tanggal LKAI`"
-						:value.sync="data.tanggal_lkai"
-						disabled
+				<CCol md="12">
+					<MySearchDocument
+						doc_type="lkai"
+						label="LKAI"
+						description="Nomor LKAI sebagai sumber penerbitan NI"
+						:value.sync="data.lkai_id"
+						:exceptions.sync="saved_lkai"
 					/>
 				</CCol>
 			</CRow>
@@ -60,13 +31,12 @@
 				</CCol>
 			</CRow>
 			<CRow>
-				<CCol sm="8">
-					<CInput
-						label="Penerima"
-						:description="`Jabatan penerima NI`"
+				<CCol sm="12">
+					<MyComboboxJabatan
+						label="Penerima NI"
+						description="Tujuan penerima NI"
 						:value.sync="data.tujuan"
-						:is-valid="validatorRequired('tujuan', data.tujuan)"
-						invalid-feedback="Pihak penerima wajib diisi"
+						:default_jabatan="default_tujuan"
 					/>
 				</CCol>
 			</CRow>
@@ -98,23 +68,9 @@
 			<!-- Tembusan -->
 			<CRow class="sep">
 				<CCol md="8">
-					<label>Tembusan</label>
-					<CRow>
-						<CCol>
-							<div class="input-container" v-for="(val,id) in data.tembusan" :key="id">
-								<MyComboboxTembusan
-									:value.sync="data.tembusan[id]"
-									:except.sync="data.tembusan"
-									@delete-data="delCc(id)"
-								/>
-							</div>
-						</CCol>
-					</CRow>
-					<CRow>
-						<CCol>
-							<CButton color="primary" @click="addCc">+ Tambah</CButton>
-						</CCol>
-					</CRow>
+					<MyInputTembusan
+						:value.sync="data.tembusan"
+					/>
 				</CCol>
 			</CRow>
 
@@ -142,14 +98,20 @@ import store from '../../../store'
 import validators from '../../../helpers/validator'
 import DefaultNi from './DefaultNi'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MyComboboxTembusan from '../../components/ComboboxTembusan.vue'
+import MyComboboxJabatan from '../../components/ComboboxJabatan.vue'
+// import MyComboboxTembusan from '../../components/ComboboxTembusan.vue'
+import MyInputTembusan from '../../components/InputTembusan.vue'
+import MySearchDocument from '../../components/SearchDocument.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 
 export default {
 	name: 'FormNi',
 	components: {
 		MyAlert,
-		MyComboboxTembusan,
+		MyComboboxJabatan,
+		// MyComboboxTembusan,
+		MyInputTembusan,
+		MySearchDocument,
 		MySelectPejabat,
 	},
 	props: {
@@ -160,33 +122,22 @@ export default {
 	data() {
 		return {
 			data: JSON.parse(JSON.stringify(DefaultNi.data)),
-			lkai_search_value: null,
-			lkai_search_items: [],
-			lkai_search_query: null,
-			lkai_search_exception: null,
+			saved_lkai: null,
 			sifat_ni_options: JSON.parse(JSON.stringify(store.getters.sifatSurat)),
 			klasifikasi_ni_options: JSON.parse(JSON.stringify(store.getters.klasifikasiSurat)),
+			default_tujuan: DefaultNi.data.tujuan,
 			default_penerbit: 'bd.05',
 			validations: {
 				tujuan: false,
 			}
 		}
 	},
-	watch: {
-		async lkai_search_query (val) {
-			await this.search_lkai(val)
-		},
-	},
 	methods: {
 		async getData() {
 			let response = await api.getDocumentById('ni', this.doc_id)
 
 			this.data = response.data
-			if (this.data.lkai_id != null) {
-				this.lkai_search_exception = this.data.lkai_id
-				await this.search_lkai(this.data.nomor_lkai)
-				this.lkai_search_value = this.lkai_search_items[0]
-			}
+			this.saved_lkai = this.data.lkai_id
 		},
 		async saveData() {
 			if (this.state == 'insert') {
@@ -208,40 +159,12 @@ export default {
 					console.log(`form ni - update data - error`, error)
 				}
 			}
+
+			// LKAI ID for search exception
+			this.saved_lkai = this.data.lkai_id
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
-		},
-		async changeValueLkai(id) {
-			if (id != null) {
-				// Get data LKAI
-				let response = await api.getDocumentById('lkai', id)
-				let lkai = response.data
-				
-				// Change current data according to lkai
-				this.data.tanggal_lkai = lkai.tanggal_dokumen
-				
-				// Specify lkai id
-				this.data.lkai_id = id
-			} else {
-				this.data.lkai_id = null
-				this.data.tanggal_lkai = null
-			}
-		},
-		async search_lkai(search) {
-			let data = {
-				'src': search, 
-				'flt': {'kode_status': ['terbit']},
-				'exc': this.lkai_search_exception, 
-			}
-			let responses = await api.searchDoc('lkai', data)
-			this.lkai_search_items = responses.data.data
-		},
-		addCc() {
-			this.data.tembusan.push(null)
-		},
-		delCc(id) {
-			this.data.tembusan.splice(id,1)
 		},
 		validatorRequired(field, val) { 
 			let validation = validators.required(val) 
