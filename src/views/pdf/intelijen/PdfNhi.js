@@ -31,11 +31,13 @@ class PdfNhi extends Pdf
 		this.txt.nomor_lkai = this.data.nomor_lkai || ''
 		this.txt.tujuan = `Yth. ${this.converters.string(this.data.tujuan)}`
 		this.txt.tempat = this.converters.string(this.data.tempat_indikasi)
-		this.txt.waktu = this.data.waktu_indikasi
+		let waktu = this.data.waktu_indikasi
 			? this.data.zona_waktu
-				? `${this.data.waktu_indikasi} ${this.data.zona_waktu}`
-				: `${this.data.waktu_indikasi}`
+				? ` / ${this.data.waktu_indikasi} ${this.data.zona_waktu}`
+				: ` / ${this.data.waktu_indikasi}`
 			: ''
+		let tanggal = this.data.tanggal_indikasi ? this.data.tanggal_indikasi : ''
+		this.txt.waktu = `${tanggal}${waktu}`
 		this.txt.kantor = this.converters.string(this.data.kantor.nama_kantor)
 
 		///// Detail /////

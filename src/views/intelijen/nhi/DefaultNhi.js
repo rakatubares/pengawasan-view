@@ -4,8 +4,9 @@ export default {
 		tanggal_dokumen: null,
 		sifat: 'segera',
 		klasifikasi: 'rahasia',
-		tujuan: null,
+		tujuan: 'Kepala Seksi Patroli dan Operasi I',
 		tempat_indikasi: null,
+		tanggal_indikasi: null,
 		waktu_indikasi: null,
 		zona_waktu: 'WIB',
 		kantor: {
@@ -31,7 +32,7 @@ export default {
 				flag_pejabat: true,
 			} 
 		},
-		tembusan: [],
+		tembusan: [null, null, null],
 	},
 	detail_exim: {
 		tipe: 'IMPOR',

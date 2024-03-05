@@ -329,13 +329,17 @@ export default {
 		disp_tujuan() { return this.data_doc.tujuan || '-' },
 		disp_tempat() { return this.data_doc.tempat_indikasi || '-' },
 		disp_waktu() { 
+			var waktu = null
 			if (this.data_doc.waktu_indikasi != null) {
-				var waktu = `${this.data_doc.waktu_indikasi} ${this.data_doc.zona_waktu}`
-			} else {
-				var waktu = '-'
+				waktu = `${this.data_doc.waktu_indikasi} ${this.data_doc.zona_waktu}`
 			}
 
-			return waktu
+			var tanggal_waktu = this.data_doc.tanggal_indikasi
+			if (waktu != null) {
+				tanggal_waktu = `${tanggal_waktu} ${waktu}`
+			}
+
+			return tanggal_waktu
 		},
 		disp_kantor() { return this.data_doc.kantor.nama_kantor || '-' },
 
@@ -344,7 +348,7 @@ export default {
 
 		// Detail exim
 		disp_dok_exim() { return (this.detail_type == 'nhi-exim') ? `${this.detail_data.jenis_dok || ''} ${this.detail_data.nomor_dok || '-'} tanggal ${this.detail_data.tanggal_dok || '-'}` : '-' },
-		disp_sarkut_exim() { return (this.detail_type == 'nhi-exim') ?  `${this.detail_data.nama_sarkut || ''} Voy/Flight/No. Pol ${this.detail_data.no_flight_trayek} || '-'` : '-' },
+		disp_sarkut_exim() { return (this.detail_type == 'nhi-exim') ?  `${this.detail_data.nama_sarkut || ''} Voy/Flight/No. Pol ${this.detail_data.nomor_sarkut} || '-'` : '-' },
 		disp_awb_exim() { return (this.detail_type == 'nhi-exim') ? `${this.detail_data.nomor_awb || '-'} tanggal ${this.detail_data.tanggal_awb || '-'}` : '-' },
 		disp_merek_koli_exim() { return (this.detail_type == 'nhi-exim') ? this.detail_data.merek_koli : '-' },
 		disp_entitas_exim() { 
@@ -383,12 +387,12 @@ export default {
 		disp_penyalur() { return (this.detail_type == 'nhi-bkc') ? this.detail_data.penyalur : '-' },
 		disp_tempat_penjualan() { return (this.detail_type == 'nhi-bkc') ? this.detail_data.tempat_penjualan : '-' },
 		disp_nppbkc() { return (this.detail_type == 'nhi-bkc') ? this.detail_data.nppbkc : '-' },
-		disp_sarkut_bkc() { return (this.detail_type == 'nhi-bkc') ? `${this.detail_data.nama_sarkut} Voy/Flight/No. Pol ${this.detail_data.no_flight_trayek}` : '-' },
+		disp_sarkut_bkc() { return (this.detail_type == 'nhi-bkc') ? `${this.detail_data.nama_sarkut} Voy/Flight/No. Pol ${this.detail_data.nomor_sarkut}` : '-' },
 		disp_data_lain_bkc() { return (this.detail_type == 'nhi-bkc') ? this.detail_data.data_lain : '-' },
 
 		// Detail tertentu
 		disp_dok_tertentu() { return (this.detail_type == 'nhi-tertentu') ? `${this.detail_data.jenis_dok} ${this.detail_data.nomor_dok} tanggal ${this.detail_data.tanggal_dok}` : '-' },
-		disp_sarkut_tertentu() { return (this.detail_type == 'nhi-tertentu') ? `${this.detail_data.nama_sarkut} Voy/Flight/No. Pol ${this.detail_data.no_flight_trayek}` : '-' },
+		disp_sarkut_tertentu() { return (this.detail_type == 'nhi-tertentu') ? `${this.detail_data.nama_sarkut} Voy/Flight/No. Pol ${this.detail_data.nomor_sarkut}` : '-' },
 		disp_awb_tertentu() { return (this.detail_type == 'nhi-tertentu') ? `${this.detail_data.nomor_awb} tanggal ${this.detail_data.tanggal_awb}` : '-'},
 		disp_merek_koli_tertentu() { return (this.detail_type == 'nhi-tertentu') ? this.detail_data.merek_koli : '-' },
 		disp_entitas_tertentu() {
