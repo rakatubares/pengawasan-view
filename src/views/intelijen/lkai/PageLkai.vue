@@ -16,6 +16,7 @@
 					:doc_type="doc_type"
 					:tipe_surat="tipe_surat"
 					:id.sync="modal_data_props.doc_id"
+					:default_pejabat="default_pejabat"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -46,6 +47,10 @@ export default {
 			type: String,
 			default: 'create-lkai'
 		},
+		default_pejabat: {
+			type: String,
+			default: 'bd.0501'
+		}
 	},
 	data() {
 		return {

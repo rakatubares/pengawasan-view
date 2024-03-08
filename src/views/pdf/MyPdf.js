@@ -1,4 +1,5 @@
 import jsPDF from "jspdf"
+import 'jspdf-autotable'
 
 import converters from "../../helpers/converter"
 
@@ -44,9 +45,9 @@ class MyPdf {
 		return this.ouputFile()
 	}
 
-	write(txt, x=left_margin, y=this.ln, align='justify')
+	write(txt, x=left_margin, y=this.ln, align='justify', right_limit=0)
 	{
-		let options = this.setOptions(align, x)
+		let options = this.setOptions(align, x, right_limit)
 		this.pdf.text(txt, x, y, options)
 		this.setBreak(txt, options)
 	}
@@ -58,9 +59,14 @@ class MyPdf {
 		this.break_height = this.font_height
 	}
 
-	setOptions(align, x)
+	setOptions(align, x, right_limit)
 	{
-		let maxWidth = 200 - x
+		if (align == 'center') {
+			var maxWidth = 200
+		} else {
+			var maxWidth = 200 - x - right_limit
+		}
+		
 		return {align: align, maxWidth: maxWidth}
 	}
 
@@ -126,6 +132,7 @@ class MyPdf {
 
 		let center = this.page_width/2
 		if (Array.isArray(doc_title)) {
+			console.log('MY PDF - TITEL - IS ARRAY', doc_title)
 			doc_title.forEach(txt => {
 				this.write(txt, center, this.ln, 'center')	
 				let dim = this.pdf.getTextDimensions(txt)
@@ -133,6 +140,7 @@ class MyPdf {
 				this.break()
 			});
 		} else {
+			console.log('MY PDF - TITEL - NOT ARRAY', doc_title)
 			this.write(doc_title, center, this.ln, 'center')
 			let dim = this.pdf.getTextDimensions(doc_title)
 			this.pdf.line(center-(dim.w/2)-1, this.ln+0.5, center+(dim.w/2)+1, this.ln+0.5)

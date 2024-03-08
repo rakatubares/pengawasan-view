@@ -2,103 +2,35 @@
 	<div class="wrapper my-form">
 		<CForm class="pt-4">
 			<!-- Dokumen sumber -->
-			<!-- LPPI -->
 			<CRow>
 				<CCol class="pb-0" sm="12">
 					<h5>Dokumen Sumber</h5>
 				</CCol>
 			</CRow>
-			<CRow class="mt-0">
-				<CCol sm="12" md="2">
-					<CRow class="mt-4">
-						<CCol style="display: inherit">
-							<CSwitch
-								color="primary"
-								:checked.sync="lppi_enabled"
-								@update:checked="toggleLppi"
-							/>
-							<b class="ml-2">{{ doc_type == 'lkain' ? 'LPPI-N' : 'LPPI' }}</b>
-						</CCol>
-					</CRow>
-				</CCol>
-				<CCol sm="12" md="6">
-					<div class="form-group">
-						<label>Nomor {{ doc_type == 'lkain' ? 'LPPI-N' : 'LPPI' }}</label>
-						<v-autocomplete
-							class="no-message"
-							v-model="lppi_search_value"
-							outlined
-							dense
-							:items.sync="lppi_search_items"
-							:search-input.sync="lppi_search_query"
-							item-text="no_dok_lengkap"
-							item-value="id"
-							@change="changeValueLppi"
-							:disabled="lppi_enabled == false"
-						>
-							<template v-slot:no-data>
-								<v-list-item>
-									<v-list-item-title>
-										Data {{ doc_type == 'lkain' ? 'LPPI-N' : 'LPPI' }} tidak ditemukan
-									</v-list-item-title>
-								</v-list-item>
-							</template>
-							<template v-slot:item="{ item }">
-								<v-list-item-content>
-									<h3><v-list-item-title>{{ item.no_dok_lengkap }}</v-list-item-title></h3>
-									<v-list-item-subtitle>{{ item.tanggal_dokumen }}</v-list-item-subtitle>
-								</v-list-item-content>
-							</template>
-						</v-autocomplete>
-					</div>
-				</CCol>
-				<CCol sm="12" md="4">
-					<div class="form-group">
-						<label class="w-100">Tgl. {{ doc_type == 'lkain' ? 'LPPI-N' : 'LPPI' }}</label>
-						<date-picker
-							v-model="data.tanggal_lppi"
-							format="DD-MM-YYYY" 
-							value-type="format"
-							type="date"
-						>
-							<template v-slot:input="slotProps">
-								<input
-									class="form-control" 
-									type="text" 
-									v-bind="slotProps.props" 
-									v-on="slotProps.events"
-									disabled
-								/>
-							</template>
-							<i slot="icon-calendar"></i>
-						</date-picker>
-					</div>
+			<!-- LPPI -->
+			<CRow>
+				<CCol md="12">
+					<MySearchDocument
+						:doc_type="kode_lppi"
+						:label="label_lppi"
+						:value.sync="data.lppi_id"
+						:exceptions.sync="saved_lppi"
+						@update:value="updateInformasi"
+					/>
 				</CCol>
 			</CRow>
+
 			<!-- LPTI -->
 			<CRow class="mt-0">
-				<CCol sm="12" md="2">
-					<CRow class="mt-4">
-						<CCol style="display: inherit">
-							<CSwitch
-								color="primary"
-								:checked.sync="data.flag_lpti"
-								@update:checked="toggleLpti"
-							/>
-							<b class="ml-2">LPT-I</b>
-						</CCol>
-					</CRow>
-				</CCol>
-				<CCol sm="12" md="6">
+				<CCol sm="12" md="8">
 					<CInput
-						label="Nomor LPT-I"
+						:label="`Nomor ${label_lpti}`"
 						:value.sync="data.nomor_lpti"
-						:disabled="data.flag_lpti == false"
 					/>
 				</CCol>
 				<CCol sm="12" md="4">
 					<div class="form-group">
-						<label class="w-100">Tgl. LPT-I</label>
+						<label class="w-100">Tgl. {{ label_lpti }}</label>
 						<date-picker
 							v-model="data.tanggal_lpti"
 							format="DD-MM-YYYY" 
@@ -111,7 +43,6 @@
 									type="text" 
 									v-bind="slotProps.props" 
 									v-on="slotProps.events"
-									:disabled="data.flag_lpti == false"	
 								/>
 							</template>
 							<i slot="icon-calendar"></i>
@@ -119,30 +50,18 @@
 					</div>
 				</CCol>
 			</CRow>
+
 			<!-- NPI -->
 			<CRow class="mt-0">
-				<CCol sm="12" md="2">
-					<CRow class="mt-4">
-						<CCol style="display: inherit">
-							<CSwitch
-								color="primary"
-								:checked.sync="data.flag_npi"
-								@update:checked="toggleNpi"
-							/>
-							<b class="ml-2">{{ doc_type == 'lkain' ? 'NPI-N' : 'NPI' }}</b>
-						</CCol>
-					</CRow>
-				</CCol>
-				<CCol sm="12" md="6">
+				<CCol sm="12" md="8">
 					<CInput
-						:label="`Nomor ${doc_type == 'lkain' ? 'NPI-N' : 'NPI'}`"
+						:label="`Nomor ${label_npi}`"
 						:value.sync="data.nomor_npi"
-						:disabled="data.flag_npi == false"
 					/>
 				</CCol>
 				<CCol sm="12" md="4">
 					<div class="form-group">
-						<label class="w-100">Tgl. {{ doc_type == 'lkain' ? 'NPI-N' : 'NPI' }}</label>
+						<label class="w-100">Tgl. {{ label_npi }}</label>
 						<date-picker
 							v-model="data.tanggal_npi"
 							format="DD-MM-YYYY" 
@@ -155,7 +74,6 @@
 									type="text" 
 									v-bind="slotProps.props" 
 									v-on="slotProps.events"
-									:disabled="data.flag_npi == false"	
 								/>
 							</template>
 							<i slot="icon-calendar"></i>
@@ -167,11 +85,11 @@
 			<!-- Analisis -->
 			<CRow>
 				<CCol sm="12">
-					<MyTableIkhtisar
-						ref="tableIkhtisar"
-						:state.sync="ikhtisar_state"
-						:data_ikhtisar.sync="data.ikhtisar"
-						@update-data="updateIkhtisar"
+					<CTextarea
+						v-if="show_informasi"
+						label="Ikhtisar Informasi"
+						:value.sync="data.informasi"
+						rows="5"
 					/>
 				</CCol>
 			</CRow>
@@ -180,6 +98,7 @@
 					<CTextarea
 						label="Prosedur Analisis"
 						:value.sync="data.prosedur"
+						rows="5"
 					/>
 				</CCol>
 			</CRow>
@@ -188,6 +107,7 @@
 					<CTextarea
 						label="Hasil Analisis"
 						:value.sync="data.hasil"
+						rows="5"
 					/>
 				</CCol>
 			</CRow>
@@ -196,6 +116,7 @@
 					<CTextarea
 						label="Kesimpulan"
 						:value.sync="data.kesimpulan"
+						rows="5"
 					/>
 				</CCol>
 			</CRow>
@@ -209,7 +130,7 @@
 			<CRow>
 				<CCol md="3" sm="12" class="pt-0">
 					<CInputCheckbox
-						label="NHI"
+						:label="label_nhi"
 						:checked.sync="data.flag_rekom_nhi"
 					/>
 				</CCol>
@@ -217,7 +138,7 @@
 			<CRow>
 				<CCol md="3" sm="12" class="pt-0">
 					<CInputCheckbox
-						label="NI"
+						:label="label_ni"
 						:checked.sync="data.flag_rekom_ni"
 					/>
 				</CCol>
@@ -227,6 +148,7 @@
 					<CTextarea
 						label="Rekomendasi Lainnya"
 						:value.sync="data.rekomendasi_lain"
+						rows="5"
 					/>
 				</CCol>
 			</CRow>
@@ -235,6 +157,7 @@
 					<CTextarea
 						label="Informasi Lainnya"
 						:value.sync="data.informasi_lain"
+						rows="5"
 					/>
 				</CCol>
 			</CRow>
@@ -280,9 +203,6 @@
 						label="Catatan"
 						:value.sync="data.catatan_pejabat"
 					/>
-					<!-- description="Catatan pejabat dalam hal keputusan tidak disetujui" -->
-					<!-- :disabled="data.catatan_pejabat == true" -->
-					<!-- @update:value="toggleKeputusan($event, 'pejabat')" -->
 				</CCol>
 			</CRow>
 			<CRow>
@@ -340,9 +260,6 @@
 						label="Catatan"
 						:value.sync="data.catatan_atasan"
 					/>
-					<!-- description="Catatan pejabat dalam hal keputusan tidak disetujui" -->
-					<!-- :disabled="data.keputusan_atasan == true" -->
-					<!-- @update:value="toggleKeputusan($event, 'atasan')" -->
 				</CCol>
 			</CRow>
 			<CRow>
@@ -386,7 +303,7 @@
 				<CCol sm="12">
 					<CButton
 						color="success"
-						@click="saveData()"
+						@click="saveData"
 					>
 						Simpan
 					</CButton>
@@ -404,58 +321,19 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
+import DefaultLkai from './DefaultLkai'
 import MyAlert from '../../components/AlertSubmit.vue'
+import MySearchDocument from '../../components/SearchDocument.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MyTableIkhtisar from '../lppi/TableIkhtisar.vue'
-
-const default_data = {
-	lppi_id: null, 
-	nomor_lppi: null,
-	tanggal_lppi: null,
-	flag_lpti: false,
-	nomor_lpti: null,
-	tanggal_lpti: null,
-	flag_npi: false,
-	nomor_npi: null,
-	tanggal_npi: null,
-	prosedur: null,
-	hasil: null,
-	kesimpulan: null,
-	flag_rekom_nhi: false,
-	flag_rekom_ni: false,
-	rekomendasi_lain: null,
-	informasi_lain: null,
-	tujuan: null,
-	keputusan_pejabat: true,
-	catatan_pejabat: null,
-	tanggal_terima_pejabat: null,
-	keputusan_atasan: true,
-	catatan_atasan: null,
-	tanggal_terima_atasan: null,
-	ikhtisar: [],
-	petugas: {
-		analis: {nip: null},
-		pejabat: {
-			kode_jabatan: null,
-			tipe_ttd: null,
-			nip: null,
-			flag_pejabat: true,
-		},
-		atasan: {
-			kode_jabatan: null,
-			tipe_ttd: null,
-			nip: null,
-			flag_pejabat: true,
-		},
-	}
-}
 
 export default {
 	name: 'FormLkai',
 	components: {
 		DatePicker,
 		MyAlert,
+		MySearchDocument,
 		MySelectPejabat,
 		MySelectPetugas,
 		MyTableIkhtisar,
@@ -465,38 +343,56 @@ export default {
 		tipe_surat: String,
 		doc_type: String,
 		doc_id: Number,
+		default_pejabat: {
+			type: String,
+			default: 'bd.0501',
+		},
+		kode_lppi: {
+			type: String,
+			default: 'lppi',
+		},
+		label_lppi: {
+			type: String,
+			default: 'LPPI',
+		},
+		label_lpti: {
+			type: String,
+			default: 'LPTI'
+		},
+		label_npi: {
+			type: String,
+			default: 'NPI'
+		},
+		label_nhi: {
+			type: String,
+			default: 'NHI'
+		},
+		label_ni: {
+			type: String,
+			default: 'NI'
+		},
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(default_data)),
-			lppi_type: this.doc_type == 'lkain' ? 'lppin' : 'lppi',
-			lppi_search_value: null,
-			lppi_search_items: [],
-			lppi_search_query: null,
-			lppi_search_exception: null,
-			lppi_enabled: false,
-			default_pejabat: 'bd.0501',
+			is_mounting: false,
+			data: JSON.parse(JSON.stringify(DefaultLkai)),
+			saved_lppi: null,
 			default_atasan: 'bd.05',
-			ikhtisar_state: 'insert'
+			ikhtisar_state: 'insert',
+			show_informasi: true,
 		}
-	},
-	watch: {
-		async lppi_search_query (val) {
-			await this.search_lppi(val)
-		},
 	},
 	methods: {
 		async getData() {
 			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data = response.data
-
-			if (this.data.lppi_id != null) {
-				this.lppi_enabled = true
-				this.lppi_search_exception = this.data.lppi_id
-				await this.search_lppi(this.data.nomor_lppi)
-				this.lppi_search_value = this.lppi_search_items[0]
-				this.ikhtisar_state = 'show'
+			if (this.doc_type == 'lkai') {
+				this.data = response.data	
+			} else {
+				let data = response.data
+				this.$emit('get-data', data)
 			}
+			
+			this.saved_lppi = this.data.lppi_id
 		},
 		fillNull() {
 			let posisi = Object.keys(this.data.petugas)
@@ -506,105 +402,70 @@ export default {
 				}
 			}
 		},
+		async getIkhtisarLppi(lppi_id) {
+			let response = await api.getDocumentById(this.kode_lppi, lppi_id)
+			let informasi = JSON.parse(JSON.stringify(response.data.informasi))
+			let list_informasi = informasi.map(function (info) {
+				return info.informasi
+			})
+			let ikhtisar = list_informasi.join('\n')
+			return ikhtisar
+		},
 		async saveData() {
 			if (this.state == 'insert') {
-				try {
+				if (this.doc_type == 'lkai') {
 					this.data = await api.storeDoc(this.doc_type, this.data)
-					this.fillNull()
-
-					this.$emit('update:doc_id', this.data.id)
-					this.$emit('update:state', 'edit')
-					this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
-				} catch (error) {
-					console.log(`form lkai - save data - error`, error)
+				} else {
+					this.$emit('insert-data', this.data)
 				}
+				
+				this.fillNull()
+				this.$emit('update:state', 'edit')
+				var msg = `Data ${this.tipe_surat} berhasil disimpan`
 			} else if (this.state == 'edit') {
-				try {
-					let update_data = this.data
-					update_data.ikhtisar = this.data.ikhtisar.map(function(ikhtisar) {
-						let update_ikhtisar = ikhtisar
-						delete update_ikhtisar.index
-						return update_ikhtisar
-					})
-					this.data = await api.updateDoc(this.doc_type, update_data.id, update_data)
-					this.fillNull()
-
-					this.$emit('update:doc_id', this.data.id)
-					this.alert(`Data ${this.tipe_surat} berhasil diubah`)
-				} catch (error) {
-					console.log(`form lkai - update data - error`, error)
+				if (this.doc_type == 'lkai') {
+					this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
+				} else {
+					this.$emit('update-data', this.data)
 				}
+				
+				this.fillNull()
+				var msg = `Data ${this.tipe_surat} berhasil diubah`
 			}
+			this.$emit('update:doc_id', this.data.id)
+			this.saved_lppi = this.data.lppi_id
+			this.alert(msg)
+		},
+		updateData(data) {
+			this.data = data
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
 		},
-		async changeValueLppi(id) {
-			if (id != null) {
-				// Get data lppi
-				let response = await api.getDocumentById(this.lppi_type, id)
-				let lppi = response.data
-				
-				// Specify lppi data
-				this.data.lppi_id = id
-				this.data.tanggal_lppi = lppi.tanggal_dokumen
-
-				// Data ikhtisar
-				this.data.ikhtisar = lppi.ikhtisar
-			} else {
-				this.data.lppi_id = null
-				this.data.tanggal_lppi = null
-				this.data.ikhtisar = []
+		async updateInformasi(val) {
+			if (this.is_mounting == false) {
+				if (val != null) {
+					var ikhtisar = await this.getIkhtisarLppi(val)
+				} else {
+					var ikhtisar = null
+				}
+				this.data.informasi = ikhtisar
+				this.refresh_informasi()
 			}
 		},
-		async search_lppi(search) {
-			let data = {
-				'src': search, 
-				'flt': {'kode_status': ['terbit']}, 
-				'exc': this.lppi_search_exception
-			}
-			let responses = await api.searchDoc(this.lppi_type, data)
-			this.lppi_search_items = responses.data.data
-		},
-		toggleLppi(val) {
-			this.lppi_enabled = val
-			this.lppi_search_value = null
-			this.data.lppi_id = null
-			this.data.tanggal_lppi = null
-			this.data.ikhtisar = []
-			if (val == true) {
-				this.ikhtisar_state = 'show'
-			} else {
-				this.ikhtisar_state = this.state
-			}
-		},
-		toggleLpti() {
-			this.data.nomor_lpti = null
-			this.data.tanggal_lpti = null
-		},
-		toggleNpi() {
-			this.data.nomor_npi = null
-			this.data.tanggal_npi = null
-		},
-		// toggleKeputusan(val, level) {
-		// 	this.data[level]['keputusan'] = val
-		// 	this.data[level]['catatan'] = null
-		// },
-		updateIkhtisar(val) {
-			this.data.ikhtisar = val
-		},
-	},
-	async mounted() {
-		// Change jabatan option for LKAI-N
-		if (this.doc_type == 'lkain') {
-			this.default_jabatan = 'bd.0502'
+		refresh_informasi() {
+			this.show_informasi = false
+			this.$nextTick(() => {
+				this.show_informasi = true
+			})
 		}
-
+	},
+	async beforeMount() {
+		this.is_mounting = true
 		if (this.state == 'edit') {
 			await this.getData()
-		} else if (this.doc_type == 'lkain') {
-			delete this.data.informasi_lain
 		}
+		this.is_mounting = false
 	}
 }
 </script>

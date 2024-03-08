@@ -84,7 +84,7 @@
 					<!-- Tabel ikhtisar -->
 					<CDataTable
 						class="my-2 mr-3"
-						:items="data_doc.ikhtisar"
+						:items="data_doc.informasi"
 						:fields="informasi_table_fields"
 						:items-per-page="5"
 						pagination

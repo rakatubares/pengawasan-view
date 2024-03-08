@@ -170,7 +170,7 @@
 					<MyTableIkhtisar
 						ref="tableIkhtisar"
 						state="insert"
-						:data_ikhtisar.sync="data.ikhtisar"
+						:data_ikhtisar.sync="data.informasi"
 						@update-data="updateIkhtisar"
 					/>
 				</CCol>
@@ -319,7 +319,7 @@ const default_data = {
 	flag_analisis: false,
 	flag_arsip: false,
 	catatan: null,
-	ikhtisar: [],
+	informasi: [],
 	petugas: {
 		penerima_informasi: {nip: null},
 		penilai_informasi: {nip: null},
@@ -370,7 +370,7 @@ export default {
 			}
 		},
 		updateIkhtisar(val) {
-			this.data.ikhtisar = val
+			this.data.informasi = val
 		},
 		async saveData() {
 			if (this.state == 'insert') {
@@ -387,10 +387,10 @@ export default {
 			} else if (this.state == 'edit') {
 				try {
 					let update_data = this.data
-					update_data.ikhtisar = this.data.ikhtisar.map(function(ikhtisar) {
-						let update_ikhtisar = ikhtisar
-						delete update_ikhtisar.index
-						return update_ikhtisar
+					update_data.informasi = this.data.informasi.map(function(informasi) {
+						let update_informasi = informasi
+						delete update_informasi.index
+						return update_informasi
 					})
 					this.data = await api.updateDoc(this.doc_type, update_data.id, update_data)
 					this.fillNull()

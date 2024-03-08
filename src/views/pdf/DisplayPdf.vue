@@ -47,12 +47,14 @@
 
 <script>
 import api from '../../router/api2.js'
-import PdfLkai from './PdfLkai.js'
-import PdfLppi from './PdfLppi.js'
+import PdfLkai from './intelijen/PdfLkai'
+import PdfLkaiN from './intelijen/PdfLkaiN'
 import PdfNhi from './intelijen/PdfNhi'
-import PdfNhiN from './pdfNhiN.js'
+import PdfNhiN from './intelijen/PdfNhiN'
 import MyAlert from '../components/AlertSubmit.vue'
 import PdfNi from './intelijen/PdfNi'
+import PdfLppi from './intelijen/PdfLppi'
+import PdfLppiN from './intelijen/PdfLppiN'
 
 export default {
 	name: "DisplayPdf",
@@ -114,14 +116,7 @@ export default {
 					break;
 
 				case 'lkain':
-					pdf = new PdfLkai(
-						data_pdf,
-						this.active_pdf,
-						'LEMBAR KERJA ANALISIS INTELIJEN NPP (LKAI-N)',
-						'lppin',
-						'LPPI-N',
-						{start: 60, end: 150}
-					)
+					pdf = new PdfLkaiN(data_pdf)
 					break;
 
 				case 'lppi':
@@ -129,22 +124,22 @@ export default {
 					break;
 
 				case 'lppin':
-					pdf = new PdfLppi(
-						data_pdf,
-						this.active_pdf,
-						'LEMBAR PENGUMPULAN DAN PENILAIAN INFORMASI NPP',
-						{start: 53, end: 157}
-					)
+					pdf = new PdfLppiN(data_pdf)
 					break;
 
 				case 'nhi':
 					let response = await api.getBarang(doc_type, doc_id)
-					let data_barang = response.data
+					var data_barang = response.data
 					pdf = new PdfNhi(data_pdf, data_barang)
 					break;
 
 				case 'nhin':
-					pdf = new PdfNhiN(data_pdf)
+					var data_barang = null
+					if (data_pdf.detail.type == 'nhin-exim') {
+						let response = await api.getBarang(doc_type, doc_id)
+						data_barang = response.data
+					}
+					pdf = new PdfNhiN(data_pdf, data_barang)
 					break;
 
 				case 'ni':

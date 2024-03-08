@@ -53,8 +53,6 @@ class PdfNhi extends Pdf
 				+ `${this.data.barang[0].satuan.satuan} `
 				+ `${this.data.barang[0].uraian_barang}`
 			txt_barang = this.converters.string(txt_barang)
-		} else {
-			txt_barang = '-'
 		}
 
 		// Exim
@@ -74,7 +72,7 @@ class PdfNhi extends Pdf
 				: ''
 			: ''
 		this.txt.sarkut_exim = detail_type == 'nhi-exim'
-			? `${detail_data.nama_sarkut || '-'} Voy/Flight/No. Pol: ${detail_data.no_flight_trayek || '-'}`
+			? `${detail_data.nama_sarkut || '-'} Voy/Flight/No. Pol: ${detail_data.nomor_sarkut || '-'}`
 			: ''
 		this.txt.awb_exim = detail_type == 'nhi-exim'
 			? detail_data.nomor_awb
@@ -125,7 +123,7 @@ class PdfNhi extends Pdf
 			? this.converters.string(detail_data.nppbkc) 
 			: ''
 		this.txt.sarkut_bkc = detail_type == 'nhi-bkc'
-			? `${detail_data.nama_sarkut || '-'} Voy/Flight/No. Pol: ${detail_data.no_flight_trayek || '-'}`
+			? `${detail_data.nama_sarkut || '-'} Voy/Flight/No. Pol: ${detail_data.nomor_sarkut || '-'}`
 			: ''
 		this.txt.barang_bkc = detail_type == 'nhi-bkc' ? txt_barang : ''
 		this.txt.data_lain_bkc = detail_type == 'nhi-bkc' 
@@ -149,7 +147,7 @@ class PdfNhi extends Pdf
 				: ''
 			: ''
 		this.txt.sarkut_tertentu = detail_type == 'nhi-tertentu'
-			? `${detail_data.nama_sarkut || '-'} Voy/Flight/No. Pol: ${detail_data.no_flight_trayek || '-'}`
+			? `${detail_data.nama_sarkut || '-'} Voy/Flight/No. Pol: ${detail_data.nomor_sarkut || '-'}`
 			: ''
 		this.txt.awb_tertentu = detail_type == 'nhi-tertentu'
 			? detail_data.nomor_awb

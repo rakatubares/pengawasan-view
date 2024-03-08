@@ -10,14 +10,26 @@
 			<template #tabs>
 				<CTab :title="tabs_list[0]['title']">
 					<MyFormLkai
-						v-if="['insert','edit'].includes(modal_state)"
+						v-if="(['insert','edit'].includes(modal_state)) & (doc_type == 'lkai')"
+						:state.sync="modal_state"
+						:tipe_surat="tipe_surat"
+						:doc_type="doc_type"
+						:doc_id.sync="doc_id"
+					/>
+					<MyFormLkaiN
+						v-else-if="(['insert','edit'].includes(modal_state)) & (doc_type == 'lkain')"
 						:state.sync="modal_state"
 						:tipe_surat="tipe_surat"
 						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
 					/>
 					<MyDisplayLkai
-						v-else-if="modal_state == 'show'"
+						v-else-if="(modal_state == 'show') & (doc_type == 'lkai')"
+						:doc_type="doc_type"
+						:doc_id.sync="doc_id"
+					/>
+					<MyDisplayLkaiN
+						v-else-if="(modal_state == 'show') & (doc_type == 'lkain')"
 						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
 					/>
@@ -42,23 +54,28 @@
 
 <script>
 import MyDisplayLkai from './DisplayLkai.vue'
+import MyDisplayLkaiN from './DisplayLkaiN.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
 import MyFormLkai from './FormLkai.vue'
+import MyFormLkaiN from './FormLkaiN.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 
 export default {
 	name: 'ModalLkai',
 	components: {
 		MyDisplayLkai,
+		MyDisplayLkaiN,
 		MyDisplayPdf,
 		MyFormLkai,
+		MyFormLkaiN,
 		MyModalTabs,
 	},
 	props: {
 		state: String,
 		tipe_surat: String,
 		doc_type: String,
-		id: Number
+		id: Number,
+		default_pejabat: String,
 	},
 	data() {
 		return {

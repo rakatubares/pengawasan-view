@@ -73,7 +73,7 @@
 				<div class="sep" v-if="data_doc.detail.type == 'nhi-exim'">
 					<CRow class="mt-2">
 						<CCol>
-							<h4><b>Barang Impor/Ekspor</b></h4>
+							<h4><b>Kegiatan atas Barang Impor/Ekspor</b></h4>
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
@@ -138,7 +138,7 @@
 				<div class="sep" v-if="data_doc.detail.type == 'nhi-bkc'">
 					<CRow class="mt-2">
 						<CCol>
-							<h4><b>Barang Kena Cukai</b></h4>
+							<h4><b>Kegiatan atas Barang Kena Cukai</b></h4>
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">
@@ -195,7 +195,7 @@
 				<div class="sep" v-if="data_doc.detail.type == 'nhi-tertentu'">
 					<CRow class="mt-2">
 						<CCol>
-							<h4><b>Barang Tertentu</b></h4>
+							<h4><b>Kegiatan atas Barang Tertentu</b></h4>
 						</CCol>
 					</CRow>
 					<CRow class="mb-1">

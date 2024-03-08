@@ -14,7 +14,7 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
-						<b>{{ doc_type == 'lkain' ? 'No LPPI-N' : 'No LPPI' }}</b>
+						<b>No {{ label_lppi }}</b>
 					</CCol>
 					<CCol md="9" class="py-1">
 						{{ disp_lppi }}
@@ -22,7 +22,7 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
-						<b>No LPT-I</b>
+						<b>No {{ label_lpti }}</b>
 					</CCol>
 					<CCol md="9" class="py-1">
 						{{ disp_lpti }}
@@ -30,28 +30,20 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
-						<b>{{ doc_type == 'lkain' ? 'No NPI-N' : 'No NPI' }}</b>
+						<b>No {{ label_npi }}</b>
 					</CCol>
 					<CCol md="9" class="py-1">
 						{{ disp_npi }}
 					</CCol>
 				</CRow>
-				<div class="sep">
-					<CRow class="mt-2">
-						<CCol>
-							<h4><b>Analisis</b></h4>
-						</CCol>
-					</CRow>
-
-					<!-- Tabel ikhtisar -->
-					<CDataTable
-						class="my-2 mr-3"
-						:items="data_doc.ikhtisar"
-						:fields="informasi_table_fields"
-						:items-per-page="5"
-						pagination
-					/>
-				</div>
+				<CRow class="mb-1">
+					<CCol md="3" class="py-1">
+						<b>Ikhtisar Informasi</b>
+					</CCol>
+					<CCol md="9" class="py-1">
+						{{ disp_informasi }}
+					</CCol>
+				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
 						<b>Prosedur Analisis</b>
@@ -85,7 +77,7 @@
 				</div>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
-						<b>NHI</b>
+						<b>{{ label_nhi }}</b>
 					</CCol>
 					<CCol md="9" class="py-1">
 						<CInputCheckbox
@@ -96,7 +88,7 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
-						<b>NI</b>
+						<b>{{ label_ni }}</b>
 					</CCol>
 					<CCol md="9" class="py-1">
 						<CInputCheckbox
@@ -118,7 +110,7 @@
 						<b>Informasi Lainnya</b>
 					</CCol>
 					<CCol md="9" class="py-1">
-						{{ disp_informasi }}
+						{{ disp_informasi_lain }}
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
@@ -218,36 +210,8 @@
 
 <script>
 import api from '../../../router/api2.js'
+import DefaultLkai from './DefaultLkai'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	tanggal_dokumen: null,
-	flag_lpti: null,
-	nomor_lpti: null,
-	tanggal_lpti: null,
-	flag_npi: null,
-	nomor_npi: null,
-	tanggal_npi: null,
-	prosedur: null,
-	hasil: null,
-	kesimpulan: null,
-	flag_rekom_nhi: null,
-	flag_rekom_ni: null,
-	rekomendasi_lain: null,
-	informasi_lain: null,
-	tujuan: null,
-	keputusan_pejabat: null,
-	catatan_pejabat: null,
-	tanggal_terima_pejabat: null,
-	keputusan_atasan: null,
-	catatan_atasan: null,
-	tanggal_terima_atasan: null,
-	petugas: {
-		pejabat: {},
-		atasan: {},
-	},
-}
 
 export default {
 	name: 'DisplayLkai',
@@ -256,16 +220,31 @@ export default {
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number
+		doc_id: Number,
+		label_lppi: {
+			type: String,
+			default: 'LPPI',
+		},
+		label_lpti: {
+			type: String,
+			default: 'LPTI'
+		},
+		label_npi: {
+			type: String,
+			default: 'NPI'
+		},
+		label_nhi: {
+			type: String,
+			default: 'NHI'
+		},
+		label_ni: {
+			type: String,
+			default: 'NI'
+		},
 	},
 	data() {
 		return {
-			data_doc: JSON.parse(JSON.stringify(default_data)),
-			informasi_table_fields: [
-				{ key: 'informasi', label: 'Informasi' },
-				{ key: 'kode_kepercayaan', label: 'Sumber' },
-				{ key: 'kode_validitas', label: 'Validitas' },
-			]
+			data_doc: JSON.parse(JSON.stringify(DefaultLkai)),
 		}
 	},
 	computed: {
@@ -313,6 +292,7 @@ export default {
 
 			return npi
 		},
+		disp_informasi() { return this.data_doc.informasi || '-' },
 		disp_prosedur() { return this.data_doc.prosedur || '-' },
 		disp_hasil() { return this.data_doc.hasil || '-' },
 		disp_kesimpulan() { return this.data_doc.kesimpulan || '-' },
@@ -327,7 +307,7 @@ export default {
 			return flag
 		},
 		disp_rekomendasi() { return this.data_doc.rekomendasi_lain || '-' },
-		disp_informasi() { return this.data_doc.informasi_lain || '-' },
+		disp_informasi_lain() { return this.data_doc.informasi_lain || '-' },
 		disp_tujuan() { return this.data_doc.tujuan || '-' },
 		disp_es_4() { return this.data_doc.petugas.pejabat.name || '-' },
 		disp_kep_es_4() { 
@@ -353,7 +333,15 @@ export default {
 	methods: {
 		async getData() {
 			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data_doc = response.data
+			if (this.doc_type == 'lkai') {
+				this.data_doc = response.data	
+			} else {
+				let data = response.data
+				this.$emit('get-data', data)
+			}	
+		},
+		updateData(data) {
+			this.data_doc = data
 		}
 	},
 	async mounted() {
