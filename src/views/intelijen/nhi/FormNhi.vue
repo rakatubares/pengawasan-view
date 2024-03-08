@@ -51,29 +51,29 @@
 			</CRow>
 			<CRow>
 				<label class="w-100 pl-3 pt-2 mb-0">Tanggal/Waktu Indikasi</label>
-				<CCol md="2" sm="12">
-						<div class="form-group">
-							<date-picker 
-								v-model="data.tanggal_indikasi"
-								format="DD-MM-YYYY" 
-								value-type="format"
-								type="date"
-								class="w-100"
-							>
-								<template v-slot:input="slotProps">
-									<input
-										class="form-control" 
-										type="text" 
-										v-bind="slotProps.props" 
-										v-on="slotProps.events"
-									/>
-								</template>
-								<i slot="icon-calendar"></i>
-								<i slot="icon-clear"></i>
-							</date-picker>
-							<small class="form-text text-muted w-100">Tanggal</small>
-						</div>
-					</CCol>
+				<CCol md="3" sm="12">
+					<div class="form-group">
+						<date-picker 
+							v-model="data.tanggal_indikasi"
+							format="DD-MM-YYYY" 
+							value-type="format"
+							type="date"
+							class="w-100"
+						>
+							<template v-slot:input="slotProps">
+								<input
+									class="form-control" 
+									type="text" 
+									v-bind="slotProps.props" 
+									v-on="slotProps.events"
+								/>
+							</template>
+							<i slot="icon-calendar"></i>
+							<i slot="icon-clear"></i>
+						</date-picker>
+						<small class="form-text text-muted w-100">Tanggal</small>
+					</div>
+				</CCol>
 				<CCol md="2" sm="12">
 					<div class="form-group">
 						<date-picker 
@@ -94,7 +94,7 @@
 							<i slot="icon-calendar"></i>
 							<i slot="icon-clear"></i>
 						</date-picker>
-						<small class="form-text text-muted w-100">Waktu</small>
+						<small class="form-text text-muted w-100">Jam</small>
 					</div>
 				</CCol>
 				<CCol md="1" sm="12">
@@ -106,7 +106,7 @@
 			</CRow>
 			<CRow>
 				<CCol sm="12">
-					<MySelectKantor
+					<MySelectKantorBC
 						:kode_kantor.sync="data.kantor.kode_kantor"
 						:default_kantor="default_kantor"
 						description="Kantor Wilayah atau Kantor Pelayanan yang membawahi pengawasan atas wilayah terjadinya atau akan terjadinya indikasi pelanggaran"
@@ -130,7 +130,7 @@
 				<CRow>
 					<CCol md="4">
 						<CSelect
-							label="Jenis Kegiatan"
+							label="Tipe Kegiatan"
 							:options="jenis_kegiatan"
 							:value.sync="data.detail.data.tipe"
 						/>
@@ -481,7 +481,7 @@ import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
 import MyInputTembusan from '../../components/InputTembusan.vue'
 import MySearchDocument from '../../components/SearchDocument.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
-import MySelectKantor from '../../components/SelectKantorBC.vue'
+import MySelectKantorBC from '../../components/SelectKantorBC.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 
 const default_zona_waktu_options = ['WIB', 'WITA', 'WIT']
@@ -501,7 +501,7 @@ export default {
 		MyInputTembusan,
 		MySearchDocument,
 		MySelectEntitas,
-		MySelectKantor,
+		MySelectKantorBC,
 		MySelectPejabat,
 	},
 	props: {
@@ -529,62 +529,43 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getDocumentById('nhi', this.doc_id)
-
-			let detail_type = response.data.detail.type
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data = this.fillNull(response.data)
+			this.saved_lkai = this.data.lkai_id
+		},
+		async saveData() {
+			if (this.state == 'insert') {
+				var response = await api.storeDoc('nhi', this.data)
+				this.$emit('update:state', 'edit')
+				var msg = `Data NHI berhasil disimpan`
+			} else if (this.state == 'edit') {
+				var response = await api.updateDoc('nhi', this.data.id, this.data)
+				var msg = `Data NHI berhasil diubah`
+			}
+			this.data = this.fillNull(response)
+			this.saved_lkai = this.data.lkai_id
+			this.$emit('update:doc_id', this.data.id)
+			this.alert(msg)			
+		},
+		fillNull(response) {
+			let detail_type = response.detail.type
 			switch (detail_type) {
 				case 'nhi-exim':
-					if (response.data.detail.data.entitas == null) {
-						response.data.detail.data.entitas = JSON.parse(JSON.stringify(DefaultNhi.detail_exim.entitas))
+					if (response.detail.data.entitas == null) {
+						response.detail.data.entitas = JSON.parse(JSON.stringify(DefaultNhi.detail_exim.entitas))
 					}
 					break;
 
 				case 'nhi-tertentu':
-					if (response.data.detail.data.entitas == null) {
-						response.data.detail.data.entitas = JSON.parse(JSON.stringify(DefaultNhi.detail_tertentu.entitas))
+					if (response.detail.data.entitas == null) {
+						response.detail.data.entitas = JSON.parse(JSON.stringify(DefaultNhi.detail_tertentu.entitas))
 					}
 					break;
 			
 				default:
 					break;
 			}
-
-			this.data = response.data
-			this.saved_lkai = this.data.lkai_id
-		},
-		async saveData() {
-			if (this.state == 'insert') {
-				try {
-					this.data = await api.storeDoc('nhi', this.data)
-					this.$emit('update:doc_id', this.data.id)
-					this.$emit('update:state', 'edit')
-					this.alert(`Data NHI berhasil disimpan`)
-				} catch (error) {
-					console.log(`form nhi - save data - error`, error)
-				}
-			} else if (this.state == 'edit') {
-				try {
-					let update_data = this.data
-					this.data = await api.updateDoc('nhi', update_data.id, update_data)
-					this.$emit('update:doc_id', this.data.id)
-					this.alert(`Data NHI berhasil diubah`)
-				} catch (error) {
-					console.log(`form nhi - update data - error`, error)
-				}
-			}
-
-			// Fill null
-			if ('entitas' in this.data.detail.data) {
-				if (this.data.detail.data.entitas == null) {
-					this.data.detail.data.entitas = {
-						type: 'entitas-orang',
-						data: {}
-					}
-				}
-			}
-
-			// LKAI ID for search exception
-			this.saved_lkai = this.data.lkai_id
+			return response
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
@@ -617,7 +598,7 @@ export default {
 			return validation
 		},
 	},
-	async mounted() {
+	async beforeMount() {
 		if (this.state == 'edit') {
 			await this.getData()
 		}

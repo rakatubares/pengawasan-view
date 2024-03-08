@@ -41,4 +41,13 @@ export default {
 			data: { id: null },
 		}
 	},
+	detail_sarkut: {
+		pelabuhan_asal: { iata_code: null },
+		pelabuhan_tujuan: { iata_code: null },
+	},
+	detail_orang: {
+		entitas: { id: null },
+		pelabuhan_asal: { iata_code: null },
+		pelabuhan_tujuan: { iata_code: null },
+	}
 }
