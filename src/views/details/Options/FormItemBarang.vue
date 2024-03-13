@@ -44,7 +44,7 @@
 
 				<!-- Upload image -->
 				<MyUploadImage 
-					v-if="render_image"
+					v-if="render_image & with_photo"
 					:images.sync="data.image_list"
 				/>
 			</CForm>
@@ -106,6 +106,7 @@ export default {
 			type: String,
 			default: 'insert'
 		},
+		with_photo: Boolean,
 		id: Number,
 		doc_type: String,
 		doc_id: Number,

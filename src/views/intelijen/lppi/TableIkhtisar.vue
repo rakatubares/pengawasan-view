@@ -10,14 +10,14 @@
 							class="mr-1"
 							@click="insertData()"
 						>
-							+ Tambah Ikhtisar
+							+ Tambah Informasi
 						</CButton>
 						<div v-else ><b>Daftar Ikhtisar</b></div>
 					</CCardHeader>
 					<CCardBody>
 						<CDataTable
 							v-if="show_table"
-							:items="list_ikhtisar_table"
+							:items="list_informasi_table"
 							:fields="fields"
 							:items-per-page="5"
 							pagination
@@ -50,24 +50,24 @@
 			</CCol>
 		</CRow>
 
-		<MyFormIkhtisar
-			ref='form_ikhtisar'
-			@save-data="saveIkhtisar"
+		<MyFormInformasi
+			ref='form_informasi'
+			@save-data="saveInformasi"
 		/>
 
-		<MyModalDeleteIkhtisar
-			ref='modal_delete_ikhtisar'
+		<MyModalDeleteInformasi
+			ref='modal_delete_informasi'
 			@delete-data="deleteData"
 		/>
 	</div>
 </template>
 
 <script>
-import MyFormIkhtisar from './FormIkhtisar.vue'
-import MyModalDeleteIkhtisar from './ModalDeleteIkhtisar.vue'
+import MyFormInformasi from './FormInformasi.vue'
+import MyModalDeleteInformasi from './ModalDeleteInformasi.vue'
 
 const show_fields = [
-	{ key: 'ikhtisar', label: 'Ikhtisar Informasi', _style: 'min-width:300px' },
+	{ key: 'informasi', label: 'Ikhtisar Informasi', _style: 'min-width:300px' },
 	{ key: 'kode_kepercayaan', label: 'Sumber' },
 	{ key: 'kode_validitas', label: 'Validitas' },
 ]
@@ -77,8 +77,8 @@ const edit_fields = show_fields.concat({ key: 'actions', label: '', _style: 'min
 export default {
 	name: 'TableIkhtisar',
 	components: {
-		MyFormIkhtisar,
-		MyModalDeleteIkhtisar
+		MyFormInformasi,
+		MyModalDeleteInformasi
 	},
 	props: {
 		state: String,
@@ -86,15 +86,15 @@ export default {
 	},
 	data() {
 		return {
-			list_ikhtisar: this.data_ikhtisar,
-			list_ikhtisar_table: [],
+			list_informasi: this.data_ikhtisar,
+			list_informasi_table: [],
 			fields: JSON.parse(JSON.stringify(show_fields)),
 			show_table: true,
 		}
 	},
 	watch: {
 		data_ikhtisar(val) {
-			this.list_ikhtisar = val
+			this.list_informasi = val
 			this.prepareTableData()
 		},
 		state() {
@@ -110,7 +110,7 @@ export default {
 			}
 		},
 		insertData() {
-			this.$refs.form_ikhtisar.showModal('insert')
+			this.$refs.form_informasi.showModal('insert')
 		},
 		editData(item) {
 			let {index, ...value} = item;
@@ -118,36 +118,36 @@ export default {
 				index: index,
 				value: value
 			}
-			this.$refs.form_ikhtisar.showModal('edit', data)
+			this.$refs.form_informasi.showModal('edit', data)
 		},
-		saveIkhtisar(val) {
+		saveInformasi(val) {
 			if (val.index == null) {
-				if (this.list_ikhtisar == null) {
-					this.list_ikhtisar = [val.value]
-					this.$refs.form_ikhtisar.update_index(0)
+				if (this.list_informasi == null) {
+					this.list_informasi = [val.value]
+					this.$refs.form_informasi.update_index(0)
 				} else {
-					this.list_ikhtisar.push(val.value)
-					let list_length = this.list_ikhtisar.length
-					this.$refs.form_ikhtisar.update_index(list_length - 1)
+					this.list_informasi.push(val.value)
+					let list_length = this.list_informasi.length
+					this.$refs.form_informasi.update_index(list_length - 1)
 				}
 			} else {
-				this.list_ikhtisar[val.index] = val.value
+				this.list_informasi[val.index] = val.value
 			}
 
 			// refresh table
 			this.prepareTableData()
 
 			// emit to parent component
-			this.$emit('update-data', this.list_ikhtisar)
+			this.$emit('update-data', this.list_informasi)
 		},
 		prepareTableData() {
-			if (this.list_ikhtisar != undefined) {
-				this.list_ikhtisar_table = []
-				for (const i in this.list_ikhtisar) {
-					let item = this.list_ikhtisar[i]
+			if (this.list_informasi != undefined) {
+				this.list_informasi_table = []
+				for (const i in this.list_informasi) {
+					let item = this.list_informasi[i]
 					item['index'] = i
 					item['kode_validitas'] = item['kode_validitas'].toString()
-					this.list_ikhtisar_table.push(item)
+					this.list_informasi_table.push(item)
 				}
 
 				// Reset table (workaround for update data display)
@@ -158,16 +158,16 @@ export default {
 			}
 		},
 		confirmDeleteData(item) {
-			this.$refs.modal_delete_ikhtisar.showModal(item)
+			this.$refs.modal_delete_informasi.showModal(item)
 		},
 		deleteData(idx) {
-			this.list_ikhtisar.splice(idx, 1)
+			this.list_informasi.splice(idx, 1)
 			
 			// refresh table
 			this.prepareTableData()
 
 			// emit to parent component
-			this.$emit('update-data', this.list_ikhtisar)
+			this.$emit('update-data', this.list_informasi)
 		},
 	},
 	mounted() {

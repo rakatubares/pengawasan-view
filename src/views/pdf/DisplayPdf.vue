@@ -47,31 +47,15 @@
 
 <script>
 import api from '../../router/api2.js'
-import PdfBast from './PdfBast.js'
-import PdfBukaPengaman from './PdfBukaPengaman.js'
-import PdfContoh from './PdfContoh.js'
-import PdfLap from './PdfLap.js'
-import PdfLi from './PdfLi.js'
-import PdfLkai from './PdfLkai.js'
-import PdfLp from './PdfLp.js'
-import PdfLphp from './PdfLphp.js'
-import PdfLpN from './PdfLpN.js'
-import PdfLppi from './PdfLppi.js'
-import PdfLptp from './PdfLptp.js'
-import PdfNhi from './PdfNhi.js'
-import PdfNhiN from './pdfNhiN.js'
-import PdfPengaman from './PdfPengaman.js'
-import PdfReekspor from './PdfReekspor.js'
-import PdfRiksa from './PdfRiksa.js'
-import PdfRiksaBadan from './PdfRiksaBadan.js'
-import PdfSbp from './PdfSbp.js'
-import PdfSegel from './PdfSegel.js'
-import PdfTegah from './PdfTegah.js'
-import PdfTolak1 from './PdfTolak1.js'
-import PdfTolak2 from './PdfTolak2.js'
+import PdfLkai from './intelijen/PdfLkai'
+import PdfLkaiN from './intelijen/PdfLkaiN'
+import PdfNhi from './intelijen/PdfNhi'
+import PdfNhiN from './intelijen/PdfNhiN'
 import MyAlert from '../components/AlertSubmit.vue'
-import PdfBukaSegel from './PdfBukaSegel.js'
-import PdfTitip from './PdfTitip.js'
+import PdfNi from './intelijen/PdfNi'
+import PdfNiN from './intelijen/PdfNiN'
+import PdfLppi from './intelijen/PdfLppi'
+import PdfLppiN from './intelijen/PdfLppiN'
 
 export default {
 	name: "DisplayPdf",
@@ -82,6 +66,7 @@ export default {
 		state: String,
 		doc_type: String,
 		doc_id: Number,
+		chain_id: Number,
 		show_button: {
 			type: Boolean,
 			default: true
@@ -105,7 +90,7 @@ export default {
 		show_publish_button() {
 			let show = false
 			if (this.is_publishable) {
-				if (this.status_pdf == 100) {
+				if (this.status_pdf == 'draft') {
 					show = true
 				}	
 			}
@@ -115,179 +100,66 @@ export default {
 	},
 	methods: {
 		async listPdf() {
-			let response = await api.getRelatedDocuments(this.doc_type, this.doc_id)
+			let response = await api.getDocumentsChain(this.doc_type, this.doc_id)
 			this.list_pdf = response.data
+		},
+		async getBarang(doc_type, doc_id) {
+			return await api.getBarang(doc_type, doc_id)
 		},
 		async getPdf(doc_type, doc_id) {
 			let pdf = null
-			let response = await api.getPdfDataById(doc_type, doc_id)
-			let pdfData = response.data.data
+			let response = await api.getDocumentById(doc_type, doc_id)
+			let data_pdf = response.data
 
 			switch (doc_type) {
-				case 'bast':
-					pdf = new PdfBast(pdfData)
-					break;
-
-				case 'bukapengaman':
-					pdf = new PdfBukaPengaman(pdfData)
-					break;
-
-				case 'bukasegel':
-					pdf = new PdfBukaSegel(pdfData)
-					break;
-
-				case 'contoh':
-					pdf = new PdfContoh(pdfData)
-					break;
-
-				case 'lap':
-					pdf = new PdfLap(pdfData)
-					break;
-
-				case 'lapn':
-					pdf = new PdfLap(
-						pdfData, 
-						this.active_pdf, 
-						'LEMBAR ANALISIS PRA PENINDAKAN', 
-						{start: 63, end: 147}
-					)
-					break;
-					
-				case 'li':
-					pdf = new PdfLi(pdfData)
-					break;
-
 				case 'lkai':
-					pdf = new PdfLkai(pdfData)
+					pdf = new PdfLkai(data_pdf)
 					break;
 
 				case 'lkain':
-					pdf = new PdfLkai(
-						pdfData,
-						this.active_pdf,
-						'LEMBAR KERJA ANALISIS INTELIJEN NPP (LKAI-N)',
-						'lppin',
-						'LPPI-N',
-						{start: 60, end: 150}
-					)
-					break;
-					
-				case 'lp':
-					pdf = new PdfLp(pdfData)
-					break;
-
-				case 'lpn':
-					pdf = new PdfLpN(pdfData)
-					break;
-
-				case 'lphp':
-					pdf = new PdfLphp(pdfData)
-					break;
-
-				case 'lphpn':
-					pdf = new PdfLphp(
-						pdfData, 
-						this.active_pdf, 
-						'lptpn', 
-						'sbpn', 
-						'LEMBAR PENENTUAN HASIL PENINDAKAN NPP', 
-						{start: 63, end: 147}
-					)
+					pdf = new PdfLkaiN(data_pdf)
 					break;
 
 				case 'lppi':
-					pdf = new PdfLppi(pdfData)
+					pdf = new PdfLppi(data_pdf)
 					break;
 
 				case 'lppin':
-					pdf = new PdfLppi(
-						pdfData,
-						this.active_pdf,
-						'LEMBAR PENGUMPULAN DAN PENILAIAN INFORMASI NPP',
-						{start: 53, end: 157}
-					)
-					break;
-
-				case 'lptp':
-					pdf = new PdfLptp(pdfData)
-					break;
-
-				case 'lptpn':
-					pdf = new PdfLptp(
-						pdfData, 
-						this.active_pdf, 
-						'sbpn', 
-						'LAPORAN PELAKSANAAN TUGAS PENINDAKAN NPP', 
-						{start: 58, end: 152}
-					)
+					pdf = new PdfLppiN(data_pdf)
 					break;
 
 				case 'nhi':
-					pdf = new PdfNhi(pdfData)
+					let response = await api.getBarang(doc_type, doc_id)
+					var data_barang = response.data
+					pdf = new PdfNhi(data_pdf, data_barang)
 					break;
 
 				case 'nhin':
-					pdf = new PdfNhiN(pdfData)
+					var data_barang = null
+					if (data_pdf.detail.type == 'nhin-exim') {
+						let response = await api.getBarang(doc_type, doc_id)
+						data_barang = response.data
+					}
+					pdf = new PdfNhiN(data_pdf, data_barang)
 					break;
 
-				case 'pengaman':
-					pdf = new PdfPengaman(pdfData)
+				case 'ni':
+					pdf = new PdfNi(data_pdf)
 					break;
-
-				case 'reekspor':
-					pdf = new PdfReekspor(pdfData)
+				
+				case 'nin':
+					pdf = new PdfNiN(data_pdf)
 					break;
-
-				case 'riksa':
-					pdf = new PdfRiksa(pdfData)
-					break;
-
-				case 'riksabadan':
-					pdf = new PdfRiksaBadan(pdfData)
-					break;
-
-				case 'sbp':
-					pdf = new PdfSbp(pdfData)
-					break;
-
-				case 'sbpn':
-					pdf = new PdfSbp(
-						pdfData, 
-						this.active_pdf, 
-						'SURAT BUKTI PENINDAKAN NPP', 
-						{start: 76, end: 134}
-					)
-					break;
-
-				case 'segel':
-					pdf = new PdfSegel(pdfData)
-					break;
-
-				case 'tegah':
-					pdf = new PdfTegah(pdfData)
-					break;
-
-				case 'titip':
-					pdf = new PdfTitip(pdfData)
-					break;
-
-				case 'tolak1':
-					pdf = new PdfTolak1(pdfData)
-					break;
-
-				case 'tolak2':
-					pdf = new PdfTolak2(pdfData)
-					break;
-
+			
 				default:
 					break;
 			}
 
 			this.src_pdf = pdf.generatePdf()
 			this.show_pdf = true
-			this.status_pdf = pdfData.kode_status
+			this.status_pdf = data_pdf.kode_status
 			if (doc_type == this.doc_type) {
-				if (this.status_pdf == 100) {
+				if (this.status_pdf == 'draft') {
 					this.is_publishable = true
 				} else {
 					this.is_publishable = false

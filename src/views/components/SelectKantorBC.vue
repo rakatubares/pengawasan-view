@@ -3,6 +3,7 @@
 		<div class="form-group">
 			<label>{{ label }}</label>
 			<v-autocomplete
+				class="no-message"
 				v-model="value"
 				no-filter
 				outlined
@@ -10,7 +11,7 @@
 				:items.sync="items"
 				:search-input.sync="search"
 				item-text="nama_kantor"
-				item-value="kd_kantor"
+				item-value="kode_kantor"
 			>
 				<template v-slot:no-data>
 					<v-list-item>
@@ -21,10 +22,11 @@
 				</template>
 				<template v-slot:item="{ item }">
 					<v-list-item-content>
-						<v-list-item-title v-text="`${item.kd_kantor} - ${item.nama_kantor}`"></v-list-item-title>
+						<v-list-item-title>{{ `${item.kode_kantor} - ${item.nama_kantor}` }}</v-list-item-title>
 					</v-list-item-content>
 				</template>
 			</v-autocomplete>
+			<small class="form-text text-muted w-100">{{ description }}</small>
 		</div>
 	</div>
 </template>
@@ -39,8 +41,9 @@ export default {
 			type: String,
 			default: 'Kantor Bea dan Cukai'
 		},
-		kd_kantor: String,
-		default_kantor: String
+		kode_kantor: String,
+		default_kantor: String,
+		description: String,
 	},
 	data() {
 		return {
@@ -53,18 +56,18 @@ export default {
 		async search (val) {
 			let data = {s: val}
 			let response = await api.searchKantorBC(data)
-			this.items = response.data.data
+			this.items = response.data
 		},
 		value(val) {
-			this.$emit('update:kd_kantor', val)
+			this.$emit('update:kode_kantor', val)
 		}
 	},
 	methods: {
 		async getData(code) {
 			let response = await api.getKantorByCode(code)
-			let satuan = response.data.data
-			this.items = [satuan]
-			this.value = this.items[0]['kd_kantor']
+			let record = response.data
+			this.items = [record]
+			this.value = this.items[0]['kode_kantor']
 		}
 	},
 	async mounted() {

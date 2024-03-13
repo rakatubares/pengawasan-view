@@ -6,7 +6,7 @@
 				<CForm>
 					<CRow>
 						<CCol md="12">
-							<MySelectEntitas
+							<MySelectEntitasOrang
 								ref="selectOrang"
 								label="Nama orang yang ditindak"
 								:id.sync="orang_id"
@@ -41,13 +41,13 @@
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 
 export default {
 	name: 'FormDetailBadan',
 	components: {
 		MyAlert,
-		MySelectEntitas
+		MySelectEntitasOrang
 	},
 	props: {
 		doc_type: String,

@@ -28,6 +28,12 @@ class API {
 		return user
 	}
 
+	async getUserByNip(nip) {
+		let response = await this.postApi(`/user/nip`, nip)
+		let user = response.data.data[0]
+		return user
+	}
+
 	async getUserByRole(roles) {
 		let response = await this.postApi(`/user/role`, roles)
 		let users = response.data.data
@@ -44,6 +50,12 @@ class API {
 		let response = await this.postApi(`/jabatan/list`, positions)
 		let jabatan = response.data.data
 		return jabatan
+	}
+
+	async searchUser(query) {
+		let response = await this.postApi(`/user/search`, query)
+		let users = response.data.data
+		return users
 	}
 
 	saveUser(data) {
@@ -64,38 +76,8 @@ class API {
 
 	async getDocumentById(doc_type, doc_id) {
 		let response = await this.getApi(`/${doc_type}/${doc_id}`)
-		let doc = response.data.data
+		let doc = response.data
 		return doc
-	}
-
-	async getDisplayDataById(doc_type, doc_id) {
-		return await this.getApi(`/${doc_type}/${doc_id}/display`)
-	}
-
-	async getBasicDataById(doc_type, doc_id) {
-		let response = await this.getApi(`/${doc_type}/${doc_id}/basic`)
-		let doc = response.data.data
-		return doc
-	}
-
-	async getFormDataById(doc_type, doc_id) {
-		return await this.getApi(`/${doc_type}/${doc_id}/form`)
-	}
-
-	async getPdfDataById(doc_type, doc_id) {
-		return await this.getApi(`/${doc_type}/${doc_id}/pdf`)
-	}
-
-	async getObjek(doc_type, doc_id) {
-		let response = await this.getApi(`/${doc_type}/${doc_id}/objek`)
-		let objek = response.data
-		return objek
-	}
-
-	async getPenindakanById(penindakan_id) {
-		let response = await this.getApi(`/penindakan/${penindakan_id}`)
-		let penindakan = response.data.data
-		return penindakan
 	}
 
 	async storeDoc(doc_type, data) {
@@ -114,7 +96,7 @@ class API {
 	}
 
 	async searchDoc(doc_type, search_query) {
-		return await this.postApi(`/${doc_type}/search`, search_query)
+		return await this.postApi(`/doc/${doc_type}/search`, search_query)
 	}
 
 	async deleteDoc(doc_type, doc_id) {
@@ -123,6 +105,11 @@ class API {
 
 	async getRelatedDocuments(doc_type, doc_id) {
 		return await this.getApi(`/${doc_type}/${doc_id}/docs`)
+	}
+
+	async getDocumentsChain(doc_type, doc_id) {
+		let response = await this.getApi(`/chain/${doc_type}/id/${doc_id}`)
+		return response.data
 	}
 
 	/*
@@ -181,30 +168,133 @@ class API {
 		return await this.postApi('/entitas/search', data)
 	}
 
+	async getBhpByDocId(doc_type, doc_id) {
+		return await this.getApi(`/${doc_type}/${doc_id}/bhp`)
+	}
+
+	async insertBhp(doc_type, doc_id, data) {
+		return await this.postApi(`/${doc_type}/${doc_id}/bhp`, data)
+	}
+
+	async updateBhp(doc_type, doc_id, detail_id, data) {
+		return await this.putApi(`/${doc_type}/${doc_id}/bhp/${detail_id}`, data)
+	}
+
+	async delItemBhp(doc_type, doc_id, item_id) {
+		await this.delApi(`/${doc_type}/${doc_id}/bhp/item/${item_id}`)
+	}
+
+	// Barang
+	async getBarang(doc_type, doc_id) {
+		let response = await this.getApi(`/barang/${doc_type}/${doc_id}/item`)
+		return response.data
+	}
+
+	async getItemBarang(doc_type, doc_id, item_id) {
+		let response = await this.getApi(`/barang/${doc_type}/${doc_id}/item/${item_id}`)
+		return response.data
+	}
+
+	async saveItemBarang(data, doc_type, doc_id) {
+		await this.postApi(`/barang/${doc_type}/${doc_id}/item`, data)
+	}
+
+	async updateItemBarang(data, doc_type, doc_id, item_id) {
+		await this.putApi(`/barang/${doc_type}/${doc_id}/item/${item_id}`, data)
+	}
+
+	async deleteItemBarang(doc_type, doc_id, item_id) {
+		await this.delApi(`/barang/${doc_type}/${doc_id}/item/${item_id}`)
+	}
+
+	// Entitas orang
+	async searchEntitasOrang(data) {
+		let response = await this.postApi(`/entitas/orang/search`, data)
+		return response.data
+	}
+
+	async getEntitasOrang(id) {
+		let response = await this.getApi(`/entitas/orang/${id}`)
+		return response.data
+	}
+
+	async saveEntitasOrang(data) {
+		console.log('API - SAVE ENTITAS ORANG')
+		let response = await this.postApi(`/entitas/orang`, data)
+		return response.data
+	}
+
+	async updateEntitasOrang(data, id) {
+		console.log('API - UPDATE ENTITAS ORANG')
+		let response = await this.putApi(`/entitas/orang/${id}`, data)
+		return response.data
+	}
+
+	// Entitas badan hukum
+	async searchEntitasBadanHukum(data) {
+		let response = await this.postApi(`/entitas/badanhukum/search`, data)
+		return response.data
+	}
+
+	async getEntitasBadanHukum(id) {
+		let response = await this.getApi(`/entitas/badanhukum/${id}`)
+		return response.data
+	}
+
+	async saveEntitasBadanHukum(data) {
+		let response = await this.postApi(`/entitas/badanhukum`, data)
+		return response.data
+	}
+
+	async updateEntitasBadanHukum(data, id) {
+		let response = await this.putApi(`/entitas/badanhukum/${id}`, data)
+		return response.data
+	}
+
+	// Tembusan
+	async searchTembusan(data) {
+		let response = await this.postApi(`/tembusan/search`, data)
+		return response.data
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| API for references
 	|--------------------------------------------------------------------------
 	*/
 
+	async searchLokasi(data) {
+		let response = await this.postApi(`/lokasi/search`, data)
+		return response.data
+	}
+
 	async getGrupLokasi() {
 		return await this.getApi('/lokasi')
 	}
 
 	async searchKantorBC(data) {
-		return await this.postApi('/kantor/search', data)
+		let response = await this.postApi('/kantor/search', data)
+		return response.data
 	}
 
 	async getKantorByCode(code) {
-		return await this.getApi(`/kantor/kode/${code}`)
+		let response =  await this.getApi(`/kantor/kode/${code}`)
+		return response.data
 	}
 
 	async searchSatuan(data) {
-		return await this.postApi('/satuan/search', data)
+		let response = await this.postApi('/satuan/search', data)
+		return response.data
 	}
 
 	async getSatuanById(id) {
-		return await this.getApi(`/satuan/${id}`)
+		let response = await this.getApi(`/satuan/${id}`)
+		return response.data
+	}
+
+	async getSatuanBarang() {
+		let response = await this.getApi(`/satuan`)
+		return response.data
 	}
 
 	async searchKemasan(data) {
@@ -220,7 +310,8 @@ class API {
 	}
 
 	async getKategori() {
-		return await this.getApi(`/kategori`)
+		let response = await this.getApi(`/kategori`)
+		return response.data
 	}
 
 	async getKategoriById(id) {
@@ -249,6 +340,10 @@ class API {
 
 	async getKlasifikasiValiditas() {
 		return await this.getApi(`/validitas`)
+	}
+
+	async getListJabatan() {
+		return await this.getApi('/jabatan')
 	}
 }
 

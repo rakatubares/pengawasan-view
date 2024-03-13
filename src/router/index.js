@@ -14,9 +14,15 @@ const Homepage = () => import('@/views/Homepage')
 const PageLkai = () => import('@/views/intelijen/lkai/PageLkai.vue')
 const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
 const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
+const PageNi = () => import('@/views/intelijen/ni/PageNi.vue')
+
+const PageLkaiN = () => import('@/views/intelijen/lkai/PageLkaiN.vue')
+const PageLppiN = () => import('@/views/intelijen/lppi/PageLppiN.vue')
 const PageNhiN = () => import('@/views/intelijen/nhin/PageNhiN.vue')
+const PageNiN = () => import('@/views/intelijen/ni/PageNiN.vue')
 
 // Views - Penindakan
+const PageLi = () => import('@/views/penindakan/li/PageLi')
 const PageBast = () => import('@/views/penindakan/bast/PageBast')
 const PageBhp = () => import('@/views/monitoring/penarikan_bhp/PageBhp')
 const PageBukaPengaman = () => import('@/views/penindakan/bukapengaman/PageBukaPengaman')
@@ -24,7 +30,6 @@ const PageBukaSegel = () => import('@/views/penindakan/bukasegel/PageBukaSegel')
 const PageContoh = () => import('@/views/penindakan/contoh/PageContoh')
 const PageLap = () => import('@/views/penindakan/lap/PageLap')
 const PageLapN = () => import('@/views/penindakan/lap/PageLapN')
-const PageLi = () => import('@/views/penindakan/li/PageLi')
 const PageLp = () => import('@/views/penindakan/lp/PageLp')
 const PageLpN = () => import('@/views/penindakan/lpn/PageLpN')
 const PageLphp = () => import('@/views/penindakan/lphp/PageLphp')
@@ -62,6 +67,73 @@ function configRoutes () {
 					name: 'Homepage',
 					component: Homepage
 				},
+				// Intelijen
+				{
+					path: 'lppi',
+					name: 'LPPI',
+					component: PageLppi,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lppi', next)
+					},
+				},
+				{
+					path: 'lkai',
+					name: 'LKAI',
+					component: PageLkai,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lkai', next)
+					},
+				},
+				{
+					path: 'nhi',
+					name: 'NHI',
+					component: PageNhi,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-nhi', next)
+					},
+				},
+				{
+					path: 'ni',
+					name: 'NI',
+					component: PageNi,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-ni', next)
+					},
+				},
+				{
+					path: 'lppin',
+					name: 'LPPI-N',
+					component: PageLppiN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lppin', next)
+					},
+				},
+				{
+
+					path: 'lkain',
+					name: 'LKAI-N',
+					component: PageLkaiN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lkain', next)
+					},
+				},
+				{
+					path: 'nhin',
+					name: 'NHI-N',
+					component: PageNhiN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-nhin', next)
+					},
+				},
+				{
+					path: 'nin',
+					name: 'NI-N',
+					component: PageNiN,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-nin', next)
+					},
+				},
+				// Penindakan
 				{
 					path: 'bast',
 					name: 'BAST',
@@ -127,14 +199,6 @@ function configRoutes () {
 					},
 				},
 				{
-					path: 'lkai',
-					name: 'LKAI',
-					component: PageLkai,
-					beforeEnter: (to, from, next) => {
-						checkRoutePermission('view-lkai', next)
-					},
-				},
-				{
 					path: 'lp',
 					name: 'LP',
 					component: PageLp,
@@ -164,30 +228,6 @@ function configRoutes () {
 					component: PageLphpN,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-lphpn', next)
-					},
-				},
-				{
-					path: 'lppi',
-					name: 'LPPI',
-					component: PageLppi,
-					beforeEnter: (to, from, next) => {
-						checkRoutePermission('view-lppi', next)
-					},
-				},
-				{
-					path: 'nhi',
-					name: 'NHI',
-					component: PageNhi,
-					beforeEnter: (to, from, next) => {
-						checkRoutePermission('view-nhi', next)
-					},
-				},
-				{
-					path: 'nhin',
-					name: 'NHI-N',
-					component: PageNhiN,
-					beforeEnter: (to, from, next) => {
-						checkRoutePermission('view-nhin', next)
 					},
 				},
 				{

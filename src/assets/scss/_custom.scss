@@ -53,6 +53,11 @@ div.v-input.no-message .v-text-field__details {
 	display: none;
 }
 
+// V-COMBOBOX
+.v-input__slot[role=combobox] .v-input__append-inner {
+	margin: 0 -12px 0 0;
+}
+
 // Button append input
 .button-input {
 	height: 35px;

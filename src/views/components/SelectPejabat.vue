@@ -3,30 +3,19 @@
 		<CForm>
 			<CRow>
 				<CCol md="8" sm="12">
-					<CSelect
+					<MySelectJabatan
+						:state="state"
 						:label="label.jabatan"
-						:options.sync="option_jabatan"
-						:value.sync="selected_jabatan"
-						@update:value="changeFilterJabatan($event, true)"
-					>
-						<template #append>
-							<CDropdown
-								:togglerText.sync="txt_plh"
-								color="primary"
-							>
-								<CDropdownItem
-									@click="togglePlh(false)"
-								>
-									Non-PLH
-								</CDropdownItem>
-								<CDropdownItem
-									@click="togglePlh(true)"
-								>
-									PLH
-								</CDropdownItem>
-							</CDropdown>
-						</template>
-					</CSelect>
+						:default_jabatan="default_jabatan"
+						:jabatan.sync="selected_jabatan"
+					/>
+				</CCol>
+				<CCol md="2" sm="12">
+					<CSelect
+						label="Tipe TTD"
+						:options="options_ttd"
+						:value.sync="selected_tipe_ttd"
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
@@ -40,8 +29,9 @@
 							:items.sync="items"
 							:search-input.sync="search"
 							item-text="name"
-							item-value="user_id"
+							item-value="nip"
 							@change="changePejabat"
+							@keyup="searchOfficer"
 						>
 							<template v-slot:no-data>
 								<v-list-item>
@@ -52,8 +42,8 @@
 							</template>
 							<template v-slot:item="{ item }">
 								<v-list-item-content>
-									<v-list-item-title v-text="item.name"></v-list-item-title>
-									<v-list-item-subtitle v-text="item.nip"></v-list-item-subtitle>
+									<v-list-item-title>{{ item.name }}</v-list-item-title>
+									<v-list-item-subtitle>{{ item.nip }}</v-list-item-subtitle>
 								</v-list-item-content>
 							</template>
 						</v-autocomplete>
@@ -75,8 +65,8 @@
 
 <script>
 import { mapState } from 'vuex'
-
 import api from '../../router/api2.js'
+import MySelectJabatan from './SelectJabatan.vue'
 
 const default_petugas = {
 	user_id: null,
@@ -84,8 +74,17 @@ const default_petugas = {
 	nip: null
 }
 
+const options_ttd = [
+	{'label': '-', 'value': null},
+	{'label': 'Plh.', 'value': 'plh'}, 
+	{'label': 'Plt.', 'value': 'plt'},
+]
+
 export default {
 	name: 'SelectPejabat',
+	components: {
+		MySelectJabatan,
+	},
 	props: {
 		state: String,
 		label: {
@@ -99,10 +98,13 @@ export default {
 		},
 		description: String,
 		default_jabatan: String,
-		selectable_jabatan: Array,
-		selectable_plh: Array,
-		id_pejabat: Number,
 		jabatan: String,
+		tipe_ttd: String,
+		nip: String,
+		with_autofill: {
+			type: Boolean,
+			default() { return true }
+		},
 	},
 	computed: {
 		...mapState(['userInfo'])
@@ -113,82 +115,63 @@ export default {
 			value: null,
 			search: null,
 			petugas: JSON.parse(JSON.stringify(default_petugas)),
-			option_jabatan: [],
+			options_jabatan: [],
+			options_ttd: options_ttd,
 			selected_jabatan: null,
-			filter_jabatan: [],
-			plh: false,
-			txt_plh: 'Non-PLH'
+			selected_tipe_ttd: null,
 		}
 	},
 	watch: {
-		async search (val) {
-			if (val != null) {
-				let positions = {positions: this.filter_jabatan}
-				this.items = await api.getUserByPosition(positions)
+		async jabatan(val1) {
+			this.selected_jabatan = val1
+		},
+		async tipe_ttd(val2) {
+			this.selected_tipe_ttd = val2
+		},
+		async nip(val3) {
+			await this.getPetugas(val3, true)
+		},
+		async selected_tipe_ttd (val4) {
+			// Change prop
+			await this.setProps('tipe_ttd', val4)
+
+			// Change officer
+			if ((val4 == null) & (this.with_autofill)) {
+				await this.autofillPejabat(this.jabatan)
+			}
+		},
+		async selected_jabatan (val5) {
+			// Change prop
+			await this.setProps('jabatan', val5)
+
+			// Change officer
+			if (this.with_autofill) {
+				if (this.selected_tipe_ttd == null) {
+					await this.autofillPejabat(val5)	
+				}	
 			}
 		},
 	},
 	methods: {
-		async createOption() {
-			let positions = {positions: this.selectable_jabatan}
-			let list_jabatan = await api.getJabatanByCode(positions)
-
-			// Create Options
-			list_jabatan.forEach(j => {
-				let option = {
-					value: j.kode,
-					label: j.jabatan
-				}
-				this.option_jabatan.push(option)
-			});
-			
-			// Get default pejabat when creating new document
-			if (this.state == 'insert') {
-				var select = this.option_jabatan[0].value
-				if (this.default_jabatan != null) {
-					this.option_jabatan.forEach(o => {
-						if (o.value == this.default_jabatan) {
-							select = o.value
-						}
-					});	
-				}
-
-				this.changeFilterJabatan(select, false)
-				await this.autofillPejabat(this.selected_jabatan)
+		async autofillPejabat(jabatan) {
+			let pejabat = await api.getUserByPosition({positions: [jabatan]})
+			this.changePejabat(pejabat[0].nip, true)
+		},
+		async setProps(prop, val6) {
+			this.$emit(`update:${prop}`, val6)
+		},
+		async searchOfficer() {
+			if ((this.search != null) & (this.search != "")) {
+				this.items = await api.searchUser({query: this.search})
 			}
 		},
-		async autofillPejabat(kd_jabatan) {
-			let pejabat = await api.getUserByPosition({positions: [kd_jabatan]})
-			this.changePejabat(pejabat[0].user_id, true)
+		async changePejabat(nip, mounted=false) {
+			await this.getPetugas(nip, mounted)
+			await this.setProps('nip', nip)
 		},
-		async changeFilterJabatan(val, autofill=true) {
-			this.selected_jabatan = val
-			this.filter_jabatan = [this.selected_jabatan]
-			this.$emit('update:jabatan', this.selected_jabatan)
-			if ((this.plh == false) && (autofill == true)) {
-				await this.autofillPejabat(this.selected_jabatan)	
-			}
-		},
-		changePejabat(id, mounted=false) {
-			this.getPetugas(id, mounted)
-			this.$emit('update:id_pejabat', id)
-		},
-		async togglePlh(val) {
-			if (val == true) {
-				this.plh = true
-				this.txt_plh = 'PLH'
-				this.filter_jabatan = this.selectable_plh
-			} else {
-				this.plh = false
-				this.txt_plh = 'Non-PLH'
-				this.filter_jabatan = [this.selected_jabatan]
-				await this.autofillPejabat(this.selected_jabatan)
-			}
-			this.$emit('update:plh', this.plh)
-		},
-		async getPetugas(id, mounted=false) {
-			if (id != null) {
-				this.petugas = await api.getUserById(id)
+		async getPetugas(nip, mounted=false) {
+			if (nip != null) {
+				this.petugas = await api.getUserByNip({nip: nip})
 				if (mounted == true) {
 					this.items = [this.petugas]
 					this.value = this.items[0]
@@ -202,11 +185,6 @@ export default {
 			api.saveUser(this.petugas)
 		},
 	},
-	mounted() {
-		this.$nextTick(function() {
-			this.createOption()	
-		})
-	}
 }
 </script>
 

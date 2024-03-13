@@ -52,10 +52,12 @@
 						 <span v-html="disp_uraian"></span>
 					</CCol>
 				</CRow>
+
 				<MyDisplayPejabat
 					title="Penerbit"
-					:data.sync="data_doc.penerbit"
+					:data.sync="data_doc.petugas.penerbit"
 				/>
+
 				<div class="sep mt-4">
 					<CRow class="mb-1 mt-2">
 						<CCol md="3" class="py-1">
@@ -81,6 +83,7 @@
 
 <script>
 import api from '../../../router/api2.js'
+import DefaultNi from './DefaultNi'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
 
 export default {
@@ -90,12 +93,12 @@ export default {
 	},
 	props: {
 		doc_type: String,
+		doc_id: Number,
 		label_lkai: String,
-		doc_id: Number
 	},
 	data() {
 		return {
-			data_doc: {}
+			data_doc: JSON.parse(JSON.stringify(DefaultNi.data))
 		}
 	},
 	computed: {
@@ -123,8 +126,16 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_doc = response.data.data
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			if (this.doc_type == 'ni') {
+				this.data_doc = response.data	
+			} else {
+				let data = response.data
+				this.$emit('get-data', data)
+			}	
+		},
+		updateData(data) {
+			this.data_doc = data
 		}
 	},
 	async mounted() {

@@ -26,7 +26,7 @@
 					</CRow>
 					<CRow>
 						<CCol md="12">
-							<MySelectEntitas
+							<MySelectEntitasOrang
 								ref="selectPemilik"
 								label="Nama pemilik/yang menguasai"
 								description="Nama pemilik/yang menguasai tempat/bangunan"
@@ -59,7 +59,7 @@
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 
 const data_default = {
 	alamat: null,
@@ -71,7 +71,7 @@ export default {
 	name: 'FormDetailBangunan',
 	components: {
 		MyAlert,
-		MySelectEntitas
+		MySelectEntitasOrang
 	},
 	props: {
 		doc_type: String,

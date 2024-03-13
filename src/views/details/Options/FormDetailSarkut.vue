@@ -62,7 +62,7 @@
 					</CRow>
 					<CRow>
 						<CCol md="12">
-							<MySelectEntitas
+							<MySelectEntitasOrang
 								ref="selectPilot"
 								label="Nama nahkoda/pengemudi/pilot"
 								:id.sync="data_objek.pilot.id"
@@ -94,7 +94,7 @@
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 
 const data_default = {
 	nama_sarkut: null,
@@ -111,7 +111,7 @@ export default {
 	name: 'FormDetailSarkut',
 	components: {
 		MyAlert,
-		MySelectEntitas
+		MySelectEntitasOrang
 	},
 	props: {
 		doc_type: String,

@@ -106,6 +106,11 @@ export default {
 			current_tab: 0
 		}
 	},
+	watch: {
+		is_exim(val) {
+			console.log('MODAL NHIN - WATCH - IS EXIM', val)
+		}
+	},
 	methods: {
 		closeModal() {
 			this.$emit('close-modal')

@@ -16,10 +16,10 @@
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
-					:label_ni="label_ni"
-					:tipe_lkai="tipe_lkai"
-					:label_lkai="label_lkai"
 					:id.sync="modal_data_props.doc_id"
+					:kode_lkai="kode_lkai"
+					:label_ni="label_ni"
+					:label_lkai="label_lkai"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -42,13 +42,13 @@ export default {
 			type: String,
 			default: 'ni'
 		},
+		kode_lkai: {
+			type: String,
+			default: 'lkai'
+		},
 		label_ni: {
 			type: String,
 			default: 'NI'
-		},
-		tipe_lkai: {
-			type: String,
-			default: 'lkai'
 		},
 		label_lkai: {
 			type: String,
@@ -80,7 +80,7 @@ export default {
 			return list.map(item => {
 				return {
 					...item,
-					lkai: item.no_lkai + '</br>' + item.tgl_lkai,
+					lkai: item[`no_${this.kode_lkai}`] + '</br>' + item[`tgl_${this.kode_lkai}`],
 				}
 			})
 		},
@@ -92,8 +92,8 @@ export default {
 		},
 		constructDeleteText(item) {
 			let text = `Apakah Anda yakin untuk menghapus data <b>${this.label_ni} atas</b> `
-				+ item.no_lkai.bold() 
-				+ " tanggal " + item.tgl_lkai.bold()
+				+ item[`no_${this.kode_lkai}`].bold() 
+				+ " tanggal " + item[`tgl_${this.kode_lkai}`].bold()
 				+ "?"
 			return text
 		}
