@@ -14,8 +14,14 @@
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
-					:tipe_surat="tipe_surat"
 					:id.sync="modal_data_props.doc_id"
+					:kode_lppi="kode_lppi"
+					:label_lkai="label_lkai"
+					:label_lppi="label_lppi"
+					:label_lpti="label_lpti"
+					:label_npi="label_npi"
+					:label_nhi="label_nhi"
+					:label_ni="label_ni"
 					:default_pejabat="default_pejabat"
 					@close-modal="closeModal"
 				/>
@@ -39,25 +45,50 @@ export default {
 			type: String,
 			default: 'lkai'
 		},
-		tipe_surat: {
+		kode_lppi: {
+			type: String,
+			default: 'lppi'
+		},
+		label_lkai: {
 			type: String,
 			default: 'LKAI'
+		},
+		label_lppi: {
+			type: String,
+			default: 'LPPI'
+		},
+		label_lpti: {
+			type: String,
+			default: 'LPTI'
+		},
+		label_npi: {
+			type: String,
+			default: 'NPI'
+		},
+		label_nhi: {
+			type: String,
+			default: 'NHI'
+		},
+		label_ni: {
+			type: String,
+			default: 'NI'
+		},
+		default_pejabat: {
+			type: String,
+			default: 'bd.0501'
 		},
 		permission_to_create: {
 			type: String,
 			default: 'create-lkai'
 		},
-		default_pejabat: {
-			type: String,
-			default: 'bd.0501'
-		}
+		
 	},
 	data() {
 		return {
-			table_title: `Daftar ${this.tipe_surat}`,
+			table_title: `Daftar ${this.label_lkai}`,
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
-				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
+				{ key: 'no_dok_lengkap', label: `No ${this.label_lkai}` },
+				{ key: 'tanggal_dokumen', label: `Tgl ${this.label_lkai}` },
 				{ key: 'analis', label: 'Analis' },
 			],
 			modal_data_props: {

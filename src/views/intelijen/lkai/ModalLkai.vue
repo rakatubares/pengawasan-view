@@ -2,7 +2,7 @@
 	<div class="wrapper">
 		<MyModalTabs
 			ref="modal_tabs"
-			:title="`Data ${tipe_surat}`"
+			:title="`Data ${label_lkai}`"
 			:tabs_list.sync="tabs_list"
 			:current_tab.sync="current_tab"
 			@close-modal="closeModal"
@@ -12,26 +12,50 @@
 					<MyFormLkai
 						v-if="(['insert','edit'].includes(modal_state)) & (doc_type == 'lkai')"
 						:state.sync="modal_state"
-						:tipe_surat="tipe_surat"
 						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
+						:kode_lppi="kode_lppi"
+						:label_lkai="label_lkai"
+						:label_lppi="label_lppi"
+						:label_lpti="label_lpti"
+						:label_npi="label_npi"
+						:label_nhi="label_nhi"
+						:label_ni="label_ni"
+						:default_pejabat="default_pejabat"
 					/>
 					<MyFormLkaiN
 						v-else-if="(['insert','edit'].includes(modal_state)) & (doc_type == 'lkain')"
 						:state.sync="modal_state"
-						:tipe_surat="tipe_surat"
 						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
+						:kode_lppi="kode_lppi"
+						:label_lkai="label_lkai"
+						:label_lppi="label_lppi"
+						:label_lpti="label_lpti"
+						:label_npi="label_npi"
+						:label_nhi="label_nhi"
+						:label_ni="label_ni"
+						:default_pejabat="default_pejabat"
 					/>
 					<MyDisplayLkai
 						v-else-if="(modal_state == 'show') & (doc_type == 'lkai')"
 						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
+						:label_lppi="label_lppi"
+						:label_lpti="label_lpti"
+						:label_npi="label_npi"
+						:label_nhi="label_nhi"
+						:label_ni="label_ni"
 					/>
 					<MyDisplayLkaiN
 						v-else-if="(modal_state == 'show') & (doc_type == 'lkain')"
 						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
+						:label_lppi="label_lppi"
+						:label_lpti="label_lpti"
+						:label_npi="label_npi"
+						:label_nhi="label_nhi"
+						:label_ni="label_ni"
 					/>
 				</CTab>
 				<CTab 
@@ -72,9 +96,15 @@ export default {
 	},
 	props: {
 		state: String,
-		tipe_surat: String,
 		doc_type: String,
 		id: Number,
+		kode_lppi: String,
+		label_lkai: String,
+		label_lppi: String,
+		label_lpti: String,
+		label_npi: String,
+		label_nhi: String,
+		label_ni: String,
 		default_pejabat: String,
 	},
 	data() {

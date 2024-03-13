@@ -221,26 +221,11 @@ export default {
 	props: {
 		doc_type: String,
 		doc_id: Number,
-		label_lppi: {
-			type: String,
-			default: 'LPPI',
-		},
-		label_lpti: {
-			type: String,
-			default: 'LPTI'
-		},
-		label_npi: {
-			type: String,
-			default: 'NPI'
-		},
-		label_nhi: {
-			type: String,
-			default: 'NHI'
-		},
-		label_ni: {
-			type: String,
-			default: 'NI'
-		},
+		label_lppi: String,
+		label_lpti: String,
+		label_npi: String,
+		label_nhi: String,
+		label_ni: String,
 	},
 	data() {
 		return {

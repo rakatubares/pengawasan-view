@@ -340,37 +340,16 @@ export default {
 	},
 	props: {
 		state: String,
-		tipe_surat: String,
 		doc_type: String,
 		doc_id: Number,
-		default_pejabat: {
-			type: String,
-			default: 'bd.0501',
-		},
-		kode_lppi: {
-			type: String,
-			default: 'lppi',
-		},
-		label_lppi: {
-			type: String,
-			default: 'LPPI',
-		},
-		label_lpti: {
-			type: String,
-			default: 'LPTI'
-		},
-		label_npi: {
-			type: String,
-			default: 'NPI'
-		},
-		label_nhi: {
-			type: String,
-			default: 'NHI'
-		},
-		label_ni: {
-			type: String,
-			default: 'NI'
-		},
+		kode_lppi: String,
+		label_lkai: String,
+		label_lppi: String,
+		label_lpti: String,
+		label_npi: String,
+		label_nhi: String,
+		label_ni: String,
+		default_pejabat: String,
 	},
 	data() {
 		return {
@@ -421,7 +400,7 @@ export default {
 				
 				this.fillNull()
 				this.$emit('update:state', 'edit')
-				var msg = `Data ${this.tipe_surat} berhasil disimpan`
+				var msg = `Data ${this.label_lkai} berhasil disimpan`
 			} else if (this.state == 'edit') {
 				if (this.doc_type == 'lkai') {
 					this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
@@ -430,7 +409,7 @@ export default {
 				}
 				
 				this.fillNull()
-				var msg = `Data ${this.tipe_surat} berhasil diubah`
+				var msg = `Data ${this.label_lkai} berhasil diubah`
 			}
 			this.$emit('update:doc_id', this.data.id)
 			this.saved_lppi = this.data.lppi_id

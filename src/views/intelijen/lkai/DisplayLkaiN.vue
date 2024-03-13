@@ -1,14 +1,14 @@
 <template>
 	<div class="wrapper">
 		<MyDisplayLkai
-			ref="displayLkai"
+			ref="DisplayLkai"
 			:doc_type="doc_type"
 			:doc_id.sync="doc_id"
-			label_lppi="LPPI-N"
-			label_lpti="LPTI-N"
-			label_npi="NPI-N"
-			label_nhi="NHI-N"
-			label_ni="NI-N"
+			:label_lppi="label_lppi"
+			:label_lpti="label_lpti"
+			:label_npi="label_npi"
+			:label_nhi="label_nhi"
+			:label_ni="label_ni"
 			@get-data="convertData"
 		/>
 	</div>
@@ -26,6 +26,11 @@ export default {
 	props: {
 		doc_type: String,
 		doc_id: Number,
+		label_lppi: String,
+		label_lpti: String,
+		label_npi: String,
+		label_nhi: String,
+		label_ni: String,
 	},
 	data() {
 		return {
@@ -40,7 +45,7 @@ export default {
 				)
 				delete data[old_key];
 			}
-			this.$refs.displayLkai.updateData(data)
+			this.$refs.DisplayLkai.updateData(data)
 		},
 	}
 }

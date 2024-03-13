@@ -3,16 +3,16 @@
 		<MyFormLkai
 			ref="formLkai"
 			:state.sync="form_state"
-			:tipe_surat="tipe_surat"
 			:doc_type="doc_type"
 			:doc_id.sync="doc_id"
-			default_pejabat="bd.0502"
-			kode_lppi="lppin"
-			label_lppi="LPPI-N"
-			label_lpti="LPTI-N"
-			label_npi="NPI-N"
-			label_nhi="NHI-N"
-			label_ni="NI-N"
+			:kode_lppi="kode_lppi"
+			:label_lkai="label_lkai"
+			:label_lppi="label_lppi"
+			:label_lpti="label_lpti"
+			:label_npi="label_npi"
+			:label_nhi="label_nhi"
+			:label_ni="label_ni"
+			:default_pejabat="default_pejabat"
 			@get-data="getData"
 			@insert-data="insertData"
 			@update-data="updateData"
@@ -35,6 +35,14 @@ export default {
 		tipe_surat: String,
 		doc_type: String,
 		doc_id: Number,
+		kode_lppi: String,
+		label_lkai: String,
+		label_lppi: String,
+		label_lpti: String,
+		label_npi: String,
+		label_nhi: String,
+		label_ni: String,
+		default_pejabat: String,
 	},
 	data() {
 		return {
