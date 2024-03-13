@@ -47,11 +47,12 @@
 
 <script>
 import api from '../../router/api2.js'
+import MyAlert from '../components/AlertSubmit.vue'
+import PdfLi from './penindakan/PdfLi'
 import PdfLkai from './intelijen/PdfLkai'
 import PdfLkaiN from './intelijen/PdfLkaiN'
 import PdfNhi from './intelijen/PdfNhi'
 import PdfNhiN from './intelijen/PdfNhiN'
-import MyAlert from '../components/AlertSubmit.vue'
 import PdfNi from './intelijen/PdfNi'
 import PdfNiN from './intelijen/PdfNiN'
 import PdfLppi from './intelijen/PdfLppi'
@@ -112,6 +113,7 @@ export default {
 			let data_pdf = response.data
 
 			switch (doc_type) {
+				// Intelijen
 				case 'lkai':
 					pdf = new PdfLkai(data_pdf)
 					break;
@@ -149,6 +151,11 @@ export default {
 				
 				case 'nin':
 					pdf = new PdfNiN(data_pdf)
+					break;
+
+				// Penindakan
+				case 'li':
+					pdf = new PdfLi(data_pdf)
 					break;
 			
 				default:

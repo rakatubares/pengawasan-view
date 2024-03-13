@@ -46,11 +46,11 @@
 				</CRow>
 				<MyDisplayPejabat
 					title="Penerbit"
-					:data.sync="data_doc.penerbit"
+					:data.sync="data_doc.petugas.penerbit"
 				/>
 				<MyDisplayPejabat
 					title="Atasan"
-					:data.sync="data_doc.atasan"
+					:data.sync="data_doc.petugas.atasan"
 				/>
 			</CCol>
 		</CRow>
@@ -59,16 +59,8 @@
 
 <script>
 import api from '../../../router/api2.js'
+import DefaultLi from './DefaultLi'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	tanggal_dokumen: null,
-	sumber: null,
-	informasi: null,
-	tindak_lanjut: null,
-	catatan: null,
-}
 
 export default {
 	name: 'DisplayLi',
@@ -81,7 +73,7 @@ export default {
 	},
 	data() {
 		return {
-			data_doc: JSON.parse(JSON.stringify(default_data))
+			data_doc: JSON.parse(JSON.stringify(DefaultLi.data))
 		}
 	},
 	computed: {
@@ -94,8 +86,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_doc = response.data.data
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data_doc = response.data
 		}
 	},
 	async mounted() {

@@ -12,6 +12,7 @@
 					<MyFormLi
 						v-if="['insert','edit'].includes(modal_state)"
 						:state.sync="modal_state"
+						:doc_type="doc_type"
 						:doc_id.sync="doc_id"
 					/>
 					<MyDisplayLi

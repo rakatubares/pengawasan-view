@@ -7,7 +7,6 @@
 			:table_fields="table_fields"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
-			:status_filter_options="status_filter_options"
 			:permission_to_create="permission_to_create"
 		>
 			<template #modal-data>
@@ -38,7 +37,7 @@ export default {
 			doc_type: 'li',
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: 'No Lembar Informasi' },
-				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
+				{ key: 'tanggal_dokumen', label: 'Tgl LI-1' },
 				{ key: 'sumber', label: 'Sumber Informasi' },
 			],
 			modal_data_props: {
@@ -46,10 +45,6 @@ export default {
 				state: null,
 				doc_id: null
 			},
-			status_filter_options: [
-				{ value: 'draft lap', label: 'Draft LAP' }, 
-				{ value: 'lap', label: 'LAP' }, 
-			],
 			permission_to_create: 'create-li',
 		}
 	},

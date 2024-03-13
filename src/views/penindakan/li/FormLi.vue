@@ -42,12 +42,11 @@
 					<MySelectPejabat
 						ref="selectPenerbit"
 						:state.sync="state"
-						:label="{jabatan: 'Jabatan Penerbit', nama: 'Nama Penerbit'}"
-						:selectable_jabatan="['bd.0503', 'bd.0504']"
-						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.penerbit.user.user_id"
-						:jabatan.sync="data.penerbit.jabatan.kode"
-						:plh.sync="data.penerbit.plh"
+						:label="{'jabatan': 'Jabatan Penerbit', 'nama': 'Nama Penerbit'}"
+						:default_jabatan.sync="default_penerbit"
+						:jabatan.sync="data.petugas.penerbit.kode_jabatan"
+						:tipe_ttd.sync="data.petugas.penerbit.tipe_ttd"
+						:nip.sync="data.petugas.penerbit.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -56,12 +55,11 @@
 					<MySelectPejabat
 						ref="selectAtasan"
 						:state.sync="state"
-						:label="{jabatan: 'Jabatan Atasan', nama: 'Nama Atasan'}"
-						:selectable_jabatan="['bd.05']"
-						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.atasan.user.user_id"
-						:jabatan.sync="data.atasan.jabatan.kode"
-						:plh.sync="data.atasan.plh"
+						:label="{'jabatan': 'Jabatan Atasan', 'nama': 'Nama Atasan'}"
+						:default_jabatan.sync="default_atasan"
+						:jabatan.sync="data.petugas.atasan.kode_jabatan"
+						:tipe_ttd.sync="data.petugas.atasan.tipe_ttd"
+						:nip.sync="data.petugas.atasan.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -87,25 +85,9 @@
 <script>
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
+import DefaultLi from './DefaultLi'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
-
-const default_data = {
-	sumber: null,
-	informasi: null,
-	tindak_lanjut: null,
-	catatan: null,
-	penerbit: {
-		jabatan: {kode: 'bd.0503'},
-		plh: false,
-		user: {user_id: null}
-	},
-	atasan: {
-		jabatan: {kode: 'bd.05'},
-		plh: false,
-		user: {user_id: null}
-	},
-}
 
 export default {
 	name: 'FormLi',
@@ -115,47 +97,30 @@ export default {
 	},
 	props: {
 		state: String,
+		doc_type: String,
 		doc_id: Number
 	},
 	data() {
 		return {
-			doc_type: 'li',
-			data: JSON.parse(JSON.stringify(default_data)),
+			data: JSON.parse(JSON.stringify(DefaultLi.data)),
+			default_penerbit: 'bd.0503',
+			default_atasan: 'bd.05',
 		}
 	},
 	methods: {
 		async getData() {
-			let response = await api.getFormDataById(this.doc_type, this.doc_id)
-			this.data = response.data.data
-			this.$nextTick(function () {
-				this.renderData()
-			})
-		},
-		renderData() {
-			this.$refs.selectPenerbit.selected_jabatan = this.data.penerbit.jabatan.kode
-			this.$refs.selectPenerbit.togglePlh(this.data.penerbit.plh)
-			this.$refs.selectPenerbit.getPetugas(this.data.penerbit.user.user_id, true)
-			this.$refs.selectAtasan.selected_jabatan = this.data.atasan.jabatan.kode
-			this.$refs.selectAtasan.togglePlh(this.data.atasan.plh)
-			this.$refs.selectAtasan.getPetugas(this.data.atasan.user.user_id, true)
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data = response.data
 		},
 		async saveData() {
 			if (this.state == 'insert') {
-				try {
-					this.data = await api.storeDoc(this.doc_type, this.data)
-					this.$emit('update:doc_id', this.data.id)
-					this.$emit('update:state', 'edit')
-					this.alert('Data LI-1 berhasil disimpan')
-				} catch (error) {
-					console.log('form li - save data - error', error)
-				}
+				this.data = await api.storeDoc(this.doc_type, this.data)
+				this.$emit('update:doc_id', this.data.id)
+				this.$emit('update:state', 'edit')
+				this.alert('Data LI-1 berhasil disimpan')
 			} else if (this.state == 'edit') {
-				try {
-					this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
-					this.alert('Data LI-1 berhasil diubah')
-				} catch (error) {
-					console.log('form li - update data - error', error)
-				}
+				this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
+				this.alert('Data LI-1 berhasil diubah')
 			}
 		},
 		alert(text, color, time) {
