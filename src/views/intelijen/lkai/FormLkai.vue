@@ -375,9 +375,9 @@ export default {
 		},
 		fillNull() {
 			let posisi = Object.keys(this.data.petugas)
-			for (const key in default_data.petugas) {
+			for (const key in DefaultLkai.petugas) {
 				if (!posisi.includes(key)) {
-					this.data.petugas[key] = JSON.parse(JSON.stringify(default_data.petugas[key]))
+					this.data.petugas[key] = JSON.parse(JSON.stringify(DefaultLkai.petugas[key]))
 				}
 			}
 		},
@@ -394,6 +394,8 @@ export default {
 			if (this.state == 'insert') {
 				if (this.doc_type == 'lkai') {
 					this.data = await api.storeDoc(this.doc_type, this.data)
+					this.$emit('update:doc_id', this.data.id)
+					this.saved_lppi = this.data.lppi_id
 				} else {
 					this.$emit('insert-data', this.data)
 				}
@@ -404,6 +406,8 @@ export default {
 			} else if (this.state == 'edit') {
 				if (this.doc_type == 'lkai') {
 					this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
+					this.$emit('update:doc_id', this.data.id)
+					this.saved_lppi = this.data.lppi_id
 				} else {
 					this.$emit('update-data', this.data)
 				}
@@ -411,12 +415,12 @@ export default {
 				this.fillNull()
 				var msg = `Data ${this.label_lkai} berhasil diubah`
 			}
-			this.$emit('update:doc_id', this.data.id)
-			this.saved_lppi = this.data.lppi_id
 			this.alert(msg)
 		},
 		updateData(data) {
 			this.data = data
+			this.$emit('update:doc_id', this.data.id)
+			this.saved_lppi = this.data.lppi_id
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)

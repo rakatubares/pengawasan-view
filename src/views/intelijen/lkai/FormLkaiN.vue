@@ -4,7 +4,7 @@
 			ref="formLkai"
 			:state.sync="form_state"
 			:doc_type="doc_type"
-			:doc_id.sync="doc_id"
+			:doc_id.sync="id"
 			:kode_lppi="kode_lppi"
 			:label_lkai="label_lkai"
 			:label_lppi="label_lppi"
@@ -47,7 +47,8 @@ export default {
 	data() {
 		return {
 			form_state: this.state,
-			lkain_keys: JSON.parse(JSON.stringify(LkainKeys))
+			id: this.doc_id,
+			lkain_keys: JSON.parse(JSON.stringify(LkainKeys)),
 		}
 	},
 	watch: {
@@ -56,7 +57,13 @@ export default {
 		},
 		state(val) {
 			this.form_state = val
-		}
+		},
+		id(val) {
+			this.$emit('update:doc_id', val)
+		},
+		doc_id(val) {
+			this.id = val
+		},
 	},
 	methods: {
 		getData(data) {
