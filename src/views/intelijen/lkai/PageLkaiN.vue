@@ -1,9 +1,15 @@
 <template>
 	<MyPageLkai
 		:doc_type="doc_type"
-		:tipe_surat="tipe_surat"
-		:permission_to_create="permission_to_create"
+		:kode_lppi="kode_lppi"
+		:label_lkai="label_lkai"
+		:label_lppi="label_lppi"
+		:label_lpti="label_lpti"
+		:label_npi="label_npi"
+		:label_nhi="label_nhi"
+		:label_ni="label_ni"
 		:default_pejabat="default_pejabat"
+		:permission_to_create="permission_to_create"
 	/>
 </template>
 
@@ -18,7 +24,13 @@ export default {
 	data() {
 		return {
 			doc_type: 'lkain',
-			tipe_surat: 'LKAI-N',
+			kode_lppi: "lppin",
+			label_lkai: "LKAI-N",
+			label_lppi: "LPPI-N",
+			label_lpti: "LPTI-N",
+			label_npi: "NPI-N",
+			label_nhi: "NHI-N",
+			label_ni: "NI-N",
 			permission_to_create: 'create-lkain',
 			default_pejabat: 'bd.0502',
 		}
