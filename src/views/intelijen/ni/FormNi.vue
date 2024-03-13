@@ -4,9 +4,9 @@
 			<CRow>
 				<CCol md="12">
 					<MySearchDocument
-						doc_type="lkai"
-						label="LKAI"
-						description="Nomor LKAI sebagai sumber penerbitan NI"
+						:doc_type="kode_lkai"
+						:label="label_lkai"
+						:description="`Nomor ${label_lkai} sebagai sumber penerbitan ${label_ni}`"
 						:value.sync="data.lkai_id"
 						:exceptions.sync="saved_lkai"
 					/>
@@ -16,7 +16,7 @@
 				<CCol md="4" sm="12">
 					<CSelect
 						label="Sifat"
-						:description="`Kategori sifat NI`"
+						:description="`Kategori sifat ${label_ni}`"
 						:options="sifat_ni_options"
 						:value.sync="data.sifat"
 					/>
@@ -24,7 +24,7 @@
 				<CCol md="4" sm="12">
 					<CSelect
 						label="Klasifikasi"
-						:description="`Kategori klasifikasi NI`"
+						:description="`Kategori klasifikasi ${label_ni}`"
 						:options="klasifikasi_ni_options"
 						:value.sync="data.klasifikasi"
 					/>
@@ -33,8 +33,8 @@
 			<CRow>
 				<CCol sm="12">
 					<MyComboboxJabatan
-						label="Penerima NI"
-						description="Tujuan penerima NI"
+						:label="`Penerima ${label_ni}`"
+						:description="`Tujuan penerima ${label_ni}`"
 						:value.sync="data.tujuan"
 						:default_jabatan="default_tujuan"
 					/>
@@ -99,7 +99,6 @@ import validators from '../../../helpers/validator'
 import DefaultNi from './DefaultNi'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MyComboboxJabatan from '../../components/ComboboxJabatan.vue'
-// import MyComboboxTembusan from '../../components/ComboboxTembusan.vue'
 import MyInputTembusan from '../../components/InputTembusan.vue'
 import MySearchDocument from '../../components/SearchDocument.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
@@ -109,7 +108,6 @@ export default {
 	components: {
 		MyAlert,
 		MyComboboxJabatan,
-		// MyComboboxTembusan,
 		MyInputTembusan,
 		MySearchDocument,
 		MySelectPejabat,
@@ -117,7 +115,10 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		doc_id: Number
+		doc_id: Number,
+		kode_lkai: String,
+		label_ni: String,
+		label_lkai: String,
 	},
 	data() {
 		return {
@@ -134,33 +135,43 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getDocumentById('ni', this.doc_id)
-
-			this.data = response.data
-			this.saved_lkai = this.data.lkai_id
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			if (this.doc_type == 'ni') {
+				this.data = response.data
+				this.saved_lkai = this.data.lkai_id
+			} else {
+				let data = response.data
+				this.$emit('get-data', data)
+			}
 		},
 		async saveData() {
 			if (this.state == 'insert') {
-				try {
+				if (this.doc_type == 'ni') {
 					this.data = await api.storeDoc(this.doc_type, this.data)
 					this.$emit('update:doc_id', this.data.id)
-					this.$emit('update:state', 'edit')
-					this.alert(`Data NI berhasil disimpan`)
-				} catch (error) {
-					console.log(`form ni - save data - error`, error)
+					this.saved_lkai = this.data.lkai_id
+				} else {
+					this.$emit('insert-data', this.data)
 				}
+				
+				this.$emit('update:state', 'edit')
+				var msg = `Data ${this.label_ni} berhasil disimpan`
 			} else if (this.state == 'edit') {
-				try {
-					let update_data = this.data
-					this.data = await api.updateDoc(this.doc_type, update_data.id, update_data)
+				if (this.doc_type == 'ni') {
+					this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 					this.$emit('update:doc_id', this.data.id)
-					this.alert(`Data NI berhasil diubah`)
-				} catch (error) {
-					console.log(`form ni - update data - error`, error)
+					this.saved_lkai = this.data.lkai_id
+				} else {
+					this.$emit('update-data', this.data)
 				}
-			}
 
-			// LKAI ID for search exception
+				var msg = `Data ${this.label_ni} berhasil diubah`
+			}
+			this.alert(msg)
+		},
+		updateData(data) {
+			this.data = data
+			this.$emit('update:doc_id', this.data.id)
 			this.saved_lkai = this.data.lkai_id
 		},
 		alert(text, color, time) {

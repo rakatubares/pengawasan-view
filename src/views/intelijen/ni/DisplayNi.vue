@@ -93,8 +93,8 @@ export default {
 	},
 	props: {
 		doc_type: String,
+		doc_id: Number,
 		label_lkai: String,
-		doc_id: Number
 	},
 	data() {
 		return {
@@ -127,7 +127,15 @@ export default {
 	methods: {
 		async getData() {
 			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data_doc = response.data
+			if (this.doc_type == 'ni') {
+				this.data_doc = response.data	
+			} else {
+				let data = response.data
+				this.$emit('get-data', data)
+			}	
+		},
+		updateData(data) {
+			this.data_doc = data
 		}
 	},
 	async mounted() {

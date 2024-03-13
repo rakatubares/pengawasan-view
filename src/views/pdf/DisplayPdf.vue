@@ -53,6 +53,7 @@ import PdfNhi from './intelijen/PdfNhi'
 import PdfNhiN from './intelijen/PdfNhiN'
 import MyAlert from '../components/AlertSubmit.vue'
 import PdfNi from './intelijen/PdfNi'
+import PdfNiN from './intelijen/PdfNiN'
 import PdfLppi from './intelijen/PdfLppi'
 import PdfLppiN from './intelijen/PdfLppiN'
 
@@ -147,13 +148,7 @@ export default {
 					break;
 				
 				case 'nin':
-					pdf = new PdfNi(
-						data_pdf,
-						this.active_pdf,
-						'NOTA INFORMASI NPP',
-						'LKAI-N',
-						{start: 85, end: 125}
-					)
+					pdf = new PdfNiN(data_pdf)
 					break;
 			
 				default:

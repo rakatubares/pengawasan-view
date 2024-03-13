@@ -3,17 +3,22 @@ import Pdf from '../MyPdf'
 const inds = {
 	cln1: 30,
 	val1: 35,
-	lbl2: 130,
-	cln2: 155,
-	val2: 160,
+	lbl2: 125,
+	cln2: 151,
+	val2: 155,
 	ttd: 125,
 }
 
 class PdfNi extends Pdf
 {
-	constructor(data)
+	constructor(
+		data,
+		title='NOTA INFORMASI',
+		lkai_label='LKAI',
+	)
 	{
-		super(data, 'NOTA INFORMASI')
+		super(data, title)
+		this.lkai_label = lkai_label
 	}
 
 	generateText()
@@ -43,7 +48,7 @@ class PdfNi extends Pdf
 		this.write(':', inds.cln1)
 		this.write(this.full_tgl_dok, inds.val1)
 
-		this.write('Nomor LKAI', inds.lbl2)
+		this.write(`Nomor ${this.lkai_label}`, inds.lbl2)
 		this.write(':', inds.cln2)
 		this.write(this.txt.nomor_lkai, inds.val2)
 		this.break()
@@ -52,7 +57,7 @@ class PdfNi extends Pdf
 		this.write(':', inds.cln1)
 		this.write(this.data.sifat, inds.val1)
 
-		this.write('Tanggal LKAI', inds.lbl2)
+		this.write(`Tanggal ${this.lkai_label}`, inds.lbl2)
 		this.write(':', inds.cln2)
 		this.write(this.txt.tgl_lkai, inds.val2)
 		this.break()

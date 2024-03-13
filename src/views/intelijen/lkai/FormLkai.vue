@@ -365,13 +365,12 @@ export default {
 		async getData() {
 			let response = await api.getDocumentById(this.doc_type, this.doc_id)
 			if (this.doc_type == 'lkai') {
-				this.data = response.data	
+				this.data = response.data
+				this.saved_lppi = this.data.lppi_id
 			} else {
 				let data = response.data
 				this.$emit('get-data', data)
 			}
-			
-			this.saved_lppi = this.data.lppi_id
 		},
 		fillNull() {
 			let posisi = Object.keys(this.data.petugas)
