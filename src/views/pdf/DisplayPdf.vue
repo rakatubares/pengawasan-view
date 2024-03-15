@@ -48,6 +48,7 @@
 <script>
 import api from '../../router/api2.js'
 import MyAlert from '../components/AlertSubmit.vue'
+import PdfLap from './penindakan/PdfLap'
 import PdfLi from './penindakan/PdfLi'
 import PdfLkai from './intelijen/PdfLkai'
 import PdfLkaiN from './intelijen/PdfLkaiN'
@@ -156,6 +157,10 @@ export default {
 				// Penindakan
 				case 'li':
 					pdf = new PdfLi(data_pdf)
+					break;
+
+				case 'lap':
+					pdf = new PdfLap(data_pdf)
 					break;
 			
 				default:

@@ -39,7 +39,7 @@ export default {
 			type: String,
 			default: 'lap'
 		},
-		tipe_surat: {
+		label_lap: {
 			type: String,
 			default: 'LAP'
 		},
@@ -50,10 +50,10 @@ export default {
 	},
 	data() {
 		return {
-			table_title: `Daftar ${this.tipe_surat}`,
+			table_title: `Daftar ${this.label_lap}`,
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
-				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
+				{ key: 'no_dok_lengkap', label: `No ${this.label_lap}` },
+				{ key: 'tanggal_dokumen', label: `Tgl ${this.label_lap}` },
 				{ key: 'dokumen_sumber', label: 'Sumber Informasi' },
 			],
 			custom_fields: ['dokumen_sumber'],
@@ -80,7 +80,7 @@ export default {
 			this.modal_data_props.show = false
 		},
 		constructDeleteText(item) {
-			let text = `Apakah Anda yakin untuk menghapus data ${this.tipe_surat} atas ` 
+			let text = `Apakah Anda yakin untuk menghapus data ${this.label_lap} atas ` 
 				+ item.nomor_sumber.bold() 
 				+ ' tanggal ' + item.tanggal_sumber.bold()  
 				+ "?"

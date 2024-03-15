@@ -53,6 +53,13 @@ converters.fullDate = (val) => {
 	return date
 }
 
+converters.currentDate = () => {
+	let now = new Date()
+	let options = {timeZone: "Asia/Jakarta", year: 'numeric', month: '2-digit', day: '2-digit'}
+	let d = now.toLocaleDateString("id-ID", options).split('/').join('-')
+	return d
+}
+
 converters.array_text = (txt, max_length) => {
 	let result
 

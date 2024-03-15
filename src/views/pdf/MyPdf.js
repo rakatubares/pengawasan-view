@@ -127,12 +127,13 @@ class MyPdf {
 	 */
 	createNomor(doc_title, doc_no=null)
 	{
+		// Change font
 		this.pdf.setFont('Helvetica', 'bold')
 		this.pdf.setFontSize(this.font_size)
 
+		// Write document title
 		let center = this.page_width/2
 		if (Array.isArray(doc_title)) {
-			console.log('MY PDF - TITEL - IS ARRAY', doc_title)
 			doc_title.forEach(txt => {
 				this.write(txt, center, this.ln, 'center')	
 				let dim = this.pdf.getTextDimensions(txt)
@@ -140,20 +141,22 @@ class MyPdf {
 				this.break()
 			});
 		} else {
-			console.log('MY PDF - TITEL - NOT ARRAY', doc_title)
 			this.write(doc_title, center, this.ln, 'center')
 			let dim = this.pdf.getTextDimensions(doc_title)
 			this.pdf.line(center-(dim.w/2)-1, this.ln+0.5, center+(dim.w/2)+1, this.ln+0.5)
 			this.break()
 		}
 
+		// Reset font
 		this.pdf.setFont('Helvetica', 'normal')
-		this.ln += this.font_height
 		
+		// Write document number
 		if (doc_no != null) {
-			this.pdf.text(doc_no, center, this.ln, 'center')
-			this.ln += this.font_height*2	
+			this.write(doc_no, center, this.ln, 'center')
+			this.break()
 		}
+
+		this.break()
 	}
 
 	prepareDocDate(tgl_dok) 

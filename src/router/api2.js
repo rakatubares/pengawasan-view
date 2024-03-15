@@ -317,6 +317,16 @@ class API {
 	async getKategoriById(id) {
 		return await this.getApi(`/kategori/${id}`)
 	}
+
+	async getKategoriPelanggaran() {
+		let response = await this.getApi(`/pelanggaran`)
+		return response.data
+	}
+
+	async getSkemaPenindakan() {
+		let response = await this.getApi(`/skema_penindakan`)
+		return response.data
+	}
 	
 	async searchNegara(data) {
 		return await this.postApi('/negara/search', data)

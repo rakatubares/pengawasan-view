@@ -274,8 +274,6 @@ class PdfLkai extends Pdf
 			this.data.catatan_atasan,
 			this.data.tanggal_terima_atasan,
 		)
-
-		return this.pdf.output('datauristring')
 	}
 
 	generateTtd(data_pejabat, keputusan, catatan, tanggal_terima) {

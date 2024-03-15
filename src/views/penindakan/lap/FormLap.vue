@@ -34,138 +34,22 @@
 				</CCol>
 			</CRow>
 			<CRow>
-				<CCol md="9" sm="12">
-					<!-- Load data sumber -->
-					<div v-if="['LI-1', 'NHI', 'NHI-N'].includes(data.jenis_sumber)" class="form-group">
-						<label>Sumber informasi</label>
-						<v-autocomplete
-							v-model="search_value"
-							outlined
-							dense
-							:items.sync="search_items"
-							:search-input.sync="search_query"
-							item-text="no_dok_lengkap"
-							item-value="id"
-							@change="changeValueSumber"
-						>
-							<template v-slot:prepend>
-								<CDropdown
-									:togglerText.sync="data.jenis_sumber"
-									color="primary"
-								>
-									<CDropdownItem v-if="doc_type == 'lap'" @click="toggleSource('NHI')">
-										NHI
-									</CDropdownItem>
-									<CDropdownItem v-if="doc_type == 'lap'" @click="toggleSource('LI-1')">
-										LI-1
-									</CDropdownItem>
-									<CDropdownItem v-if="doc_type == 'lapn'" @click="toggleSource('NHI-N')">
-										NHI-N
-									</CDropdownItem>
-									<CDropdownItem @click="toggleSource('Lainnya')">
-										Lainnya
-									</CDropdownItem>
-								</CDropdown>
-							</template>
-							<template v-slot:no-data>
-								<v-list-item>
-									<v-list-item-title>
-										Data tidak ditemukan
-									</v-list-item-title>
-								</v-list-item>
-							</template>
-							<template v-slot:item="{ item }">
-								<v-list-item-content>
-									<h3><v-list-item-title>{{ item.no_dok_lengkap }}</v-list-item-title></h3>
-									<v-list-item-subtitle>{{ item.tanggal_dokumen }}</v-list-item-subtitle>
-								</v-list-item-content>
-							</template>
-						</v-autocomplete>
-						<small v-if="doc_type == 'lapn'" class="form-text text-muted w-100">Nomor NHI-N / Informasi lain</small>
-						<small v-else class="form-text text-muted w-100">Nomor NHI / LI-1 / Informasi lain</small>
-					</div>
-
-					<!-- Input data sumber -->
-					<CInput
-						v-else
-						label="Sumber informasi"
-						:description="(doc_type == 'lapn') ? `Nomor NHI-N / Informasi lain` : `Nomor NHI / LI-1 / Informasi lain`"
-						:value.sync="data.nomor_sumber"
-						:is-valid="validatorRequired"
-						invalid-feedback="Sumber informasi wajib diisi"
-					>
-						<template #prepend>
-							<CDropdown
-								:togglerText.sync="data.jenis_sumber"
-								color="primary"
-							>
-								<CDropdownItem v-if="doc_type == 'lap'" @click="toggleSource('NHI')">
-									NHI
-								</CDropdownItem>
-								<CDropdownItem v-if="doc_type == 'lap'" @click="toggleSource('LI-1')">
-									LI-1
-								</CDropdownItem>
-								<CDropdownItem v-if="doc_type == 'lapn'" @click="toggleSource('NHI-N')">
-									NHI-N
-								</CDropdownItem>
-								<CDropdownItem @click="toggleSource('Lainnya')">
-									Lainnya
-								</CDropdownItem>
-							</CDropdown>
-						</template>
-					</CInput>
-				</CCol>
-				<CCol md="3" sm="12">
-					<div class="form-group">
-						<label class="w-100">Tanggal sumber informasi</label>
-						<date-picker 
-							v-model="data.tanggal_sumber"
-							format="DD-MM-YYYY"
-							value-type="format"
-							type="date"
-							@change="
-								validatorDatetime($event, 'DD-MM-YYYY', 'validasi.tanggal_sumber', validasi.tanggal_sumber.text)
-							"
-						>
-							<template v-slot:input="slotProps">
-								<div v-if="['LI-1', 'NHI', 'NHI-N'].includes(data.jenis_sumber)">
-									<input
-										class="form-control" 
-										type="text" 
-										v-bind="slotProps.props" 
-										v-on="slotProps.events"
-										disabled
-									/>
-								</div>
-								<div v-else>
-									<input
-										class="form-control" 
-										type="text" 
-										v-bind="slotProps.props" 
-										v-on="slotProps.events"
-										v-bind:class="{
-											'is-valid': validasi.tanggal_sumber.state,
-											'is-invalid': !validasi.tanggal_sumber.state
-										}"
-									/>
-									<div class="invalid-feedback pb-1">{{validasi.tanggal_sumber.text}}</div>
-								</div>
-							</template>
-							<i slot="icon-calendar"></i>
-							<i slot="icon-clear"></i>
-						</date-picker>
-						<small v-if="doc_type == 'lapn'" class="form-text text-muted w-100">Tanggal NHI-N / Informasi lain</small>
-						<small v-else class="form-text text-muted w-100">Tanggal NHI / LI-1 / Informasi lain</small>
-					</div>
+				<CCol>
+					<MyToggleSearchDocument
+						:doc_options="source_options"
+						:doc_type.sync="data.jenis_sumber"
+						:doc_id.sync="data.sumber_id"
+						:doc_number.sync="data.nomor_sumber"
+						:doc_date.sync="data.tanggal_sumber"
+						:saved_doc_id.sync="saved_source_id"
+					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="4" sm="12">
-					<CSelect
+					<MySelectKategoriPelanggaran
 						label="Dugaan Pelanggaran"
-						description="Kategori dugaan pelanggaran"
-						:options="dugaan_pelanggaran_options"
-						:value.sync="data.dugaan_pelanggaran.id"
+						:id.sync="data.dugaan_pelanggaran.id"
 					/>
 				</CCol>
 			</CRow>
@@ -328,10 +212,8 @@
 			</CRow>
 			<CRow v-if="data.flag_layak_penindakan">
 				<CCol md="3" sm="12">
-					<CSelect
-						label="Skema Penindakan"
-						:options="skema_penindakan_options"
-						:value.sync="data.skema_penindakan.id"
+					<MySelectSkemaPenindakan
+						:id.sync="data.skema_penindakan.id"
 					/>
 				</CCol>
 				<CCol md="9" sm="12">
@@ -375,12 +257,11 @@
 					<MySelectPejabat
 						ref="selectPenerbit"
 						:state.sync="state"
-						:label="{jabatan: 'Jabatan Penerbit', nama: 'Nama Penerbit'}"
-						:selectable_jabatan="['bd.0503', 'bd.0504']"
-						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.penerbit.user.user_id"
-						:jabatan.sync="data.penerbit.jabatan.kode"
-						:plh.sync="data.penerbit.plh"
+						:label="{'jabatan': 'Jabatan Penerbit', 'nama': 'Nama Penerbit'}"
+						:default_jabatan.sync="default_penerbit"
+						:jabatan.sync="data.petugas.penerbit.kode_jabatan"
+						:tipe_ttd.sync="data.petugas.penerbit.tipe_ttd"
+						:nip.sync="data.petugas.penerbit.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -389,12 +270,11 @@
 					<MySelectPejabat
 						ref="selectAtasan"
 						:state.sync="state"
-						:label="{jabatan: 'Jabatan Atasan', nama: 'Nama Atasan'}"
-						:selectable_jabatan="['bd.05']"
-						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.atasan.user.user_id"
-						:jabatan.sync="data.atasan.jabatan.kode"
-						:plh.sync="data.atasan.plh"
+						:label="{'jabatan': 'Jabatan Atasan', 'nama': 'Nama Atasan'}"
+						:default_jabatan.sync="default_atasan"
+						:jabatan.sync="data.petugas.atasan.kode_jabatan"
+						:tipe_ttd.sync="data.petugas.atasan.tipe_ttd"
+						:nip.sync="data.petugas.atasan.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -426,48 +306,11 @@ import api from '../../../router/api2.js'
 import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
+import MySelectKategoriPelanggaran from '../../components/SelectKategoriPelanggaran.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
-
-const default_data = {
-	tanggal_dokumen: null,
-	jenis_sumber: 'NHI',
-	sumber_id: null,
-	nomor_sumber: null,
-	tanggal_sumber: null,
-	dugaan_pelanggaran: {id: 1},
-	flag_pelaku: 1,
-	keterangan_pelaku: null,
-	flag_pelanggaran: 1,
-	keterangan_pelanggaran: null,
-	flag_locus: 1,
-	keterangan_locus: null,
-	flag_tempus: 1,
-	keterangan_tempus: null,
-	flag_kewenangan: 1,
-	keterangan_kewenangan: null,
-	flag_sdm: 1,
-	keterangan_sdm: null,
-	flag_sarpras: 1,
-	keterangan_sarpras: null,
-	flag_anggaran: 1,
-	keterangan_anggaran: null,
-	flag_layak_penindakan: true,
-	skema_penindakan: {id: 1},
-	keterangan_skema_penindakan: null,
-	flag_layak_patroli: null,
-	keterangan_patroli: null,
-	kesimpulan: null,
-	penerbit: {
-		jabatan: {kode: 'bd.0503'},
-		plh: false,
-		user: {user_id: null}
-	},
-	atasan: {
-		jabatan: {kode: 'bd.05'},
-		plh: false,
-		user: {user_id: null}
-	},
-}
+import MySelectSkemaPenindakan from '../../components/SelectSkemaPenindakan.vue'
+import MyToggleSearchDocument from '../../components/ToggleSearchDocument.vue'
+import DefaultLap from './DefaultLap.js'
 
 const custom_validations_default = {
 	tanggal_dokumen: {
@@ -485,25 +328,34 @@ export default {
 	components: {
 		DatePicker,
 		MyAlert,
+		MySelectKategoriPelanggaran,
 		MySelectPejabat,
+		MySelectSkemaPenindakan,
+		MyToggleSearchDocument,
 	},
 	props: {
 		state: String,
 		doc_type: String,
 		doc_id: Number,
 		doc_name: String,
+		source_options: {
+			type: Array,
+			default() {
+				return [
+					{'type': 'nhi', 'label': 'NHI', 'state': 'search'}, 
+					{'type': 'li', 'label': 'LI-1', 'state': 'search'},
+					{'type': 'lainnya', 'label': 'Lainnya', 'state': 'manual'},
+				]
+			}
+		}
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(default_data)),
+			data: JSON.parse(JSON.stringify(DefaultLap.data)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
-			tipe_sumber: 'nhi',
-			search_query: null,
-			search_value: null,
-			search_items: [],
-			search_exception: null,
-			dugaan_pelanggaran_options: [],
-			skema_penindakan_options: [],
+			saved_source_id: null,
+			default_penerbit: 'bd.0503',
+			default_atasan: 'bd.05',
 			labelIcon: {
 				labelOn: '\u2713',
 				labelOff: '\u2715'
@@ -512,57 +364,33 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getFormDataById(this.doc_type, this.doc_id)
-			this.data = response.data.data
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data = response.data
+			this.saved_source_id = this.data.sumber_id
 
-			this.fillDefault()
-			if (this.data.skema_penindakan == null) {
-				this.data.skema_penindakan = {id: null}
-			}
-			if (this.data.sumber_id != null) {
-				this.changeTipeSumber(this.data.jenis_sumber)
-				this.search_exception = this.data.sumber_id
-				await this.search_sumber(this.data.nomor_sumber)
-				this.search_value = this.search_items[0]
-				this.data_source = this.data.jenis_sumber
-			}
-			
-			this.$nextTick(function () {
-				this.renderData()
-			})
-		},
-		fillDefault() {
-			this.data.flag_layak_penindakan = this.data.flag_layak_penindakan == 1 ? true : false
-		},
-		renderData() {
+			this.fillNull()
+
 			this.validatorDatetime(this.data.tanggal_dokumen, 'DD-MM-YYYY', 'validasi.tanggal_dokumen', this.validasi.tanggal_dokumen.text)
-			this.validatorDatetime(this.data.tanggal_sumber, 'DD-MM-YYYY', 'validasi.tanggal_sumber', this.validasi.tanggal_sumber.text)
-			this.$refs.selectPenerbit.selected_jabatan = this.data.penerbit.jabatan.kode
-			this.$refs.selectPenerbit.togglePlh(this.data.penerbit.plh)
-			this.$refs.selectPenerbit.getPetugas(this.data.penerbit.user.user_id, true)
-			this.$refs.selectAtasan.selected_jabatan = this.data.atasan.jabatan.kode
-			this.$refs.selectAtasan.togglePlh(this.data.atasan.plh)
-			this.$refs.selectAtasan.getPetugas(this.data.atasan.user.user_id, true)
+		},
+		fillNull() {
+			if (this.data.jenis_sumber == null) {
+				this.data.jenis_sumber = DefaultLap.data.jenis_sumber
+			}
+			this.data.flag_layak_penindakan = this.data.flag_layak_penindakan == 1 ? true : false
 		},
 		async saveData() {
 			if (this.state == 'insert') {
-				try {
-					this.data = await api.storeDoc(this.doc_type, this.data)
-					this.fillDefault()
-					this.$emit('update:doc_id', this.data.id)
-					this.$emit('update:state', 'edit')
-					this.alert(`Data ${this.doc_name} berhasil disimpan`)
-				} catch (error) {
-					console.log('form lap - save data - error', error)
-				}
+				this.data = await api.storeDoc(this.doc_type, this.data)
+				this.saved_source_id = this.data.sumber_id
+				this.fillNull()
+				this.$emit('update:doc_id', this.data.id)
+				this.$emit('update:state', 'edit')
+				this.alert(`Data ${this.doc_name} berhasil disimpan`)
 			} else if (this.state == 'edit') {
-				try {
-					this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
-					this.fillDefault()
-					this.alert(`Data ${this.doc_name} berhasil diubah`)
-				} catch (error) {
-					console.log('form lap - update data - error', error)
-				}
+				this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
+				this.saved_source_id = this.data.sumber_id
+				this.fillNull()
+				this.alert(`Data ${this.doc_name} berhasil diubah`)
 			}
 		},
 		alert(text, color, time) {
@@ -574,69 +402,6 @@ export default {
 			let valid = validators.date(dt)
 			_.set(this, validasiName+'.state', valid)
 			_.set(this, validasiName+'.text', text)
-		},
-		async getKategoriPelanggaran() {
-			let response = await api.getApi('/pelanggaran')
-			let kategori_pelanggaran = response.data.data
-			kategori_pelanggaran.forEach(element => {
-				let option = {
-					value: element.id,
-					label: element.kategori
-				}
-				this.dugaan_pelanggaran_options.push(option)
-			});
-		},
-		async getSkemaPenindakan() {
-			let response = await api.getApi('/penindakan')
-			let skema_penindakan = response.data.data
-			skema_penindakan.forEach(element => {
-				let option = {
-					value: element.id,
-					label: element.skema
-				}
-				this.skema_penindakan_options.push(option)
-			});
-		},
-		toggleSource(val) {
-			this.data.jenis_sumber = val
-			this.changeTipeSumber(val)
-
-			// Nullify related data
-			this.data.nomor_sumber = null
-			this.data.tanggal_sumber = null
-			this.data.sumber_id = null
-			this.search_value = null			
-		},
-		changeTipeSumber(val) {
-			// Change source document
-			if (val == 'NHI') {
-				this.tipe_sumber = 'nhi'
-			} else if (val == 'LI-1') {
-				this.tipe_sumber = 'li'
-			} else if (val == 'NHI-N') {
-				this.tipe_sumber = 'nhin'
-			} else {
-				this.tipe_sumber = null
-			}
-		},
-		async changeValueSumber(id) {
-			if (id != null) {
-				// Get data sumber
-				let response = await api.getDisplayDataById(this.tipe_sumber, id)
-				let doc = response.data.data
-				
-				// Change current data according to li
-				this.data.nomor_sumber = doc.no_dok_lengkap
-				this.data.tanggal_sumber = doc.tanggal_dokumen
-				
-				// Specify sumber id
-				this.data.sumber_id = id
-			}
-		},
-		async search_sumber(search) {
-			let data = {'src': search, 'flt': {kode_status: 200}, 'exc': this.search_exception}
-			let responses = await api.searchDoc(this.tipe_sumber, data)
-			this.search_items = responses.data.data
 		},
 		togglePenindakan(val) {
 			if (val == true) {
@@ -650,24 +415,12 @@ export default {
 			this.data.keterangan_layak_patroli = null
 		}
 	},
-	watch: {
-		data: function(val) {
-			this.renderData()
-		},
-		async search_query (val) {
-			await this.search_sumber(val)
-		},
-	},
 	async mounted() {
-		this.getKategoriPelanggaran()
-		this.getSkemaPenindakan()
-
 		if (this.state == 'edit') {
 			await this.getData()
 		} else {
-			if (this.doc_type == 'lapn') {
-				this.toggleSource('NHI-N')
-			}
+			this.data.tanggal_dokumen = converters.currentDate()
+			this.validatorDatetime(this.data.tanggal_dokumen, 'DD-MM-YYYY', 'validasi.tanggal_dokumen', this.validasi.tanggal_dokumen.text)
 		}
 	}
 }

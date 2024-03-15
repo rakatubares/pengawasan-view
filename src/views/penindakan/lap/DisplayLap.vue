@@ -153,11 +153,11 @@
 				</div>
 				<MyDisplayPejabat
 					title="Penerbit"
-					:data.sync="data_doc.penerbit"
+					:data.sync="data_doc.petugas.penerbit"
 				/>
 				<MyDisplayPejabat
 					title="Atasan"
-					:data.sync="data_doc.atasan"
+					:data.sync="data_doc.petugas.atasan"
 				/>
 			</CCol>
 		</CRow>
@@ -166,37 +166,8 @@
 
 <script>
 import api from '../../../router/api2.js'
+import DefaultLap from './DefaultLap'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	tanggal_dokumen: null,
-	nomor_sumber: null,
-	tanggal_sumber: null,
-	dugaan_pelanggaran: {kategori: null},
-	flag_pelaku: null,
-	keterangan_pelaku: null,
-	flag_pelanggaran: null,
-	keterangan_pelanggaran: null,
-	flag_locus: null,
-	keterangan_locus: null,
-	flag_tempus: null,
-	keterangan_tempus: null,
-	flag_kewenangan: null,
-	keterangan_kewenangan: null,
-	flag_sdm: null,
-	keterangan_sdm: null,
-	flag_sarpras: null,
-	keterangan_sarpras: null,
-	flag_anggaran: null,
-	keterangan_anggaran: null,
-	flag_layak_penindakan: null,
-	skema_penindakan: null,
-	keterangan_skema_penindakan: null,
-	flag_layak_patroli: null,
-	keterangan_patroli: null,
-	kesimpulan: null,
-}
 
 export default {
 	name: 'DisplayLap',
@@ -209,7 +180,7 @@ export default {
 	},
 	data() {
 		return {
-			data_doc: JSON.parse(JSON.stringify(default_data))
+			data_doc: JSON.parse(JSON.stringify(DefaultLap.data))
 		}
 	},
 	computed: {
@@ -236,7 +207,9 @@ export default {
 		disp_layak_penindakan() { return this.data_doc.flag_layak_penindakan ? 'LAYAK DILAKUKAN PENINDAKAN' : 'TIDAK / BELUM LAYAK DILAKUKAN PENINDAKAN'},
 		disp_skema() {
 			return this.data_doc.skema_penindakan != null
-				? this.data_doc.skema_penindakan.skema.toUpperCase()
+				? this.data_doc.skema_penindakan.skema != null
+					? this.data_doc.skema_penindakan.skema.toUpperCase()
+					: null
 				: null
 		},
 		disp_ket_skema() { return this.data_doc.keterangan_skema_penindakan || '-' },
@@ -246,8 +219,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_doc = response.data.data
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data_doc = response.data
 		}
 	},
 	async mounted() {

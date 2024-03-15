@@ -14,7 +14,9 @@ const state = {
   sifatSurat: ['SEGERA', 'SANGAT SEGERA'],
   klasifikasiSurat: ['RAHASIA', 'SANGAT RAHASIA'],
   kategoriBarang: null,
+  kategoriPelanggaran: null,
   satuanBarang: null,
+  skemaPenindakan: null,
 }
 
 const mutations = {
@@ -40,7 +42,9 @@ const getters = {
 	sifatSurat: state => { return state.sifatSurat },
 	klasifikasiSurat: state => { return state.klasifikasiSurat },
 	kategoriBarang: state => { return state.kategoriBarang },
+	kategoriPelanggaran: state => { return state.kategoriPelanggaran },
 	satuanBarang: state => { return state.satuanBarang },
+	skemaPenindakan: state => { return state.skemaPenindakan },
 }
 
 export default new Vuex.Store({
