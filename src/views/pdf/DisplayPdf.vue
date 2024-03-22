@@ -58,6 +58,7 @@ import PdfNi from './intelijen/PdfNi'
 import PdfNiN from './intelijen/PdfNiN'
 import PdfLppi from './intelijen/PdfLppi'
 import PdfLppiN from './intelijen/PdfLppiN'
+import PdfSbp from './penindakan/PdfSbp'
 
 export default {
 	name: "DisplayPdf",
@@ -161,6 +162,10 @@ export default {
 
 				case 'lap':
 					pdf = new PdfLap(data_pdf)
+					break;
+
+				case 'sbp':
+					pdf = new PdfSbp(data_pdf)
 					break;
 			
 				default:

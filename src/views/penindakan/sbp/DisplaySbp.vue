@@ -92,25 +92,37 @@
 						{{ disp_catatan }}
 					</CCol>
 				</CRow>
-				<MyDisplayEntitas
-					title="Pemilik/Saksi"
-					:data.sync="data_sbp.penindakan.saksi"
-				/>
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>Saksi</b></h5>
+					</CCol>
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(data_sbp.penindakan.saksi.id)"
+						>{{ disp_saksi }}</p>
+					</CCol>
+				</CRow>
 				<MyDisplayPegawai
 					title="Pejabat 1"
-					:data.sync="data_sbp.penindakan.petugas1"
+					:data.sync="data_sbp.penindakan.petugas.petugas1"
 				/>
 				<MyDisplayPegawai
 					title="Pejabat 2"
-					:data.sync="data_sbp.penindakan.petugas2"
+					:data.sync="data_sbp.penindakan.petugas.petugas2"
 				/>
 				<MyDisplayPejabat
 					v-if="doc_type == 'sbp'"
 					title="Atasan"
-					:data.sync="data_sbp.lptp.atasan"
+					:data.sync="data_sbp.lptp.petugas.atasan"
 				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_saksi"
+			:show.sync="show_modal_saksi"
+		/>
 	</div>
 </template>
 
@@ -119,6 +131,7 @@ import api from '../../../router/api2.js'
 import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 const default_data = {
 	no_dok_lengkap: null,
@@ -134,11 +147,14 @@ const default_data = {
 		sprint: {
 			nomor_sprint: null,
 			tanggal_sprint: null
-		}
+		},
+		saksi: {nama: null},
+		petugas: {}
 	},
 	lptp: {
 		no_dok_lengkap: null,
 		catatan: null,
+		petugas: {}
 	}
 }
 
@@ -148,6 +164,7 @@ export default {
 		MyDisplayEntitas,
 		MyDisplayPegawai,
 		MyDisplayPejabat,
+		MyModalEntitasOrang,
 	},
 	props: {
 		doc_type: String,
@@ -155,7 +172,8 @@ export default {
 	},
 	data() {
 		return {
-			data_sbp: JSON.parse(JSON.stringify(default_data))
+			data_sbp: JSON.parse(JSON.stringify(default_data)),
+			show_modal_saksi: false,
 		}
 	},
 	computed: {
@@ -171,16 +189,20 @@ export default {
 		disp_uraian() { return this.data_sbp.uraian_penindakan || '-' },
 		disp_alasan() { return this.data_sbp.alasan_penindakan || '-' },
 		disp_pelanggaran() { return this.data_sbp.jenis_pelanggaran || '-' },
-		disp_waktu_mulai() { return this.data_sbp.wkt_mulai_penindakan || '-' },
-		disp_waktu_selesai() { return this.data_sbp.wkt_selesai_penindakan || '-' },
+		disp_waktu_mulai() { return ((this.data_sbp.tanggal_mulai_penindakan || '-') + ' ' + (this.data_sbp.waktu_mulai_penindakan || '-')) },
+		disp_waktu_selesai() { return ((this.data_sbp.tanggal_selesai_penindakan || '-') + ' ' + (this.data_sbp.waktu_selesai_penindakan || '-')) },
 		disp_hal_terjadi() { return this.data_sbp.hal_terjadi || '-' },
-		disp_catatan() { return this.data_sbp.lptp.catatan || '-' }
+		disp_catatan() { return this.data_sbp.lptp.catatan || '-' },
+		disp_saksi() { return this.data_sbp.penindakan.saksi.nama || '-'},
 	},
 	methods: {
 		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_sbp = response.data.data
-		}
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data_sbp = response.data
+		},
+		showEntitas(saksi_id) {
+			this.$refs.modal_saksi.showModal('show', saksi_id)
+		},
 	},
 	async mounted() {
 		await this.getData()
@@ -189,5 +211,12 @@ export default {
 </script>
 
 <style>
-
+.a {
+	text-decoration: none;
+	background-color: transparent;
+	color: #321fdb;
+}
+.a:hover {
+	cursor: pointer;
+}
 </style>

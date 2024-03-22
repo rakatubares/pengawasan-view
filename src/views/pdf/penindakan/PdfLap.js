@@ -279,7 +279,8 @@ class PdfLap extends Pdf {
 			inds.ttd1,
 			this.data.petugas.penerbit.jabatan, 
 			this.data.petugas.penerbit.txt_tipe_ttd, 
-			this.data.petugas.penerbit.name
+			this.data.petugas.penerbit.name,
+			this.data.petugas.penerbit.nip
 		)
 
 		// Atasan
@@ -288,7 +289,8 @@ class PdfLap extends Pdf {
 			inds.ttd2,
 			this.data.petugas.atasan.jabatan, 
 			this.data.petugas.atasan.txt_tipe_ttd, 
-			this.data.petugas.atasan.name
+			this.data.petugas.atasan.name,
+			this.data.petugas.atasan.nip
 		)
 	}
 
