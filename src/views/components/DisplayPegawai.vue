@@ -29,7 +29,7 @@ export default {
 	},
 	watch: {
 		data(val) {
-			if (val != null) {
+			if ((val != null) || (val != undefined)) {
 				this.data_pegawai = JSON.parse(JSON.stringify(val))
 			}
 		}
@@ -46,7 +46,7 @@ export default {
 	},
 	computed: {
 		disp_pegawai() {
-			return `${this.data_pegawai.name} - ${this.data_pegawai.nip}`
+			return `${this.data_pegawai.name || ''} - ${this.data_pegawai.nip || ''}`
 		},
 	}
 }

@@ -9,6 +9,7 @@ class MyPdf {
 	constructor(
 		data,
 		jenis_dok,
+		inds={},
 		ln=50, 
 		font_height=4, 
 		font_size=10, 
@@ -16,7 +17,6 @@ class MyPdf {
 		page_width=210,
 		start_line=83, 
 		end_line=127,
-		inds={}
 	)
 	{
 		this.pdf = new jsPDF('p', 'mm', [page_height, page_width])
@@ -166,12 +166,25 @@ class MyPdf {
 		this.thn = this.tgl_dok != null ? converters.numTerbilang(this.tgl_dok.getFullYear()) : ''
 	}
 
-	ttd(x, jabatan, tipe_ttd, nama, breaks=5)
+	prepareDate(tgl_sprint) {
+		let tgl = converters.date(tgl_sprint, 'DD-MM-YYYY')
+		let full_tgl = converters.fullDate(tgl)
+		return {'tgl': tgl, 'full_tgl': full_tgl}
+	}
+
+	ttd(x, jabatan=null, tipe_ttd='', nama, nip=null, breaks=4)
 	{
-		this.write(tipe_ttd, x-7)
-		this.write(jabatan, x)
+		if (jabatan) {
+			this.write(tipe_ttd, x-7)
+			this.write(jabatan, x)	
+		}
 		this.break(breaks, true)
 		this.write(nama, x)
+		this.break()
+		if (nip) {
+			this.write(`NIP ${nip}`, x)
+			this.break()
+		}
 	}
 	
 	cc(ccs)

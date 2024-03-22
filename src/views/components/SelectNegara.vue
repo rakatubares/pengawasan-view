@@ -12,6 +12,7 @@
 				:search-input.sync="search"
 				item-text="nama_negara"
 				item-value="kode_2"
+				:disabled.sync="disabled"
 			>
 				<template v-slot:no-data>
 					<v-list-item>
@@ -37,6 +38,7 @@ import api from '../../router/api2.js'
 export default {
 	name: 'SelectNegara',
 	props: {
+		state: null,
 		label: {
 			type: String,
 			default: 'Negara'
@@ -48,6 +50,7 @@ export default {
 			items: [],
 			search: null,
 			kode: null,
+			disabled: false,
 		}
 	},
 	watch: {
@@ -58,7 +61,14 @@ export default {
 		},
 		kode(val) {
 			this.$emit('update:value', val)
-		}
+		},
+		state(val) {
+			if (val == 'show') {
+				this.disabled = true
+			} else {
+				this.disabled = false
+			}
+		},
 	},
 	methods: {
 		async getData(code) {
