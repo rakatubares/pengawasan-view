@@ -20,6 +20,8 @@
 								v-for="option in identity_types" 
 								:value="option" 
 								:key="option"
+
+								disabled
 							>
 								{{ option }}
 							</option>
@@ -32,6 +34,7 @@
 							:value.sync="identitas.nomor"
 							:is-valid="validatorRequired('nomor', identitas.nomor)"
 							invalid-feedback="Jenis identitas wajib diisi"
+							:disabled.sync="disabled"
 						/>
 					</CCol>
 				</CRow>
@@ -40,6 +43,7 @@
 						<CInput
 							label="Pejabat Penerbit"
 							:value.sync="identitas.pejabat_penerbit"
+							:disabled.sync="disabled"
 						/>
 					</CCol>
 				</CRow>
@@ -48,6 +52,7 @@
 						<CInput
 							label="Tempat Penerbitan"
 							:value.sync="identitas.tempat_penerbitan"
+							:disabled.sync="disabled"
 						/>
 					</CCol>
 				</CRow>
@@ -61,6 +66,7 @@
 					Kembali
 				</CButton>
 				<CButton 
+					v-if="state != 'show'"
 					color="success"	
 					@click="saveData"
 				>
@@ -96,6 +102,7 @@ export default {
 		return {
 			state: null,
 			show: false,
+			disabled: false,
 			identitas: JSON.parse(JSON.stringify(default_identitas)),
 			validations: {
 				jenis: false,
@@ -103,10 +110,19 @@ export default {
 			}
 		}
 	},
+	watch: {
+		state(val) {
+			if (val == 'show') {
+				this.disabled = true
+			} else {
+				this.disabled = false
+			}
+		}
+	},
 	methods: {
 		showModal(state, index=null, data=null) {
 			this.state = state
-			if (state=='update') {
+			if (state=='update' || state=='show') {
 				this.index = index
 				this.identitas = JSON.parse(JSON.stringify(data))
 			}

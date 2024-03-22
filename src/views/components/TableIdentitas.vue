@@ -144,8 +144,8 @@ export default {
 			this.list_identitas.splice(index, 1)
 			this.refreshTable()
 		},
-		showData(item) {
-			console.log('TABLR IDENTITAS - SHOW', item)
+		showData(item, index) {
+			this.$refs.modal_identitas.showModal('show', index, item)
 		},
 		getButton(type) {
 			let btn = false

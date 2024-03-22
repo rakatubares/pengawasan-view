@@ -77,6 +77,20 @@ div.v-input.no-message .v-text-field__details {
 	color: #636f83
 }
 
+// Disabled
+.form-control:disabled, .form-control[readonly] {
+	background-color: #e8e8e8;
+	opacity: 1;
+}
+
+.v-input--is-disabled fieldset {
+	background-color: #e8e8e8;
+}
+
+div.mx-datepicker input:disabled {
+	color: #768192;
+}
+
 // ==========================
 //  ALERT
 // ==========================
