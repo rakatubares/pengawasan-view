@@ -69,30 +69,30 @@ class API {
 	*/
 
 	async getListDocuments(doc_type) {
-		let response = await this.getApi(`/${doc_type}`)
+		let response = await this.getApi(`/doc/${doc_type}`)
 		let list = response.data.data
 		return list
 	}
 
 	async getDocumentById(doc_type, doc_id) {
-		let response = await this.getApi(`/${doc_type}/${doc_id}`)
+		let response = await this.getApi(`/doc/${doc_type}/${doc_id}`)
 		let doc = response.data
 		return doc
 	}
 
 	async storeDoc(doc_type, data) {
-		let response = await this.postApi(`/${doc_type}`, data)
+		let response = await this.postApi(`/doc/${doc_type}`, data)
 		let doc = response.data.data
 		return doc
 	}
 
 	async updateDoc(doc_type, doc_id, data) {
-		let response = await this.putApi(`/${doc_type}/${doc_id}`, data)
+		let response = await this.putApi(`/doc/${doc_type}/${doc_id}`, data)
 		return response.data.data
 	}
 
 	async publishDoc(doc_type, doc_id) {
-		await this.putApi(`/${doc_type}/${doc_id}/publish`)
+		await this.putApi(`/doc/${doc_type}/${doc_id}/publish`)
 	}
 
 	async searchDoc(doc_type, search_query) {
@@ -100,15 +100,15 @@ class API {
 	}
 
 	async deleteDoc(doc_type, doc_id) {
-		return await this.delApi(`/${doc_type}/${doc_id}`)
+		return await this.delApi(`/doc/${doc_type}/${doc_id}`)
 	}
 
-	async getRelatedDocuments(doc_type, doc_id) {
-		return await this.getApi(`/${doc_type}/${doc_id}/docs`)
-	}
+	// async getRelatedDocuments(doc_type, doc_id) {
+	// 	return await this.getApi(`/${doc_type}/${doc_id}/docs`)
+	// }
 
 	async getDocumentsChain(doc_type, doc_id) {
-		let response = await this.getApi(`/chain/${doc_type}/id/${doc_id}`)
+		let response = await this.getApi(`/doc/${doc_type}/${doc_id}/chain`)
 		return response.data
 	}
 

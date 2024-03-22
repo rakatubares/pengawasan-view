@@ -23,6 +23,7 @@
 						<CInput
 							label="Alias"
 							:value.sync="entitas.alias"
+							:disabled.sync="disable_edit"
 						/>
 					</CCol>
 				</CRow>
@@ -31,6 +32,7 @@
 						<CInput
 							label="Tempat Lahir"
 							:value.sync="entitas.tempat_lahir"
+							:disabled.sync="disable_edit"
 						/>
 					</CCol>
 					<CCol sm="6">
@@ -48,6 +50,7 @@
 										type="text" 
 										v-bind="slotProps.props" 
 										v-on="slotProps.events"
+										:disabled="disable_edit"
 									/>
 								</template>
 								<i slot="icon-calendar"></i>
@@ -64,18 +67,21 @@
 								{value: 'M', label: 'Laki-laki'}, 
 								{value: 'F', label: 'Perempuan'},
 							]"
+							:disabled.sync="disable_edit"
 						/>
 					</CCol>
 					<CCol sm="6">
 						<CInput
 							label="Agama"
 							:value.sync="entitas.agama"
+							:disabled.sync="disable_edit"
 						/>
 					</CCol>
 				</CRow>
 				<CRow>
 					<CCol sm="12">
 						<MySelectNegara
+							:state.sync="state"
 							ref="SelectNegara"
 							label="Kewarganegaraan"
 							:value.sync="entitas.warga_negara.kode_2"
@@ -87,6 +93,7 @@
 						<CTextarea
 							label="Alamat Identitas"
 							:value.sync="entitas.alamat_identitas"
+							:disabled.sync="disable_edit"
 						/>
 					</CCol>
 				</CRow>
@@ -95,6 +102,7 @@
 						<CTextarea
 							label="Alamat Tinggal"
 							:value.sync="entitas.alamat_tinggal"
+							:disabled.sync="disable_edit"
 						/>
 					</CCol>
 				</CRow>
@@ -103,6 +111,7 @@
 						<CInput
 							label="Pekerjaan"
 							:value.sync="entitas.pekerjaan"
+							:disabled.sync="disable_edit"
 						/>
 					</CCol>
 				</CRow>
@@ -113,6 +122,7 @@
 							:value.sync="entitas.nomor_telepon"
 							:is-valid="validatorPhone('telepon', entitas.nomor_telepon)"
 							invalid-feedback="Nomor telepon tidak valid"
+							:disabled.sync="disable_edit"
 						/>
 					</CCol>
 					<CCol sm="6">
@@ -122,6 +132,7 @@
 							:value.sync="entitas.email"
 							:is-valid="validatorEmail('email', entitas.email)"
 							invalid-feedback="Email tidak valid"
+							:disabled.sync="disable_edit"
 						/>
 					</CCol>
 				</CRow>
@@ -144,6 +155,7 @@
 					Kembali
 				</CButton>
 				<CButton 
+					v-if="state != 'show'"
 					color="success"
 					@click="saveEntitas"
 				>
@@ -193,6 +205,7 @@ export default {
 			state: null,
 			entitas: JSON.parse(JSON.stringify(default_entitas)),
 			disable_name_edit: false,
+			disable_edit: false,
 			validations: {
 				nama: false,
 				telepon: false,
@@ -216,22 +229,31 @@ export default {
 		async showModal(state, id=null) {
 			this.state = state
 			if (state == 'update') {
-				// Get entity data
-				let response = await api.getEntitasOrang(id)
-				let entitas = response.data
-
-				// Fill options data
-				if (entitas.warga_negara != null) {
-					this.$refs.SelectNegara.getData(entitas.warga_negara.kode_2)	
-				} else {
-					entitas.warga_negara = JSON.parse(JSON.stringify(default_entitas.warga_negara))
-				}
-				this.entitas = entitas
+				this.getData(id)
 
 				// Prevent edit entity's name
 				this.disable_name_edit = true
+			} else if (state == 'show') {
+				this.getData(id)
+
+				// Prevent edit data
+				this.disable_name_edit = true
+				this.disable_edit = true
 			}
 			this.show = true
+		},
+		async getData(id) {
+			// Get entity data
+			let response = await api.getEntitasOrang(id)
+			let entitas = response.data
+
+			// Fill options data
+			if (entitas.warga_negara != null) {
+				this.$refs.SelectNegara.getData(entitas.warga_negara.kode_2)	
+			} else {
+				entitas.warga_negara = JSON.parse(JSON.stringify(default_entitas.warga_negara))
+			}
+			this.entitas = entitas
 		},
 		closeModal() {
 			this.show = false	
@@ -240,6 +262,7 @@ export default {
 			this.entitas = JSON.parse(JSON.stringify(default_entitas))
 			this.$refs.SelectNegara.getData(null)
 			this.disable_name_edit = false
+			this.disable_edit = false
 		},
 		async saveEntitas() {
 			if (this.allValid) {
