@@ -7,10 +7,10 @@ const inds = {
 	ttd2: 127,
 }
 
-class PdfTolak1 extends PdfPenindakan {
+class PdfTolak2 extends PdfPenindakan {
 	constructor(
 		data,
-		title = ['BERITA ACARA', 'PENOLAKAN TANDA TANGAN SURAT BUKTI PENINDAKAN']
+		title = ['BERITA ACARA PENOLAKAN TANDA TANGAN', 'TERHADAP BERITA ACARA PENOLAKAN TANDA TANGAN SURAT BUKTI PENINDAKAN'],
 	) {
 		super(data, title)
 	}
@@ -22,13 +22,13 @@ class PdfTolak1 extends PdfPenindakan {
 		this.txt = {}
 
 		this.txt.pernyataan = `Kami yang bertanda tangan di bawah ini menyatakan bahwa ` +
-			`setelah dibacakan Surat Bukti Penindakan ${this.data.sbp.no_dok_lengkap} ` +
-			`tanggal ${this.data.sbp.tanggal_dokumen}.`
+			`setelah dibacakan Berita Acara Penolakan Tanda Tangan Surat Bukti Penindakan nomor ${this.data.tolak1.no_dok_lengkap} ` +
+			`tanggal ${this.data.tolak1.tanggal_dokumen}.`
 
 		this.txt.alasan = this.data.alasan || ''
 	}
 
-	writeText() 
+	writeText()
 	{
 		this.createHeader()
 		this.createNomor(this.jenis_dok, this.data.no_dok_lengkap)
@@ -44,7 +44,7 @@ class PdfTolak1 extends PdfPenindakan {
 
 		this.write('Saudara:')
 		this.break()
-		
+
 		this.write('Nama')
 		this.write(':', inds.cln)
 		this.write(data_orang.nama, inds.txt)
@@ -80,7 +80,7 @@ class PdfTolak1 extends PdfPenindakan {
 		this.write(data_orang.alamat, inds.txt)
 		this.break()
 
-		this.write('menolak untuk menandatangani Surat Bukti Penindakan tersebut di atas dengan alasan :')
+		this.write('menolak untuk menandatangani Berita Acara Penolakan Tanda Tangan Surat Bukti Penindakan tersebut di atas dengan alasan :')
 		this.break()
 
 		this.write(this.txt.alasan)
@@ -101,9 +101,9 @@ class PdfTolak1 extends PdfPenindakan {
 		// Saksi
 		this.ttd(
 			inds.ttd1,
-			'Pengangkut/Pemilik/Kuasanya/Saksi*',
+			'Saksi,',
 			undefined, 
-			this.data.penindakan.saksi.nama,
+			this.data.saksi.nama,
 		)
 
 		// Pejabat
@@ -134,4 +134,4 @@ class PdfTolak1 extends PdfPenindakan {
 	}
 }
 
-export default PdfTolak1
+export default PdfTolak2

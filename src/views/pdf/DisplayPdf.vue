@@ -61,6 +61,7 @@ import PdfLppiN from './intelijen/PdfLppiN'
 import PdfSbp from './penindakan/PdfSbp'
 import PdfLptp from './penindakan/PdfLptp'
 import PdfTolak1 from './penindakan/PdfTolak1'
+import PdfTolak2 from './penindakan/PdfTolak2'
 
 export default {
 	name: "DisplayPdf",
@@ -172,6 +173,10 @@ export default {
 
 				case 'tolak1':
 					pdf = new PdfTolak1(data_pdf)
+					break;
+
+				case 'tolak2':
+					pdf = new PdfTolak2(data_pdf)
 					break;
 
 				case 'lptp':
