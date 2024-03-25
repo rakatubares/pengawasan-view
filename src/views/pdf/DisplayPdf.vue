@@ -60,7 +60,7 @@ import PdfLppi from './intelijen/PdfLppi'
 import PdfLppiN from './intelijen/PdfLppiN'
 import PdfSbp from './penindakan/PdfSbp'
 import PdfLptp from './penindakan/PdfLptp'
-import PdfTolak1 from './intelijen/PdfTolak1'
+import PdfTolak1 from './penindakan/PdfTolak1'
 
 export default {
 	name: "DisplayPdf",

@@ -1,4 +1,4 @@
-import PdfPenindakan from "../penindakan/PdfPenindakan";
+import PdfPenindakan from "./PdfPenindakan";
 
 const inds = {
 	first: 20,
