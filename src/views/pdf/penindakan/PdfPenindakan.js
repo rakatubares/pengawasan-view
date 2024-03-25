@@ -5,13 +5,17 @@ class PdfPenindakan extends MyPdf {
 	{
 		let txt = {}
 
-		let nama = data ? data.nama_sarkut || '' : ''
-		let jenis = data 
+		txt.nama_sarkut = data ? data.nama_sarkut || '' : ''
+		txt.jenis_sarkut = data 
 			? data.jenis_sarkut
-				? `(${data.jenis_sarkut})` 
-				: '' 
 			: ''
-		txt.nama_sarkut = nama + ' ' + jenis
+		txt.nama_jenis_sarkut = txt.nama_sarkut != ''
+			? txt.jenis_sarkut != ''
+				? txt.nama_sarkut + ' / ' + txt.jenis_sarkut
+				: txt.nama_sarkut
+			: txt.jenis_sarkut != ''
+				? txt.jenis_sarkut
+				: ''
 
 		txt.nomor_sarkut = data ? data.nomor_sarkut || '' : ''
 
@@ -58,6 +62,26 @@ class PdfPenindakan extends MyPdf {
 				? data.item.length > 0
 					? data.item.length == 1
 						? `${data.item[0]['jumlah_barang']} ${data.item[0]['satuan']['satuan']} ${data.item[0]['uraian_barang']}`
+						: `${data.item.length} ITEM, LIHAT LAMPIRAN`
+					: ''
+				: ''
+			: ''
+
+		txt.komoditi = data
+			? data.item
+				? data.item.length > 0
+					? data.item.length == 1
+						? data.item[0]['uraian_barang']
+						: `${data.item.length} ITEM, LIHAT LAMPIRAN`
+					: ''
+				: ''
+			: ''
+
+		txt.jumlah = data
+			? data.item
+				? data.item.length > 0
+					? data.item.length == 1
+						? `${data.item[0]['jumlah_barang']} ${data.item[0]['satuan']['satuan']}`
 						: `${data.item.length} ITEM, LIHAT LAMPIRAN`
 					: ''
 				: ''
@@ -114,6 +138,13 @@ class PdfPenindakan extends MyPdf {
 				? data.entitas.tanggal_lahir
 				: ''
 			: ''
+		txt.jenis_kelamin = data
+			? data.entitas
+				? data.entitas.jenis_kelamin
+					? data.entitas.jenis_kelamin.uraian
+					: ''
+				: ''
+			: ''
 		txt.warga_negara = data
 			? data.entitas
 				? data.entitas.warga_negara
@@ -165,7 +196,7 @@ class PdfPenindakan extends MyPdf {
 
 		this.write('Nama dan Jenis Sarkut', this.inds.dtl)
 		this.write(':', this.inds.cln)
-		this.write(data_sarkut.nama_sarkut, this.inds.txt)
+		this.write(data_sarkut.nama_jenis_sarkut, this.inds.txt)
 		this.break()
 
 		this.write('No. Voy / Penerbangan / Trayek*', this.inds.dtl)

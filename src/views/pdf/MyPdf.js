@@ -152,7 +152,7 @@ class MyPdf {
 		
 		// Write document number
 		if (doc_no != null) {
-			this.write(doc_no, center, this.ln, 'center')
+			this.write(`Nomor : ${doc_no}`, center, this.ln, 'center')
 			this.break()
 		}
 
@@ -190,12 +190,12 @@ class MyPdf {
 		}
 	}
 	
-	cc(ccs)
+	cc(ccs, ind=undefined)
 	{
-		this.write('Tembusan:')
+		this.write('Tembusan:', ind)
 		this.break()
 		for (let i = 0; i < ccs.length; i++) {
-			this.write(`${i+1}. ${ccs[i]}`)
+			this.write(`${i+1}. ${ccs[i]}`, ind)
 			this.break()
 		}
 	}

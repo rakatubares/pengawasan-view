@@ -43,13 +43,13 @@ class PdfSbp extends PdfPenindakan {
 		this.txt.lokasi = this.data.penindakan.lokasi_penindakan || ''
 
 		// Uraian Penindakan
-		this.txt.uraian = this.data.uraian_penindakan || ''
+		this.txt.uraian = this.data.penindakan.uraian_penindakan || ''
 
 		// Alasan Penindakan
-		this.txt.alasan = this.data.alasan_penindakan || ''
+		this.txt.alasan = this.data.penindakan.alasan_penindakan || ''
 
 		// Jenis Palanggaran
-		this.txt.pelanggaran = this.data.jenis_pelanggaran || ''
+		this.txt.pelanggaran = this.data.penindakan.jenis_pelanggaran || ''
 
 		// Tindakan
 		this.txt.tindakan = 'Tindakan yang diambil : pemeriksaan dihentikan / diijinkan meneruskan perjalanan / '
@@ -57,21 +57,21 @@ class PdfSbp extends PdfPenindakan {
 			+ 'dibawa ke Kantor Bea dan Cukai tempat kedudukan penjabat penerbit Surat Perintah / diserahkan kepada PPNS Bea dan Cukai*.'
 
 		// Mulai
-		this.txt.mulai = this.data.tanggal_mulai_penindakan
-			? this.data.waktu_mulai_penindakan
-				? `${this.data.tanggal_mulai_penindakan} ${this.data.waktu_mulai_penindakan}`
+		this.txt.mulai = this.data.penindakan.tanggal_mulai_penindakan
+			? this.data.penindakan.waktu_mulai_penindakan
+				? `${this.data.penindakan.tanggal_mulai_penindakan} ${this.data.penindakan.waktu_mulai_penindakan}`
 				: ''
 			: ''
 
 		// Selesai
-		this.txt.selesai = this.data.tanggal_selesai_penindakan
-			? this.data.waktu_selesai_penindakan
-				? `${this.data.tanggal_selesai_penindakan} ${this.data.waktu_selesai_penindakan}`
+		this.txt.selesai = this.data.penindakan.tanggal_selesai_penindakan
+			? this.data.penindakan.waktu_selesai_penindakan
+				? `${this.data.penindakan.tanggal_selesai_penindakan} ${this.data.penindakan.waktu_selesai_penindakan}`
 				: ''
 			: ''
 
 		// Hal Terjadi
-		this.txt.hal_terjadi = this.data.hal_terjadi || ''
+		this.txt.hal_terjadi = this.data.penindakan.hal_terjadi || ''
 
 		// Keterangan
 		this.txt.keterangan = 'Yang dimaksud dengan "barang yang dikuasai negara" adalah '
@@ -180,17 +180,17 @@ class PdfSbp extends PdfPenindakan {
 			inds.ttd2,
 			'Pejabat yang melakukan penindakan,',
 			undefined, 
-			this.data.petugas.petugas1.name,
-			this.data.petugas.petugas1.nip,
+			this.data.penindakan.petugas.petugas1.name,
+			this.data.penindakan.petugas.petugas1.nip,
 		)
 
-		if (this.data.petugas.petugas2) {
+		if (this.data.penindakan.petugas.petugas2) {
 			this.ttd(
 				inds.ttd2,
 				undefined,
 				undefined, 
-				this.data.petugas.petugas2.name,
-				this.data.petugas.petugas2.nip,
+				this.data.penindakan.petugas.petugas2.name,
+				this.data.penindakan.petugas.petugas2.nip,
 				3,
 			)	
 		}
