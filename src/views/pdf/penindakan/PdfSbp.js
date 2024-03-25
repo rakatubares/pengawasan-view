@@ -24,7 +24,7 @@ class PdfSbp extends PdfPenindakan {
 	{
 		this.prepareDocDate(this.data.tanggal_dokumen)
 		let tgl_sprint = this.prepareDate(this.data.penindakan.sprint.tanggal_sprint)
-		this.tgl_sprint = tgl_sprint['tgl']
+		this.tgl_sprint = tgl_sprint['short_tgl']
 		this.full_tgl_sprint = tgl_sprint['full_tgl']
 
 		this.txt = {}

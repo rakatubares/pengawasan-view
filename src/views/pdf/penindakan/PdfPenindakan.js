@@ -1,6 +1,30 @@
 import MyPdf from "../MyPdf";
 
 class PdfPenindakan extends MyPdf {
+	opening()
+	{
+		let tgl_penindakan = this.data.penindakan.tanggal_selesai_penindakan
+			? this.prepareDate(this.data.penindakan.tanggal_selesai_penindakan)
+			: ''
+
+		let tgl_sprint = this.data.penindakan.sprint
+			? this.data.penindakan.sprint.tanggal_sprint
+				? this.prepareDate(this.data.penindakan.sprint.tanggal_sprint)
+				: ''
+			: ''
+
+		let jabatan = this.data.penindakan.sprint
+			? this.data.penindakan.sprint.pejabat.jabatan || ''
+			: ''
+
+		let txt = [
+			`  Pada hari ini ${tgl_penindakan.hr} tanggal ${tgl_penindakan.tgl} bulan ${tgl_penindakan.bln} tahun ${tgl_penindakan.thn}.`,
+			`Berdasarkan Surat Perintah : ${jabatan} Nomor ${this.data.penindakan.sprint.nomor_sprint} Tanggal ${tgl_sprint.short_tgl}.`
+		]
+
+		return txt
+	}
+
 	convertSarkut(data) 
 	{
 		let txt = {}
@@ -133,16 +157,33 @@ class PdfPenindakan extends MyPdf {
 				? data.entitas.nama
 				: ''
 			: ''
+		txt.tempat_lahir = data
+			? data.entitas
+				? data.entitas.tempat_lahir
+				: ''
+			: ''	
 		txt.tanggal_lahir = data
 			? data.entitas
 				? data.entitas.tanggal_lahir
 				: ''
 			: ''
+		txt.ttl = txt.tempat_lahir != ''
+			? txt.tanggal_lahir != ''
+				? `${txt.tempat_lahir} / ${txt.tanggal_lahir}`
+				: txt.tempat_lahir
+			: txt.tanggal_lahir != ''
+				? txt.tanggal_lahir
+				: ''
 		txt.jenis_kelamin = data
 			? data.entitas
 				? data.entitas.jenis_kelamin
 					? data.entitas.jenis_kelamin.uraian
 					: ''
+				: ''
+			: ''
+		txt.agama = data
+			? data.entitas
+				? data.entitas.agama
 				: ''
 			: ''
 		txt.warga_negara = data
@@ -159,6 +200,11 @@ class PdfPenindakan extends MyPdf {
 					: data.entitas.alamat_tinggal
 						? this.converters.string(data.entitas.alamat_tinggal)
 						: ''
+				: ''
+			: ''
+		txt.pekerjaan = data
+			? data.entitas
+				? data.entitas.pekerjaan
 				: ''
 			: ''
 

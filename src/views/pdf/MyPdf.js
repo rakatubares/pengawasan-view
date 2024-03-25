@@ -169,10 +169,16 @@ class MyPdf {
 		this.thn = this.tgl_dok != null ? converters.numTerbilang(this.tgl_dok.getFullYear()) : ''
 	}
 
-	prepareDate(tgl_sprint) {
-		let tgl = converters.date(tgl_sprint, 'DD-MM-YYYY')
-		let full_tgl = converters.fullDate(tgl)
-		return {'tgl': tgl, 'full_tgl': full_tgl}
+	prepareDate(tgl) {
+		let data = {}
+		let date = converters.date(tgl, 'DD-MM-YYYY')
+		data.short_tgl = tgl
+		data.full_tgl = converters.fullDate(date)
+		data.hr = tgl != null ? converters.weekDay(date) : ''
+		data.tgl = tgl != null ? converters.numTerbilang(date.getDate()) : ''
+		data.bln = tgl != null ? converters.monthName(date) : ''
+		data.thn = tgl != null ? converters.numTerbilang(date.getFullYear()) : ''
+		return data
 	}
 
 	ttd(x, jabatan=null, tipe_ttd='', nama, nip=null, breaks=4)
