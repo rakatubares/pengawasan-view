@@ -157,6 +157,11 @@ class PdfPenindakan extends MyPdf {
 				? data.entitas.nama
 				: ''
 			: ''
+		txt.alias = data
+			? data.entitas
+				? data.entitas.alias
+				: ''
+			: ''
 		txt.tempat_lahir = data
 			? data.entitas
 				? data.entitas.tempat_lahir
@@ -193,15 +198,21 @@ class PdfPenindakan extends MyPdf {
 					: ''
 				: ''
 			: ''
-		txt.alamat = data
+		txt.alamat_tinggal = data
 			? data.entitas
-				? data.entitas.alamat_identitas
-					? this.converters.string(data.entitas.alamat_identitas)
-					: data.entitas.alamat_tinggal
-						? this.converters.string(data.entitas.alamat_tinggal)
-						: ''
+				? this.converters.string(data.entitas.alamat_tinggal) || ''
 				: ''
 			: ''
+		txt.alamat_identitas = data
+			? data.entitas
+				? this.converters.string(data.entitas.alamat_identitas) || ''
+				: ''
+			: ''
+		txt.alamat = txt.alamat_tinggal != ''
+			? txt.alamat_tinggal
+			: txt.alamat_identitas != ''
+				? txt.alamat_identitas
+				: ''
 		txt.pekerjaan = data
 			? data.entitas
 				? data.entitas.pekerjaan
@@ -209,20 +220,32 @@ class PdfPenindakan extends MyPdf {
 			: ''
 
 		txt.identitas = ''
+		txt.penerbit_identitas = ''
 		if (data) {
 			if (data.entitas) {
 				if (data.entitas.identitas.length > 0) {
 					let identitas = data.entitas.identitas.filter(function (id) {
-						if (id['jenis'] == 'NPWP') {
+						if (id['jenis'] == 'KTP') {
+							return id
+						} else if (id['jenis'] == 'PASPOR') {
 							return id
 						}
 					})
 	
 					if (identitas.length > 0) {
-						txt.identitas = `${identitas[0]['jenis']} ${identitas[0]['nomor']}`
+						var selected_identitas = identitas[0]
 					} else {
-						txt.identitas = `${data.entitas.identitas[0].jenis} ${data.entitas.identitas[0].nomor}`
+						var selected_identitas = data.entitas.identitas[0]
 					}
+
+					txt.identitas = `${selected_identitas['jenis']} ${selected_identitas['nomor']}`
+					txt.penerbit_identitas = selected_identitas.tempat_penerbitan
+						? selected_identitas.pejabat_penerbit
+							? `${selected_identitas.tempat_penerbitan} / ${selected_identitas.pejabat_penerbit}`
+							: selected_identitas.tempat_penerbitan
+						: selected_identitas.pejabat_penerbit
+							? selected_identitas.pejabat_penerbit
+							: ''
 				}	
 			}
 		}

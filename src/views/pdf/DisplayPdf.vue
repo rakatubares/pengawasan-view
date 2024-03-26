@@ -60,6 +60,7 @@ import PdfLppi from './intelijen/PdfLppi'
 import PdfLppiN from './intelijen/PdfLppiN'
 import PdfSbp from './penindakan/PdfSbp'
 import PdfLptp from './penindakan/PdfLptp'
+import PdfRiksaBadan from './penindakan/PdfRiksaBadan'
 import PdfTolak1 from './penindakan/PdfTolak1'
 import PdfTolak2 from './penindakan/PdfTolak2'
 
@@ -165,6 +166,10 @@ export default {
 
 				case 'lap':
 					pdf = new PdfLap(data_pdf)
+					break;
+
+				case 'riksa_badan':
+					pdf = new PdfRiksaBadan(data_pdf)
 					break;
 
 				case 'sbp':
