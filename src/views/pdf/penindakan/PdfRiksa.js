@@ -8,6 +8,8 @@ const inds = {
 	txt2: 53,
 	cln3: 60,
 	txt3: 63,
+	cln4: 30,
+	txt4: 33,
 	ttd1: 17,
 	ttd2: 127,
 	lamp: 140
@@ -129,11 +131,23 @@ class PdfRiksa extends PdfPenindakan {
 		////// LAMPIRAN //////
 		if (this.data.penindakan.objek.barang) {
 			if (this.data.penindakan.objek.barang.item.length > 1) {
-				this.pdf.setFont('Helvetica', 'normal')
 				this.pdf.addPage()
+				this.pdf.setFontSize(this.font_size)
+				this.pdf.setFont('Helvetica', 'normal')
 
 				// Header
-				this.headerLampiran()
+				// this.headerLampiran()
+				this.ln = 10
+				this.write('Lampiran Berita Acara Pemeriksaan')
+				this.break()
+				this.write('Nomor')
+				this.write(':', inds.cln4)
+				this.write(this.data.no_dok_lengkap, inds.txt4)
+				this.break()
+				this.write('Tanggal')
+				this.write(':', inds.cln4)
+				this.write(this.full_tgl_dok, inds.txt4)
+				this.break(2)
 				
 				// Tabel barang
 				this.pdf.setFont('Helvetica', 'bold')
@@ -142,7 +156,42 @@ class PdfRiksa extends PdfPenindakan {
 				this.pdf.setFont('Helvetica', 'normal')
 				this.write('Hasil pemeriksaan kedapatan:')
 				this.break()
-				this.tabelBarang(this.data.penindakan.objek.barang.item)
+				let table_height = this.tabelBarang(this.data.penindakan.objek.barang.item)
+
+				this.ln = table_height
+				this.break(2)
+				let ln_ttd = this.ln
+
+				// Saksi
+				this.ttd(
+					inds.ttd1,
+					'Pemilik/Importir/Eksportir/Kuasanya/Saksi*,',
+					undefined,
+					data_saksi.nama,
+				)
+				this.break()
+
+				// Pejabat
+				this.ln = ln_ttd
+				this.ttd(
+					inds.ttd2,
+					'Pejabat yang melakukan pemeriksaan,',
+					undefined, 
+					this.data.penindakan.petugas.petugas1.name,
+					this.data.penindakan.petugas.petugas1.nip,
+				)
+
+				if (this.data.penindakan.petugas.petugas2) {
+					this.break()
+					this.ttd(
+						inds.ttd2,
+						undefined,
+						undefined, 
+						this.data.penindakan.petugas.petugas2.name,
+						this.data.penindakan.petugas.petugas2.nip,
+						3,
+					)	
+				}
 
 				// Statement jumlah lampiran
 				let totalPages = this.pdf.internal.getNumberOfPages();
