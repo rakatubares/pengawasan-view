@@ -197,6 +197,11 @@ class PdfRiksaBadan extends PdfPenindakan {
 				3,
 			)	
 		}
+
+		////// KETERANGAN //////
+		this.pdf.setFont('Helvetica', 'italic')
+		this.pdf.setFontSize('7')
+		this.write('*Coret yang tidak perlu')
 	}
 
 	writeData(lbl, data)

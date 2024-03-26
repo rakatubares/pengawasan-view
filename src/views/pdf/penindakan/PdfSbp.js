@@ -102,10 +102,10 @@ class PdfSbp extends PdfPenindakan {
 		this.write('Obyek Penindakan:', inds.alp)
 		this.break()
 
-		this.writeSarkut(this.data.penindakan.objek.sarkut)
-		this.writeBarang(this.data.penindakan.objek.barang)
-		this.writeBangunan(this.data.penindakan.objek.bangunan)
-		this.writeBadan(this.data.penindakan.objek.badan)
+		this.writeSarkut(this.data.penindakan.objek.sarkut, true)
+		this.writeBarang(this.data.penindakan.objek.barang, true)
+		this.writeBangunan(this.data.penindakan.objek.bangunan, true)
+		this.writeBadan(this.data.penindakan.objek.badan, true)
 
 		// Lokasi
 		this.write('4.')

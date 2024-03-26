@@ -52,15 +52,16 @@ import PdfLap from './penindakan/PdfLap'
 import PdfLi from './penindakan/PdfLi'
 import PdfLkai from './intelijen/PdfLkai'
 import PdfLkaiN from './intelijen/PdfLkaiN'
+import PdfLppi from './intelijen/PdfLppi'
+import PdfLppiN from './intelijen/PdfLppiN'
+import PdfLptp from './penindakan/PdfLptp'
 import PdfNhi from './intelijen/PdfNhi'
 import PdfNhiN from './intelijen/PdfNhiN'
 import PdfNi from './intelijen/PdfNi'
 import PdfNiN from './intelijen/PdfNiN'
-import PdfLppi from './intelijen/PdfLppi'
-import PdfLppiN from './intelijen/PdfLppiN'
-import PdfSbp from './penindakan/PdfSbp'
-import PdfLptp from './penindakan/PdfLptp'
+import PdfRiksa from './penindakan/PdfRiksa'
 import PdfRiksaBadan from './penindakan/PdfRiksaBadan'
+import PdfSbp from './penindakan/PdfSbp'
 import PdfTolak1 from './penindakan/PdfTolak1'
 import PdfTolak2 from './penindakan/PdfTolak2'
 
@@ -170,6 +171,10 @@ export default {
 
 				case 'riksa_badan':
 					pdf = new PdfRiksaBadan(data_pdf)
+					break;
+
+				case 'riksa':
+					pdf = new PdfRiksa(data_pdf)
 					break;
 
 				case 'sbp':

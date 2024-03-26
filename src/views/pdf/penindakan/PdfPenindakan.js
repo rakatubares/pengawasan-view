@@ -47,11 +47,9 @@ class PdfPenindakan extends MyPdf {
 		let satuan_kapasitas = data ? data.satuan_kapasitas || '' : ''
 		txt.kapasitas = jumlah_kapasitas + ' ' + satuan_kapasitas
 
-		txt.pengemudi = data
-			? data.pengemudi
-				? data.pengemudi.nama
-				: ''
-			: ''
+		let pengemudi = data ? this.convertBadan({entitas: data.pengemudi}) : {nama: '', identitas: ''}
+		txt.pengemudi = pengemudi.nama
+		txt.identitas_pengemudi = pengemudi.identitas
 
 		txt.bendera = data
 			? data.bendera
@@ -120,11 +118,9 @@ class PdfPenindakan extends MyPdf {
 			: ''
 		txt.dokumen = `${jenis_dokumen} ${nomor_dokumen} ${tanggal_dokumen}`
 
-		txt.pemilik = data
-			? data.pemilik
-				? data.pemilik.nama
-				: ''
-			: ''
+		let pemilik = data ? this.convertBadan({entitas: data.pemilik}) : {nama: '', identitas: ''}
+		txt.pemilik = pemilik.nama
+		txt.identitas_pemilik = pemilik.identitas
 
 		return txt
 	}
@@ -139,11 +135,10 @@ class PdfPenindakan extends MyPdf {
 				: ''
 			: ''
 		txt.no_reg = data ? data.no_reg || '' : ''
-		txt.pemilik = data
-			? data.pemilik
-				? data.pemilik.nama
-				: ''
-			: ''
+
+		let pemilik = data ? this.convertBadan({entitas: data.pemilik}) : {nama: '', identitas: ''}
+		txt.pemilik = pemilik.nama
+		txt.identitas_pemilik = pemilik.identitas
 
 		return txt
 	}
@@ -253,13 +248,17 @@ class PdfPenindakan extends MyPdf {
 		return txt
 	}
 
-	writeSarkut(data) 
+	writeSarkut(data, sbp=false) 
 	{
 		let data_sarkut = this.convertSarkut(data)
 
 		this.pdf.setFont('Helvetica', 'bold')
-		this.write('a.', this.inds.alp)
-		this.write('Sarana Pengangkut* :', this.inds.dtl)
+		if (sbp) {
+			this.write('a.', this.inds.alp)
+			this.write('Sarana Pengangkut* :', this.inds.dtl)	
+		} else {
+			this.write('Sarana Pengangkut:', this.inds.dtl)
+		}
 		this.pdf.setFont('Helvetica', 'normal')
 		this.break()
 
@@ -283,6 +282,13 @@ class PdfPenindakan extends MyPdf {
 		this.write(data_sarkut.pengemudi, this.inds.txt)
 		this.break()
 
+		if (!sbp) {
+			this.write('Nomor Identitas', this.inds.dtl)
+			this.write(':', this.inds.cln)
+			this.write(data_sarkut.identitas_pengemudi, this.inds.txt)
+			this.break()
+		}
+
 		this.write('Bendera', this.inds.dtl)
 		this.write(':', this.inds.cln)
 		this.write(data_sarkut.bendera, this.inds.txt)
@@ -294,13 +300,17 @@ class PdfPenindakan extends MyPdf {
 		this.break()
 	}
 
-	writeBarang(data) 
+	writeBarang(data, sbp=false) 
 	{
 		let data_barang = this.convertBarang(data)
 
 		this.pdf.setFont('Helvetica', 'bold')
-		this.write('b.', this.inds.alp)
-		this.write('Barang* :', this.inds.dtl)
+		if (sbp) {
+			this.write('b.', this.inds.alp)
+			this.write('Barang* :', this.inds.dtl)	
+		} else {
+			this.write('Barang:', this.inds.dtl)
+		}
 		this.pdf.setFont('Helvetica', 'normal')
 		this.break()
 
@@ -325,24 +335,35 @@ class PdfPenindakan extends MyPdf {
 		this.write(':', this.inds.cln)
 		this.write(data_barang.pemilik, this.inds.txt)
 		this.break()
+
+		if (!sbp) {
+			this.write('Nomor Identitas', this.inds.dtl)
+			this.write(':', this.inds.cln)
+			this.write(data_barang.identitas_pemilik, this.inds.txt)
+			this.break()
+		}
 	}
 
-	writeBangunan(data) 
+	writeBangunan(data, sbp=false) 
 	{
 		let data_bangunan = this.convertBangunan(data)
 
 		this.pdf.setFont('Helvetica', 'bold')
-		this.write('c.', this.inds.alp)
-		this.write('Bangunan* :', this.inds.dtl)
+		if (sbp) {
+			this.write('c.', this.inds.alp)
+			this.write('Bangunan* :', this.inds.dtl)	
+		} else {
+			this.write('Bangunan:', this.inds.dtl)
+		}
 		this.pdf.setFont('Helvetica', 'normal')
 		this.break()
 
-		this.write('Alamat', this.inds.dtl)
+		this.write('Alamat Bangunan / Tempat', this.inds.dtl)
 		this.write(':', this.inds.cln)
 		this.write(data_bangunan.alamat, this.inds.txt)
 		this.break()
 
-		this.write('No Reg Bangunan / NPPBKC / dll.', this.inds.dtl)
+		this.write('No Reg Bangunan / NPPBKC / NPWP / dll.', this.inds.dtl)
 		this.write(':', this.inds.cln)
 		this.write(data_bangunan.no_reg, this.inds.txt)
 		this.break()
@@ -351,9 +372,16 @@ class PdfPenindakan extends MyPdf {
 		this.write(':', this.inds.cln)
 		this.write(data_bangunan.pemilik, this.inds.txt)
 		this.break()
+
+		if (!sbp) {
+			this.write('Nomor Identitas', this.inds.dtl)
+			this.write(':', this.inds.cln)
+			this.write(data_bangunan.identitas_pemilik, this.inds.txt)
+			this.break()
+		}
 	}
 
-	writeBadan(data)
+	writeBadan(data, sbp=false)
 	{
 		let data_badan = this.convertBadan(data)
 
