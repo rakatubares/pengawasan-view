@@ -253,12 +253,8 @@ class PdfPenindakan extends MyPdf {
 		let data_sarkut = this.convertSarkut(data)
 
 		this.pdf.setFont('Helvetica', 'bold')
-		if (sbp) {
-			this.write('a.', this.inds.alp)
-			this.write('Sarana Pengangkut* :', this.inds.dtl)	
-		} else {
-			this.write('Sarana Pengangkut:', this.inds.dtl)
-		}
+		this.write('a.', this.inds.alp)
+		this.write('Sarana Pengangkut:', this.inds.dtl)	
 		this.pdf.setFont('Helvetica', 'normal')
 		this.break()
 
@@ -305,12 +301,8 @@ class PdfPenindakan extends MyPdf {
 		let data_barang = this.convertBarang(data)
 
 		this.pdf.setFont('Helvetica', 'bold')
-		if (sbp) {
-			this.write('b.', this.inds.alp)
-			this.write('Barang* :', this.inds.dtl)	
-		} else {
-			this.write('Barang:', this.inds.dtl)
-		}
+		this.write('b.', this.inds.alp)
+		this.write('Barang:', this.inds.dtl)
 		this.pdf.setFont('Helvetica', 'normal')
 		this.break()
 
@@ -349,12 +341,8 @@ class PdfPenindakan extends MyPdf {
 		let data_bangunan = this.convertBangunan(data)
 
 		this.pdf.setFont('Helvetica', 'bold')
-		if (sbp) {
-			this.write('c.', this.inds.alp)
-			this.write('Bangunan* :', this.inds.dtl)	
-		} else {
-			this.write('Bangunan:', this.inds.dtl)
-		}
+		this.write('c.', this.inds.alp)
+		this.write('Bangunan:', this.inds.dtl)
 		this.pdf.setFont('Helvetica', 'normal')
 		this.break()
 
@@ -387,7 +375,7 @@ class PdfPenindakan extends MyPdf {
 
 		this.pdf.setFont('Helvetica', 'bold')
 		this.write('d.', this.inds.alp)
-		this.write('Badan* :', this.inds.dtl)
+		this.write('Badan:', this.inds.dtl)
 		this.pdf.setFont('Helvetica', 'normal')
 		this.break()
 
@@ -415,6 +403,33 @@ class PdfPenindakan extends MyPdf {
 		this.write(':', this.inds.cln)
 		this.write(data_badan.identitas, this.inds.txt)
 		this.break()
+	}
+
+	writeSaksi(data) 
+	{
+		let data_saksi = this.convertBadan({entitas: data})
+		this.write('Pemeriksaan disaksikan oleh pengangkut/pemilik/importir/eksportir atau kuasanya/ketua lingkungan/dll*:')
+		this.break()
+
+		this.write('Nama')
+		this.write(':', this.inds.cln_saksi)
+		this.write(data_saksi.nama, this.inds.txt_saksi)
+		this.break()
+
+		this.write('Alamat')
+		this.write(':', this.inds.cln_saksi)
+		this.write(data_saksi.alamat, this.inds.txt_saksi)
+		this.break()
+
+		this.write('Pekerjaan')
+		this.write(':', this.inds.cln_saksi)
+		this.write(data_saksi.pekerjaan, this.inds.txt_saksi)
+		this.break()
+
+		this.write('Nomor Identitas')
+		this.write(':', this.inds.cln_saksi)
+		this.write(data_saksi.identitas, this.inds.txt_saksi)
+		this.break(1)
 	}
 }
 

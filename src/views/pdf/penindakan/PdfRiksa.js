@@ -1,15 +1,15 @@
 import PdfPenindakan from "./PdfPenindakan";
 
 const inds = {
-	dtl: undefined,
-	cln: 95,
-	txt: 98,
-	cln2: 50,
-	txt2: 53,
-	cln3: 60,
-	txt3: 63,
-	cln4: 30,
-	txt4: 33,
+	dtl: 15,
+	cln: 85,
+	txt: 88,
+	cln2: 45,
+	txt2: 48,
+	cln_saksi: 45,
+	txt_saksi: 48,
+	cln_lamp: 30,
+	txt_lamp: 33,
 	ttd1: 17,
 	ttd2: 127,
 	lamp: 140
@@ -28,9 +28,7 @@ class PdfRiksa extends PdfPenindakan {
 		this.prepareDocDate(this.data.tanggal_dokumen)
 
 		this.txt = {}
-
 		this.txt.lokasi = this.data.penindakan.lokasi_penindakan || ''
-
 	}
 
 	writeText()
@@ -59,29 +57,7 @@ class PdfRiksa extends PdfPenindakan {
 		this.break()
 
 		///// Saksi /////
-		let data_saksi = this.convertBadan({entitas: this.data.penindakan.saksi})
-		this.write('Pemeriksaan disaksikan oleh pengangkut/pemilik/importir/eksportir atau kuasanya/ketua lingkungan/dll*:')
-		this.break()
-
-		this.write('Nama')
-		this.write(':', inds.cln3)
-		this.write(data_saksi.nama, inds.txt3)
-		this.break()
-
-		this.write('Alamat')
-		this.write(':', inds.cln3)
-		this.write(data_saksi.alamat, inds.txt3)
-		this.break()
-
-		this.write('Pekerjaan')
-		this.write(':', inds.cln3)
-		this.write(data_saksi.pekerjaan, inds.txt3)
-		this.break()
-
-		this.write('Identitas (KTP/SIM/Paspor*)')
-		this.write(':', inds.cln3)
-		this.write(data_saksi.identitas, inds.txt3)
-		this.break()
+		this.writeSaksi(this.data.penindakan.saksi)
 
 		this.write('Demikian Berita Acara ini dibuat dengan sebenarnya.', inds.ttd1)
 		this.break(1)
@@ -97,7 +73,7 @@ class PdfRiksa extends PdfPenindakan {
 			inds.ttd1,
 			'Pemilik/Importir/Eksportir/Kuasanya/Saksi*,',
 			undefined,
-			data_saksi.nama,
+			this.data.penindakan.saksi.nama,
 		)
 		this.break()
 
@@ -141,12 +117,12 @@ class PdfRiksa extends PdfPenindakan {
 				this.write('Lampiran Berita Acara Pemeriksaan')
 				this.break()
 				this.write('Nomor')
-				this.write(':', inds.cln4)
-				this.write(this.data.no_dok_lengkap, inds.txt4)
+				this.write(':', inds.cln_lamp)
+				this.write(this.data.no_dok_lengkap, inds.txt_lamp)
 				this.break()
 				this.write('Tanggal')
-				this.write(':', inds.cln4)
-				this.write(this.full_tgl_dok, inds.txt4)
+				this.write(':', inds.cln_lamp)
+				this.write(this.full_tgl_dok, inds.txt_lamp)
 				this.break(2)
 				
 				// Tabel barang
@@ -167,7 +143,7 @@ class PdfRiksa extends PdfPenindakan {
 					inds.ttd1,
 					'Pemilik/Importir/Eksportir/Kuasanya/Saksi*,',
 					undefined,
-					data_saksi.nama,
+					this.data.penindakan.saksi.nama
 				)
 				this.break()
 
