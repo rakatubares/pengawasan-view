@@ -405,10 +405,10 @@ class PdfPenindakan extends MyPdf {
 		this.break()
 	}
 
-	writeSaksi(data) 
+	writeSaksi(data, tindakan='') 
 	{
 		let data_saksi = this.convertBadan({entitas: data})
-		this.write('Pemeriksaan disaksikan oleh pengangkut/pemilik/importir/eksportir atau kuasanya/ketua lingkungan/dll*:')
+		this.write(`${tindakan} disaksikan oleh pengangkut/pemilik/importir/eksportir atau kuasanya/ketua lingkungan/dll*:`)
 		this.break()
 
 		this.write('Nama')

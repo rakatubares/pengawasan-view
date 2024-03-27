@@ -62,6 +62,7 @@ import PdfNiN from './intelijen/PdfNiN'
 import PdfRiksa from './penindakan/PdfRiksa'
 import PdfRiksaBadan from './penindakan/PdfRiksaBadan'
 import PdfSbp from './penindakan/PdfSbp'
+import PdfSegel from './penindakan/PdfSegel'
 import PdfTegah from './penindakan/PdfTegah'
 import PdfTolak1 from './penindakan/PdfTolak1'
 import PdfTolak2 from './penindakan/PdfTolak2'
@@ -180,6 +181,10 @@ export default {
 
 				case 'tegah':
 					pdf = new PdfTegah(data_pdf)
+					break;
+
+				case 'segel':
+					pdf = new PdfSegel(data_pdf)
 					break;
 
 				case 'sbp':

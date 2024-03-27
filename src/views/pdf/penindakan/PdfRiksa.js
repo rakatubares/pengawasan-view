@@ -57,7 +57,7 @@ class PdfRiksa extends PdfPenindakan {
 		this.break()
 
 		///// Saksi /////
-		this.writeSaksi(this.data.penindakan.saksi)
+		this.writeSaksi(this.data.penindakan.saksi, 'Pemeriksaan')
 
 		this.write('Demikian Berita Acara ini dibuat dengan sebenarnya.', inds.ttd1)
 		this.break(1)

@@ -13,10 +13,10 @@ const inds = {
 	lamp: 140
 }
 
-class PdfTegah extends PdfPenindakan {
+class PdfSegel extends PdfPenindakan {
 	constructor(
 		data,
-		title = 'BERITA ACARA PENEGAHAN',
+		title = 'BERITA ACARA PENYEGELAN',
 	) {
 		super(data, title, inds)
 	}
@@ -24,6 +24,19 @@ class PdfTegah extends PdfPenindakan {
 	generateText()
 	{
 		this.prepareDocDate(this.data.tanggal_dokumen)
+
+		this.txt = {}
+
+		let jenis = this.data.jenis_segel || '     '
+		let jumlah = this.data.jumlah_segel
+			? this.data.satuan_segel
+				? `${this.data.jumlah_segel} ${this.converters.numTerbilang(this.data.jumlah_segel)} ${this.data.satuan_segel}`
+				: this.data.jumlah_segel
+			: '     '
+		let nomor = this.data.nomor_segel || '     '
+		let tempat = this.data.tempat_segel || '     '
+		this.txt.segel = `dengan menggunakan segel / tanda pengaman ${jenis} `
+			+ `sebanyak ${jumlah} Nomor ${nomor} penempatan / pelekatan segel sebagai berikut ${tempat}`
 	}
 
 	writeText()
@@ -33,13 +46,20 @@ class PdfTegah extends PdfPenindakan {
 
 		this.write(this.opening())
 		this.break()
-		this.write('Kami yang bertanda tangan di bawah ini dalam rangka pengamanan hak-hak negara, telah melakukan penegahan terhadap:')
+		this.write('Kami yang bertanda tangan di bawah ini telah melakukan penyegelan atas:')
 		this.break()
 
 		this.writeSarkut(this.data.penindakan.objek.sarkut)
 		this.writeBarang(this.data.penindakan.objek.barang)
+		this.writeBangunan(this.data.penindakan.objek.bangunan)
 
-		this.writeSaksi(this.data.penindakan.saksi, 'Penegahan')
+		this.write(this.txt.segel)
+		this.break()
+
+		this.writeSaksi(this.data.penindakan.saksi, 'Penyegelan')
+
+		this.write('Demikian Berita Acara ini dibuat dengan sebenarnya.', inds.ttd1)
+		this.break(1)
 
 		///// TTD /////
 		this.write(`Tangerang, ${this.full_tgl_dok}`, inds.ttd2)
@@ -79,16 +99,8 @@ class PdfTegah extends PdfPenindakan {
 		}
 
 		////// KETERANGAN //////
-		this.break()
 		this.pdf.setFont('Helvetica', 'italic')
 		this.pdf.setFontSize('7')
-		let txt_kewenangan = 'Penegahan merupakan kewenangan administratif berdasarkan '
-			+ 'Pasal 77 Undang-Undang nomor 10 tahun 1995 sebagaimana diubah terakhir dengan '
-			+ 'Undang-Undang nomor 17 tahun 2006 tentang Kepabeanan dan '
-			+ 'Pasal 33 Undang-Undang nomor 11 tahun 1995 sebagaimana diubah terakhir dengan '
-			+ 'Undang-Undang nomor 39 tahun 2007 tentang Cukai.'
-		this.write(txt_kewenangan)
-		this.break(1)
 		this.write('*Coret yang tidak perlu')
 
 		////// LAMPIRAN //////
@@ -105,4 +117,4 @@ class PdfTegah extends PdfPenindakan {
 	}
 }
 
-export default PdfTegah
+export default PdfSegel
