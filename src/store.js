@@ -15,6 +15,7 @@ const state = {
   klasifikasiSurat: ['RAHASIA', 'SANGAT RAHASIA'],
   kategoriBarang: null,
   kategoriPelanggaran: null,
+  kemasan: null,
   satuanBarang: null,
   skemaPenindakan: null,
 }
@@ -43,6 +44,7 @@ const getters = {
 	klasifikasiSurat: state => { return state.klasifikasiSurat },
 	kategoriBarang: state => { return state.kategoriBarang },
 	kategoriPelanggaran: state => { return state.kategoriPelanggaran },
+	kemasan: state => { return state.kemasan },
 	satuanBarang: state => { return state.satuanBarang },
 	skemaPenindakan: state => { return state.skemaPenindakan },
 }

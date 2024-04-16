@@ -40,9 +40,15 @@ class PdfLptp extends PdfPenindakan {
 		this.txt.tempus_tanggal = this.data.penindakan.tanggal_selesai_penindakan || '-'
 		this.txt.tempus_jam = this.data.penindakan.waktu_selesai_penindakan || '-'
 
-		let kategori = this.data.penindakan.kategori_penindakan.kategori || '-'
-		let uraian = this.data.penindakan.uraian_penindakan || '-'
-		this.txt.kategori_uraian = `${kategori} / ${uraian}`
+		let kategori = this.data.penindakan.kategori_penindakan
+			? this.data.penindakan.kategori_penindakan.kategori || ''
+			: ''
+		let uraian = this.data.penindakan.uraian_penindakan || ''
+		this.txt.kategori_uraian = kategori != ''
+			? uraian != ''
+				? `${kategori} / ${uraian}` : kategori
+			: uraian != ''
+				? uraian : '-'
 
 		this.txt.nomor_sbp = this.data.sbp.no_dok_lengkap || ''
 		this.txt.tanggal_sbp = this.data.sbp.tanggal_dokumen || ''

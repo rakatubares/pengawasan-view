@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<div class="wrapper">
 		<MyModalDoc
 			title="Data BA Buka Tanda Pengaman"
@@ -93,4 +93,4 @@ export default {
 </script>
 
 <style>
-</style>
+</style> -->

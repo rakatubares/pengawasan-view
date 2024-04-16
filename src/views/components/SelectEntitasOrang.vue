@@ -14,6 +14,7 @@
 							:items.sync="entity_options"
 							item-text="nama"
 							item-value="id"
+							:disabled.sync="disabled"
 						>
 							<template v-slot:append-outer>
 								<CButton 
@@ -162,6 +163,10 @@ export default {
 			default: false
 		},
 		showAlamat: {
+			type: Boolean,
+			default: false
+		},
+		disabled: {
 			type: Boolean,
 			default: false
 		},

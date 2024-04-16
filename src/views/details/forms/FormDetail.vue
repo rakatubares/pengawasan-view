@@ -67,9 +67,9 @@
 <script>
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
-import MyFormBadan from './FormDetailBadan.vue'
-import MyFormBangunan from './FormDetailBangunan.vue'
-import MyFormBarang from './FormDetailBarang.vue'
+import MyFormBadan from './FormBadan.vue'
+import MyFormBangunan from './FormBangunan.vue'
+import MyFormBarang from './FormBarang.vue'
 import MyFormDokumen from './FormDetailDokumen.vue'
 import MyFormSarkut from './FormDetailSarkut.vue'
 

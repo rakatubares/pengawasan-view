@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<div class="wrapper">
 		<MyModalDoc
 			title="Data BA Serah terima"
@@ -87,4 +87,4 @@ export default {
 
 <style>
 
-</style>
+</style> -->

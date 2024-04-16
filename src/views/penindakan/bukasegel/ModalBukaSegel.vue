@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<div class="wrapper">
 		<MyModalDoc
 			title="Data BA Buka Segel"
@@ -94,4 +94,4 @@ export default {
 
 <style>
 
-</style>
+</style> -->

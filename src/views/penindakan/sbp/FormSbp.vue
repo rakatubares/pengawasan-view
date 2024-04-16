@@ -5,21 +5,28 @@
 		<CForm class="pt-3">
 			<CRow>
 				<CCol md="12">
+					<MySearchDocument
+						doc_type="lap"
+						label="LAP Sumber"
+						:value.sync="data.lap_id"
+						:exceptions.sync="saved_lap"
+					/>
+				</CCol>
+			</CRow>
+			<CRow>
+				<CCol md="12">
 					<MySelectSprint
 						ref="selectSprint"
-						:id.sync="data.penindakan.sprint.id"
+						:id.sync="selected_sprint"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol sm="12">
-					<MySelectLokasi
-						:state.sync="state"
-						:grup_lokasi_id.sync="data.penindakan.grup_lokasi.id"
-						:lokasi.sync="data.penindakan.lokasi_penindakan"
+					<MyComboboxLokasi
 						label="Lokasi Penindakan"
 						description="Tempat / lokasi dilakukan penindakan"
-						feedback="Lokasi penindakan wajib diisi"
+						:value.sync="data.penindakan.lokasi_penindakan"
 					/>
 				</CCol>
 			</CRow>
@@ -28,7 +35,7 @@
 					<CTextarea
 						label="Uraian Penindakan"
 						description="Uraian / kronologis singkat terkait penindakan"
-						:value.sync="data.uraian_penindakan"
+						:value.sync="data.penindakan.uraian_penindakan"
 					/>
 				</CCol>
 			</CRow>
@@ -37,41 +44,36 @@
 					<CTextarea
 						label="Alasan Penindakan"
 						description="Pertimbangan dan alasan dilakukannya penindakan"
-						:value.sync="data.alasan_penindakan"
+						:value.sync="data.penindakan.alasan_penindakan"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
-				<CCol md="4" sm="12">
+				<CCol md="6" sm="12">
 					<CSelect
 						label="Jenis Pelanggaran"
 						description="Jenis dugaan pelanggaran"
 						:options="jenis_pelanggaran_options"
-						:value.sync="data.jenis_pelanggaran"
+						:value.sync="data.penindakan.jenis_pelanggaran"
+					/>
+				</CCol>
+				<CCol md="6" sm="12">
+					<MySelectKategoriPelanggaran
+						label="Kategori Penindakan"
+						:id.sync="data.penindakan.kategori_penindakan.id"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
+				<label class="w-100 pl-3 pt-2 mb-0">Tanggal/Waktu Mulai Penindakan</label>
 				<CCol md="3" sm="12">
 					<div class="form-group">
-						<label class="w-100">Waktu mulai penindakan</label>
 						<date-picker 
-							v-model="data.wkt_mulai_penindakan" 
-							format="DD-MM-YYYY HH:mm" 
+							v-model="data.penindakan.tanggal_mulai_penindakan"
+							format="DD-MM-YYYY" 
 							value-type="format"
-							type="datetime"
-							@change="
-								validatorDatetime($event, 'DD-MM-YYYY HH:mm', 'validasi.wkt_mulai_penindakan', 'Waktu mulai penindakan wajib diisi')
-								validatorSequence(
-									$event, 
-									data.wkt_selesai_penindakan, 
-									'validasi.wkt_mulai_penindakan',
-									'validasi.wkt_selesai_penindakan',
-									'Waktu mulai penindakan sebelum waktu selesai',
-									'Waktu selesai penindakan setelah waktu mulai',
-									'DD-MM-YYYY HH:mm'
-								)
-							"
+							type="date"
+							class="w-100"
 						>
 							<template v-slot:input="slotProps">
 								<input
@@ -79,38 +81,22 @@
 									type="text" 
 									v-bind="slotProps.props" 
 									v-on="slotProps.events"
-									v-bind:class="{
-										'is-valid': validasi.wkt_mulai_penindakan.state,
-										'is-invalid': !validasi.wkt_mulai_penindakan.state
-									}"
 								/>
-								<div class="invalid-feedback pb-1">{{validasi.wkt_mulai_penindakan.text}}</div>
 							</template>
 							<i slot="icon-calendar"></i>
 							<i slot="icon-clear"></i>
 						</date-picker>
+						<small class="form-text text-muted w-100">Tanggal</small>
 					</div>
 				</CCol>
-				<CCol md="3" sm="12">
+				<CCol md="2" sm="12">
 					<div class="form-group">
-						<label class="w-100">Waktu selesai penindakan</label>
 						<date-picker 
-							v-model="data.wkt_selesai_penindakan" 
-							format="DD-MM-YYYY HH:mm" 
+							v-model="data.penindakan.waktu_mulai_penindakan"
+							format="HH:mm" 
 							value-type="format"
-							type="datetime"
-							@change="
-								validatorDatetime($event, 'DD-MM-YYYY HH:mm', 'validasi.wkt_selesai_penindakan', 'Waktu selesai penindakan wajib diisi')
-								validatorSequence(
-									data.wkt_mulai_penindakan, 
-									$event, 
-									'validasi.wkt_mulai_penindakan',
-									'validasi.wkt_selesai_penindakan',
-									'Waktu mulai penindakan sebelum waktu selesai',
-									'Waktu selesai penindakan setelah waktu mulai',
-									'DD-MM-YYYY HH:mm'
-								)
-							"
+							type="time"
+							class="w-100"
 						>
 							<template v-slot:input="slotProps">
 								<input
@@ -118,16 +104,61 @@
 									type="text" 
 									v-bind="slotProps.props" 
 									v-on="slotProps.events"
-									v-bind:class="{
-										'is-valid': validasi.wkt_selesai_penindakan.state,
-										'is-invalid': !validasi.wkt_selesai_penindakan.state
-									}"
 								/>
-								<div class="invalid-feedback pb-1">{{validasi.wkt_selesai_penindakan.text}}</div>
 							</template>
 							<i slot="icon-calendar"></i>
 							<i slot="icon-clear"></i>
 						</date-picker>
+						<small class="form-text text-muted w-100">Jam</small>
+					</div>
+				</CCol>
+			</CRow>
+			<CRow>
+				<label class="w-100 pl-3 pt-2 mb-0">Tanggal/Waktu Selesai Penindakan</label>
+				<CCol md="3" sm="12">
+					<div class="form-group">
+						<date-picker 
+							v-model="data.penindakan.tanggal_selesai_penindakan"
+							format="DD-MM-YYYY" 
+							value-type="format"
+							type="date"
+							class="w-100"
+						>
+							<template v-slot:input="slotProps">
+								<input
+									class="form-control" 
+									type="text" 
+									v-bind="slotProps.props" 
+									v-on="slotProps.events"
+								/>
+							</template>
+							<i slot="icon-calendar"></i>
+							<i slot="icon-clear"></i>
+						</date-picker>
+						<small class="form-text text-muted w-100">Tanggal</small>
+					</div>
+				</CCol>
+				<CCol md="2" sm="12">
+					<div class="form-group">
+						<date-picker 
+							v-model="data.penindakan.waktu_selesai_penindakan"
+							format="HH:mm" 
+							value-type="format"
+							type="time"
+							class="w-100"
+						>
+							<template v-slot:input="slotProps">
+								<input
+									class="form-control" 
+									type="text" 
+									v-bind="slotProps.props" 
+									v-on="slotProps.events"
+								/>
+							</template>
+							<i slot="icon-calendar"></i>
+							<i slot="icon-clear"></i>
+						</date-picker>
+						<small class="form-text text-muted w-100">Jam</small>
 					</div>
 				</CCol>
 			</CRow>
@@ -136,7 +167,7 @@
 					<CTextarea
 						label="Hal yang terjadi"
 						description="Hal-hal lain yang perlu diterangkan pada saat proses penindakan"
-						:value.sync="data.hal_terjadi"
+						:value.sync="data.penindakan.hal_terjadi"
 					/>
 				</CCol>
 			</CRow>
@@ -151,11 +182,11 @@
 			</CRow>
 			<CRow>
 				<CCol md="12">
-					<MySelectEntitas
-						ref="selectSaksi"
+					<MySelectEntitasOrang 
+						state="insert"
 						label="Nama Pengangkut/Pemilik/Kuasa/Saksi/Orang yang Diperiksa"
 						description="Nama terang Pengangkut/Pemilik/Kuasa/Saksi yang menyaksikan penindakan/Orang yang Diperiksa"
-						:id.sync="data.penindakan.saksi.id"
+						:entity_id.sync="data.penindakan.saksi.id"
 					/>
 				</CCol>
 			</CRow>
@@ -165,9 +196,8 @@
 						ref="selectPetugas1"
 						label="Nama Petugas 1"
 						description="Nama Petugas Bea dan Cukai yang melakukan penindakan"
-						:id.sync="data.penindakan.petugas1.user_id"
-						role="p2vue.penindakan"
 						:currentUser="true"
+						:nip.sync="data.penindakan.petugas.petugas1.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -177,8 +207,7 @@
 						ref="selectPetugas2"
 						label="Nama Petugas 2"
 						description="Nama Petugas Bea dan Cukai yang melakukan penindakan"
-						:id.sync="data.penindakan.petugas2.user_id"
-						role="p2vue.penindakan"
+						:nip.sync="data.penindakan.petugas.petugas2.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -187,12 +216,11 @@
 					<MySelectPejabat
 						ref="selectPejabat"
 						:state.sync="state"
-						:label="{jabatan: 'Jabatan Atasan', nama: 'Nama Atasan'}"
-						:selectable_jabatan="['bd.0503', 'bd.0504']"
-						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.lptp.atasan.user.user_id"
-						:jabatan.sync="data.lptp.atasan.jabatan.kode"
-						:plh.sync="data.lptp.atasan.plh"
+						:label="{'jabatan': 'Jabatan Atasan', 'nama': 'Nama Atasan'}"
+						:default_jabatan.sync="default_atasan"
+						:jabatan.sync="data.lptp.petugas.atasan.kode_jabatan"
+						:tipe_ttd.sync="data.lptp.petugas.atasan.tipe_ttd"
+						:nip.sync="data.lptp.petugas.atasan.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -224,37 +252,44 @@ import api from '../../../router/api2.js'
 import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
+import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
+import MySearchDocument from '../../components/SearchDocument.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
+import MySelectKategoriPelanggaran from '../../components/SelectKategoriPelanggaran.vue'
 import MySelectLokasi from '../../components/SelectLokasi.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
 const default_data = {
-	uraian_penindakan: null,
-	alasan_penindakan: null,
-	jenis_pelanggaran: 'kepabeanan',
-	wkt_mulai_penindakan: null,
-	wkt_selesai_penindakan: null,
-	hal_terjadi: null,
+	lap_id: null,
 	penindakan: {
-		grup_lokasi: {id: null},
-		lokasi_penindakan: null,
 		sprint: {id: null},
+		lokasi_penindakan: null,
+		uraian_penindakan: null,
+		alasan_penindakan: null,
+		jenis_pelanggaran: 'kepabeanan',
+		kategori_penindakan: {id: 1},
+		tanggal_mulai_penindakan: null,
+		waktu_mulai_penindakan: null,
+		tanggal_selesai_penindakan: null,
+		waktu_selesai_penindakan: null,
+		hal_terjadi: null,
 		saksi: {id: null},
-		petugas1: {user_id: null},
-		petugas2: {user_id: null}
+		petugas: {
+			petugas1: {nip: null},
+			petugas2: {nip: null}
+		}
 	},
 	lptp: {
 		catatan: null,
-		atasan: {
-			jabatan: {
-				kode: 'bd.0503',
-				jabatan: null
-			},
-			plh: false,
-			user: {
-				user_id: null
+		petugas: {
+			atasan: {
+				kode_jabatan: null,
+				tipe_ttd: null,
+				nip: null,
+				flag_pejabat: true,
 			}
 		}
 	},
@@ -282,7 +317,11 @@ export default {
 	components: {
 		DatePicker,
 		MyAlert,
+		MyComboboxLokasi,
+		MySearchDocument,
 		MySelectEntitas,
+		MySelectEntitasOrang,
+		MySelectKategoriPelanggaran,
 		MySelectLokasi,
 		MySelectPejabat,
 		MySelectPetugas,
@@ -297,43 +336,46 @@ export default {
 	data() {
 		return {
 			data: JSON.parse(JSON.stringify(default_data)),
+			selected_sprint: null,
+			saved_lap: null,
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 			jenis_pelanggaran_options: [ ...jenis_pelanggaran ],
+			default_atasan: 'bd.0503',
+		}
+	},
+	watch: {
+		selected_sprint(val) {
+			this.data.penindakan.sprint.id = val
 		}
 	},
 	methods: {
 		async getData() {
-			let response = await api.getFormDataById(this.doc_type, this.doc_id)
-			this.data = response.data.data
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data = response.data
+			this.selected_sprint = this.data.penindakan.sprint
+				? this.data.penindakan.sprint.id : null
+			this.saved_lap = this.data.lap_id
 
-			if (this.data.penindakan.petugas2 == null) {
-				this.data.penindakan.petugas2 = {user_id: null}
-			}
-			
-			this.$nextTick(function () {
-				this.renderData()
-			})
+			this.fillNull()
 		},
-		renderData() {
-			this.validatorDatetime(this.data.wkt_mulai_penindakan, 'DD-MM-YYYY HH:mm', 'validasi.wkt_mulai_penindakan', 'Waktu mulai penindakan wajib diisi')
-			this.validatorDatetime(this.data.wkt_selesai_penindakan, 'DD-MM-YYYY HH:mm', 'validasi.wkt_selesai_penindakan', 'Waktu selesai penindakan wajib diisi')
-			this.validatorSequence(
-				this.data.wkt_mulai_penindakan, 
-				this.data.wkt_selesai_penindakan, 
-				'validasi.wkt_mulai_penindakan',
-				'validasi.wkt_selesai_penindakan',
-				'Waktu mulai penindakan sebelum waktu selesai',
-				'Waktu selesai penindakan setelah waktu mulai',
-				'DD-MM-YYYY HH:mm'
-			)
-			this.$refs.selectSprint.getSprint(this.data.penindakan.sprint.id, true)
-			this.$refs.selectSaksi.getEntitas(this.data.penindakan.saksi.id, true)
-			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
-			this.$refs.selectPetugas2.getPetugas(this.data.penindakan.petugas2.user_id, true)
-			if (this.doc_type == 'sbp') {
-				this.$refs.selectPejabat.selected_jabatan = this.data.lptp.atasan.jabatan.kode
-				this.$refs.selectPejabat.togglePlh(this.data.lptp.atasan.plh)
-				this.$refs.selectPejabat.getPetugas(this.data.lptp.atasan.user.user_id, true)
+		fillNull() {
+			if (this.data.penindakan.sprint == null) {
+				this.data.penindakan.sprint = JSON.parse(JSON.stringify(default_data.penindakan.sprint))
+			}
+
+			if (this.data.penindakan.kategori_penindakan == null) {
+				this.data.penindakan.kategori_penindakan = JSON.parse(JSON.stringify(default_data.penindakan.kategori_penindakan))
+			}
+
+			if (this.data.penindakan.saksi == null) {
+				this.data.penindakan.saksi = JSON.parse(JSON.stringify(default_data.penindakan.saksi))
+			}
+
+			if (
+				(this.data.penindakan.petugas.petugas2 == null) ||
+				(this.data.penindakan.petugas.petugas2 == undefined)
+			) {
+				this.data.penindakan.petugas.petugas2 = JSON.parse(JSON.stringify(default_data.penindakan.petugas.petugas2))
 			}
 		},
 		async saveData() {
@@ -341,9 +383,7 @@ export default {
 				try {
 					this.data = await api.storeDoc(this.doc_type, this.data)
 
-					if (this.data.penindakan.petugas2 == null) {
-						this.data.penindakan.petugas2 = {user_id: null}
-					}
+					this.fillNull()
 
 					this.$emit('update:doc_id', this.data.id)
 					this.$emit('update:state', 'edit')
@@ -359,6 +399,8 @@ export default {
 					console.log(`form ${this.doc_type} - update data - error`, error)
 				}
 			}
+
+			this.$emit('save-data', this.data.penindakan)
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
@@ -385,6 +427,9 @@ export default {
 	async mounted() {
 		if (this.state == 'edit') {
 			await this.getData()
+		} else {
+			this.data.penindakan.tanggal_mulai_penindakan = converters.currentDate()
+			this.data.penindakan.tanggal_selesai_penindakan = converters.currentDate()
 		}
 	}
 }

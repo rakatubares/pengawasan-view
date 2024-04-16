@@ -3,8 +3,8 @@ import PdfPenindakan from "./PdfPenindakan"
 const inds = {
 	alp: 15,
 	dtl: 20,
-	cln: 85,
-	txt: 88,
+	cln: 90,
+	txt: 93,
 	num_cln: 55,
 	num_txt: 58,
 	ttd1: 17,
@@ -23,16 +23,26 @@ class PdfSbp extends PdfPenindakan {
 	generateText()
 	{
 		this.prepareDocDate(this.data.tanggal_dokumen)
-		let tgl_sprint = this.prepareDate(this.data.penindakan.sprint.tanggal_sprint)
-		this.tgl_sprint = tgl_sprint['short_tgl']
-		this.full_tgl_sprint = tgl_sprint['full_tgl']
+		if (this.data.penindakan.sprint) {
+			let tgl_sprint = this.prepareDate(this.data.penindakan.sprint.tanggal_sprint)
+			this.tgl_sprint = tgl_sprint['short_tgl']
+			this.full_tgl_sprint = tgl_sprint['full_tgl']	
+		} else {
+			this.tgl_sprint = ''
+			this.full_tgl_sprint = ''
+		}
+		
 
 		this.txt = {}
 		
 		// Dasar penindakan
-		this.txt.dasar_penindakan = 'Dasar penindakan, Surat Perintah Nomor : ' 
-			+ this.data.penindakan.sprint.nomor_sprint 
-			+ ' tanggal ' + this.full_tgl_sprint + '.'
+		if (this.data.penindakan.sprint) {
+			this.txt.dasar_penindakan = 'Dasar penindakan, Surat Perintah Nomor : ' 
+				+ this.data.penindakan.sprint.nomor_sprint 
+				+ ' tanggal ' + this.full_tgl_sprint + '.'	
+		} else {
+			this.txt.dasar_penindakan = 'Dasar penindakan, Surat Perintah Nomor :     tanggal     .'
+		}
 
 		// Perintah
 		this.txt.perintah = 'Perintah yang dilaksanakan : '
@@ -60,18 +70,22 @@ class PdfSbp extends PdfPenindakan {
 		this.txt.mulai = this.data.penindakan.tanggal_mulai_penindakan
 			? this.data.penindakan.waktu_mulai_penindakan
 				? `${this.data.penindakan.tanggal_mulai_penindakan} ${this.data.penindakan.waktu_mulai_penindakan}`
-				: ''
+				: this.data.penindakan.tanggal_mulai_penindakan
 			: ''
 
 		// Selesai
 		this.txt.selesai = this.data.penindakan.tanggal_selesai_penindakan
 			? this.data.penindakan.waktu_selesai_penindakan
 				? `${this.data.penindakan.tanggal_selesai_penindakan} ${this.data.penindakan.waktu_selesai_penindakan}`
-				: ''
+				: this.data.penindakan.tanggal_selesai_penindakan
 			: ''
 
 		// Hal Terjadi
 		this.txt.hal_terjadi = this.data.penindakan.hal_terjadi || ''
+
+		// Saksi
+		this.txt.saksi = this.data.penindakan.saksi
+			? this.data.penindakan.saksi.nama : ''
 
 		// Keterangan
 		this.txt.keterangan = 'Yang dimaksud dengan "barang yang dikuasai negara" adalah '
@@ -171,7 +185,7 @@ class PdfSbp extends PdfPenindakan {
 			inds.ttd1,
 			'Pengangkut/Pemilik/Kuasanya/Saksi*',
 			undefined, 
-			this.data.penindakan.saksi.nama,
+			this.txt.saksi,
 		)
 
 		// Pejabat

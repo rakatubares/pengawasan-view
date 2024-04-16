@@ -103,10 +103,6 @@ class API {
 		return await this.delApi(`/doc/${doc_type}/${doc_id}`)
 	}
 
-	// async getRelatedDocuments(doc_type, doc_id) {
-	// 	return await this.getApi(`/${doc_type}/${doc_id}/docs`)
-	// }
-
 	async getDocumentsChain(doc_type, doc_id) {
 		let response = await this.getApi(`/doc/${doc_type}/${doc_id}/chain`)
 		return response.data
@@ -117,72 +113,6 @@ class API {
 	| API for details
 	|--------------------------------------------------------------------------
 	*/
-
-	async getDetailByDocId(doc_type, doc_id, detail_type) {
-		let response = await this.getApi(`/${doc_type}/${doc_id}/${detail_type}`)
-		let objek = response.data.data
-		return objek
-	}
-
-	async getItemBarangByDocId(doc_type, doc_id) {
-		return await this.getApi(`/${doc_type}/${doc_id}/barang/item`)
-	}
-
-	async getItemBarang(doc_type, doc_id, item_id) {
-		return await this.getApi(`/${doc_type}/${doc_id}/barang/item/${item_id}`)
-	}
-
-	async delItemBarang(doc_type, doc_id, item_id) {
-		await this.delApi(`/${doc_type}/${doc_id}/barang/item/${item_id}`)
-	}
-
-	async insertDetail(doc_type, doc_id, detail_type, data) {
-		return await this.postApi(`/${doc_type}/${doc_id}/${detail_type}`, data)
-	}
-
-	async updateDetail(doc_type, doc_id, detail_type, detail_id, data) {
-		return await this.putApi(`/${doc_type}/${doc_id}/${detail_type}/${detail_id}`, data)
-	}
-
-	async getLinkedDoc(doc_type, doc_id) {
-		return await this.getApi(`/${doc_type}/${doc_id}/linked`)
-	}
-
-	async storeLinkedDoc(doc_type, doc_id, data) {
-		return await this.postApi(`/${doc_type}/${doc_id}/storelinked`, data)
-	}
-
-	async getEntitasById(id) {
-		return await this.getApi(`/entitas/${id}`)
-	}
-
-	async saveEntitas(data) {
-		return await this.postApi(`/entitas`, data)
-	}
-
-	async updateEntitas(id, data) {
-		return await this.putApi(`/entitas/${id}`, data)
-	}
-
-	async searchEntitas(data) {
-		return await this.postApi('/entitas/search', data)
-	}
-
-	async getBhpByDocId(doc_type, doc_id) {
-		return await this.getApi(`/${doc_type}/${doc_id}/bhp`)
-	}
-
-	async insertBhp(doc_type, doc_id, data) {
-		return await this.postApi(`/${doc_type}/${doc_id}/bhp`, data)
-	}
-
-	async updateBhp(doc_type, doc_id, detail_id, data) {
-		return await this.putApi(`/${doc_type}/${doc_id}/bhp/${detail_id}`, data)
-	}
-
-	async delItemBhp(doc_type, doc_id, item_id) {
-		await this.delApi(`/${doc_type}/${doc_id}/bhp/item/${item_id}`)
-	}
 
 	// Barang
 	async getBarang(doc_type, doc_id) {
@@ -219,13 +149,11 @@ class API {
 	}
 
 	async saveEntitasOrang(data) {
-		console.log('API - SAVE ENTITAS ORANG')
 		let response = await this.postApi(`/entitas/orang`, data)
 		return response.data
 	}
 
 	async updateEntitasOrang(data, id) {
-		console.log('API - UPDATE ENTITAS ORANG')
 		let response = await this.putApi(`/entitas/orang/${id}`, data)
 		return response.data
 	}
@@ -254,6 +182,76 @@ class API {
 	// Tembusan
 	async searchTembusan(data) {
 		let response = await this.postApi(`/tembusan/search`, data)
+		return response.data
+	}
+
+	// Penindakan Sarkut
+	async getPenindakanSarkut(penindakan_id) {
+		let response = await this.getApi(`/penindakan/${penindakan_id}/sarkut`)
+		return response.data
+	}
+
+	async savePenindakanSarkut(data, penindakan_id) {
+		let response = await this.postApi(`/penindakan/${penindakan_id}/sarkut`, data)
+		return response.data
+	}
+
+	async updatePenindakanSarkut(data, penindakan_id) {
+		let response = await this.putApi(`/penindakan/${penindakan_id}/sarkut`, data)
+		return response.data
+	}
+
+	// Penindakan Bangunan
+	async getPenindakanBangunan(penindakan_id) {
+		let response = await this.getApi(`/penindakan/${penindakan_id}/bangunan`)
+		return response.data
+	}
+
+	async savePenindakanBangunan(data, penindakan_id) {
+		let response = await this.postApi(`/penindakan/${penindakan_id}/bangunan`, data)
+		return response.data
+	}
+
+	async updatePenindakanBangunan(data, penindakan_id) {
+		let response = await this.putApi(`/penindakan/${penindakan_id}/bangunan`, data)
+		return response.data
+	}
+
+	// Penindakan Badan
+	async getPenindakanBadan(penindakan_id) {
+		let response = await this.getApi(`/penindakan/${penindakan_id}/badan`)
+		return response.data
+	}
+
+	async savePenindakanBadan(data, penindakan_id) {
+		let response = await this.postApi(`/penindakan/${penindakan_id}/badan`, data)
+		return response.data
+	}
+
+	async updatePenindakanBadan(data, penindakan_id) {
+		let response = await this.putApi(`/penindakan/${penindakan_id}/badan`, data)
+		return response.data
+	}
+
+	// Penindakan Barang
+	async getPenindakanBarang(penindakan_id) {
+		let response = await this.getApi(`/penindakan/${penindakan_id}/barang`)
+		return response.data
+	}
+
+	async savePenindakanBarang(data, penindakan_id) {
+		let response = await this.postApi(`/penindakan/${penindakan_id}/barang`, data)
+		return response.data
+	}
+
+	async updatePenindakanBarang(data, penindakan_id) {
+		let response = await this.putApi(`/penindakan/${penindakan_id}/barang`, data)
+		return response.data
+	}
+
+	// Tindakan
+	async saveTindakan(data, penindakan_id) {
+		let response = await this.postApi(`/penindakan/${penindakan_id}/tindakan`, data)
 		return response.data
 	}
 
@@ -299,6 +297,11 @@ class API {
 
 	async searchKemasan(data) {
 		return await this.postApi('/kemasan/search', data)
+	}
+
+	async getKemasan() {
+		let response = await this.getApi(`/kemasan`)
+		return response.data
 	}
 
 	async getKemasanById(id) {

@@ -128,7 +128,7 @@
 
 <script>
 import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
+// import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
 import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
@@ -161,7 +161,7 @@ const default_data = {
 export default {
 	name: 'DisplaySbp',
 	components: {
-		MyDisplayEntitas,
+		// MyDisplayEntitas,
 		MyDisplayPegawai,
 		MyDisplayPejabat,
 		MyModalEntitasOrang,
@@ -179,7 +179,18 @@ export default {
 	computed: {
 		disp_no_sbp() { return this.data_sbp.no_dok_lengkap || '-' },
 		disp_tgl_sbp() { return this.data_sbp.tanggal_dokumen || '-' },
-		disp_sprint() { return ((this.data_sbp.penindakan.sprint.nomor_sprint || '') + ' tanggal ' + (this.data_sbp.penindakan.sprint.tanggal_sprint || '')) },
+		disp_sprint() { 
+			let txt = this.data_sbp.penindakan.sprint
+				? this.data_sbp.penindakan.sprint.nomor_sprint
+					? this.data_sbp.penindakan.sprint.tanggal_sprint
+						? `${this.data_sbp.penindakan.sprint.nomor_sprint} tanggal ${this.data_sbp.penindakan.sprint.tanggal_sprint}`
+						: this.data_sbp.penindakan.sprint.nomor_sprint
+					: this.data_sbp.penindakan.sprint.tanggal_sprint
+						? `tanggal ${this.data_sbp.penindakan.sprint.tanggal_sprint}`
+						: '-'
+				: '-'
+			return txt
+		},
 		disp_lptp() { return this.data_sbp.lptp.no_dok_lengkap || '-' },
 		disp_lokasi() {
 			var grup_lokasi = this.data_sbp.penindakan.grup_lokasi ? `(${this.data_sbp.penindakan.grup_lokasi.lokasi}) ` : ''
@@ -189,11 +200,15 @@ export default {
 		disp_uraian() { return this.data_sbp.penindakan.uraian_penindakan || '-' },
 		disp_alasan() { return this.data_sbp.penindakan.alasan_penindakan || '-' },
 		disp_pelanggaran() { return this.data_sbp.penindakan.jenis_pelanggaran || '-' },
-		disp_waktu_mulai() { return ((this.data_sbp.penindakan.tanggal_mulai_penindakan || '-') + ' ' + (this.data_sbp.penindakan.waktu_mulai_penindakan || '-')) },
-		disp_waktu_selesai() { return ((this.data_sbp.penindakan.tanggal_selesai_penindakan || '-') + ' ' + (this.data_sbp.penindakan.waktu_selesai_penindakan || '-')) },
+		disp_waktu_mulai() { return ((this.data_sbp.penindakan.tanggal_mulai_penindakan || '-') + ' ' + (this.data_sbp.penindakan.waktu_mulai_penindakan || '')) },
+		disp_waktu_selesai() { return ((this.data_sbp.penindakan.tanggal_selesai_penindakan || '-') + ' ' + (this.data_sbp.penindakan.waktu_selesai_penindakan || '')) },
 		disp_hal_terjadi() { return this.data_sbp.penindakan.hal_terjadi || '-' },
 		disp_catatan() { return this.data_sbp.lptp.catatan || '-' },
-		disp_saksi() { return this.data_sbp.penindakan.saksi.nama || '-'},
+		disp_saksi() { 
+			let txt = this.data_sbp.penindakan.saksi
+				? this.data_sbp.penindakan.saksi.nama : '-'
+			return txt
+		}
 	},
 	methods: {
 		async getData() {

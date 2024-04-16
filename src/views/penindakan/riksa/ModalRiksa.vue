@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<div class="wrapper">
 		<MyModalDoc
 			title="Data BA Pemeriksaan"
@@ -84,4 +84,4 @@ export default {
 </script>
 
 <style>
-</style>
+</style> -->

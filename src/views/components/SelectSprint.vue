@@ -14,6 +14,8 @@
 						item-text="nomor_sprint"
 						item-value="id"
 						@change="changeValue"
+						@click="searchDocument"
+						@keyup="searchDocument"
 					>
 						<template v-slot:append-outer>
 							<CButton 
@@ -34,8 +36,8 @@
 						</template>
 						<template v-slot:item="{ item }">
 							<v-list-item-content>
-								<h3><v-list-item-title v-text="item.nomor_sprint"></v-list-item-title></h3>
-								<v-list-item-subtitle v-text="item.tanggal_sprint"></v-list-item-subtitle>
+								<h3><v-list-item-title>{{ item.nomor_sprint }}</v-list-item-title></h3>
+								<v-list-item-subtitle>{{ item.tanggal_sprint }}</v-list-item-subtitle>
 							</v-list-item-content>
 						</template>
 					</v-autocomplete>
@@ -181,7 +183,7 @@ export default {
 		return {
 			items: [],
 			value: null,
-			search: null,
+			search: '',
 			sprint: JSON.parse(JSON.stringify(default_sprint)),
 			show_modal: false,
 			new_sprint: JSON.parse(JSON.stringify(default_sprint)),
@@ -190,13 +192,16 @@ export default {
 		}
 	},
 	watch: {
-		async search (val) {
-			let data = {'s': val}
-			let response = await axios.post(api.searchSprint(), data)
-			this.items = response.data.data
+		id(val) {
+			this.getSprint(val, true)
 		}
 	},
 	methods: {
+		async searchDocument () {
+			let data = {'src': this.search}
+			let response = await axios.post(api.searchSprint(), data)
+			this.items = response.data.data
+		},
 		changeValue(id) {
 			this.getSprint(id)
 			this.$emit('update:id', id)

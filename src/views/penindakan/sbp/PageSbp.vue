@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import MyModalSbp from './ModalSbp.vue'
+import MyModalSbp from './ModalSbp2.vue'
 import MyPageDoc from '../../components/PageDoc.vue'
 
 export default {

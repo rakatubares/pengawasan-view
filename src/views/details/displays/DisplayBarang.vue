@@ -1,9 +1,7 @@
 <template>
 	<div class="wrapper">
-		<CRow 
-			class="mt-3 mx-2 pt-3 border-top"
-		>
-			<CCol col="12">
+		<CRow class="mx-2 mt-2">
+			<CCol>
 				<CRow>
 					<CCol md="12">
 						<h5>Barang</h5>
@@ -14,7 +12,7 @@
 						<b>Jumlah/Jenis Kemasan</b>
 					</CCol>
 					<CCol md="9">
-						&nbsp;{{disp_kemasan}}
+						{{disp_kemasan}}
 					</CCol>
 				</CRow>
 				<CRow class="mt-2 ml-1">
@@ -22,7 +20,7 @@
 						<b>Jenis/Nomor dan Tanggal Dokumen</b>
 					</CCol>
 					<CCol md="9">
-						&nbsp;{{disp_dokumen}}
+						{{disp_dokumen}}
 					</CCol>
 				</CRow>
 				<CRow class="mt-2 ml-1">
@@ -30,7 +28,11 @@
 						<b>Pemilik/Importir/Eksportir/Kuasa</b>
 					</CCol>
 					<CCol md="9">
-						&nbsp;{{disp_pemilik}}
+						<p 
+							v-if="disp_pemilik != null"
+							class="a nav-link p-0 m-0"
+							@click="showEntitas(objek.pemilik.id)"
+						>{{ disp_pemilik }}</p>
 					</CCol>
 				</CRow>
 
@@ -39,57 +41,84 @@
 					<CCol>
 						<MyTableBarang
 							state="show"
-							:doc_type="doc_type"
-							:doc_id="doc_id"
-							:data_objek="data_objek"
+							doc_type="penindakan-barang"
+							:doc_id.sync="objek.id"
+							:data_objek="objek"
 							:bhp="bhp"
-						>
-						</MyTableBarang>
+						/>
 					</CCol>
 				</CRow>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_entitas"
+		/>
 	</div>
 </template>
 
 <script>
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 import MyTableBarang from '../../components/barang/TableItemBarang.vue'
 
 export default {
 	name: 'DisplayBarang',
 	components: {
+		MyModalEntitasOrang,
 		MyTableBarang
 	},
 	props: {
 		doc_type: String,
 		doc_id: Number,
-		data_objek: Object,
+		penindakan: Object,
 		bhp: {
 			type: Boolean,
 			default: false,
 		},
 	},
 	computed: {
+		objek() {
+			let data = this.penindakan.objek.barang
+				? JSON.parse(JSON.stringify(this.penindakan.objek.barang))
+				: JSON.parse(JSON.stringify(default_data))
+			
+			return data
+		},
 		disp_kemasan() {
-			let txt = (this.data.jumlah_kemasan || '-') + ' ' + (this.data.kemasan.kode_kemasan || '')
+			let txt = this.objek.jumlah_kemasan
+				? this.objek.kemasan
+					? `${this.objek.jumlah_kemasan} ${this.objek.kemasan.kemasan}`
+					: this.objek.jumlah_kemasan
+				: this.objek.kemasan
+					? this.objek.kemasan.kemasan
+					: ''
 			return txt
 		},
-		disp_dokumen() {
-			if (this.data.dokumen != null) {
-				var txt = (this.data.dokumen.jns_dok || '') + ' ' + (this.data.dokumen.no_dok || '-') + ' / ' + (this.data.dokumen.tgl_dok || '-')
-			} else {
-				var txt = '-'
-			}
-			return txt
+		disp_dokumen() { 
+			let dok = this.objek.jenis_dokumen
+				? this.objek.nomor_dokumen
+					? this.objek.tanggal_dokumen
+						? `${this.objek.jenis_dokumen} ${this.objek.nomor_dokumen} tanggal ${this.objek.tanggal_dokumen}`
+						: `${this.objek.jenis_dokumen} ${this.objek.nomor_dokumen}`
+					: this.objek.tanggal_dokumen
+						? `${this.objek.jenis_dokumen} tanggal ${this.objek.tanggal_dokumen}`
+						: this.objek.jenis_dokumen
+				: this.objek.nomor_dokumen
+					? this.objek.tanggal_dokumen
+						? `${this.objek.nomor_dokumen} tanggal ${this.objek.tanggal_dokumen}`
+						: this.objek.nomor_dokumen
+					: this.objek.tanggal_dokumen
+						? this.objek.tanggal_dokumen
+						: ''
+			
+			return dok
 		},
-		disp_pemilik() {
-			return this.data.pemilik.nama || '-'
-		},
+		disp_pemilik() { return this.objek.pemilik ? this.objek.pemilik.nama : null },
 	},
-	data() {
-		return {
-			data: this.data_objek,
-		}
+	methods: {
+		showEntitas(entitas_id) {
+			this.$refs.modal_entitas.showModal('show', entitas_id)
+		},
 	},
 }
 </script>

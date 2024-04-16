@@ -10,6 +10,7 @@
 		</div>
 
 		<CTabs 
+			v-if="show_tabs"
 			:activeTab="current_tab"
 			@update:activeTab="changeTab($event)"
 		>
@@ -87,9 +88,9 @@ export default {
 	},
 	data() {
 		return {
-			console,
 			show: false,
 			navs: JSON.parse(JSON.stringify(navs_default)),
+			show_tabs: true,
 		}
 	},
 	methods: {
@@ -129,6 +130,12 @@ export default {
 		nextTab() {
 			this.$emit('update:current_tab', this.current_tab + 1)
 			this.getNavs(this.current_tab + 1)
+		},
+		resetTabs() {
+			this.show_tabs = false
+			this.$nextTick(() => {
+				this.show_tabs = true
+			})
 		}
 	},
 	mounted() {

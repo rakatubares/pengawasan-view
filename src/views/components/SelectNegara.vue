@@ -12,7 +12,7 @@
 				:search-input.sync="search"
 				item-text="nama_negara"
 				item-value="kode_2"
-				:disabled.sync="disabled"
+				:disabled.sync="local_disabled"
 			>
 				<template v-slot:no-data>
 					<v-list-item>
@@ -44,13 +44,17 @@ export default {
 			default: 'Negara'
 		},
 		value: String,
+		disabled: {
+			type: Boolean,
+			default: false
+		},
 	},
 	data() {
 		return {
 			items: [],
 			search: null,
 			kode: null,
-			disabled: false,
+			local_disabled: this.disabled,
 		}
 	},
 	watch: {
@@ -64,10 +68,15 @@ export default {
 		},
 		state(val) {
 			if (val == 'show') {
-				this.disabled = true
-			} else {
-				this.disabled = false
+				this.local_disabled = true
 			}
+		},
+		disabled(val) {
+			console.log('SELECT NEGARA - WATCH DISABLED', val)
+			this.local_disabled = val
+		},
+		local_disabled(val) {
+			this.$emit('update:disabled', val)
 		},
 	},
 	methods: {
@@ -81,6 +90,11 @@ export default {
 				this.items = []
 				this.kode = null
 			}
+		}
+	},
+	mounted() {
+		if (this.value != null) {
+			this.getData(this.value)
 		}
 	}
 }
