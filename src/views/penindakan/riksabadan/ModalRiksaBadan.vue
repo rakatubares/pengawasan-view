@@ -1,40 +1,36 @@
 <template>
 	<div class="wrapper">
-		<MyModalDoc
-			title="Data BA Pemeriksaan Badan"
-			:state.sync="modal_state"
-			:tabs.sync="tabs"
+		<MyModalPenindakan
+			ref="ModalPenindakan"
+			:title="`Data ${tipe_surat}`"
+			:state.sync="local_state"
+			:doc_type="doc_type"
+			:doc_id.sync="id"
+			:available_objects="[]"
 			@close-modal="closeModal"
 		>
-			<template #tab-uraian>
-				<MyFormRiksaBadan
-					v-if="['insert','edit'].includes(modal_state)"
-					:state.sync="modal_state"
-					:doc_id.sync="doc_id"
+			<template #uraian>
+				<MyDisplayRiksaBadan 
+					v-if="local_state == 'show'"
+					:doc_type="doc_type"
+					:doc_id.sync="id"
 				/>
-				<MyDisplayRiksaBadan
-					v-else-if="modal_state == 'show'"
-					:doc_id.sync="doc_id"
-				/>
-			</template>
-			<template #tab-pdf>
-				<MyDisplayPdf 
-					v-if="['show','edit'].includes(modal_state)"
-					:state.sync="modal_state"
-					:doc_type="doc_type" 
+				<MyFormRiksaBadan 
+					v-else-if="['insert','edit'].includes(local_state)"
+					:state.sync="local_state"
+					:doc_type="doc_type"
+					:tipe_surat="tipe_surat"
 					:doc_id.sync="doc_id"
 				/>
 			</template>
-		</MyModalDoc>
+		</MyModalPenindakan>
 	</div>
 </template>
 
 <script>
-import MyDisplayDetail from '../../details/displays/DisplayDetail.vue'
-import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
 import MyDisplayRiksaBadan from './DisplayRiksaBadan.vue'
 import MyFormRiksaBadan from './FormRiksaBadan.vue'
-import MyModalDoc from '../../components/ModalDoc2.vue'
+import MyModalPenindakan from '../../components/ModalPenindakan.vue'
 
 const tabs_list = [
 	{
@@ -52,33 +48,41 @@ const tabs_list = [
 export default {
 	name: 'ModalRiksaBadan',
 	components: {
-		MyDisplayDetail,
-		MyDisplayPdf,
 		MyDisplayRiksaBadan,
 		MyFormRiksaBadan,
-		MyModalDoc,
+		MyModalPenindakan,
 	},
 	props: {
 		state: String,
-		id: Number
+		doc_type: String,
+		tipe_surat: String,
+		id: Number,
 	},
 	data() {
 		return {
-			doc_type: 'riksabadan',
 			doc_id: this.id,
-			modal_state: this.state,
+			local_state: this.state,
 			tabs: JSON.parse(JSON.stringify(tabs_list)),
+		}
+	},
+	watch: {
+		state(val) {
+			this.local_state = val
+		},
+		local_state: function(val) {
+			this.$emit('update:state', val)
+		},
+		id(val) {
+			this.doc_id = val
+		},
+		doc_id(val) {
+			this.$emit('update:id', val)
 		}
 	},
 	methods: {
 		closeModal() {
 			this.$emit('close-modal')
 		},
-	},
-	watch: {
-		modal_state: function(val) {
-			this.$emit('update:state', val)
-		}
 	},
 }
 </script>

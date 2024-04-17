@@ -176,6 +176,8 @@ class PdfRiksaBadan extends PdfPenindakan {
 			this.txt.saksi,
 		)
 
+		let ln_lowest = this.ln
+
 		// Pejabat
 		this.ln = ln_ttd
 		this.ttd(
@@ -199,6 +201,8 @@ class PdfRiksaBadan extends PdfPenindakan {
 		}
 
 		////// KETERANGAN //////
+		this.ln = ln_lowest
+		this.break()
 		this.pdf.setFont('Helvetica', 'italic')
 		this.pdf.setFontSize('7')
 		this.write('*Coret yang tidak perlu')

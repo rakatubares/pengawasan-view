@@ -11,7 +11,6 @@
 						dense
 						:items.sync="items"
 						:search-input.sync="search"
-						:disabled="currentUser == true"
 						item-text="name"
 						item-value="nip"
 						@change="changeOfficer"

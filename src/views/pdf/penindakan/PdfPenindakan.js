@@ -7,19 +7,23 @@ class PdfPenindakan extends MyPdf {
 			? this.prepareDate(this.data.penindakan.tanggal_selesai_penindakan)
 			: ''
 
+		let no_sprint = this.data.penindakan.sprint
+			? this.data.penindakan.sprint.nomor_sprint
+			: '   '
+
 		let tgl_sprint = this.data.penindakan.sprint
 			? this.data.penindakan.sprint.tanggal_sprint
-				? this.prepareDate(this.data.penindakan.sprint.tanggal_sprint)
-				: ''
-			: ''
+				? this.prepareDate(this.data.penindakan.sprint.tanggal_sprint).short_tgl
+				: '   '
+			: '   '
 
 		let jabatan = this.data.penindakan.sprint
-			? this.data.penindakan.sprint.pejabat.jabatan || ''
-			: ''
+			? this.data.penindakan.sprint.pejabat.jabatan || '   '
+			: '   '
 
 		let txt = [
 			`  Pada hari ini ${tgl_penindakan.hr} tanggal ${tgl_penindakan.tgl} bulan ${tgl_penindakan.bln} tahun ${tgl_penindakan.thn}.`,
-			`Berdasarkan Surat Perintah : ${jabatan} Nomor ${this.data.penindakan.sprint.nomor_sprint} Tanggal ${tgl_sprint.short_tgl}.`
+			`Berdasarkan Surat Perintah : ${jabatan} Nomor ${no_sprint} Tanggal ${tgl_sprint}.`
 		]
 
 		return txt

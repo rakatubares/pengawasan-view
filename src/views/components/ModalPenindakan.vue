@@ -193,6 +193,10 @@ export default {
 			type: Object,
 			default() { return JSON.parse(JSON.stringify(default_tabs_properties)) }
 		},
+		available_objects: {
+			type: Array,
+			default() { return JSON.parse(JSON.stringify(default_objects)) }
+		},
 	},
 	data() {
 		return {
@@ -203,7 +207,7 @@ export default {
 			tabs_names: Object.keys(this.tabs_properties),
 			tabs_list: Object.values(this.tabs_properties),
 			current_tab: 0,
-			objects: JSON.parse(JSON.stringify(default_objects)),
+			objects: this.available_objects,
 			data_objects: {},
 			data_sarkut: null,
 		}
@@ -231,8 +235,13 @@ export default {
 		async getObjects() {
 			let response = await api.getDocumentById(this.doc_type, this.doc_id)
 			if (this.state == 'show') {
-				this.objects = Object.keys(response.data.penindakan.objek)	
+				this.objects = this.available_objects.filter(function (object) {
+					if (Object.keys(response.data.penindakan.objek).includes(object)) {
+						return object
+					}
+				})
 			}
+
 			this.data_objects = response.data.penindakan.objek
 			this.penindakan_id = response.data.penindakan.id
 			this.penindakan = response.data.penindakan
@@ -282,11 +291,11 @@ export default {
 					break;
 
 				case 'edit':
-					this.tabs_properties['sarkut'].visibility = true
-					this.tabs_properties['barang'].visibility = true
-					this.tabs_properties['bangunan'].visibility = true
-					this.tabs_properties['badan'].visibility = true
-					this.tabs_properties['tindakan'].visibility = true
+					this.tabs_properties['sarkut'].visibility = this.available_objects.includes('sarkut') ? true : false
+					this.tabs_properties['barang'].visibility = this.available_objects.includes('barang') ? true : false
+					this.tabs_properties['bangunan'].visibility = this.available_objects.includes('bangunan') ? true : false
+					this.tabs_properties['badan'].visibility = this.available_objects.includes('badan') ? true : false
+					this.tabs_properties['tindakan'].visibility = this.doc_type == 'sbp' ? true : false
 					this.tabs_properties['pdf'].visibility = true
 					break;
 			
@@ -307,7 +316,7 @@ export default {
 				if (!this.objects.includes(object)) {
 					delete tabs_properties[object]
 				}
-				if (this.state == 'show') {
+				if ((this.state == 'show') || (this.doc_type != 'sbp')) {
 					delete tabs_properties['tindakan']
 				}
 			});
@@ -329,6 +338,8 @@ export default {
 		if (this.state != 'insert') {
 			this.getObjects()	
 		}
+		this.changeTabsVisibilities()
+		this.changeTabsList()
 	}
 }
 </script>

@@ -16,7 +16,6 @@
 			<CRow>
 				<CCol md="12">
 					<MySelectSprint
-						ref="selectSprint"
 						:id.sync="selected_sprint"
 					/>
 				</CCol>
@@ -193,18 +192,16 @@
 			<CRow>
 				<CCol md="12">
 					<MySelectPetugas
-						ref="selectPetugas1"
 						label="Nama Petugas 1"
 						description="Nama Petugas Bea dan Cukai yang melakukan penindakan"
-						:currentUser="true"
 						:nip.sync="data.penindakan.petugas.petugas1.nip"
+						:currentUser="true"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="12">
 					<MySelectPetugas
-						ref="selectPetugas2"
 						label="Nama Petugas 2"
 						description="Nama Petugas Bea dan Cukai yang melakukan penindakan"
 						:nip.sync="data.penindakan.petugas.petugas2.nip"
@@ -380,24 +377,16 @@ export default {
 		},
 		async saveData() {
 			if (this.state == 'insert') {
-				try {
-					this.data = await api.storeDoc(this.doc_type, this.data)
+				this.data = await api.storeDoc(this.doc_type, this.data)
 
-					this.fillNull()
+				this.fillNull()
 
-					this.$emit('update:doc_id', this.data.id)
-					this.$emit('update:state', 'edit')
-					this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
-				} catch (error) {
-					console.log(`form ${this.doc_type} - save data - error`, error)
-				}
+				this.$emit('update:doc_id', this.data.id)
+				this.$emit('update:state', 'edit')
+				this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
 			} else if (this.state == 'edit') {
-				try {
-					await api.updateDoc(this.doc_type, this.data.id, this.data)
-					this.alert(`Data ${this.tipe_surat} berhasil diubah`)
-				} catch (error) {
-					console.log(`form ${this.doc_type} - update data - error`, error)
-				}
+				await api.updateDoc(this.doc_type, this.data.id, this.data)
+				this.alert(`Data ${this.tipe_surat} berhasil diubah`)
 			}
 
 			this.$emit('save-data', this.data.penindakan)

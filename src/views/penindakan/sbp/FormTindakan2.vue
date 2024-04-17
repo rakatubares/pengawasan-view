@@ -181,7 +181,6 @@ export default {
 	},
 	methods: {
 		getAvailableTindakan() {
-			console.log('FORM TINDAKAN - PENINDAKAN', JSON.parse(JSON.stringify(this.penindakan)))
 			this.disabled_tindakan['riksa_badan'] = this.penindakan 
 				? !['badan'].some(r => Object.keys(this.penindakan.objek).includes(r)) 
 				: true
@@ -195,7 +194,6 @@ export default {
 				? !['sarkut', 'barang', 'bangunan'].some(r => Object.keys(this.penindakan.objek).includes(r)) 
 				: true
 			this.disabled_save = this.penindakan ? false : true
-			console.log('FORM TINDAKAN - AVAILABLE TINDAKAN', JSON.parse(JSON.stringify(this.disabled_tindakan)))
 		},
 		async listChain() {
 			let response = await api.getDocumentsChain('penindakan', this.penindakan.id)

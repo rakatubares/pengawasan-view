@@ -15,7 +15,6 @@
 					:doc_id.sync="id"
 				/>
 				<MyFormSbp 
-					ref="form_sbp"
 					v-else-if="['insert','edit'].includes(local_state)"
 					:state.sync="local_state"
 					:doc_type="doc_type"

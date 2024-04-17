@@ -84,16 +84,6 @@
 						</CCol>
 					</CRow>
 					<CRow>
-						<CCol md="12">
-							<MySelectEntitasOrang
-								:state.sync="state"
-								label="Nama nahkoda/pengemudi/pilot"
-								:entity_id.sync="objek.pengemudi.id"
-								:disabled="!flag_badan"
-							/>
-						</CCol>
-					</CRow>
-					<CRow>
 						<CCol md="6" sm="12">
 							<MySelectNegara
 								:state.sync="state"
@@ -108,6 +98,16 @@
 								label="Nomor registrasi/polisi"
 								:disabled="!flag_badan"
 								:value.sync="objek.registrasi_sarkut"
+							/>
+						</CCol>
+					</CRow>
+					<CRow>
+						<CCol md="12">
+							<MySelectEntitasOrang
+								:state.sync="state"
+								label="Nama nahkoda/pengemudi/pilot"
+								:entity_id.sync="objek.pengemudi.id"
+								:disabled="!flag_badan"
 							/>
 						</CCol>
 					</CRow>

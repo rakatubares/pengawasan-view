@@ -2,71 +2,85 @@
 	<div class="wrapper form-riksa-badan">
 		<CForm class="pt-3">
 			<CRow>
+				<label class="w-100 pl-3 pt-2 mb-0">Tanggal Penindakan</label>
+				<CCol md="3" sm="12">
+					<div class="form-group">
+						<date-picker 
+							v-model="data.penindakan.tanggal_selesai_penindakan"
+							format="DD-MM-YYYY" 
+							value-type="format"
+							type="date"
+							class="w-100"
+						>
+							<template v-slot:input="slotProps">
+								<input
+									class="form-control" 
+									type="text" 
+									v-bind="slotProps.props" 
+									v-on="slotProps.events"
+								/>
+							</template>
+							<i slot="icon-calendar"></i>
+							<i slot="icon-clear"></i>
+						</date-picker>
+					</div>
+				</CCol>
+			</CRow>
+			<CRow>
 				<CCol md="12">
 					<MySelectSprint
-						ref="selectSprint"
-						:id.sync="data.penindakan.sprint.id"
+						:id.sync="selected_sprint"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="12">
-					<MySelectEntitas
-						ref="selectOrang"
+					<MySelectEntitasOrang
 						label="Nama orang yang diperiksa"
 						description="Nama orang yang terhadapnya dilakukan pemeriksaan badan"
-						:id.sync="data.orang.id"
+						:entity_id.sync="data.penindakan.objek.badan.entitas.id"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol sm="12">
-					<CInput
+					<CTextarea
 						label="Datang dari"
 						description="Tempat asal perjalanan orang yg diperiksa"
-						:value.sync="data.asal"
-						:is-valid="validatorRequired"
-						invalid-feedback="Asal perjalanan harus diisi"
+						:value.sync="data.penindakan.objek.badan.asal"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol sm="12">
-					<CInput
+					<CTextarea
 						label="Tempat tujuan"
 						description="Tempat tujuan perjalanan orang yang diperiksa"
-						:value.sync="data.tujuan"
+						:value.sync="data.penindakan.objek.badan.tujuan"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="12">
-					<MySelectEntitas
-						ref="selectPendamping"
+					<MySelectEntitasOrang
 						label="Nama orang yang bepergian bersama"
 						description="Nama orang yang ikut bepergian dengan orang yang diperiksa"
-						:id.sync="data.pendamping.id"
+						:entity_id.sync="data.penindakan.objek.badan.pendamping.id"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="8" sm="12">
 					<CInput
-						class="without-valid"
 						label="Nama sarana pengangkut"
 						description="Nama sarana pengangkut orang yang diperiksa"
-						:value.sync="data.sarkut.nama_sarkut"
-						:is-valid="validatorRequiredLinked(data.sarkut.nama_sarkut, data.sarkut.jenis_sarkut)"
-						invalid-feedback="Nama sarkut wajib diisi"
+						:value.sync="data.penindakan.objek.badan.nama_sarkut"
 					/>
 				</CCol>
 				<CCol md="4" sm="12">
 					<CInput
-						class="without-valid"
 						label="Jenis sarana pengangkut"
-						:value.sync="data.sarkut.jenis_sarkut"
-						:is-valid="validatorRequiredLinked(data.sarkut.jenis_sarkut, data.sarkut.nama_sarkut)"
-						invalid-feedback="Jenis sarkut wajib diisi"
+						:value.sync="data.penindakan.objek.badan.jenis_sarkut"
 					/>
 				</CCol>
 			</CRow>
@@ -74,30 +88,31 @@
 				<CCol md="4" sm="12">
 					<CInput
 						label="Nomor voyage/penerbangan/trayek"
-						:value.sync="data.sarkut.no_flight_trayek"
+						:value.sync="data.penindakan.objek.badan.nomor_sarkut"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
-				<CCol md="3" sm="12">
-					<CInput
-						label="Bendera"
-						:value.sync="data.sarkut.bendera"
+				<CCol md="6" sm="12">
+					<MySelectNegara
+						ref="SelectNegara"
+						label="Bendera sarkut"
+						:value.sync="data.penindakan.objek.badan.bendera.kode_2"
 					/>
 				</CCol>
-				<CCol md="3" sm="12">
+				<CCol md="6" sm="12">
 					<CInput
 						label="Nomor registrasi/polisi"
-						:value.sync="data.sarkut.no_reg_polisi"
+						:value.sync="data.penindakan.objek.badan.registrasi_sarkut"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="12">
-					<MySelectEntitas
+					<MySelectEntitasOrang
 						ref="selectPilot"
 						label="Nama nahkoda/pengemudi/pilot"
-						:id.sync="data.sarkut.pilot.id"
+						:entity_id.sync="data.penindakan.objek.badan.pengemudi.id"
 					/>
 				</CCol>
 			</CRow>
@@ -106,37 +121,46 @@
 					<CInput
 						label="Jenis dokumen"
 						description="Jenis dokumen barang yang dibawa"
-						:value.sync="data.dokumen.jns_dok"
+						:value.sync="data.penindakan.objek.badan.jenis_dokumen"
 					/>
 				</CCol>
-				<CCol md="4">
+				<CCol md="6">
 					<CInput
 						label="Nomor dokumen"
 						description="Nomor dokumen barang yang dibawa ornag yang diperiksa"
-						:value.sync="data.dokumen.no_dok"
+						:value.sync="data.penindakan.objek.badan.nomor_dokumen"
 					/>
 				</CCol>
 				<CCol md="2">
 					<div class="form-group">
 						<label class="w-100">Tanggal dokumen</label>
 						<date-picker 
-							v-model="data.dokumen.tgl_dok" 
+							v-model="data.penindakan.objek.badan.tanggal_dokumen" 
 							format="DD-MM-YYYY" 
 							value-type="format"
 							type="date"
-						></date-picker>
+							class="w-100"
+						>
+							<template v-slot:input="slotProps">
+								<input
+									class="form-control" 
+									type="text" 
+									v-bind="slotProps.props" 
+									v-on="slotProps.events"
+								/>
+							</template>
+							<i slot="icon-calendar"></i>
+							<i slot="icon-clear"></i>
+						</date-picker>
 					</div>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol sm="12">
-					<MySelectLokasi
-						:state.sync="state"
-						:grup_lokasi_id.sync="data.penindakan.grup_lokasi.id"
-						:lokasi.sync="data.penindakan.lokasi_penindakan"
+					<MyComboboxLokasi
 						label="Lokasi Pemeriksaan"
 						description="Tempat/lokasi/alamat di mana pemeriksaan dilakukan"
-						feedback="Lokasi pemeriksaan wajib diisi"
+						:value.sync="data.penindakan.lokasi_penindakan"
 					/>
 				</CCol>
 			</CRow>
@@ -145,7 +169,7 @@
 					<CTextarea
 						label="Uraian pemeriksaan"
 						description="Uraian pakaian yang dibuka / pemeriksaan medis yang dilakukan terhadap orang yang dilakukan pemeriksaan badan"
-						:value.sync="data.uraian_pemeriksaan"
+						:value.sync="data.penindakan.objek.badan.uraian_pemeriksaan"
 					/>
 				</CCol>
 			</CRow>
@@ -154,30 +178,26 @@
 					<CTextarea
 						label="Hasil pemeriksaan"
 						description="Hasil pemeriksaan badan"
-						:value.sync="data.hasil_pemeriksaan"
-						:is-valid="validatorRequired"
-						invalid-feedback="Hasil pemeriksaan wajib diisi"
+						:value.sync="data.penindakan.objek.badan.hasil_pemeriksaan"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="12">
-					<MySelectEntitas
+					<MySelectEntitasOrang
 						ref="selectSaksi"
 						label="Nama Saksi"
 						description="Nama saksi yang menyaksikan pemeriksaan badan"
-						:id.sync="data.saksi.id"
+						:entity_id.sync="data.penindakan.saksi.id"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="12">
 					<MySelectPetugas
-						ref="selectPetugas1"
 						label="Nama Petugas 1"
 						description="Nama Pejabat Bea dan Cukai yang melakukan pemeriksaan badan"
-						:id.sync="data.penindakan.petugas1.user_id"
-						role="p2vue.penindakan"
+						:nip.sync="data.penindakan.petugas.petugas1.nip"
 						:currentUser="true"
 					/>
 				</CCol>
@@ -185,11 +205,9 @@
 			<CRow>
 				<CCol md="12">
 					<MySelectPetugas
-						ref="selectPetugas2"
 						label="Nama Petugas 2"
 						description="Nama Pejabat Bea dan Cukai yang melakukan pemeriksaan badan"
-						:id.sync="data.penindakan.petugas2.user_id"
-						role="p2vue.penindakan"
+						:nip.sync="data.penindakan.petugas.petugas2.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -217,43 +235,46 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
+import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
+// import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectLokasi from '../../components/SelectLokasi.vue'
+import MySelectNegara from '../../components/SelectNegara.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
 const default_data = {
-	asal: null,
-	tujuan: null,
-	orang: {id: null},
-	pendamping: {id: null},
-	sarkut: {
-		id: null,
-		nama_sarkut: null,
-		jenis_sarkut: null,
-		no_flight_trayek: null,
-		pilot: {id: null},
-		bendera: null,
-		no_reg_polisi: null,
-	},
-	dokumen: {
-		id: null,
-		jns_dok: null,
-		no_dok: null,
-		tgl_dok: null,
-	},
-	uraian_pemeriksaan: null,
-	hasil_pemeriksaan: null,
-	saksi: {id: null},
 	penindakan: {
-		grup_lokasi: {id: null},
+		tanggal_selesai_penindakan: null,
 		lokasi_penindakan: null,
 		sprint: {id: null},
+		objek: {
+			badan: {
+				entitas: {id: null},
+				asal: null,
+				tujuan: null,
+				pendamping: {id: null},
+				nama_sarkut: null,
+				jenis_sarkut: null,
+				nomor_sarkut: null,
+				pengemudi: {id: null},
+				bendera: {kode_2: null},
+				registrasi_sarkut: null,
+				jenis_dokumen: null,
+				nomor_dokumen: null,
+				tanggal_dokumen: null,
+				uraian_pemeriksaan: null,
+				hasil_pemeriksaan: null,
+			}
+		},
 		saksi: {id: null},
-		petugas1: {user_id: null},
-		petugas2: {user_id: null}
+		petugas: {
+			petugas1: {nip: null},
+			petugas2: {nip: null},
+		},
 	},
 }
 
@@ -262,93 +283,89 @@ export default {
 	components: {
 		DatePicker,
 		MyAlert,
-		MySelectEntitas,
+		// MySelectEntitas,
+		MyComboboxLokasi,
+		MySelectEntitasOrang,
 		MySelectLokasi,
+		MySelectNegara,
 		MySelectPetugas,
 		MySelectSprint,
 	},
 	props: {
 		state: String,
+		doc_type: String,
+		tipe_surat: String,
 		doc_id: Number
 	},
 	data() {
 		return {
 			data: JSON.parse(JSON.stringify(default_data)),
+			selected_sprint: null,
+		}
+	},
+	watch: {
+		selected_sprint(val) {
+			this.data.penindakan.sprint.id = val
 		}
 	},
 	methods: {
 		async getData() {
-			let response = await api.getFormDataById('riksabadan', this.doc_id)
-			this.data = response.data.data
-			this.fillDefaultData()
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data = response.data
+			this.selected_sprint = this.data.penindakan.sprint
+				? this.data.penindakan.sprint.id : null
+			this.fillNull()
 			
-			this.$nextTick(function () {
-				this.renderData()
-			})
+			// this.$nextTick(function () {
+			// 	this.renderData()
+			// })
 		},
-		fillDefaultData() {
-			// Data orang yg bersamaan
-			if (this.data.pendamping == null) {
-				this.data.pendamping = {id: null}
+		fillNull() {
+			if (this.data.penindakan.sprint == null) {
+				this.data.penindakan.sprint = JSON.parse(JSON.stringify(default_data.penindakan.sprint))
 			}
 
-			// Data sarkut
-			if (this.data.sarkut == null) {
-				this.data.sarkut = {
-					id: null,
-					nama_sarkut: null,
-					jenis_sarkut: null,
-					no_flight_trayek: null,
-					pilot: {id: null},
-					bendera: null,
-					no_reg_polisi: null,
-				}
-			} else {
-				if (this.data.sarkut.pilot == null) {
-					this.data.sarkut.pilot = {id: null}
-				}
+			if (this.data.penindakan.saksi == null) {
+				this.data.penindakan.saksi = JSON.parse(JSON.stringify(default_data.penindakan.saksi))
 			}
 
-			// Data dokumen barang
-			if (this.data.dokumen == null) {
-				this.data.dokumen = {
-					id: null,
-					jns_dok: null,
-					no_dok: null,
-					tgl_dok: null,
-				}
+			if (
+				(this.data.penindakan.petugas.petugas2 == null) ||
+				(this.data.penindakan.petugas.petugas2 == undefined)
+			) {
+				this.data.penindakan.petugas.petugas2 = JSON.parse(JSON.stringify(default_data.penindakan.petugas.petugas2))
 			}
 
-			// Data saksi
-			if (this.data.saksi == null) {
-				this.data.saksi = {id: null}
+			let objek = this.data.penindakan.objek.badan
+
+			if (objek.entitas == null) {
+				objek.entitas = JSON.parse(JSON.stringify(default_data.penindakan.objek.badan.entitas))
 			}
 
-			// Data petugas 2
-			if (this.data.penindakan.petugas2 == null) {
-				this.data.penindakan.petugas2 = {user_id: null}
+			if (objek.pendamping == null) {
+				objek.pendamping = JSON.parse(JSON.stringify(default_data.penindakan.objek.badan.pendamping))
 			}
-		},
-		renderData() {
-			this.$refs.selectSprint.getSprint(this.data.penindakan.sprint.id, true)
-			this.$refs.selectOrang.getEntitas(this.data.orang.id, true)
-			this.$refs.selectPendamping.getEntitas(this.data.pendamping.id, true)
-			this.$refs.selectPilot.getEntitas(this.data.sarkut.pilot.id, true)
-			this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
-			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
-			this.$refs.selectPetugas2.getPetugas(this.data.penindakan.petugas2.user_id, true)
+
+			if (objek.pengemudi == null) {
+				objek.pengemudi = JSON.parse(JSON.stringify(default_data.penindakan.objek.badan.pengemudi))
+			}
+
+			if (objek.bendera == null) {
+				objek.bendera = JSON.parse(JSON.stringify(default_data.penindakan.objek.badan.bendera))
+			}
 		},
 		async saveData() {
+			console.log('FORM RIKSA BADAN - SAVE', JSON.parse(JSON.stringify(this.data)))
 			if (this.state == 'insert') {
-				this.data = await api.storeDoc('riksabadan', this.data)
-				this.fillDefaultData()
+				this.data = await api.storeDoc(this.doc_type, this.data)
+				this.fillNull()
 
 				this.$emit('update:doc_id', this.data.id)
 				this.$emit('update:state', 'edit')
-				this.alert('Data BA Pemeriksaan Badan berhasil disimpan')
+				this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
 			} else if (this.state == 'edit') {
-				await api.updateDoc('riksabadan', this.doc_id, this.data)
-				this.alert('Data BA Pemeriksaan Badan berhasil diubah')
+				await api.updateDoc(this.doc_type, this.doc_id, this.data)
+				this.alert(`Data ${this.tipe_surat} berhasil diubah`)
 			}
 		},
 		alert(text, color, time) {
@@ -361,6 +378,8 @@ export default {
 	async mounted() {
 		if (this.state == 'edit') {
 			await this.getData()
+		} else {
+			this.data.penindakan.tanggal_selesai_penindakan = converters.currentDate()
 		}
 	}
 }

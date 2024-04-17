@@ -81,17 +81,17 @@ export default [
 						_children: [
 							{
 								_name: 'CSidebarNavItem',
-								name: 'BA Periksa',
-								to: '/riksa',
-								icon: 'cil-file',
-								permissions: 'view-riksa',
-							},
-							{
-								_name: 'CSidebarNavItem',
 								name: 'BA Periksa Badan',
 								to: '/riksabadan',
 								icon: 'cil-file',
 								permissions: 'view-riksa-badan',
+							},
+							{
+								_name: 'CSidebarNavItem',
+								name: 'BA Periksa',
+								to: '/riksa',
+								icon: 'cil-file',
+								permissions: 'view-riksa',
 							},
 							{
 								_name: 'CSidebarNavItem',

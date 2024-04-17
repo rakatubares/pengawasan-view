@@ -12,7 +12,11 @@
 						<b>Nama</b>
 					</CCol>
 					<CCol md="9">
-						&nbsp;{{disp_nama}}
+						<p 
+							v-if="disp_nama != null"
+							class="a nav-link p-0 m-0"
+							@click="showEntitas(objek.entitas.id)"
+						>&nbsp;{{ disp_nama }}</p>
 					</CCol>
 				</CRow>
 				<CRow class="mt-2 ml-1">
@@ -36,7 +40,11 @@
 						<b>Pendamping</b>
 					</CCol>
 					<CCol md="9">
-						&nbsp;{{disp_pendamping}}
+						<p 
+							v-if="disp_pendamping != null"
+							class="a nav-link p-0 m-0"
+							@click="showEntitas(objek.pendamping.id)"
+						>&nbsp;{{ disp_pendamping }}</p>
 					</CCol>
 				</CRow>
 				<CRow class="mt-2 ml-1">
@@ -88,7 +96,7 @@
 							v-if="disp_pengemudi != null"
 							class="a nav-link p-0 m-0"
 							@click="showEntitas(objek.pengemudi.id)"
-						>{{ disp_pengemudi }}</p>
+						>&nbsp;{{ disp_pengemudi }}</p>
 					</CCol>
 				</CRow>
 				<CRow class="mt-2 ml-1">
@@ -97,6 +105,22 @@
 					</CCol>
 					<CCol md="9">
 						&nbsp;{{disp_dokumen}}
+					</CCol>
+				</CRow>
+				<CRow class="mt-2 ml-1">
+					<CCol md="3">
+						<b>Uraian Pemeriksaan</b>
+					</CCol>
+					<CCol md="9">
+						&nbsp;{{disp_uraian_pemeriksaan}}
+					</CCol>
+				</CRow>
+				<CRow class="mt-2 ml-1">
+					<CCol md="3">
+						<b>Hasil Pemeriksaan</b>
+					</CCol>
+					<CCol md="9">
+						&nbsp;{{disp_hasil_pemeriksaan}}
 					</CCol>
 				</CRow>
 			</CCol>
@@ -124,6 +148,8 @@ const default_data = {
 	jenis_dokumen: null,
 	nomor_dokumen: null,
 	tanggal_dokumen: null,
+	uraian_pemeriksaan: null,
+	hasil_pemeriksaan: null,
 }
 
 export default {
@@ -149,7 +175,10 @@ export default {
 		disp_nama_sarkut() { return this.objek.nama_sarkut || '-' },
 		disp_jenis_sarkut() { return this.objek.jenis_sarkut || '-' },
 		disp_nomor_sarkut() { return this.objek.nomor_sarkut || '-' },
-		disp_bendera_sarkut() { return this.objek.bendera_sarkut || '-' },
+		disp_bendera_sarkut() { 
+			let bendera = this.objek.bendera ? this.objek.bendera.nama_negara : '-'
+			return bendera
+		},
 		disp_registrasi_sarkut() { return this.objek.registrasi_sarkut || '-' },
 		disp_pengemudi() { return this.objek.pengemudi ? this.objek.pengemudi.nama : null },
 		disp_dokumen() { 
@@ -170,6 +199,12 @@ export default {
 						: '-'
 			
 			return dok
+		},
+		disp_uraian_pemeriksaan() {
+			return this.objek.uraian_pemeriksaan ? this.objek.uraian_pemeriksaan : '-'
+		},
+		disp_hasil_pemeriksaan() {
+			return this.objek.hasil_pemeriksaan ? this.objek.hasil_pemeriksaan : '-'
 		},
 	},
 	methods: {

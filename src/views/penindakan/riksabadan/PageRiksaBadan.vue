@@ -3,7 +3,7 @@
 		<MyPageDoc 
 			ref="page_doc"
 			:doc_type="doc_type"
-			table_title="Daftar BA Pemeriksaan Badan"
+			:table_title="`Daftar ${tipe_surat}`"
 			:table_fields="table_fields"
 			:custom_fields="custom_fields"
 			:compute_list="computeList"
@@ -15,6 +15,8 @@
 				<MyModalRiksaBadan 
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
+					:doc_type="doc_type"
+					:tipe_surat="tipe_surat"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>
@@ -35,11 +37,12 @@ export default {
 	},
 	data() {
 		return {
-			doc_type: 'riksabadan',
+			doc_type: 'riksa_badan',
+			tipe_surat: 'BA Pemeriksaan Badan',
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Periksa Badan' },
-				{ key: 'tanggal_penindakan', label: 'Tgl BA' },
-				{ key: 'nama_orang', label: 'Nama Orang' },
+				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
+				{ key: 'entitas', label: 'Nama Orang' },
 				{ key: 'petugas', label: 'Petugas' },
 			],
 			custom_fields: ['petugas'],
@@ -70,7 +73,7 @@ export default {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
 				+ " a.n. " 
-				+ item.nama_orang.bold() 
+				+ item.entitas.bold() 
 				+ "?"
 			
 			return text
