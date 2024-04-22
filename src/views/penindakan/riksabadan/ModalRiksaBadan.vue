@@ -1,7 +1,6 @@
 <template>
 	<div class="wrapper">
 		<MyModalPenindakan
-			ref="ModalPenindakan"
 			:title="`Data ${tipe_surat}`"
 			:state.sync="local_state"
 			:doc_type="doc_type"
@@ -32,19 +31,6 @@ import MyDisplayRiksaBadan from './DisplayRiksaBadan.vue'
 import MyFormRiksaBadan from './FormRiksaBadan.vue'
 import MyModalPenindakan from '../../components/ModalPenindakan.vue'
 
-const tabs_list = [
-	{
-		title: 'Uraian',
-		visibility: true,
-		name: 'tab-uraian',
-	},
-	{
-		title: 'Print',
-		visibility: false,
-		name: 'tab-pdf',
-	}
-]
-
 export default {
 	name: 'ModalRiksaBadan',
 	components: {
@@ -62,7 +48,6 @@ export default {
 		return {
 			doc_id: this.id,
 			local_state: this.state,
-			tabs: JSON.parse(JSON.stringify(tabs_list)),
 		}
 	},
 	watch: {

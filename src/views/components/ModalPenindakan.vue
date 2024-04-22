@@ -209,7 +209,6 @@ export default {
 			current_tab: 0,
 			objects: this.available_objects,
 			data_objects: {},
-			data_sarkut: null,
 		}
 	},
 	watch: {
@@ -245,22 +244,6 @@ export default {
 			this.data_objects = response.data.penindakan.objek
 			this.penindakan_id = response.data.penindakan.id
 			this.penindakan = response.data.penindakan
-			
-			this.data_sarkut = response.data.penindakan.objek.sarkut
-				? JSON.parse(JSON.stringify(response.data.penindakan.objek.sarkut))
-				: null
-
-			this.data_badan = response.data.penindakan.objek.badan
-				? JSON.parse(JSON.stringify(response.data.penindakan.objek.badan))
-				: null
-			
-			this.data_bangunan = response.data.penindakan.objek.bangunan
-				? JSON.parse(JSON.stringify(response.data.penindakan.objek.bangunan))
-				: null
-
-			this.data_barang = response.data.penindakan.objek.barang
-				? JSON.parse(JSON.stringify(response.data.penindakan.objek.barang))
-				: null
 		},
 		setPenindakan(penindakan) {
 			this.data_objects = penindakan.objek

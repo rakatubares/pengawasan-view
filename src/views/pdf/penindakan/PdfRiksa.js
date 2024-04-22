@@ -29,6 +29,7 @@ class PdfRiksa extends PdfPenindakan {
 
 		this.txt = {}
 		this.txt.lokasi = this.data.penindakan.lokasi_penindakan || ''
+		this.txt.saksi = this.data.penindakan.saksi ? this.data.penindakan.saksi.nama : ''
 	}
 
 	writeText()
@@ -73,7 +74,7 @@ class PdfRiksa extends PdfPenindakan {
 			inds.ttd1,
 			'Pemilik/Importir/Eksportir/Kuasanya/Saksi*,',
 			undefined,
-			this.data.penindakan.saksi.nama,
+			this.txt.saksi,
 		)
 		this.break()
 
@@ -143,7 +144,7 @@ class PdfRiksa extends PdfPenindakan {
 					inds.ttd1,
 					'Pemilik/Importir/Eksportir/Kuasanya/Saksi*,',
 					undefined,
-					this.data.penindakan.saksi.nama
+					this.txt.saksi
 				)
 				this.break()
 

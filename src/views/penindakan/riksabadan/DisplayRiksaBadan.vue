@@ -167,9 +167,7 @@
 
 <script>
 import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
-import MyDisplaySarkut from '../../details/displays/DisplaySarkut.vue'
 import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 const default_data = {
@@ -207,9 +205,7 @@ const default_data = {
 export default {
 	name: 'DisplayRiksaBadan',
 	components: {
-		MyDisplayEntitas,
 		MyDisplayPegawai,
-		MyDisplaySarkut,
 		MyModalEntitasOrang,
 	},
 	props: {

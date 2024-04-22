@@ -108,6 +108,10 @@ export default {
 			let data = this.penindakan.objek.sarkut
 				? JSON.parse(JSON.stringify(this.penindakan.objek.sarkut))
 				: JSON.parse(JSON.stringify(default_data))
+
+			if (!data.pengemudi) {
+				data.pengemudi = JSON.parse(JSON.stringify(default_data.pengemudi))
+			}
 			
 			return data
 		},

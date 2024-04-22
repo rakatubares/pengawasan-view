@@ -238,7 +238,6 @@ import api from '../../../router/api2.js'
 import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
-// import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
 import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectLokasi from '../../components/SelectLokasi.vue'
@@ -283,7 +282,6 @@ export default {
 	components: {
 		DatePicker,
 		MyAlert,
-		// MySelectEntitas,
 		MyComboboxLokasi,
 		MySelectEntitasOrang,
 		MySelectLokasi,
@@ -315,10 +313,6 @@ export default {
 			this.selected_sprint = this.data.penindakan.sprint
 				? this.data.penindakan.sprint.id : null
 			this.fillNull()
-			
-			// this.$nextTick(function () {
-			// 	this.renderData()
-			// })
 		},
 		fillNull() {
 			if (this.data.penindakan.sprint == null) {
@@ -355,7 +349,6 @@ export default {
 			}
 		},
 		async saveData() {
-			console.log('FORM RIKSA BADAN - SAVE', JSON.parse(JSON.stringify(this.data)))
 			if (this.state == 'insert') {
 				this.data = await api.storeDoc(this.doc_type, this.data)
 				this.fillNull()

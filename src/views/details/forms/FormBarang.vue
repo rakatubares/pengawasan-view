@@ -146,7 +146,7 @@ const default_data = {
 }
 
 export default {
-	name: 'FormDetailBarang',
+	name: 'FormBarang',
 	components: {
 		DatePicker,
 		MyAlert,
@@ -252,7 +252,9 @@ export default {
 			this.state = 'insert'
 			this.flag_barang = false
 			this.objek = JSON.parse(JSON.stringify(default_data))
-			this.objek.pemilik = {id: this.penindakan.saksi.id}
+			if (this.penindakan.saksi) {
+				this.objek.pemilik = {id: this.penindakan.saksi.id}	
+			}
 		}
 	},
 }

@@ -28,27 +28,39 @@
 						{{ disp_lokasi }}
 					</CCol>
 				</CRow>
-				<MyDisplayEntitas
-					title="Pemilik/Saksi"
-					:data.sync="data_riksa.penindakan.saksi"
-				/>
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>Saksi</b></h5>
+					</CCol>
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(data_doc.penindakan.saksi.id)"
+						>{{ disp_saksi }}</p>
+					</CCol>
+				</CRow>
 				<MyDisplayPegawai
 					title="Petugas 1"
-					:data.sync="data_riksa.penindakan.petugas1"
+					:data.sync="data_doc.penindakan.petugas.petugas1"
 				/>
 				<MyDisplayPegawai
 					title="Petugas 2"
-					:data.sync="data_riksa.penindakan.petugas2"
+					:data.sync="data_doc.penindakan.petugas.petugas2"
 				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_saksi"
+			:show.sync="show_modal_saksi"
+		/>
 	</div>
 </template>
 
 <script>
 import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 const default_data = {
 	no_dok_lengkap: null,
@@ -58,43 +70,51 @@ const default_data = {
 		sprint: {
 			nomor_sprint: null,
 			tanggal_sprint: null
-		}
+		},
+		saksi: {nama: null},
+		petugas: {}
 	}
 }
 
 export default {
 	name: 'DisplayRiksa',
 	components: {
-		MyDisplayEntitas,
-		MyDisplayPegawai
+		MyDisplayPegawai,
+		MyModalEntitasOrang,
 	},
 	props: {
+		doc_type: String,
 		doc_id: Number
 	},
 	data() {
 		return {
-			data_riksa: JSON.parse(JSON.stringify(default_data))
+			data_doc: JSON.parse(JSON.stringify(default_data)),
+			show_modal_saksi: false,
 		}
 	},
 	computed: {
-		disp_no_ba_riksa() { return this.data_riksa.no_dok_lengkap || '-' },
-		disp_tgl_ba_riksa() { return this.data_riksa.penindakan.tanggal_penindakan || '-' },
-		disp_sprint() { return ((this.data_riksa.penindakan.sprint.nomor_sprint || '') + ' tanggal ' + (this.data_riksa.penindakan.sprint.tanggal_sprint || '')) },
-		disp_lokasi() {
-			var grup_lokasi = this.data_riksa.penindakan.grup_lokasi ? `(${this.data_riksa.penindakan.grup_lokasi.lokasi}) ` : ''
-			var lokasi = this.data_riksa.penindakan.lokasi_penindakan ? this.data_riksa.penindakan.lokasi_penindakan : '-'
-			return grup_lokasi+lokasi
-		},
+		disp_no_ba_riksa() { return this.data_doc.no_dok_lengkap || '-' },
+		disp_tgl_ba_riksa() { return this.data_doc.tanggal_dokumen || '-' },
+		disp_sprint() { return (
+			(this.data_doc.penindakan.sprint.nomor_sprint || '') 
+			+ ' tanggal ' 
+			+ (this.data_doc.penindakan.sprint.tanggal_sprint || '')
+		) },
+		disp_lokasi() { return this.data_doc.penindakan.lokasi_penindakan || '-' },
+		disp_saksi() { 
+			let txt = this.data_doc.penindakan.saksi
+				? this.data_doc.penindakan.saksi.nama : '-'
+			return txt
+		}
 	},
 	methods: {
 		async getData() {
-			let response = await api.getDisplayDataById('riksa', this.doc_id)
-			this.data_riksa = response.data.data
-
-			if (this.data_riksa.penindakan.petugas2 == null) {
-				this.data_riksa.penindakan.petugas2 = {user_id: null}
-			}
-		}
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data_doc = response.data
+		},
+		showEntitas(saksi_id) {
+			this.$refs.modal_saksi.showModal('show', saksi_id)
+		},
 	},
 	async mounted() {
 		await this.getData()

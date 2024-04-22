@@ -85,7 +85,7 @@ const default_data = {
 }
 
 export default {
-	name: 'FormDetailBangunan',
+	name: 'FormBangunan',
 	components: {
 		MyAlert,
 		MySelectEntitasOrang
@@ -172,7 +172,9 @@ export default {
 			this.state = 'insert'
 			this.flag_bangunan = false
 			this.objek = JSON.parse(JSON.stringify(default_data))
-			this.objek.pemilik = {id: this.penindakan.saksi.id}
+			if (this.penindakan.saksi) {
+				this.objek.pemilik = {id: this.penindakan.saksi.id}
+			}
 		}
 	}
 }

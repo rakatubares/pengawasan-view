@@ -221,7 +221,7 @@ const default_data = {
 }
 
 export default {
-	name: 'FormDetailBadan',
+	name: 'FormBadan',
 	components: {
 		DatePicker,
 		MyAlert,

@@ -223,7 +223,9 @@ export default {
 			this.state = 'insert'
 			this.flag_sarkut = false
 			this.objek = JSON.parse(JSON.stringify(default_data))
-			this.objek.pengemudi = {id: this.penindakan.saksi.id}
+			if (this.penindakan.saksi) {
+				this.objek.pengemudi = {id: this.penindakan.saksi.id}	
+			}
 		}
 	}
 }

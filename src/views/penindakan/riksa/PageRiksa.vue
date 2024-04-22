@@ -3,7 +3,7 @@
 		<MyPageDoc
 			ref="page_doc"
 			:doc_type="doc_type"
-			table_title="Daftar BA Pemeriksaan"
+			:table_title="`Daftar ${tipe_surat}`"
 			:table_fields="table_fields"
 			:custom_fields="custom_fields"
 			:compute_list="computeList"
@@ -15,6 +15,8 @@
 				<MyModalRiksa 
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
+					:doc_type="doc_type"
+					:tipe_surat="tipe_surat"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>
@@ -36,9 +38,10 @@ export default {
 	data() {
 		return {
 			doc_type: 'riksa',
+			tipe_surat: 'BA Pemeriksaan',
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Pemeriksaan' },
-				{ key: 'tanggal_penindakan', label: 'Tgl BA' },
+				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
 				{ key: 'nama_saksi', label: 'Pemilik/Saksi' },
 				{ key: 'petugas', label: 'Petugas' },
 			],
@@ -69,9 +72,12 @@ export default {
 		constructDeleteText(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
-				+ " a.n. " 
-				+ item.nama_saksi.bold() 
-				+ "?"
+
+			if (item.nama_saksi) {
+				text += ` a.n. ${item.nama_saksi.bold()}`
+			}
+
+			text += '?'
 			
 			return text
 		},
