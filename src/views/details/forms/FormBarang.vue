@@ -208,8 +208,9 @@ export default {
 				this.state = 'edit'
 				this.flag_barang = true
 				this.objek = response.data
+				this.fillNull()
 				let penindakan = this.penindakan
-				penindakan.objek.barang = response.data
+				penindakan.objek.barang = this.objek
 				this.$emit('update:penindakan', penindakan)
 			} else {
 				this.state = 'insert'

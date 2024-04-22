@@ -3,10 +3,34 @@
 		<!-- Form BA Segel header -->
 		<CForm class="pt-3">
 			<CRow>
+				<label class="w-100 pl-3 pt-2 mb-0">Tanggal Penindakan</label>
+				<CCol md="3" sm="12">
+					<div class="form-group">
+						<date-picker 
+							v-model="data.penindakan.tanggal_selesai_penindakan"
+							format="DD-MM-YYYY" 
+							value-type="format"
+							type="date"
+							class="w-100"
+						>
+							<template v-slot:input="slotProps">
+								<input
+									class="form-control" 
+									type="text" 
+									v-bind="slotProps.props" 
+									v-on="slotProps.events"
+								/>
+							</template>
+							<i slot="icon-calendar"></i>
+							<i slot="icon-clear"></i>
+						</date-picker>
+					</div>
+				</CCol>
+			</CRow>
+			<CRow>
 				<CCol md="12">
 					<MySelectSprint
-						ref="selectSprint"
-						:id.sync="data.penindakan.sprint.id"
+						:id.sync="selected_sprint"
 					/>
 				</CCol>
 			</CRow>
@@ -19,13 +43,10 @@
 						:value.sync="data.jenis_segel"
 					/>
 				</CCol>
-				<CCol md="3" sm="12">
+				<CCol md="2" sm="12">
 					<CInput
 						label="Jumlah Segel"
-						description="Jumlah segel yang digunakan"
 						:value.sync="data.jumlah_segel"
-						:is-valid="validatorNumber"
-						invalid-feedback="Jumlah segel wajib diisi"
 					/>
 				</CCol>
 				<CCol md="3" sm="12">
@@ -38,31 +59,36 @@
 			<CRow>
 				<CCol sm="12">
 					<CInput
-						label="Tempat Segel"
+						label="Penempatan Segel"
 						description="Bagian / lokasi tempat segel ditempatkan / dilekatkan"
 						:value.sync="data.tempat_segel"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
+				<CCol class="col-12">
+					<CInput
+						label="Nomor Segel"
+						:value.sync="data.nomor_segel"
+					/>	
+				</CCol>
+			</CRow>
+			<CRow>
 				<CCol md="12">
-					<MySelectEntitas
+					<MySelectEntitasOrang
 						ref="selectSaksi"
 						label="Nama Saksi"
 						description="Nama lengkap pengangkut / kuasa barang / sarana pengangkut atau pemilik / yang menguasai bangunan atau tempat lain yang menyaksikan penyegelan"
-						:showAlamat="true"
-						:id.sync="data.penindakan.saksi.id"
+						:entity_id.sync="data.penindakan.saksi.id"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="12">
 					<MySelectPetugas
-						ref="selectPetugas1"
 						label="Nama Petugas 1"
-						description="Nama Pejabat Bea dan Cukai yang melakukan penyegelan"
-						:id.sync="data.penindakan.petugas1.user_id"
-						role="p2vue.penindakan"
+						description="Nama Pejabat Bea dan Cukai yang melakukan pemeriksaan"
+						:nip.sync="data.penindakan.petugas.petugas1.nip"
 						:currentUser="true"
 					/>
 				</CCol>
@@ -70,11 +96,9 @@
 			<CRow>
 				<CCol md="12">
 					<MySelectPetugas
-						ref="selectPetugas2"
 						label="Nama Petugas 2"
-						description="Nama Pejabat Bea dan Cukai yang melakukan penyegelan"
-						:id.sync="data.penindakan.petugas2.user_id"
-						role="p2vue.penindakan"
+						description="Nama Pejabat Bea dan Cukai yang melakukan pemeriksaan"
+						:nip.sync="data.penindakan.petugas.petugas2.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -98,81 +122,98 @@
 </template>
 
 <script>
+import DatePicker from 'vue2-datepicker'
+import 'vue2-datepicker/index.css'
+
 import api from '../../../router/api2.js'
+import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
 
 const default_data = {
-	jenis_segel: 'kertas',
-	jumlah_segel: null,
-	satuan_segel: null,
+	jenis_segel: 'Kertas',
+	jumlah_segel: 1,
+	satuan_segel: 'lembar',
 	tempat_segel: null,
 	penindakan: {
+		tanggal_selesai_penindakan: null,
 		lokasi_penindakan: null,
 		sprint: {id: null},
 		saksi: {id: null},
-		petugas1: {user_id: null},
-		petugas2: {user_id: null}
+		petugas: {
+			petugas1: {nip: null},
+			petugas2: {nip: null},
+		},
 	},
 }
 
 export default {
 	name: 'FormSegel',
 	components: {
+		DatePicker,
 		MyAlert,
-		MySelectEntitas,
+		MySelectEntitasOrang,
 		MySelectPetugas,
 		MySelectSprint
 	},
 	props: {
 		state: String,
+		doc_type: String,
+		tipe_surat: String,
 		doc_id: Number
 	},
 	data() {
 		return {
 			data: JSON.parse(JSON.stringify(default_data)),
+			selected_sprint: null,
+		}
+	},
+	watch: {
+		selected_sprint(val) {
+			this.data.penindakan.sprint.id = val
 		}
 	},
 	methods: {
 		async getData() {
-			let response = await api.getFormDataById('segel', this.doc_id)
-			this.data = response.data.data
-
-			if (this.data.penindakan.petugas2 == null) {
-				this.data.penindakan.petugas2 = {user_id: null}
-			}
-			
-			this.$nextTick(function () {
-				this.renderData()
-			})
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data = response.data
+			this.selected_sprint = this.data.penindakan.sprint
+				? this.data.penindakan.sprint.id : null
+			this.fillNull()
 		},
-		renderData() {
-			this.$refs.selectSprint.getSprint(this.data.penindakan.sprint.id, true)
-			this.$refs.selectSaksi.getEntitas(this.data.penindakan.saksi.id, true)
-			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
-			this.$refs.selectPetugas2.getPetugas(this.data.penindakan.petugas2.user_id, true)
+		fillNull() {
+			if (this.data.penindakan.sprint == null) {
+				this.data.penindakan.sprint = JSON.parse(JSON.stringify(default_data.penindakan.sprint))
+			}
+
+			if (this.data.penindakan.saksi == null) {
+				this.data.penindakan.saksi = JSON.parse(JSON.stringify(default_data.penindakan.saksi))
+			}
+
+			if (
+				(this.data.penindakan.petugas.petugas2 == null) ||
+				(this.data.penindakan.petugas.petugas2 == undefined)
+			) {
+				this.data.penindakan.petugas.petugas2 = JSON.parse(JSON.stringify(default_data.penindakan.petugas.petugas2))
+			}
 		},
 		async saveData() {
 			if (this.state == 'insert') {
-				try {
-					let response = await api.storeDoc('segel', this.data)
-					this.$emit('update:doc_id', response.id)
-					this.$emit('update:state', 'edit')
-					this.alert('Data BA Segel berhasil disimpan')
-				} catch (error) {
-					console.log('form segel - save data - error', error)
-				}
+				this.data = await api.storeDoc(this.doc_type, this.data)
+				this.fillNull()
+
+				this.$emit('update:doc_id', this.data.id)
+				this.$emit('update:state', 'edit')
+				this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
 			} else if (this.state == 'edit') {
-				try {
-					await api.updateDoc('segel', this.doc_id, this.data)
-					this.alert('Data BA Segel berhasil diubah')
-				} catch (error) {
-					console.log('form segel - update data - error', error)
-				}
+				await api.updateDoc(this.doc_type, this.doc_id, this.data)
+				this.alert(`Data ${this.tipe_surat} berhasil diubah`)
 			}
+
+			this.$emit('save-data', this.data)
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
@@ -183,6 +224,8 @@ export default {
 	async mounted() {
 		if (this.state == 'edit') {
 			await this.getData()
+		} else {
+			this.data.penindakan.tanggal_selesai_penindakan = converters.currentDate()
 		}
 	}
 }

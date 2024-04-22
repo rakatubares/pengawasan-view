@@ -138,12 +138,15 @@ export default {
 			if (response != '') {
 				this.state = 'edit'
 				this.flag_bangunan = true
+				this.objek = response.data
+				this.fillNull()
 				let penindakan = this.penindakan
-				penindakan.objek.bangunan = response.data
+				penindakan.objek.bangunan = this.objek
 				this.$emit('update:penindakan', penindakan)
 			} else {
 				this.state = 'insert'
 				this.flag_bangunan = false
+				this.objek = JSON.parse(JSON.stringify(default_data))
 				let penindakan = this.penindakan
 				delete penindakan.objek.bangunan
 				this.$emit('update:penindakan', penindakan)

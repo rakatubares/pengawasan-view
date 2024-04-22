@@ -37,6 +37,7 @@ class PdfSegel extends PdfPenindakan {
 		let tempat = this.data.tempat_segel || '     '
 		this.txt.segel = `dengan menggunakan segel / tanda pengaman ${jenis} `
 			+ `sebanyak ${jumlah} Nomor ${nomor} penempatan / pelekatan segel sebagai berikut ${tempat}`
+		this.txt.saksi = this.data.penindakan.saksi ? this.data.penindakan.saksi.nama : ''
 	}
 
 	writeText()
@@ -56,7 +57,7 @@ class PdfSegel extends PdfPenindakan {
 		this.write(this.txt.segel)
 		this.break()
 
-		this.writeSaksi(this.data.penindakan.saksi, 'Penyegelan')
+		this.writeSaksi(this.txt.saksi, 'Penyegelan')
 
 		this.write('Demikian Berita Acara ini dibuat dengan sebenarnya.', inds.ttd1)
 		this.break(1)
@@ -72,7 +73,7 @@ class PdfSegel extends PdfPenindakan {
 			inds.ttd1,
 			'Pemilik/Importir/Eksportir/Kuasanya/Saksi*,',
 			undefined,
-			this.data.penindakan.saksi.nama,
+			this.txt.saksi,
 		)
 		this.break()
 

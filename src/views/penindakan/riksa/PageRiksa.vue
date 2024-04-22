@@ -70,14 +70,12 @@ export default {
 			this.modal_data_props.show = false
 		},
 		constructDeleteText(item) {
+			let saksi = '-'
+			if (item.nama_saksi) { saksi = item.nama_saksi.bold() }
+
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
-
-			if (item.nama_saksi) {
-				text += ` a.n. ${item.nama_saksi.bold()}`
-			}
-
-			text += '?'
+				+ ` a.n. ${saksi} ?`
 			
 			return text
 		},

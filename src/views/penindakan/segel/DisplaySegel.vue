@@ -52,27 +52,39 @@
 						{{ disp_tempat_segel }}
 					</CCol>
 				</CRow>
-				<MyDisplayEntitas
-					title="Saksi"
-					:data.sync="data_segel.penindakan.saksi"
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>Saksi</b></h5>
+					</CCol>
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(data_doc.penindakan.saksi.id)"
+						>{{ disp_saksi }}</p>
+					</CCol>
+				</CRow>
+				<MyDisplayPegawai
+					title="Petugas 1"
+					:data.sync="data_doc.penindakan.petugas.petugas1"
 				/>
 				<MyDisplayPegawai
-					title="Pejabat 1"
-					:data.sync="data_segel.penindakan.petugas1"
-				/>
-				<MyDisplayPegawai
-					title="Pejabat 2"
-					:data.sync="data_segel.penindakan.petugas2"
+					title="Petugas 2"
+					:data.sync="data_doc.penindakan.petugas.petugas2"
 				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_saksi"
+			:show.sync="show_modal_saksi"
+		/>
 	</div>
 </template>
 
 <script>
 import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 const default_data = {
 	no_dok_lengkap: null,
@@ -85,37 +97,50 @@ const default_data = {
 		sprint: {
 			nomor_sprint: null,
 			tanggal_sprint: null
-		}
+		},
+		saksi: {nama: null},
+		petugas: {}
 	},
 }
 
 export default {
 	name: 'DisplaySegel',
 	components: {
-		MyDisplayEntitas,
-		MyDisplayPegawai
+		MyDisplayPegawai,
+		MyModalEntitasOrang,
 	},
 	props: {
+		doc_type: String,
 		doc_id: Number
 	},
 	data() {
 		return {
-			data_segel: JSON.parse(JSON.stringify(default_data))
+			data_doc: JSON.parse(JSON.stringify(default_data)),
+			show_modal_saksi: false,
 		}
 	},
 	computed: {
-		disp_no_ba_segel() { return this.data_segel.no_dok_lengkap || '-' },
-		disp_tgl_ba_segel() { return this.data_segel.penindakan.tanggal_penindakan || '-' },
-		disp_sprint() { return ((this.data_segel.penindakan.sprint.nomor_sprint || '') + ' tanggal ' + (this.data_segel.penindakan.sprint.tanggal_sprint || '')) },
-		disp_jenis_segel() { return this.data_segel.jenis_segel || '-' },
-		disp_jumlah_segel() { return ((this.data_segel.jumlah_segel || '-') + ' ' + (this.data_segel.satuan_segel || '')) },
-		disp_nomor_segel() { return this.data_segel.nomor_segel || '-'},
-		disp_tempat_segel() { return this.data_segel.tempat_segel || '-' },
+		disp_no_ba_segel() { return this.data_doc.no_dok_lengkap || '-' },
+		disp_tgl_ba_segel() { return this.data_doc.tanggal_dokumen || '-' },
+		disp_sprint() { return (
+			(this.data_doc.penindakan.sprint.nomor_sprint || '') 
+			+ ' tanggal ' 
+			+ (this.data_doc.penindakan.sprint.tanggal_sprint || '')
+		) },
+		disp_jenis_segel() { return this.data_doc.jenis_segel || '-' },
+		disp_jumlah_segel() { return ((this.data_doc.jumlah_segel || '-') + ' ' + (this.data_doc.satuan_segel || '')) },
+		disp_nomor_segel() { return this.data_doc.nomor_segel || '-'},
+		disp_tempat_segel() { return this.data_doc.tempat_segel || '-' },
+		disp_saksi() { 
+			let txt = this.data_doc.penindakan.saksi
+				? this.data_doc.penindakan.saksi.nama : '-'
+			return txt
+		}
 	},
 	methods: {
 		async getData() {
-			let response = await api.getDisplayDataById('segel', this.doc_id)
-			this.data_segel = response.data.data
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data_doc = response.data
 		}
 	},
 	async mounted() {

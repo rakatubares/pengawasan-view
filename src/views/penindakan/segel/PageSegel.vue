@@ -3,19 +3,20 @@
 		<MyPageDoc 
 			ref="page_doc"
 			:doc_type="doc_type"
-			table_title="Daftar BA Penyegelan"
+			:table_title="`Daftar ${tipe_surat}`"
 			:table_fields="table_fields"
 			:custom_fields="custom_fields"
 			:compute_list="computeList"
 			:modal_data_props.sync="modal_data_props"
-			:construct_delete_text="constructDeleteText"
-			:status_filter_options="status_filter_options"
+			:construct_delete_text="constructDeleteText"			
 			:permission_to_create="permission_to_create"
 		>
 			<template #modal-data>
 				<MyModalSegel 
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
+					:doc_type="doc_type"
+					:tipe_surat="tipe_surat"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>
@@ -37,6 +38,7 @@ export default {
 	data() {
 		return {
 			doc_type: 'segel',
+			tipe_surat: 'BA Penyegelan',
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Segel' },
 				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
@@ -49,10 +51,6 @@ export default {
 				state: null,
 				doc_id: null
 			},
-			status_filter_options: [
-				{ value: 'draft buka segel', label: 'Draft Buka Segel' }, 
-				{ value: 'buka segel', label: 'Buka Segel' },
-			],
 			permission_to_create: 'create-segel',
 		}
 	},
@@ -72,11 +70,12 @@ export default {
 			this.modal_data_props.show = false
 		},
 		constructDeleteText(item) {
+			let saksi = '-'
+			if (item.nama_saksi) { saksi = item.nama_saksi.bold() }
+
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
-				+ " a.n. " 
-				+ item.nama_saksi.bold() 
-				+ "?"
+				+ ` a.n. ${saksi} ?`
 			
 			return text
 		},
