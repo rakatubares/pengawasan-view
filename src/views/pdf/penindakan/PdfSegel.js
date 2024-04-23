@@ -57,7 +57,7 @@ class PdfSegel extends PdfPenindakan {
 		this.write(this.txt.segel)
 		this.break()
 
-		this.writeSaksi(this.txt.saksi, 'Penyegelan')
+		this.writeSaksi(this.data.penindakan.saksi, 'Penyegelan')
 
 		this.write('Demikian Berita Acara ini dibuat dengan sebenarnya.', inds.ttd1)
 		this.break(1)

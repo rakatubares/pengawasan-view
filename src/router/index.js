@@ -41,6 +41,7 @@ const PageRiksaBadan = () => import('@/views/penindakan/riksabadan/PageRiksaBada
 const PageSbp = () => import('@/views/penindakan/sbp/PageSbp')
 const PageSbpN = () => import('@/views/penindakan/sbp/PageSbpN')
 const PageSegel = () => import('@/views/penindakan/segel/PageSegel')
+const PageTegah = () => import('@/views/penindakan/tegah/PageTegah')
 const PageTitip = () => import('@/views/penindakan/titip/PageTitip')
 const PageTolak1 = () => import('@/views/penindakan/tolak1/PageTolak1')
 const PageTolak2 = () => import('@/views/penindakan/tolak2/PageTolak2')
@@ -67,6 +68,7 @@ function configRoutes () {
 					name: 'Homepage',
 					component: Homepage
 				},
+
 				// Intelijen
 				{
 					path: 'lppi',
@@ -133,6 +135,7 @@ function configRoutes () {
 						checkRoutePermission('view-nin', next)
 					},
 				},
+
 				// Penindakan
 				{
 					path: 'bast',
@@ -284,6 +287,14 @@ function configRoutes () {
 					component: PageSegel,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-segel', next)
+					},
+				},
+				{
+					path: 'tegah',
+					name: 'BA Penegahan',
+					component: PageTegah,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-tegah', next)
 					},
 				},
 				{

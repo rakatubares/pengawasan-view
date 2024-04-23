@@ -95,6 +95,13 @@ export default [
 							},
 							{
 								_name: 'CSidebarNavItem',
+								name: 'BA Tegah',
+								to: '/tegah',
+								icon: 'cil-file',
+								permissions: 'view-tegah',
+							},
+							{
+								_name: 'CSidebarNavItem',
 								name: 'BA Segel',
 								to: '/segel',
 								icon: 'cil-file',

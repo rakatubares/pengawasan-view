@@ -122,11 +122,18 @@ export default {
 	computed: {
 		disp_no_ba_segel() { return this.data_doc.no_dok_lengkap || '-' },
 		disp_tgl_ba_segel() { return this.data_doc.tanggal_dokumen || '-' },
-		disp_sprint() { return (
-			(this.data_doc.penindakan.sprint.nomor_sprint || '') 
-			+ ' tanggal ' 
-			+ (this.data_doc.penindakan.sprint.tanggal_sprint || '')
-		) },
+		disp_sprint() { 
+			let txt = '-'
+
+			if (this.data_doc.penindakan.sprint) {
+				txt = (
+					(this.data_doc.penindakan.sprint.nomor_sprint || '') 
+					+ ' tanggal ' 
+					+ (this.data_doc.penindakan.sprint.tanggal_sprint || '')
+				)
+			}
+			return txt 
+		},
 		disp_jenis_segel() { return this.data_doc.jenis_segel || '-' },
 		disp_jumlah_segel() { return ((this.data_doc.jumlah_segel || '-') + ' ' + (this.data_doc.satuan_segel || '')) },
 		disp_nomor_segel() { return this.data_doc.nomor_segel || '-'},

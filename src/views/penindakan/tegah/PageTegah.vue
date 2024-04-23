@@ -1,251 +1,85 @@
 <template>
 	<div class="wrapper" data-app>
-		<!-- Display table data for BA Penegahan -->
-		<CRow>
-			<CCol>
-				<MyTableData
-					state="list"
-					:fields="fields"
-					:items="list_table"
-					:showData="showDoc"
-					:editData="editDoc"
-					:deleteData="deleteDoc"
-				>
-					<template #header>
-						<CIcon name="cil-grid"/>Daftar BA Penegahan
-						<div class="card-header-actions">
-							<CButton 
-								color="primary" 
-								@click="createNewDoc()"
-								class="mr-1"
-							>
-								+ Buat BA Penegahan
-							</CButton>
-						</div>
-					</template>
-				</MyTableData>
-			</CCol>
-		</CRow>
-
-		<!-- Modal input BA Penegahan -->
-		<MyModalTabs
-			ref="modal_tabs"
-			title="Data BA Penegahan"
-			v-if="modal_props.show"
-			:tabs_list.sync="modal_props.tabs.list"
-			:current_tab.sync="modal_props.tabs.current"
-			@close-modal="closeModalInput"
+		<MyPageDoc 
+			ref="page_doc"
+			:doc_type="doc_type"
+			:table_title="`Daftar ${tipe_surat}`"
+			:table_fields="table_fields"
+			:custom_fields="custom_fields"
+			:compute_list="computeList"
+			:modal_data_props.sync="modal_data_props"
+			:construct_delete_text="constructDeleteText"			
+			:permission_to_create="permission_to_create"
 		>
-			<template #tab-header>
-				<CTab :title="modal_props.tabs.list[0]['title']">
-					<MyFormTegah
-						ref="form_segel"
-						v-if="modal_props.header_form"
-						:id.sync="modal_props.doc_id"
-						:state.sync="modal_props.state"
-						@save-data="saveData"
-					>
-					</MyFormTegah>
-					<MyDisplayTegah
-						v-if="modal_props.header_display"
-						:id.sync="modal_props.doc_id"
-					>
-					</MyDisplayTegah>
-				</CTab>
+			<template #modal-data>
+				<MyModalTegah 
+					v-if="modal_data_props.show"
+					:state.sync="modal_data_props.state"
+					:doc_type="doc_type"
+					:tipe_surat="tipe_surat"
+					:id.sync="modal_data_props.doc_id"
+					@close-modal="closeModal"
+				/>
 			</template>
-
-			<template #tab-detail>
-				<CTab
-					v-if="modal_props.tabs.list[1]['visibility']"
-					:title="modal_props.tabs.list[1]['title']" 
-				>
-					<MyDisplayDetail
-						:available_details="available_details"
-						:state="modal_props.state"
-						:doc_type="doc_type"
-						:doc_id.sync="modal_props.doc_id"
-						@edit-data="refreshPdf"
-					>
-					</MyDisplayDetail>
-				</CTab>
-			</template>
-
-			<template #tab-form>
-				<CTab 
-					v-if="modal_props.tabs.list[2]['visibility']"
-					:title="modal_props.tabs.list[2]['title']" 
-				>
-					<MyPdfTegah
-						ref="pdf_doc"
-						:id.sync="modal_props.doc_id"
-						@publish-doc="showDoc"
-					></MyPdfTegah>
-				</CTab>
-			</template>
-		</MyModalTabs>
-
-		<!-- Modal konfirmasi delete SBP -->
-		<MyModalDelete
-			v-if="modal_delete_props.show"
-			:url.sync="modal_delete_props.url"
-			@close-modal="closeModalDelete"
-			@delete-data="closeModalDelete(); getDataTable()"
-		>
-			<template #text>
-				<span v-html="modal_delete_props.text"></span>
-			</template>
-		</MyModalDelete>
+		</MyPageDoc>
 	</div>
 </template>
 
 <script>
-import axios from 'axios'
-
-import api from '../../../router/api.js'
-import MyDisplayDetail from '../../details/DisplayDetail.vue'
-import MyDisplayTegah from '../tegah/DisplayTegah.vue'
-import MyFormTegah from '../tegah/FormTegah.vue'
-import MyModalDelete from '../../components/ModalDelete.vue'
-import MyModalTabs from '../../components/ModalTabs.vue'
-import MyPdfTegah from '../tegah/PdfTegah.vue'
-import MyTableData from '../../components/TableData.vue'
-
-const tabs_default = {
-	current: 0,
-	list: [
-		{
-			title: 'Header',
-			visibility: true
-		}, 
-		{
-			title: 'Detail',
-			visibility: false
-		}, 
-		{
-			title: 'Form BA Penegahan',
-			visibility: false
-		}
-	]
-}
+import MyModalTegah from './ModalTegah.vue'
+import MyPageDoc from '../../components/PageDoc.vue'
 
 export default {
 	name: 'PageTegah',
 	components: {
-		MyDisplayDetail,
-		MyDisplayTegah,
-		MyFormTegah,
-		MyModalDelete,
-		MyModalTabs,
-		MyPdfTegah,
-		MyTableData
+		MyModalTegah,
+		MyPageDoc,
 	},
 	data() {
 		return {
-			fields: [
-				{ key: 'no_dok_lengkap', label: 'No BA Penegahan' },
-				{ key: 'tgl_dok', label: 'Tgl BA' },
-				{ key: 'nama_saksi', label: 'Pemilik/Saksi' },
-				{ key: 'petugas1', label: 'Petugas' },
-				{ key: 'status', label: 'Status' },
-				{ key: 'actions', label: '' },
-			],
-			list_table: [],
 			doc_type: 'tegah',
-			available_details: ['sarkut', 'barang'],
-			modal_props: {
+			tipe_surat: 'BA Penegahan',
+			table_fields: [
+				{ key: 'no_dok_lengkap', label: 'No BA Tegah' },
+				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
+				{ key: 'nama_saksi', label: 'Pemilik/Saksi' },
+				{ key: 'petugas', label: 'Petugas' },
+			],
+			custom_fields: ['petugas'],
+			modal_data_props: {
 				show: false,
-				state: 'insert',
-				tabs: JSON.parse(JSON.stringify(tabs_default)),
-				doc_id: null,
-				header_form: false,
-				header_display: false
+				state: null,
+				doc_id: null
 			},
-			modal_delete_props: {
-				show: false,
-				url: null,
-				text: null
-			}
+			permission_to_create: 'create-tegah',
 		}
 	},
 	methods: {
-		getDataTable() {
-			axios
-				.get(api.getPenegahan())
-				.then(
-					(response) => {
-						this.list_table = response.data.data
-					}
-				)
+		computeList(list) {
+			return list.map(item => {
+				return {
+					...item,
+					petugas: item.petugas1 + '</br>' + item.petugas2,
+				}
+			})
 		},
-		showDoc(id) {
-			this.modal_props.state = 'display'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
-			this.modal_props.doc_id = id
-			this.modal_props.header_form = false
-			this.modal_props.header_display = true
-			this.modal_props.show = true
+		closeModal() {
+			this.$refs.page_doc.getDataTable()
+			this.modal_data_props.state = null
+			this.modal_data_props.doc_id = null
+			this.modal_data_props.show = false
 		},
-		createNewDoc() {
-			this.modal_props.state = 'insert'
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-			this.modal_props.doc_id = null
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
-			this.modal_props.show = true
-		},
-		editDoc(id) {
-			this.modal_props.state = 'edit'
-			this.modal_props.tabs.list[1]['visibility'] = true
-			this.modal_props.tabs.list[2]['visibility'] = true
-			this.modal_props.doc_id = id
-			this.modal_props.header_form = true
-			this.modal_props.header_display = false
-			this.modal_props.show = true
-		},
-		closeModalInput() {
-			this.getDataTable()
-			this.modal_props.show = false
-			this.modal_props.tabs = JSON.parse(JSON.stringify(tabs_default))
-			this.modal_props.doc_id = null
-			this.modal_props.header_form = false
-			this.modal_props.header_display = false
-		},
-		saveData(state) {
-			if (state == 'insert') {
-				this.displayTab(1)
-				this.displayTab(2)
-				this.$refs.modal_tabs.getNavs(0)
-			} else {
-				this.refreshPdf()
-			}
-		},
-		deleteDoc(item) {
+		constructDeleteText(item) {
+			let saksi = '-'
+			if (item.nama_saksi) { saksi = item.nama_saksi.bold() }
+
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
-				+ " a.n. " 
-				+ item.nama_saksi.bold() 
-				+ "?"
+				+ ` a.n. ${saksi} ?`
 			
-			this.modal_delete_props.url = api.getPenegahanById(item.id)
-			this.modal_delete_props.text = text
-			this.modal_delete_props.show = true
+			return text
 		},
-		closeModalDelete() {
-			this.modal_delete_props.url = null
-			this.modal_delete_props.text = null
-			this.modal_delete_props.show = false
-		},
-		displayTab(tab_index) {
-			this.modal_props.tabs.list[tab_index]['visibility'] = true
-		},
-		refreshPdf() {
-			this.$refs.pdf_doc.showPdf()
-		}
 	},
-	created() {
-		this.getDataTable()
-	}
 }
 </script>
 

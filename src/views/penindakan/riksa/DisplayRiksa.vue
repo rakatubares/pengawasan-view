@@ -95,11 +95,18 @@ export default {
 	computed: {
 		disp_no_ba_riksa() { return this.data_doc.no_dok_lengkap || '-' },
 		disp_tgl_ba_riksa() { return this.data_doc.tanggal_dokumen || '-' },
-		disp_sprint() { return (
-			(this.data_doc.penindakan.sprint.nomor_sprint || '') 
-			+ ' tanggal ' 
-			+ (this.data_doc.penindakan.sprint.tanggal_sprint || '')
-		) },
+		disp_sprint() { 
+			let txt = '-'
+
+			if (this.data_doc.penindakan.sprint) {
+				txt = (
+					(this.data_doc.penindakan.sprint.nomor_sprint || '') 
+					+ ' tanggal ' 
+					+ (this.data_doc.penindakan.sprint.tanggal_sprint || '')
+				)
+			}
+			return txt 
+		},
 		disp_lokasi() { return this.data_doc.penindakan.lokasi_penindakan || '-' },
 		disp_saksi() { 
 			let txt = this.data_doc.penindakan.saksi

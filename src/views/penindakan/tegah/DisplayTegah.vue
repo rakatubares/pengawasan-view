@@ -4,12 +4,12 @@
 			<CCol class="mt-3 mx-2" md="12">
 				<CRow>
 					<CCol>
-						<h4>{{ disp_no_dok }}</h4>
+						<h4>{{ disp_no_ba_tegah }}</h4>
 					</CCol>
 				</CRow>
 				<CRow class="mb-3">
 					<CCol>
-						<h5>{{ disp_tgl_dok }}</h5>
+						<h5>{{ disp_tgl_ba_tegah }}</h5>
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
@@ -20,127 +20,100 @@
 						{{ disp_sprint }}
 					</CCol>
 				</CRow>
-				<CRow class="mb-1">
+				<CRow class="sep">
 					<CCol md="3">
-						<b>Nama Pemilik/Saksi</b>
+						<h5><b>Saksi</b></h5>
 					</CCol>
 					<CCol md="9">
-						{{ disp_nama_saksi }}
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(data_doc.penindakan.saksi.id)"
+						>{{ disp_saksi }}</p>
 					</CCol>
 				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3">
-						<b>Alamat</b>
-					</CCol>
-					<CCol md="9">
-						{{ disp_alamat_saksi }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3">
-						<b>Pekerjaan</b>
-					</CCol>
-					<CCol md="9">
-						{{ disp_jabatan_saksi }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3">
-						<b>Identitas</b>
-					</CCol>
-					<CCol md="9">
-						{{ disp_identitas_saksi }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3">
-						<b>Petugas 1</b>
-					</CCol>
-					<CCol md="9">
-						{{ disp_petugas1 }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3">
-						<b>Petugas 2</b>
-					</CCol>
-					<CCol md="9">
-						{{ disp_petugas2 }}
-					</CCol>
-				</CRow>
+				<MyDisplayPegawai
+					title="Petugas 1"
+					:data.sync="data_doc.penindakan.petugas.petugas1"
+				/>
+				<MyDisplayPegawai
+					title="Petugas 2"
+					:data.sync="data_doc.penindakan.petugas.petugas2"
+				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_saksi"
+			:show.sync="show_modal_saksi"
+		/>
 	</div>
 </template>
 
 <script>
-import axios from "axios"
+import api from '../../../router/api2.js'
+import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
-import api from '../../../router/api.js'
-
-const data_default = {
+const default_data = {
 	no_dok_lengkap: null,
-	tgl_dok: null,
-	sprint: {
-		nomor_sprint: null,
-		tanggal_sprint: null
-	},
-	saksi: {
-		nama: null,
-		alamat: null,
-		pekerjaan: null,
-		jenis_identitas: null,
-		nomor_identitas: null
-	},
-	petugas1: {
-		name: null,
-		nip: null
-	},
-	petugas2: {
-		name: null,
-		nip: null
+	penindakan: {
+		tanggal_penindakan: null,
+		sprint: {
+			nomor_sprint: null,
+			tanggal_sprint: null
+		},
+		saksi: {nama: null},
+		petugas: {}
 	}
 }
 export default {
 	name: 'DisplayTegah',
-	props: {
-		id: Number
+	components: {
+		MyDisplayPegawai,
+		MyModalEntitasOrang,
 	},
-	computed: {
-		disp_no_dok() { return this.data.no_dok_lengkap || '-' },
-		disp_tgl_dok() { return this.data.tgl_dok || '-' },
-		disp_sprint() { return ((this.data.sprint.nomor_sprint || '') + ' tanggal ' + (this.data.sprint.tanggal_sprint || '')) },
-		disp_nama_saksi() { return this.data.saksi.nama || '-' },
-		disp_alamat_saksi() { return this.data.saksi.alamat || '-' },
-		disp_jabatan_saksi() { return this.data.saksi.pekerjaan || '-' },
-		disp_identitas_saksi() { return (this.data.saksi.jenis_identitas || '') + ' ' + (this.data.saksi.nomor_identitas || '-') },
-		disp_petugas1() { return this.data.petugas1.name || '-' },
-		disp_petugas2() { 
-			if (this.data.petugas2 != null) {
-				return this.data.petugas2.name
-			} else {
-				return '-'
-			}
-		},
+	props: {
+		doc_type: String,
+		doc_id: Number
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(data_default))
+			data_doc: JSON.parse(JSON.stringify(default_data)),
+			show_modal_saksi: false,
+		}
+	},
+	computed: {
+		disp_no_ba_tegah() { return this.data_doc.no_dok_lengkap || '-' },
+		disp_tgl_ba_tegah() { return this.data_doc.tanggal_dokumen || '-' },
+		disp_sprint() { 
+			let txt = '-'
+
+			if (this.data_doc.penindakan.sprint) {
+				txt = (
+					(this.data_doc.penindakan.sprint.nomor_sprint || '') 
+					+ ' tanggal ' 
+					+ (this.data_doc.penindakan.sprint.tanggal_sprint || '')
+				)
+			}
+			return txt 
+		},
+		disp_saksi() { 
+			let txt = this.data_doc.penindakan.saksi
+				? this.data_doc.penindakan.saksi.nama : '-'
+			return txt
 		}
 	},
 	methods: {
-		getData() {
-			axios
-				.get(api.getPenegahanById(this.id))
-				.then(
-					(response) => {
-						this.data = JSON.parse(JSON.stringify(response.data.data))
-					}
-				)
-		}
+		async getData() {
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.data_doc = response.data
+		},
+		showEntitas(saksi_id) {
+			this.$refs.modal_saksi.showModal('show', saksi_id)
+		},
 	},
-	mounted() {
-		this.getData()
+	async mounted() {
+		await this.getData()
 	}
 }
 </script>

@@ -221,11 +221,18 @@ export default {
 	computed: {
 		disp_no_ba_riksa_badan() { return this.data_doc.no_dok_lengkap || '-' },
 		disp_tgl_ba_riksa_badan() { return this.data_doc.tanggal_dokumen || '-' },
-		disp_sprint() { return (
-			(this.data_doc.penindakan.sprint.nomor_sprint || '') 
-			+ ' tanggal ' 
-			+ (this.data_doc.penindakan.sprint.tanggal_sprint || '')
-		) },
+		disp_sprint() { 
+			let txt = '-'
+
+			if (this.data_doc.penindakan.sprint) {
+				txt = (
+					(this.data_doc.penindakan.sprint.nomor_sprint || '') 
+					+ ' tanggal ' 
+					+ (this.data_doc.penindakan.sprint.tanggal_sprint || '')
+				)
+			}
+			return txt 
+		},
 
 		objek() { return this.data_doc.penindakan.objek.badan },
 		disp_nama() { return this.objek.entitas.nama || '-'},

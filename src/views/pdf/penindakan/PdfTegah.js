@@ -24,6 +24,9 @@ class PdfTegah extends PdfPenindakan {
 	generateText()
 	{
 		this.prepareDocDate(this.data.tanggal_dokumen)
+
+		this.txt = {}
+		this.txt.saksi = this.data.penindakan.saksi ? this.data.penindakan.saksi.nama : ''
 	}
 
 	writeText()
@@ -52,7 +55,7 @@ class PdfTegah extends PdfPenindakan {
 			inds.ttd1,
 			'Pemilik/Importir/Eksportir/Kuasanya/Saksi*,',
 			undefined,
-			this.data.penindakan.saksi.nama,
+			this.txt.saksi,
 		)
 		this.break()
 
