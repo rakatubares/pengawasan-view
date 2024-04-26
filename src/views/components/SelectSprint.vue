@@ -275,6 +275,9 @@ export default {
 	},
 	mounted() {
 		this.getJabatan()
+		if (this.id != null) {
+			this.getSprint(this.id, true)
+		}
 	}
 }
 </script>

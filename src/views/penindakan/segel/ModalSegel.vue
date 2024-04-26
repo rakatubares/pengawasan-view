@@ -44,12 +44,12 @@ export default {
 		state: String,
 		doc_type: String,
 		tipe_surat: String,
-		id: Number
+		id: Number,
 	},
 	data() {
 		return {
 			doc_id: this.id,
-			local_state: this.state
+			local_state: this.state,
 		}
 	},
 	watch: {
@@ -64,7 +64,7 @@ export default {
 		},
 		doc_id(val) {
 			this.$emit('update:id', val)
-		}
+		},
 	},
 	methods: {
 		closeModal() {
@@ -72,7 +72,7 @@ export default {
 		},
 		updatePenindakan(data) {
 			this.$refs.ModalPenindakan.setPenindakan(data.penindakan)
-		}
+		},
 	},
 }
 </script>

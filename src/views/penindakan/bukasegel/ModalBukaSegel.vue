@@ -1,92 +1,132 @@
-<!-- <template>
+<template>
 	<div class="wrapper">
-		<MyModalDoc
-			title="Data BA Buka Segel"
-			:state.sync="modal_state"
+		<MyModalPenindakan
+			ref="ModalPenindakan"
+			:title="`Data ${tipe_surat}`"
+			:state.sync="local_state"
+			:default_data="default_document"
 			:doc_type="doc_type"
-			:doc_id.sync="doc_id"
-			:tabs_visibility="tabs_visibility"
+			:document.sync="document"
+			:available_objects="['sarkut', 'barang', 'bangunan']"
 			@close-modal="closeModal"
 		>
-			<template #tab-uraian>
-				<MyDisplayBukaSegel
-					v-if="modal_state == 'show'"
-					:doc_id.sync="doc_id"
-				/>
-				<MyFormBukaSegel
-					v-if="['insert','edit','edit_header'].includes(modal_state)"
-					:state.sync="modal_state"
-					:doc_id.sync="doc_id"
-				/>
-			</template>
-			<template #tab-object>
-				<MyDisplayDetail 
-					v-if="['show','edit_header'].includes(modal_state)"
+			<template #uraian>
+				<MyDisplayBukaSegel 
+					ref="DisplayBukaSegel"
+					v-if="local_state == 'show'"
 					:doc_type="doc_type"
-					:doc_id.sync="doc_id"
+					:document.sync="document"
 				/>
-				<MyFormDetail 
-					v-if="modal_state == 'edit'"
-					:available_details="['sarkut', 'barang', 'bangunan']"
+				<MyFormBukaSegel 
+					ref="FormBukaSegel"
+					v-else-if="['insert','edit'].includes(local_state)"
+					:state.sync="local_state"
 					:doc_type="doc_type"
-					:doc_id.sync="doc_id"
+					:tipe_surat="tipe_surat"
+					:document.sync="document"
+					@update-data="setDocument"
 				/>
 			</template>
-			<template #tab-pdf>
-				<MyDisplayPdf 
-					v-if="['show','edit','edit_header'].includes(modal_state)"
-					:state.sync="modal_state"
-					:doc_type="doc_type" 
-					:doc_id.sync="doc_id"
-				/>
-			</template>
-		</MyModalDoc>
+		</MyModalPenindakan>
+
+		<!-- Alert -->
+		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
 <script>
+import api from '../../../router/api2.js'
+import converters from '../../../helpers/converter.js'
+import DefaultBukaSegel from './DefaultBukaSegel'
+import MyAlert from '../../components/AlertSubmit.vue'
+import MyModalPenindakan from '../../components/ModalPenindakan.vue'
 import MyDisplayBukaSegel from './DisplayBukaSegel.vue'
-import MyDisplayDetail from '../../details/displays/DisplayDetail.vue'
-import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
-import MyFormDetail from '../../details/Options/FormDetail.vue'
 import MyFormBukaSegel from './FormBukaSegel.vue'
-import MyModalDoc from '../../components/ModalDoc2.vue'
 
 export default {
 	name: 'ModalBukaSegel',
 	components: {
-		MyDisplayDetail,
-		MyDisplayPdf,
+		DefaultBukaSegel,
+		MyAlert,
+		MyModalPenindakan,
 		MyDisplayBukaSegel,
-		MyFormDetail,
 		MyFormBukaSegel,
-		MyModalDoc,
 	},
 	props: {
 		state: String,
-		id: Number
+		doc_type: String,
+		tipe_surat: String,
+		id: Number,
 	},
 	data() {
 		return {
-			doc_type: 'bukasegel',
 			doc_id: this.id,
-			modal_state: this.state,
-			tabs_visibility: {
-				show: ['tab-object', 'tab-pdf'],
-				insert: [],
-				edit: ['tab-object', 'tab-pdf'],
-				edit_header: ['tab-object', 'tab-pdf'],
-			},
+			local_state: this.state,
+			default_document: JSON.parse(JSON.stringify(DefaultBukaSegel.data)),
+			document: JSON.parse(JSON.stringify(DefaultBukaSegel.data)),
 		}
 	},
+	watch: {
+		state(val) {
+			this.local_state = val
+		},
+		local_state: function(val) {
+			this.$emit('update:state', val)
+		},
+		id(val) {
+			this.doc_id = val
+		},
+		doc_id(val) {
+			this.$emit('update:id', val)
+		},
+	},
 	methods: {
+		async getData() {
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.document = response.data
+			this.fillNull()
+		},
+		setDocument(val) {
+			this.document = JSON.parse(JSON.stringify(val))
+			this.fillNull()
+
+			this.alert('DATA BERHASIL DISIMPAN')
+		},
+		fillNull() {
+			if (this.document.sprint == null) {
+				this.document.sprint = JSON.parse(JSON.stringify(DefaultBukaSegel.data.sprint))
+			}
+
+			if (this.document.asal_segel == null) {
+				this.document.asal_segel = DefaultBukaSegel.data.asal_segel
+			}
+
+			if (this.document.saksi == null) {
+				this.document.saksi = JSON.parse(JSON.stringify(DefaultBukaSegel.data.saksi))
+			}
+
+			if (
+				(this.document.petugas.petugas2 == null) ||
+				(this.document.petugas.petugas2 == undefined)
+			) {
+				this.document.petugas.petugas2 = JSON.parse(JSON.stringify(DefaultBukaSegel.data.petugas.petugas2))
+			}
+		},
 		closeModal() {
 			this.$emit('close-modal')
 		},
+		updatePenindakan(data) {
+			this.$refs.ModalPenindakan.setPenindakan(data.penindakan)
+		},
+		alert(text, color, time) {
+			this.$refs.alert.show_alert(text, color, time)
+		},
 	},
-	watch: {
-		modal_state: function(val) {
-			this.$emit('update:state', val)
+	async beforeMount() {
+		if (['show', 'edit'].includes(this.state)) {
+			await this.getData()
+		} else {
+			this.document.tanggal_buka_segel = converters.currentDate()
 		}
 	},
 }
@@ -94,4 +134,4 @@ export default {
 
 <style>
 
-</style> -->
+</style>

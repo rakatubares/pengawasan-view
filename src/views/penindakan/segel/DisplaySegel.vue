@@ -148,7 +148,10 @@ export default {
 		async getData() {
 			let response = await api.getDocumentById(this.doc_type, this.doc_id)
 			this.data_doc = response.data
-		}
+		},
+		showEntitas(saksi_id) {
+			this.$refs.modal_saksi.showModal('show', saksi_id)
+		},
 	},
 	async mounted() {
 		await this.getData()

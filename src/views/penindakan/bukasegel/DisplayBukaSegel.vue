@@ -4,12 +4,12 @@
 			<CCol class="mt-3 mx-2" md="12">
 				<CRow>
 					<CCol class="pb-1">
-						<h4>{{ disp_no_dok_lengkap }}</h4>
+						<h4>{{ disp_no_ba_buka_segel }}</h4>
 					</CCol>
 				</CRow>
 				<CRow class="mb-3">
 					<CCol class="pt-1 pb-3">
-						<h5>{{ disp_tgl_dok }}</h5>
+						<h5>{{ disp_tgl_ba_buka_segel }}</h5>
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
@@ -60,75 +60,78 @@
 						{{ disp_tempat_segel }}
 					</CCol>
 				</CRow>
-				<MyDisplayEntitas
-					title="Pemilik/Saksi"
-					:data.sync="data_buka_segel.saksi"
-				/>
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>Saksi</b></h5>
+					</CCol>
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(document.saksi.id)"
+						>{{ disp_saksi }}</p>
+					</CCol>
+				</CRow>
 				<MyDisplayPegawai
 					title="Petugas 1"
-					:data.sync="data_buka_segel.petugas1"
+					:data.sync="document.petugas.petugas1"
 				/>
 				<MyDisplayPegawai
 					title="Petugas 2"
-					:data.sync="data_buka_segel.petugas2"
+					:data.sync="document.petugas.petugas2"
 				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_saksi"
+			:show.sync="show_modal_saksi"
+		/>
 	</div>
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	tanggal_dokumen: null,
-	nomor_segel: null,
-	tanggal_segel: null,
-	jenis_segel: null,
-	jumlah_segel: null,
-	tempat_segel: null,
-	sprint: {
-		nomor_sprint: null,
-		tanggal_sprint: null
-	}
-}
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 export default {
 	name: 'DisplayBukaSegel',
 	components: {
-		MyDisplayEntitas,
-		MyDisplayPegawai
+		MyDisplayPegawai,
+		MyModalEntitasOrang,
 	},
 	props: {
-		doc_id: Number
+		doc_type: String,
+		document: Object,
 	},
 	data() {
 		return {
-			data_buka_segel: JSON.parse(JSON.stringify(default_data))
+			show_modal_saksi: false,
 		}
 	},
 	computed: {
-		disp_no_dok_lengkap() { return this.data_buka_segel.no_dok_lengkap || '-' },
-		disp_tgl_dok() { return this.data_buka_segel.tanggal_dokumen || '-' },
-		disp_sprint() { return ((this.data_buka_segel.sprint.nomor_sprint || '') + ' tanggal ' + (this.data_buka_segel.sprint.tanggal_sprint || '')) },
-		disp_jenis_segel() { return this.data_buka_segel.jenis_segel || '-' },
-		disp_jumlah_segel() { return ((this.data_buka_segel.jumlah_segel || '-') + ' ' + (this.data_buka_segel.satuan_segel || '')) },
-		disp_nomor_segel() { return this.data_buka_segel.nomor_segel || '-' },
-		disp_tanggal_segel() { return this.data_buka_segel.tanggal_segel || '-' },
-		disp_tempat_segel() { return this.data_buka_segel.tempat_segel || '-' },
-	},
-	methods: {
-		async getData() {
-			let response = await api.getDisplayDataById('bukasegel', this.doc_id)
-			this.data_buka_segel = response.data.data
+		disp_no_ba_buka_segel() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_ba_buka_segel() { return this.document.tanggal_dokumen || '-' },
+		disp_sprint() { return ((this.document.sprint.nomor_sprint || '') + ' tanggal ' + (this.document.sprint.tanggal_sprint || '')) },
+		disp_jenis_segel() { return this.document.jenis_segel || '-' },
+		disp_jumlah_segel() { return ((this.document.jumlah_segel || '-') + ' ' + (this.document.satuan_segel || '')) },
+		disp_nomor_segel() { return this.document.nomor_segel || '-' },
+		disp_tanggal_segel() { return this.document.tanggal_segel || '-' },
+		disp_tempat_segel() { return this.document.tempat_segel || '-' },
+		disp_saksi() { 
+			let txt = this.document.saksi
+				? this.document.saksi.nama : '-'
+			return txt
 		}
 	},
-	async mounted() {
-		await this.getData()
-	}
+	methods: {
+		setDocument(val) {
+			console.log('DISPLAY BUKA SEGEL - SET DATA', JSON.parse(JSON.stringify(val)))
+			this.document = JSON.parse(JSON.stringify(val))
+		},
+		showEntitas(saksi_id) {
+			this.$refs.modal_saksi.showModal('show', saksi_id)
+		},
+	},
 }
 </script>
 

@@ -13,15 +13,15 @@ const inds = {
 	lamp: 140
 }
 
-class PdfSegel extends PdfPenindakan {
+class PdfBukaSegel extends PdfPenindakan {
 	constructor(
 		data,
-		title = 'BERITA ACARA PENYEGELAN',
+		title = 'BERITA ACARA PEMBUKAAN SEGEL',
 	) {
-		super(data, title, inds)
+		super(data, title, inds);
 	}
 
-	generateText()
+	generateText() 
 	{
 		this.prepareDocDate(this.data.tanggal_dokumen)
 
@@ -35,19 +35,19 @@ class PdfSegel extends PdfPenindakan {
 			: '     '
 		let nomor = this.data.nomor_segel || '     '
 		let tempat = this.data.tempat_segel || '     '
-		this.txt.segel = `dengan menggunakan segel / tanda pengaman ${jenis} `
+		this.txt.segel = `berupa segel / tanda pengaman ${jenis} `
 			+ `sebanyak ${jumlah} Nomor ${nomor} penempatan / pelekatan segel sebagai berikut: ${tempat}`
-		this.txt.saksi = this.data.penindakan.saksi ? this.data.penindakan.saksi.nama : ''
+		this.txt.saksi = this.data.saksi ? this.data.saksi.nama : ''
 	}
-
+	
 	writeText()
 	{
 		this.createHeader()
 		this.createNomor(this.jenis_dok, this.data.no_dok_lengkap)
 
-		this.write(this.opening())
+		this.write(this.opening(this.data.tanggal_buka_segel, this.data.sprint))
 		this.break()
-		this.write('Kami yang bertanda tangan di bawah ini telah melakukan penyegelan atas:')
+		this.write('Kami yang bertanda tangan di bawah ini telah melakukan pembukaan segel atas:')
 		this.break()
 
 		this.writeSarkut(this.data.penindakan.objek.sarkut)
@@ -57,7 +57,7 @@ class PdfSegel extends PdfPenindakan {
 		this.write(this.txt.segel)
 		this.break()
 
-		this.writeSaksi(this.data.penindakan.saksi, 'Penyegelan')
+		this.writeSaksi(this.data.saksi, 'Pembukaan segel')
 
 		this.write('Demikian Berita Acara ini dibuat dengan sebenarnya.', inds.ttd1)
 		this.break(1)
@@ -81,20 +81,20 @@ class PdfSegel extends PdfPenindakan {
 		this.ln = ln_ttd
 		this.ttd(
 			inds.ttd2,
-			'Pejabat yang melakukan penyegelan,',
+			'Pejabat yang melakukan pembukaan segel,',
 			undefined, 
-			this.data.penindakan.petugas.petugas1.name,
-			this.data.penindakan.petugas.petugas1.nip,
+			this.data.petugas.petugas1.name,
+			this.data.petugas.petugas1.nip,
 		)
 
-		if (this.data.penindakan.petugas.petugas2) {
+		if (this.data.petugas.petugas2) {
 			this.break()
 			this.ttd(
 				inds.ttd2,
 				undefined,
 				undefined, 
-				this.data.penindakan.petugas.petugas2.name,
-				this.data.penindakan.petugas.petugas2.nip,
+				this.data.petugas.petugas2.name,
+				this.data.petugas.petugas2.nip,
 				3,
 			)	
 		}
@@ -118,4 +118,4 @@ class PdfSegel extends PdfPenindakan {
 	}
 }
 
-export default PdfSegel
+export default PdfBukaSegel

@@ -3,7 +3,7 @@
 		<MyPageDoc 
 			ref="page_doc"
 			:doc_type="doc_type"
-			table_title="Daftar BA Pembukaan Segel"
+			:table_title="`Daftar ${tipe_surat}`"
 			:table_fields="table_fields"
 			:custom_fields="custom_fields"
 			:compute_list="computeList"
@@ -15,6 +15,8 @@
 				<MyModalBukaSegel 
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
+					:doc_type="doc_type"
+					:tipe_surat="tipe_surat"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>
@@ -35,15 +37,16 @@ export default {
 	},
 	data() {
 		return {
-			doc_type: 'bukasegel',
+			doc_type: 'buka_segel',
+			tipe_surat: 'BA Pembukaan Segel',
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Buka Segel' },
 				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
-				{ key: 'ba_segel', label: 'BA Penyegelan' },
+				{ key: 'segel', label: 'Segel' },
 				{ key: 'nama_saksi', label: 'Pemilik/Saksi' },
 				{ key: 'petugas', label: 'Petugas' },
 			],
-			custom_fields: ['ba_segel','petugas'],
+			custom_fields: ['segel','petugas'],
 			modal_data_props: {
 				show: false,
 				state: null,
@@ -57,7 +60,7 @@ export default {
 			return list.map(item => {
 				return {
 					...item,
-					ba_segel: item.no_ba_segel + '</br>' + item.tgl_ba_segel,
+					segel: item.nomor_segel + '</br>' + item.tanggal_segel,
 					petugas: item.petugas1 + '</br>' + item.petugas2,
 				}
 			})
@@ -71,8 +74,8 @@ export default {
 		constructDeleteText(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
-				+ " a.n. " 
-				+ item.nama_saksi.bold() 
+				+ " atas segel nomor " 
+				+ item.nomor_segel.bold() 
 				+ "?"
 			
 			return text

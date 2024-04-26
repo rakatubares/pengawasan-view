@@ -75,18 +75,16 @@ export default {
 	},
 	data() {
 		return {
-			doc_id: this.value,
 			items: [],
 			search_input: '',
 			tanggal_dokumen: null,
+			selected_document: null,
 		}
 	},
-	watch: {
-		value(val) {
-			this.doc_id = val
-		},
-		async doc_id(val) {
-			await this.changeValue(val)
+	computed: {
+		doc_id: { 
+			get() { return this.value },
+			set(val) { return val },
 		}
 	},
 	methods: {
@@ -100,21 +98,31 @@ export default {
 			this.items = responses.data.data
 		},
 		async changeValue(id) {
-			this.$emit('update:value', id)
-
 			if (id != null) {
-				this.getDocument(id)
+				await this.getDocument(id)
 			} else {
 				this.tanggal_dokumen = null
 			}
+
+			this.$emit('update:value', id)
 		},
 		async getDocument(id) {
 			let response = await api.getDocumentById(this.doc_type, id)
 			let data_dokumen = response.data
 			this.tanggal_dokumen = data_dokumen.tanggal_dokumen
 			this.items = [data_dokumen]
+			this.selected_document = data_dokumen
+		},
+		getDataDocument() {
+			let data = this.selected_document
+			return data
 		}
 	},
+	mounted() {
+		if (this.doc_id != null) {
+			this.getDocument(this.doc_id)
+		}
+	}
 }
 </script>
 

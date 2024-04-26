@@ -63,6 +63,7 @@ import PdfRiksa from './penindakan/PdfRiksa'
 import PdfRiksaBadan from './penindakan/PdfRiksaBadan'
 import PdfSbp from './penindakan/PdfSbp'
 import PdfSegel from './penindakan/PdfSegel'
+import PdfBukaSegel from './penindakan/PdfBukaSegel'
 import PdfTegah from './penindakan/PdfTegah'
 import PdfTolak1 from './penindakan/PdfTolak1'
 import PdfTolak2 from './penindakan/PdfTolak2'
@@ -75,7 +76,7 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		doc_id: Number,
+		document: Object,
 		chain_id: Number,
 		show_button: {
 			type: Boolean,
@@ -97,6 +98,7 @@ export default {
 		}
 	},
 	computed: {
+		doc_id() { return this.document ? this.document.id : null },
 		show_publish_button() {
 			let show = false
 			if (this.is_publishable) {
@@ -185,6 +187,10 @@ export default {
 
 				case 'segel':
 					pdf = new PdfSegel(data_pdf)
+					break;
+
+				case 'buka_segel':
+					pdf = new PdfBukaSegel(data_pdf)
 					break;
 
 				case 'sbp':

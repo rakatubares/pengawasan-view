@@ -20,15 +20,13 @@
 				>
 					<div v-if="checkCurrentTab('sarkut')">
 						<MyDisplaySarkut
-							v-if="state=='show'"
+							v-if="detail_state=='show'"
 							:penindakan.sync="penindakan"
 						/>
 						<MyFormSarkut
-							v-else-if="state=='edit'"
+							v-else-if="detail_state=='edit'"
 							:penindakan.sync="penindakan"
 						/>
-						<!-- :penindakan_id.sync="penindakan_id"
-						:data_objek.sync="data_sarkut" -->
 					</div>
 				</CTab>
 
@@ -39,11 +37,11 @@
 				>
 					<div v-if="checkCurrentTab('barang')">
 						<MyDisplayBarang
-							v-if="state=='show'"
+							v-if="detail_state=='show'"
 							:penindakan.sync="penindakan"
 						/>
 						<MyFormBarang
-							v-else-if="state=='edit'"
+							v-else-if="detail_state=='edit'"
 							:penindakan.sync="penindakan"
 						/>
 					</div>
@@ -56,11 +54,11 @@
 				>
 					<div v-if="checkCurrentTab('bangunan')">
 						<MyDisplayBangunan
-							v-if="state=='show'"
+							v-if="detail_state=='show'"
 							:penindakan.sync="penindakan"
 						/>
 						<MyFormBangunan
-							v-else-if="state=='edit'"
+							v-else-if="detail_state=='edit'"
 							:penindakan.sync="penindakan"
 						/>
 					</div>
@@ -73,11 +71,11 @@
 				>
 					<div v-if="checkCurrentTab('badan')">
 						<MyDisplayBadan
-							v-if="state=='show'"
+							v-if="detail_state=='show'"
 							:penindakan.sync="penindakan"
 						/>
 						<MyFormBadan
-							v-else-if="state=='edit'"
+							v-else-if="detail_state=='edit'"
 							:penindakan.sync="penindakan"
 						/>
 					</div>
@@ -103,10 +101,10 @@
 				>
 					<div v-if="checkCurrentTab('pdf')">
 						<MyDisplayPdf 
-							v-if="['show','edit'].includes(local_state)"
+							v-if="['show','edit'].includes(state)"
 							:state.sync="local_state"
 							:doc_type="doc_type" 
-							:doc_id.sync="local_doc_id"
+							:document.sync="document"
 						/>
 					</div>
 				</CTab>
@@ -116,7 +114,6 @@
 </template>
 
 <script>
-import api from '../../router/api2.js'
 import MyDisplayBadan from '../details/displays/DisplayBadan.vue'
 import MyDisplayBangunan from '../details/displays/DisplayBangunan.vue'
 import MyDisplayBarang from '../details/displays/DisplayBarang.vue'
@@ -188,7 +185,7 @@ export default {
 		state: String,
 		title: String,
 		doc_type: String,
-		doc_id: Number,
+		document: Object,
 		tabs_properties: {
 			type: Object,
 			default() { return JSON.parse(JSON.stringify(default_tabs_properties)) }
@@ -200,61 +197,55 @@ export default {
 	},
 	data() {
 		return {
-			local_doc_id: this.doc_id,
-			local_state: null,
-			penindakan_id: null,
-			penindakan: null,
 			tabs_names: Object.keys(this.tabs_properties),
 			tabs_list: Object.values(this.tabs_properties),
 			current_tab: 0,
-			objects: this.available_objects,
-			data_objects: {},
+		}
+	},
+	computed: {
+		local_state: {
+			get() { return this.state },
+			set(val) { return val },
+		},
+		detail_state() {
+			let state = this.state
+			if ((this.state != 'insert')) {
+				if ((this.doc_type == 'buka_segel') & (this.document.segel_id != null)) {
+					state = 'show'
+				}
+			}
+			return state
+		},
+		doc_id() { return this.document.id },
+		penindakan: { 
+			get() { return this.document.penindakan },
+			set(val) { return val },
+		},
+		objects() {
+			let objects = this.available_objects
+			if ((this.detail_state == 'show') & (this.penindakan != undefined)) {
+				let penindakan = this.penindakan
+				objects = this.available_objects.filter(function (object) {
+					if (Object.keys(penindakan.objek).includes(object)) {
+						return object
+					}
+				})
+			}
+			return objects
 		}
 	},
 	watch: {
-		doc_id(val) {
-			this.local_doc_id = val
-		},
-		local_doc_id(val) {
-			this.$emit('update:doc_id', val)
-		},
-		state(val) {
-			this.local_state = val
-		},
-		local_state(val) {
-			this.$emit('update:state', val)
-			this.changeTabsVisibilities()
-		},
 		objects() {
 			this.changeTabsVisibilities()
 			this.changeTabsList()
 		},
 	},
 	methods: {
-		async getObjects() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			if (this.state == 'show') {
-				this.objects = this.available_objects.filter(function (object) {
-					if (Object.keys(response.data.penindakan.objek).includes(object)) {
-						return object
-					}
-				})
-			}
-
-			this.data_objects = response.data.penindakan.objek
-			this.penindakan_id = response.data.penindakan.id
-			this.penindakan = response.data.penindakan
-		},
-		setPenindakan(penindakan) {
-			this.data_objects = penindakan.objek
-			this.penindakan_id = penindakan.id
-			this.penindakan = penindakan
-		},
 		closeModal() {
 			this.$emit('close-modal')
 		},
 		changeTabsVisibilities() {
-			switch (this.state) {
+			switch (this.detail_state) {
 				case 'show':
 					this.tabs_properties['sarkut'].visibility = this.objects.includes('sarkut')
 					this.tabs_properties['barang'].visibility = this.objects.includes('barang')
@@ -316,14 +307,6 @@ export default {
 			return match_current
 		}
 	},
-	mounted() {
-		this.local_state = this.state
-		if (this.state != 'insert') {
-			this.getObjects()	
-		}
-		this.changeTabsVisibilities()
-		this.changeTabsList()
-	}
 }
 </script>
 

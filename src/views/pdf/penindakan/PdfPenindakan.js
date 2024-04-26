@@ -1,24 +1,23 @@
 import MyPdf from "../MyPdf";
 
 class PdfPenindakan extends MyPdf {
-	opening()
+	opening(
+		tanggal=this.data.penindakan.tanggal_selesai_penindakan,
+		sprint=this.data.penindakan.sprint,
+	)
 	{
-		let tgl_penindakan = this.data.penindakan.tanggal_selesai_penindakan
-			? this.prepareDate(this.data.penindakan.tanggal_selesai_penindakan)
-			: ''
+		let tgl_penindakan = tanggal ? this.prepareDate(tanggal) : ''
 
-		let no_sprint = this.data.penindakan.sprint
-			? this.data.penindakan.sprint.nomor_sprint
-			: '   '
+		let no_sprint = sprint ? sprint.nomor_sprint : '   '
 
-		let tgl_sprint = this.data.penindakan.sprint
-			? this.data.penindakan.sprint.tanggal_sprint
-				? this.prepareDate(this.data.penindakan.sprint.tanggal_sprint).short_tgl
+		let tgl_sprint = sprint
+			? sprint.tanggal_sprint
+				? this.prepareDate(sprint.tanggal_sprint).short_tgl
 				: '   '
 			: '   '
 
-		let jabatan = this.data.penindakan.sprint
-			? this.data.penindakan.sprint.pejabat.jabatan || '   '
+		let jabatan = sprint 
+			? sprint.pejabat.jabatan || '   '
 			: '   '
 
 		let txt = [

@@ -163,7 +163,7 @@ export default {
 		state: String,
 		doc_type: String,
 		tipe_surat: String,
-		doc_id: Number
+		doc_id: Number,
 	},
 	data() {
 		return {
