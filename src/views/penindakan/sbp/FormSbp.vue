@@ -234,9 +234,6 @@
 				</CCol>
 			</CRow>
 		</CForm>
-
-		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
@@ -246,9 +243,7 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
-import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
-import MyAlert from '../../components/AlertSubmit.vue'
 import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
 import MySearchDocument from '../../components/SearchDocument.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
@@ -258,39 +253,6 @@ import MySelectLokasi from '../../components/SelectLokasi.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
-
-const default_data = {
-	lap_id: null,
-	penindakan: {
-		sprint: {id: null},
-		lokasi_penindakan: null,
-		uraian_penindakan: null,
-		alasan_penindakan: null,
-		jenis_pelanggaran: 'kepabeanan',
-		kategori_penindakan: {id: 1},
-		tanggal_mulai_penindakan: null,
-		waktu_mulai_penindakan: null,
-		tanggal_selesai_penindakan: null,
-		waktu_selesai_penindakan: null,
-		hal_terjadi: null,
-		saksi: {id: null},
-		petugas: {
-			petugas1: {nip: null},
-			petugas2: {nip: null}
-		}
-	},
-	lptp: {
-		catatan: null,
-		petugas: {
-			atasan: {
-				kode_jabatan: null,
-				tipe_ttd: null,
-				nip: null,
-				flag_pejabat: true,
-			}
-		}
-	},
-}
 
 const custom_validations_default = {
 	tgl_sprint: {
@@ -313,7 +275,6 @@ export default {
 	name: 'FormSbp',
 	components: {
 		DatePicker,
-		MyAlert,
 		MyComboboxLokasi,
 		MySearchDocument,
 		MySelectEntitas,
@@ -327,72 +288,38 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		tipe_surat: String,
-		doc_id: Number
+		document: Object,
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(default_data)),
-			selected_sprint: null,
-			saved_lap: null,
+			data: JSON.parse(JSON.stringify(this.document)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
 			jenis_pelanggaran_options: [ ...jenis_pelanggaran ],
 			default_atasan: 'bd.0503',
 		}
 	},
-	watch: {
-		selected_sprint(val) {
-			this.data.penindakan.sprint.id = val
+	computed: {
+		saved_lap: {
+			get() { return this.data.lap_id },
+			set(val) { this.data.lap_id = val },
+		},
+		selected_sprint: {
+			get() { return this.data.penindakan.sprint.id },
+			set(val) { this.data.penindakan.sprint.id = val },
 		}
 	},
+	watch: {
+		document(val) { this.data = val },
+	},
 	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data = response.data
-			this.selected_sprint = this.data.penindakan.sprint
-				? this.data.penindakan.sprint.id : null
-			this.saved_lap = this.data.lap_id
-
-			this.fillNull()
-		},
-		fillNull() {
-			if (this.data.penindakan.sprint == null) {
-				this.data.penindakan.sprint = JSON.parse(JSON.stringify(default_data.penindakan.sprint))
-			}
-
-			if (this.data.penindakan.kategori_penindakan == null) {
-				this.data.penindakan.kategori_penindakan = JSON.parse(JSON.stringify(default_data.penindakan.kategori_penindakan))
-			}
-
-			if (this.data.penindakan.saksi == null) {
-				this.data.penindakan.saksi = JSON.parse(JSON.stringify(default_data.penindakan.saksi))
-			}
-
-			if (
-				(this.data.penindakan.petugas.petugas2 == null) ||
-				(this.data.penindakan.petugas.petugas2 == undefined)
-			) {
-				this.data.penindakan.petugas.petugas2 = JSON.parse(JSON.stringify(default_data.penindakan.petugas.petugas2))
-			}
-		},
 		async saveData() {
 			if (this.state == 'insert') {
-				this.data = await api.storeDoc(this.doc_type, this.data)
-
-				this.fillNull()
-
-				this.$emit('update:doc_id', this.data.id)
+				var data = await api.storeDoc(this.doc_type, this.data)
 				this.$emit('update:state', 'edit')
-				this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
 			} else if (this.state == 'edit') {
-				await api.updateDoc(this.doc_type, this.data.id, this.data)
-				this.alert(`Data ${this.tipe_surat} berhasil diubah`)
+				var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 			}
-
-			this.$emit('save-data', this.data.penindakan)
-		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
+			this.$emit('save-data', data)
 		},
 		validatorRequired(val) { return validators.required(val) },
 		validatorDatetime(val, format, validasiName, text) { 
@@ -413,14 +340,6 @@ export default {
 			}
 		}
 	},
-	async mounted() {
-		if (this.state == 'edit') {
-			await this.getData()
-		} else {
-			this.data.penindakan.tanggal_mulai_penindakan = converters.currentDate()
-			this.data.penindakan.tanggal_selesai_penindakan = converters.currentDate()
-		}
-	}
 }
 </script>
 

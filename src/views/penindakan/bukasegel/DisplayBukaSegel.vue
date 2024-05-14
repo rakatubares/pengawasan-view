@@ -124,10 +124,6 @@ export default {
 		}
 	},
 	methods: {
-		setDocument(val) {
-			console.log('DISPLAY BUKA SEGEL - SET DATA', JSON.parse(JSON.stringify(val)))
-			this.document = JSON.parse(JSON.stringify(val))
-		},
 		showEntitas(saksi_id) {
 			this.$refs.modal_saksi.showModal('show', saksi_id)
 		},

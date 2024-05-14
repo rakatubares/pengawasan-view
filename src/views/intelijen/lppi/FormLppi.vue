@@ -258,6 +258,7 @@
 						label="Nama Penerima Disposisi"
 						description="Pegawai yang menerima disposisi"
 						:nip.sync="data.petugas.penerima_disposisi.nip"	
+						:currentUser="true"
 					/>
 				</CCol>
 			</CRow>
@@ -287,9 +288,6 @@
 				</CCol>
 			</CRow>
 		</CForm>
-
-		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
@@ -298,112 +296,54 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
-import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MyTableIkhtisar from './TableIkhtisar.vue'
-
-const default_data = {
-	flag_info_internal: false,
-	media_info_internal: null,
-	tgl_terima_info_internal: null,
-	no_dok_info_internal: null,
-	tgl_dok_info_internal: null,
-	flag_info_eksternal: false,
-	media_info_eksternal: null,
-	tgl_terima_info_eksternal: null,
-	no_dok_info_eksternal: null,
-	tgl_dok_info_eksternal: null,
-	kesimpulan: null,
-	tanggal_disposisi: null,
-	flag_analisis: false,
-	flag_arsip: false,
-	catatan: null,
-	informasi: [],
-	petugas: {
-		penerima_informasi: {nip: null},
-		penilai_informasi: {nip: null},
-		penerima_disposisi: {nip: null},
-		pejabat: {
-			kode_jabatan: null,
-			tipe_ttd: null,
-			nip: null,
-			flag_pejabat: true,
-		},
-	}
-}
 
 export default {
 	name: 'FormLppi',
 	components: {
 		DatePicker,
-		MyAlert,
 		MySelectPejabat,
 		MySelectPetugas,
 		MyTableIkhtisar,
 	},
 	props: {
 		state: String,
-		tipe_surat: String,
 		doc_type: String,
-		doc_id: Number,
+		doc_name: String,
+		document: Object,
+		default_jabatan: {
+			type: String,
+			default: 'bd.0501',
+		}
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(default_data)),
-			default_jabatan: 'bd.0501'
+			data: JSON.parse(JSON.stringify(this.document)),
 		}
 	},
+	watch: {
+		document(val) { this.data = val },
+	},
 	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data = response.data
-
-			this.fillNull()
-		},
-		fillNull() {
-			let posisi =  Object.keys(this.data.petugas)
-			for (const key in default_data.petugas) {
-				if (!posisi.includes(key)) {
-					this.data.petugas[key] = JSON.parse(JSON.stringify(default_data.petugas[key]))
-				}
-			}
-		},
 		updateIkhtisar(val) {
 			this.data.informasi = val
 		},
 		async saveData() {
 			if (this.state == 'insert') {
-				try {
-					this.data = await api.storeDoc(this.doc_type, this.data)
-					this.fillNull()
-
-					this.$emit('update:doc_id', this.data.id)
-					this.$emit('update:state', 'edit')
-					this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
-				} catch (error) {
-					console.log(`form lppi - save data - error`, error)
-				}
+				var data = await api.storeDoc(this.doc_type, this.data)
+				this.$emit('update:state', 'edit')
 			} else if (this.state == 'edit') {
-				try {
-					let update_data = this.data
-					update_data.informasi = this.data.informasi.map(function(informasi) {
-						let update_informasi = informasi
-						delete update_informasi.index
-						return update_informasi
-					})
-					this.data = await api.updateDoc(this.doc_type, update_data.id, update_data)
-					this.fillNull()
-					
-					this.$emit('update:doc_id', this.data.id)
-					this.alert(`Data ${this.tipe_surat} berhasil diubah`)
-				} catch (error) {
-					console.log(`form lppi - update data - error`, error)
-				}
+				let update_data = this.data
+				update_data.informasi = this.data.informasi.map(function(informasi) {
+					let update_informasi = informasi
+					delete update_informasi.index
+					return update_informasi
+				})
+				var data = await api.updateDoc(this.doc_type, update_data.id, update_data)
 			}
-		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
+			this.$emit('save-data', data)
 		},
 		toggleFlagInternal(val) {
 			this.data.flag_info_internal = val
@@ -420,16 +360,6 @@ export default {
 			this.data.tgl_dok_info_eksternal = null
 		},
 	},
-	async mounted() {
-		// Change jabatan option for LPPI-N
-		if (this.doc_type == 'lppin') {
-			this.default_jabatan = 'bd.0502'
-		}
-
-		if (this.state == 'edit') {
-			await this.getData()
-		}
-	}
 }
 </script>
 

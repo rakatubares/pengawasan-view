@@ -106,7 +106,7 @@
 							<b>{{ disp_layak_penindakan }}</b>
 						</CCol>
 					</CRow>
-					<div v-if="data_doc.flag_layak_penindakan">
+					<div v-if="document.flag_layak_penindakan">
 						<CRow class="mt-2 mb-1">
 							<CCol md="3" class="py-1">
 								<b>Skema Penindakan</b>
@@ -153,11 +153,11 @@
 				</div>
 				<MyDisplayPejabat
 					title="Penerbit"
-					:data.sync="data_doc.petugas.penerbit"
+					:data.sync="document.petugas.penerbit"
 				/>
 				<MyDisplayPejabat
 					title="Atasan"
-					:data.sync="data_doc.petugas.atasan"
+					:data.sync="document.petugas.atasan"
 				/>
 			</CCol>
 		</CRow>
@@ -165,8 +165,6 @@
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import DefaultLap from './DefaultLap'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
 
 export default {
@@ -176,56 +174,42 @@ export default {
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number
-	},
-	data() {
-		return {
-			data_doc: JSON.parse(JSON.stringify(DefaultLap.data))
-		}
+		document: Object,
 	},
 	computed: {
-		disp_no_lap() { return this.data_doc.no_dok_lengkap || '-' },
-		disp_tgl_lap() { return this.data_doc.tanggal_dokumen || '-' },
-		disp_sumber() { return ((this.data_doc.nomor_sumber || '') + ' tanggal ' + (this.data_doc.tanggal_sumber || '')) },
-		disp_kategori() { return this.data_doc.dugaan_pelanggaran.kategori || '-' },
-		disp_flag_pelaku() { return this.data_doc.flag_pelaku ? 'DIKETAHUI' : 'TIDAK DIKETAHUI' },
-		disp_ket_pelaku() { return this.data_doc.keterangan_pelaku },
-		disp_flag_pelanggaran() { return this.data_doc.flag_pelanggaran ? 'DIKETAHUI' : 'TIDAK DIKETAHUI' },
-		disp_ket_pelanggaran() { return this.data_doc.keterangan_pelanggaran },
-		disp_flag_locus() { return this.data_doc.flag_locus ? 'DIKETAHUI' : 'TIDAK DIKETAHUI' },
-		disp_ket_locus() { return this.data_doc.keterangan_locus },
-		disp_flag_tempus() { return this.data_doc.flag_tempus ? 'DIKETAHUI' : 'TIDAK DIKETAHUI' },
-		disp_ket_tempus() { return this.data_doc.keterangan_tempus },
-		disp_flag_kewenangan() { return this.data_doc.flag_kewenangan ? 'KEWENANGAN DJBC' : 'BUKAN KEWENANGAN DJBC' },
-		disp_ket_kewenangan() { return this.data_doc.keterangan_kewenangan },
-		disp_flag_sdm() { return this.data_doc.flag_sdm ? 'TERSEDIA' : 'TIDAK TERSEDIA' },
-		disp_ket_sdm() { return this.data_doc.keterangan_sdm },
-		disp_flag_sarpras() { return this.data_doc.flag_sarpras ? 'TERSEDIA' : 'TIDAK TERSEDIA' },
-		disp_ket_sarpras() { return this.data_doc.keterangan_sarpras },
-		disp_flag_anggaran() { return this.data_doc.flag_anggaran ? 'TERSEDIA' : 'TIDAK TERSEDIA' },
-		disp_ket_anggaran() { return this.data_doc.keterangan_anggaran },
-		disp_layak_penindakan() { return this.data_doc.flag_layak_penindakan ? 'LAYAK DILAKUKAN PENINDAKAN' : 'TIDAK / BELUM LAYAK DILAKUKAN PENINDAKAN'},
+		disp_no_lap() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_lap() { return this.document.tanggal_dokumen || '-' },
+		disp_sumber() { return ((this.document.nomor_sumber || '') + ' tanggal ' + (this.document.tanggal_sumber || '')) },
+		disp_kategori() { return this.document.dugaan_pelanggaran.kategori || '-' },
+		disp_flag_pelaku() { return this.document.flag_pelaku ? 'DIKETAHUI' : 'TIDAK DIKETAHUI' },
+		disp_ket_pelaku() { return this.document.keterangan_pelaku },
+		disp_flag_pelanggaran() { return this.document.flag_pelanggaran ? 'DIKETAHUI' : 'TIDAK DIKETAHUI' },
+		disp_ket_pelanggaran() { return this.document.keterangan_pelanggaran },
+		disp_flag_locus() { return this.document.flag_locus ? 'DIKETAHUI' : 'TIDAK DIKETAHUI' },
+		disp_ket_locus() { return this.document.keterangan_locus },
+		disp_flag_tempus() { return this.document.flag_tempus ? 'DIKETAHUI' : 'TIDAK DIKETAHUI' },
+		disp_ket_tempus() { return this.document.keterangan_tempus },
+		disp_flag_kewenangan() { return this.document.flag_kewenangan ? 'KEWENANGAN DJBC' : 'BUKAN KEWENANGAN DJBC' },
+		disp_ket_kewenangan() { return this.document.keterangan_kewenangan },
+		disp_flag_sdm() { return this.document.flag_sdm ? 'TERSEDIA' : 'TIDAK TERSEDIA' },
+		disp_ket_sdm() { return this.document.keterangan_sdm },
+		disp_flag_sarpras() { return this.document.flag_sarpras ? 'TERSEDIA' : 'TIDAK TERSEDIA' },
+		disp_ket_sarpras() { return this.document.keterangan_sarpras },
+		disp_flag_anggaran() { return this.document.flag_anggaran ? 'TERSEDIA' : 'TIDAK TERSEDIA' },
+		disp_ket_anggaran() { return this.document.keterangan_anggaran },
+		disp_layak_penindakan() { return this.document.flag_layak_penindakan ? 'LAYAK DILAKUKAN PENINDAKAN' : 'TIDAK / BELUM LAYAK DILAKUKAN PENINDAKAN'},
 		disp_skema() {
-			return this.data_doc.skema_penindakan != null
-				? this.data_doc.skema_penindakan.skema != null
-					? this.data_doc.skema_penindakan.skema.toUpperCase()
+			return this.document.skema_penindakan != null
+				? this.document.skema_penindakan.skema != null
+					? this.document.skema_penindakan.skema.toUpperCase()
 					: null
 				: null
 		},
-		disp_ket_skema() { return this.data_doc.keterangan_skema_penindakan || '-' },
-		disp_layak_patroli() { return this.data_doc.flag_layak_patroli == 1 ? 'LAYAK PATROLI' : 'TIDAK / BELUM LAYAK PATROLI' },
-		disp_ket_patroli() { return this.data_doc.keterangan_patroli || '-' },
-		disp_kesimpulan() { return this.data_doc.kesimpulan || '-' },
+		disp_ket_skema() { return this.document.keterangan_skema_penindakan || '-' },
+		disp_layak_patroli() { return this.document.flag_layak_patroli == 1 ? 'LAYAK PATROLI' : 'TIDAK / BELUM LAYAK PATROLI' },
+		disp_ket_patroli() { return this.document.keterangan_patroli || '-' },
+		disp_kesimpulan() { return this.document.kesimpulan || '-' },
 	},
-	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data_doc = response.data
-		}
-	},
-	async mounted() {
-		await this.getData()
-	}
 }
 </script>
 

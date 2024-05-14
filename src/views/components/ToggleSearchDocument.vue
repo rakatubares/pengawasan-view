@@ -11,9 +11,9 @@
 						color="primary"
 					>
 						<CDropdownItem
-							v-for="option in doc_options"
+							v-for="option in dropdown_items"
 							:key="option.type"
-							@click="toggleDocType(option)"
+							@click="toggleDocType(option.type)"
 						>
 							{{ option.label }}
 						</CDropdownItem>
@@ -86,34 +86,43 @@ export default {
 			type: String,
 			default: 'Sumber Informasi',
 		},
-		doc_options: Array,
+		doc_options: Object,
 		doc_type: String,
 		doc_id: Number,
 		doc_number: String,
 		doc_date: String,
 		saved_doc_id: Number,
 	},
-	data() {
-		return {
-			selected_doc_label: this.doc_options[0]['label'],
-			selected_doc_state: this.doc_options[0]['state'],
-			selected_doc_type: this.doc_options[0]['type'],
-		}
-	},
-	watch: {
-		selected_doc_type(val) {
-			this.$emit('update:doc_type', val)
-		},
-		selected_doc_state(val, oldVal) {
-			console.log('TOGGLE SEARCH DOCUMENT - WATCH - SELECTED DOC STATE', val, oldVal)
-		}
-	},
 	computed: {
+		dropdown_items() {
+			let items = []
+			for (const key in this.doc_options) {
+				if (Object.hasOwnProperty.call(this.doc_options, key)) {
+					let item = {
+						'type': key, 
+						'label': this.doc_options[key]['label'], 
+						'state': this.doc_options[key]['state']
+					}
+					items.push(item)
+				}
+			}
+			return items
+		},
+		selected_doc_type: {
+			get() { return this.doc_type },
+			set(val) { this.$emit('update:doc_type', val) },
+		},
+		selected_doc_label: {
+			get() { return this.doc_options[this.selected_doc_type]['label'] },
+			set() { },
+		},
+		selected_doc_state: {
+			get() { return this.doc_options[this.selected_doc_type]['state'] },
+			set() { },
+		},
 		selected_doc_id: {
 			get() { return this.doc_id },
-			set(val) { 
-				this.$emit('update:doc_id', val) 
-			},
+			set(val) { this.$emit('update:doc_id', val) },
 		},
 		selected_doc_number: {
 			get() { return this.doc_number },
@@ -130,9 +139,9 @@ export default {
 	},
 	methods: {
 		toggleDocType(val) {
-			this.selected_doc_label = val.label
-			this.selected_doc_state = val.state
-			this.selected_doc_type = val.type
+			this.selected_doc_label = this.doc_options[val]['label']
+			this.selected_doc_state = this.doc_options[val]['state']
+			this.selected_doc_type = val
 			this.selected_doc_id = null
 			this.selected_doc_number = null
 			this.selected_doc_date = null

@@ -9,8 +9,8 @@
 		>
 			<template #tabs>
 				<CTab :title="tabs_list[0]['title']">
-					<MyFormLkai
-						ref="FormLkai"
+					<MyFormLkaiN
+						ref="FormLkaiN"
 						v-if="(['insert','edit'].includes(local_state))"
 						:state.sync="local_state"
 						:doc_type="doc_type"
@@ -25,7 +25,7 @@
 						:default_pejabat="default_pejabat"
 						@save-data="setDocument"
 					/>
-					<MyDisplayLkai
+					<MyDisplayLkaiN
 						v-else-if="(local_state == 'show')"
 						:doc_type="doc_type"
 						:document.sync="document"
@@ -60,21 +60,21 @@
 <script>
 import api from '../../../router/api2.js'
 import converters from '../../../helpers/converter.js'
-import DefaultLkai from './DefaultLkai'
+import DefaultLkaiN from './DefaultLkaiN'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MyDisplayLkai from './DisplayLkai.vue'
+import MyDisplayLkaiN from './DisplayLkaiN.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
-import MyFormLkai from './FormLkai.vue'
+import MyFormLkaiN from '../lkain/FormLkaiN.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 
 export default {
-	name: 'ModalLkai',
+	name: 'ModalLkaiN',
 	components: {
-		DefaultLkai,
+		DefaultLkaiN,
 		MyAlert,
-		MyDisplayLkai,
+		MyDisplayLkaiN,
 		MyDisplayPdf,
-		MyFormLkai,
+		MyFormLkaiN,
 		MyModalTabs,
 	},
 	props: {
@@ -93,7 +93,7 @@ export default {
 	data() {
 		return {
 			doc_id: this.id,
-			document: JSON.parse(JSON.stringify(DefaultLkai.data)),
+			document: JSON.parse(JSON.stringify(DefaultLkaiN.data)),
 			local_state: this.state,
 			tabs_list: [
 				{
@@ -137,9 +137,9 @@ export default {
 		},
 		fillNull() {
 			let posisi = Object.keys(this.document.petugas)
-			for (const key in DefaultLkai.data.petugas) {
+			for (const key in DefaultLkaiN.data.petugas) {
 				if (!posisi.includes(key)) {
-					this.document.petugas[key] = JSON.parse(JSON.stringify(DefaultLkai.data.petugas[key]))
+					this.document.petugas[key] = JSON.parse(JSON.stringify(DefaultLkaiN.data.petugas[key]))
 				}
 			}
 		},
@@ -170,7 +170,7 @@ export default {
 		if (['show', 'edit'].includes(this.state)) {
 			await this.getData()
 			if (this.state == 'edit') {
-				await this.$refs.FormLkai.mountData()
+				await this.$refs.FormLkaiN.mountData()
 			}
 		} else {
 			this.document.tanggal_terima_pejabat = converters.currentDate()
@@ -184,4 +184,5 @@ export default {
 </script>
 
 <style>
+
 </style>

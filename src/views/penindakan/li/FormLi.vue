@@ -76,63 +76,46 @@
 				</CCol>
 			</CRow>
 		</CForm>
-
-		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
 <script>
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
-import DefaultLi from './DefaultLi'
-import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 
 export default {
 	name: 'FormLi',
 	components: {
-		MyAlert,
 		MySelectPejabat,
 	},
 	props: {
 		state: String,
 		doc_type: String,
-		doc_id: Number
+		document: Object,
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(DefaultLi.data)),
+			data: JSON.parse(JSON.stringify(this.document)),
 			default_penerbit: 'bd.0503',
 			default_atasan: 'bd.05',
 		}
 	},
+	watch: { 
+		document(val) { this.data = val }
+	},
 	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data = response.data
-		},
 		async saveData() {
 			if (this.state == 'insert') {
-				this.data = await api.storeDoc(this.doc_type, this.data)
-				this.$emit('update:doc_id', this.data.id)
+				var data = await api.storeDoc(this.doc_type, this.data)
 				this.$emit('update:state', 'edit')
-				this.alert('Data LI-1 berhasil disimpan')
 			} else if (this.state == 'edit') {
-				this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
-				this.alert('Data LI-1 berhasil diubah')
+				var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 			}
-		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
+			this.$emit('save-data', data)
 		},
 		validatorRequired(val) { return validators.required(val) },
 	},
-	async mounted() {
-		if (this.state == 'edit') {
-			await this.getData()
-		}
-	}
 }
 </script>
 

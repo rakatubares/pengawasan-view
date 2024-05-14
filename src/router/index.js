@@ -16,7 +16,7 @@ const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
 const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
 const PageNi = () => import('@/views/intelijen/ni/PageNi.vue')
 
-const PageLkaiN = () => import('@/views/intelijen/lkai/PageLkaiN.vue')
+const PageLkaiN = () => import('@/views/intelijen/lkain/PageLkaiN.vue')
 const PageLppiN = () => import('@/views/intelijen/lppi/PageLppiN.vue')
 const PageNhiN = () => import('@/views/intelijen/nhin/PageNhiN.vue')
 const PageNiN = () => import('@/views/intelijen/ni/PageNiN.vue')

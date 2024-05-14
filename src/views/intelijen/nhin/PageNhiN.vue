@@ -16,7 +16,7 @@
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
-					:tipe_surat="tipe_surat"
+					:doc_name="doc_name"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>
@@ -40,17 +40,17 @@ export default {
 			type: String,
 			default: 'nhin'
 		},
-		tipe_surat: {
+		doc_name: {
 			type: String,
 			default: 'NHI-N'
 		}
 	},
 	data() {
 		return {
-			table_title: `Daftar ${this.tipe_surat}`,
+			table_title: `Daftar ${this.doc_name}`,
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
-				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
+				{ key: 'no_dok_lengkap', label: `No ${this.doc_name}` },
+				{ key: 'tanggal_dokumen', label: `Tgl ${this.doc_name}` },
 				{ key: 'lkain', label: 'LKAI-N' },
 			],
 			custom_fields: ['lkain'],

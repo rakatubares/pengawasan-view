@@ -212,9 +212,9 @@
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 
 export default {
-	name: 'DisplayLkai',
+	name: 'DisplayLkaiN',
 	components: {
-		MyDisplayPegawai
+		MyDisplayPegawai,
 	},
 	props: {
 		doc_type: String,
@@ -230,11 +230,11 @@ export default {
 		disp_tgl_lkai() { return this.document.tanggal_dokumen || '-' },
 		disp_lppi() { 
 			if (
-				(this.document.nomor_lppi != null) &&
-				(this.document.tanggal_lppi != null)
+				(this.document.nomor_lppin != null) &&
+				(this.document.tanggal_lppin != null)
 			) {
-				let no_lppi = this.document.nomor_lppi || '-'
-				let tgl_lppi = this.document.tanggal_lppi || '-'
+				let no_lppi = this.document.nomor_lppin || '-'
+				let tgl_lppi = this.document.tanggal_lppin || '-'
 				var lppi = `${no_lppi} tanggal ${tgl_lppi}`
 			} else {
 				var lppi = '-'
@@ -244,11 +244,11 @@ export default {
 		},
 		disp_lpti() { 
 			if (
-				(this.document.nomor_lpti != null) &&
-				(this.document.tanggal_lpti != null)
+				(this.document.nomor_lptin != null) &&
+				(this.document.tanggal_lptin != null)
 			) {
-				let no_lpti = this.document.nomor_lpti || '-'
-				let tgl_lpti = this.document.tanggal_lpti || '-'
+				let no_lpti = this.document.nomor_lptin || '-'
+				let tgl_lpti = this.document.tanggal_lptin || '-'
 				var lpti = `${no_lpti} tanggal ${tgl_lpti}`
 			} else {
 				var lpti = '-'
@@ -258,11 +258,11 @@ export default {
 		},
 		disp_npi() { 
 			if (
-				(this.document.nomor_npi != null) &&
-				(this.document.tanggal_npi != null)
+				(this.document.nomor_npin != null) &&
+				(this.document.tanggal_npin != null)
 			) {
-				let no_npi = this.document.nomor_npi || '-'
-				let tgl_npi = this.document.tanggal_npi || '-'
+				let no_npi = this.document.nomor_npin || '-'
+				let tgl_npi = this.document.tanggal_npin || '-'
 				var npi = `${no_npi} tanggal ${tgl_npi}`
 			} else {
 				var npi = '-'
@@ -275,12 +275,12 @@ export default {
 		disp_hasil() { return this.document.hasil || '-' },
 		disp_kesimpulan() { return this.document.kesimpulan || '-' },
 		flag_nhi() { 
-			let flag = this.document.flag_rekom_nhi == 1
+			let flag = this.document.flag_rekom_nhin == 1
 				? true : false 
 			return flag
 		},
 		flag_ni() { 
-			let flag = this.document.flag_rekom_ni == 1
+			let flag = this.document.flag_rekom_nin == 1
 				? true : false 
 			return flag
 		},

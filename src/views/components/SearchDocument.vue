@@ -87,6 +87,11 @@ export default {
 			set(val) { return val },
 		}
 	},
+	watch: {
+		doc_id(val) {
+			this.getDocument(val)
+		}
+	},
 	methods: {
 		async searchDocument() {
 			let data = {

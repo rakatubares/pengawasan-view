@@ -3,7 +3,7 @@
 		<MyPageDoc 
 			ref="page_doc"
 			:doc_type="doc_type"
-			:table_title="`Daftar ${tipe_surat}`"
+			:table_title="`Daftar ${doc_name}`"
 			:table_fields="table_fields"
 			:custom_fields="custom_fields"
 			:compute_list="computeList"
@@ -16,7 +16,7 @@
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
-					:tipe_surat="tipe_surat"
+					:doc_name="doc_name"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>
@@ -38,7 +38,7 @@ export default {
 	data() {
 		return {
 			doc_type: 'buka_segel',
-			tipe_surat: 'BA Pembukaan Segel',
+			doc_name: 'BA Pembukaan Segel',
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Buka Segel' },
 				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
@@ -74,9 +74,11 @@ export default {
 		constructDeleteText(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
-				+ " atas segel nomor " 
-				+ item.nomor_segel.bold() 
-				+ "?"
+			if (item.nomor_segel != null) {
+				text += " atas segel nomor "
+				text += item.nomor_segel.bold()
+			}
+			text += "?"
 			
 			return text
 		},

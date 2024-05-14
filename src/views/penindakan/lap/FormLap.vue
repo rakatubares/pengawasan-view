@@ -10,9 +10,6 @@
 							format="DD-MM-YYYY"
 							value-type="format"
 							type="date"
-							@change="
-								validatorDatetime($event, 'DD-MM-YYYY', 'validasi.tanggal_dokumen', validasi.tanggal_sumber.text)
-							"
 						>
 							<template v-slot:input="slotProps">
 								<input
@@ -20,12 +17,7 @@
 									type="text" 
 									v-bind="slotProps.props" 
 									v-on="slotProps.events"
-									v-bind:class="{
-										'is-valid': validasi.tanggal_dokumen.state,
-										'is-invalid': !validasi.tanggal_dokumen.state
-									}"
 								/>
-								<div class="invalid-feedback pb-1">{{validasi.tanggal_dokumen.text}}</div>
 							</template>
 							<i slot="icon-calendar"></i>
 							<i slot="icon-clear"></i>
@@ -36,6 +28,7 @@
 			<CRow>
 				<CCol>
 					<MyToggleSearchDocument
+						ref="ToggleSearchDocument"
 						:doc_options="source_options"
 						:doc_type.sync="data.jenis_sumber"
 						:doc_id.sync="data.sumber_id"
@@ -291,9 +284,6 @@
 				</CCol>
 			</CRow>
 		</CForm>
-
-		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
@@ -303,20 +293,13 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
-import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
-import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectKategoriPelanggaran from '../../components/SelectKategoriPelanggaran.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectSkemaPenindakan from '../../components/SelectSkemaPenindakan.vue'
 import MyToggleSearchDocument from '../../components/ToggleSearchDocument.vue'
-import DefaultLap from './DefaultLap.js'
 
 const custom_validations_default = {
-	tanggal_dokumen: {
-		state: false,
-		text: 'Tanggal wajib diisi'
-	},
 	tanggal_sumber: {
 		state: false,
 		text: 'Tanggal sumber informasi wajib diisi'
@@ -327,7 +310,6 @@ export default {
 	name: 'FormLap',
 	components: {
 		DatePicker,
-		MyAlert,
 		MySelectKategoriPelanggaran,
 		MySelectPejabat,
 		MySelectSkemaPenindakan,
@@ -336,24 +318,23 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		doc_id: Number,
+		document: Object,
 		doc_name: String,
 		source_options: {
-			type: Array,
+			type: Object,
 			default() {
-				return [
-					{'type': 'nhi', 'label': 'NHI', 'state': 'search'}, 
-					{'type': 'li', 'label': 'LI-1', 'state': 'search'},
-					{'type': 'lainnya', 'label': 'Lainnya', 'state': 'manual'},
-				]
+				return {
+					'nhi': {'label': 'NHI', 'state': 'search'}, 
+					'li': {'label': 'LI-1', 'state': 'search'},
+					'lainnya': {'label': 'Lainnya', 'state': 'manual'},
+				}
 			}
 		}
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(DefaultLap.data)),
+			data: JSON.parse(JSON.stringify(this.document)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
-			saved_source_id: null,
 			default_penerbit: 'bd.0503',
 			default_atasan: 'bd.05',
 			labelIcon: {
@@ -362,47 +343,31 @@ export default {
 			},
 		}
 	},
-	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data = response.data
-			this.saved_source_id = this.data.sumber_id
-
-			this.fillNull()
-
-			this.validatorDatetime(this.data.tanggal_dokumen, 'DD-MM-YYYY', 'validasi.tanggal_dokumen', this.validasi.tanggal_dokumen.text)
-		},
-		fillNull() {
-			if (this.data.jenis_sumber == null) {
-				this.data.jenis_sumber = DefaultLap.data.jenis_sumber
+	computed: {
+		saved_source_id: {
+			get() { return this.data.sumber_id },
+			set(val) { this.data.sumber_id = val }
+		}
+	},
+	watch: { 
+		document(val) { 
+			this.data = val 
+			if (this.data.sumber_id) {
+				this.$refs.ToggleSearchDocument.getDataDocument()
 			}
-			this.data.flag_layak_penindakan = this.data.flag_layak_penindakan == 1 ? true : false
 		},
+	},
+	methods: {
 		async saveData() {
 			if (this.state == 'insert') {
-				this.data = await api.storeDoc(this.doc_type, this.data)
-				this.saved_source_id = this.data.sumber_id
-				this.fillNull()
-				this.$emit('update:doc_id', this.data.id)
+				var data = await api.storeDoc(this.doc_type, this.data)
 				this.$emit('update:state', 'edit')
-				this.alert(`Data ${this.doc_name} berhasil disimpan`)
 			} else if (this.state == 'edit') {
-				this.data = await api.updateDoc(this.doc_type, this.data.id, this.data)
-				this.saved_source_id = this.data.sumber_id
-				this.fillNull()
-				this.alert(`Data ${this.doc_name} berhasil diubah`)
+				var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 			}
-		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
+			this.$emit('save-data', data)
 		},
 		validatorRequired(val) { return validators.required(val) },
-		validatorDatetime(val, format, validasiName, text) { 
-			let dt = converters.date(val, format)
-			let valid = validators.date(dt)
-			_.set(this, validasiName+'.state', valid)
-			_.set(this, validasiName+'.text', text)
-		},
 		togglePenindakan(val) {
 			if (val == true) {
 				this.data.skema_penindakan = {id: 1}
@@ -413,16 +378,8 @@ export default {
 			}
 			this.data.keterangan_skema_penindakan = null
 			this.data.keterangan_layak_patroli = null
-		}
+		},
 	},
-	async mounted() {
-		if (this.state == 'edit') {
-			await this.getData()
-		} else {
-			this.data.tanggal_dokumen = converters.currentDate()
-			this.validatorDatetime(this.data.tanggal_dokumen, 'DD-MM-YYYY', 'validasi.tanggal_dokumen', this.validasi.tanggal_dokumen.text)
-		}
-	}
 }
 </script>
 

@@ -70,7 +70,7 @@
 				</CRow>
 
 				<!-- Barang Exim -->
-				<div class="sep" v-if="data_doc.detail.type == 'nhin-exim'">
+				<div class="sep" v-if="document.detail.type == 'nhin-exim'">
 					<CRow class="mt-2">
 						<CCol>
 							<h4><b>Kegiatan atas Barang Impor/Ekspor</b></h4>
@@ -135,7 +135,7 @@
 				</div>
 
 				<!-- Sarkut -->
-				<div class="sep" v-if="data_doc.detail.type == 'nhin-sarkut'">
+				<div class="sep" v-if="document.detail.type == 'nhin-sarkut'">
 					<CRow class="mt-2">
 						<CCol>
 							<h4><b>Kegiatan atas Sarana Pengangkut</b></h4>
@@ -200,7 +200,7 @@
 				</div>
 
 				<!-- Orang -->
-				<div class="sep" v-if="data_doc.detail.type == 'nhin-orang'">
+				<div class="sep" v-if="document.detail.type == 'nhin-orang'">
 					<CRow class="mt-2">
 						<CCol>
 							<h4><b>Kegiatan atas Orang</b></h4>
@@ -300,7 +300,7 @@
 
 				<MyDisplayPejabat
 					title="Penerbit"
-					:data.sync="data_doc.petugas.penerbit"
+					:data.sync="document.petugas.penerbit"
 				/>
 
 				<div class="sep mt-4">
@@ -327,8 +327,6 @@
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import DefaultNhiN from './DefaultNhiN'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
 
@@ -340,23 +338,18 @@ export default {
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number,
-	},
-	data() {
-		return {
-			data_doc: JSON.parse(JSON.stringify(DefaultNhiN.data)),
-		}
+		document: Object,
 	},
 	computed: {
-		disp_no_nhin() { return this.data_doc.no_dok_lengkap || '-' },
-		disp_tgl_nhin() { return this.data_doc.tanggal_dokumen || '-' },
+		disp_no_nhin() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_nhin() { return this.document.tanggal_dokumen || '-' },
 		disp_lkain() { 
 			if (
-				(this.data_doc.nomor_lkain != null) &&
-				(this.data_doc.tanggal_lkain != null)
+				(this.document.nomor_lkain != null) &&
+				(this.document.tanggal_lkain != null)
 			) {
-				let no_lkain = this.data_doc.nomor_lkain || '-'
-				let tgl_lkain = this.data_doc.tanggal_lkain || '-'
+				let no_lkain = this.document.nomor_lkain || '-'
+				let tgl_lkain = this.document.tanggal_lkain || '-'
 				var lkain = `${no_lkain} tanggal ${tgl_lkain}`
 			} else {
 				var lkain = '-'
@@ -364,27 +357,27 @@ export default {
 
 			return lkain
 		},
-		disp_sifat() { return this.data_doc.sifat || '-' },
-		disp_klasifikasi() { return this.data_doc.klasifikasi || '-' },
-		disp_tujuan() { return this.data_doc.tujuan || '-' },
-		disp_tempat() { return this.data_doc.tempat_indikasi || '-' },
+		disp_sifat() { return this.document.sifat || '-' },
+		disp_klasifikasi() { return this.document.klasifikasi || '-' },
+		disp_tujuan() { return this.document.tujuan || '-' },
+		disp_tempat() { return this.document.tempat_indikasi || '-' },
 		disp_waktu() { 
 			var waktu = null
-			if (this.data_doc.waktu_indikasi != null) {
-				waktu = `${this.data_doc.waktu_indikasi} ${this.data_doc.zona_waktu}`
+			if (this.document.waktu_indikasi != null) {
+				waktu = `${this.document.waktu_indikasi} ${this.document.zona_waktu}`
 			}
 
-			var tanggal_waktu = this.data_doc.tanggal_indikasi
+			var tanggal_waktu = this.document.tanggal_indikasi
 			if (waktu != null) {
 				tanggal_waktu = `${tanggal_waktu} ${waktu}`
 			}
 
 			return tanggal_waktu
 		},
-		disp_kantor() { return this.data_doc.kantor.nama_kantor || '-' },
+		disp_kantor() { return this.document.kantor.nama_kantor || '-' },
 
-		detail_type() { return this.data_doc.detail.type },
-		detail_data() { return this.data_doc.detail.data },
+		detail_type() { return this.document.detail.type },
+		detail_data() { return this.document.detail.data },
 
 		// Detail exim
 		disp_dok_exim() { return (this.detail_type == 'nhin-exim') ? `${this.detail_data.jenis_dok || ''} ${this.detail_data.nomor_dok || '-'} tanggal ${this.detail_data.tanggal_dok || '-'}` : '-' },
@@ -492,7 +485,6 @@ export default {
 			}
 			return txt
 		},
-		// disp_paspor() { return this.data_doc.orang.nomor_identitas || '-' },
 		disp_nomor_sarkut_orang() { return (this.detail_type == 'nhin-orang') ? this.detail_data.nomor_sarkut : '-' },
 		disp_asal_orang() { 
 			let txt = '-'
@@ -544,21 +536,9 @@ export default {
 		},
 		disp_data_lain_orang() { return (this.detail_type == 'nhin-orang') ? this.detail_data.data_lain : '-' },
 
-		disp_indikasi() { return this.data_doc.indikasi || '-' },
-		data_tembusan() { return  this.data_doc.tembusan || null }
+		disp_indikasi() { return this.document.indikasi || '-' },
+		data_tembusan() { return  this.document.tembusan || null }
 	},
-	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data_doc = response.data
-			let flag_exim = this.data_doc.detail.type == 'nhin-exim' ? true : false
-			this.$emit('update:is_exim', flag_exim)
-			this.$emit('show-data')
-		}
-	},
-	async mounted() {
-		await this.getData()
-	}
 }
 </script>
 

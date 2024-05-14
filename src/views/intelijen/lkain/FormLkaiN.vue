@@ -11,10 +11,10 @@
 			<CRow>
 				<CCol md="12">
 					<MySearchDocument
-						ref="SearchLppi"
+						ref="SearchLppiN"
 						:doc_type="kode_lppi"
 						:label="label_lppi"
-						:value.sync="data.lppi_id"
+						:value.sync="data.lppin_id"
 						:exceptions.sync="saved_lppi"
 						@update:value="updateInformasi"
 					/>
@@ -26,14 +26,14 @@
 				<CCol sm="12" md="8">
 					<CInput
 						:label="`Nomor ${label_lpti}`"
-						:value.sync="data.nomor_lpti"
+						:value.sync="data.nomor_lptin"
 					/>
 				</CCol>
 				<CCol sm="12" md="4">
 					<div class="form-group">
 						<label class="w-100">Tgl. {{ label_lpti }}</label>
 						<date-picker
-							v-model="data.tanggal_lpti"
+							v-model="data.tanggal_lptin"
 							format="DD-MM-YYYY" 
 							value-type="format"
 							type="date"
@@ -57,14 +57,14 @@
 				<CCol sm="12" md="8">
 					<CInput
 						:label="`Nomor ${label_npi}`"
-						:value.sync="data.nomor_npi"
+						:value.sync="data.nomor_npin"
 					/>
 				</CCol>
 				<CCol sm="12" md="4">
 					<div class="form-group">
 						<label class="w-100">Tgl. {{ label_npi }}</label>
 						<date-picker
-							v-model="data.tanggal_npi"
+							v-model="data.tanggal_npin"
 							format="DD-MM-YYYY" 
 							value-type="format"
 							type="date"
@@ -132,7 +132,7 @@
 				<CCol md="3" sm="12" class="pt-0">
 					<CInputCheckbox
 						:label="label_nhi"
-						:checked.sync="data.flag_rekom_nhi"
+						:checked.sync="data.flag_rekom_nhin"
 					/>
 				</CCol>
 			</CRow>
@@ -140,7 +140,7 @@
 				<CCol md="3" sm="12" class="pt-0">
 					<CInputCheckbox
 						:label="label_ni"
-						:checked.sync="data.flag_rekom_ni"
+						:checked.sync="data.flag_rekom_nin"
 					/>
 				</CCol>
 			</CRow>
@@ -325,7 +325,7 @@ import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MyTableIkhtisar from '../lppi/TableIkhtisar.vue'
 
 export default {
-	name: 'FormLkai',
+	name: 'FormLkaiN',
 	components: {
 		DatePicker,
 		MySearchDocument,
@@ -362,9 +362,7 @@ export default {
 		}
 	},
 	watch: {
-		document(val) {
-			this.data = val 
-		},
+		document(val) { this.data = val },
 	},
 	methods: {
 		async getIkhtisarLppi(lppi_id) {
@@ -377,8 +375,8 @@ export default {
 			return ikhtisar
 		},
 		async mountData() {
-			if (this.data.lppi_id) {
-				await this.$refs.SearchLppi.getDocument(this.data.lppi_id)
+			if (this.data.lppin_id) {
+				await this.$refs.SearchLppiN.getDocument(this.data.lppin_id)
 			}
 		},
 		async saveData() {
@@ -407,7 +405,7 @@ export default {
 				this.show_informasi = true
 			})
 		}
-	},
+	}
 }
 </script>
 

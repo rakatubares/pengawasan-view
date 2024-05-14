@@ -4,6 +4,7 @@
 			<CRow>
 				<CCol md="12">
 					<MySearchDocument
+						ref="SearchLkaiN"
 						doc_type="lkain"
 						label="LKAI-N"
 						description="Nomor LKAI-N sebagai sumber penerbitan NHI-N"
@@ -496,9 +497,6 @@
 					</CButton>
 				</CCol>
 			</CRow>
-
-			<!-- Alert -->
-			<MyAlert ref="alert"></MyAlert>
 		</CForm>
 	</div>
 </template>
@@ -510,7 +508,6 @@ import 'vue2-datepicker/index.css'
 import api from '../../../router/api2.js'
 import store from '../../../store'
 import DefaultNhiN from './DefaultNhiN'
-import MyAlert from '../../components/AlertSubmit.vue'
 import MyComboboxJabatan from '../../components/ComboboxJabatan.vue'
 import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
 import MyInputTembusan from '../../components/InputTembusan.vue'
@@ -532,7 +529,6 @@ export default {
 	name: 'FormNhiN',
 	components: {
 		DatePicker,
-		MyAlert,
 		MyComboboxJabatan,
 		MyComboboxLokasi,
 		MyInputTembusan,
@@ -546,13 +542,11 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		doc_id: Number,
-		is_exim: Boolean,
+		document: Object,
 	},
 	data() {
 		return {
 			data: JSON.parse(JSON.stringify(DefaultNhiN.data)),
-			saved_lkain: null,
 			jenis_kegiatan: JSON.parse(JSON.stringify(store.getters.jenisKegiatan)),
 			sifat_nhin_options: JSON.parse(JSON.stringify(store.getters.sifatSurat)),
 			klasifikasi_nhin_options: JSON.parse(JSON.stringify(store.getters.klasifikasiSurat)),
@@ -564,78 +558,29 @@ export default {
 			default_kantor: '050100',
 		}
 	},
-	watch: {
-		is_exim(val) {
-			console.log('FORM NHIN - WATCH - IS EXIM', val)
+	computed: {
+		saved_lkain: {
+			get() { return this.data.lkain_id },
+			set(val) { this.data.lkain_id = val },
 		}
 	},
+	watch: {
+		document(val) { this.data = val },
+	},
 	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data = this.fillNull(response.data)
-			this.saved_lkain = this.data.lkain_id
-			this.updateTab()
+		async mountData() {
+			if (this.data.lkain_id) {
+				await this.$refs.SearchLkaiN.getDocument(this.data.lkain_id)	
+			}
 		},
 		async saveData() {
 			if (this.state == 'insert') {
-				var response = await api.storeDoc('nhin', this.data)
+				var data = await api.storeDoc(this.doc_type, this.data)
 				this.$emit('update:state', 'edit')
-				var msg = `Data NHI-N berhasil disimpan`
 			} else if (this.state == 'edit') {
-				var response = await api.updateDoc('nhin', this.data.id, this.data)
-				var msg = `Data NHI-N berhasil diubah`
+				var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 			}
-			this.data = this.fillNull(response)
-			this.saved_lkain = this.data.lkai_id
-			this.$emit('update:doc_id', this.data.id)
-			this.alert(msg)
-			this.updateTab()
-		},
-		fillNull(response) {
-			let detail_type = response.detail.type
-			switch (detail_type) {
-				case 'nhin-exim':
-					if (response.detail.data.entitas == null) {
-						response.detail.data.entitas = JSON.parse(JSON.stringify(DefaultNhiN.detail_exim.entitas))
-					}
-					break;
-
-				case 'nhin-sarkut':
-					if (response.detail.data.pelabuhan_asal == null) {
-						response.detail.data.pelabuhan_asal = JSON.parse(JSON.stringify(DefaultNhiN.detail_sarkut.pelabuhan_asal))
-					}
-					if (response.detail.data.pelabuhan_tujuan == null) {
-						response.detail.data.pelabuhan_tujuan = JSON.parse(JSON.stringify(DefaultNhiN.detail_sarkut.pelabuhan_tujuan))
-					}
-					break;
-
-				case 'nhin-orang':
-					if (response.detail.data.entitas == null) {
-						response.detail.data.entitas = JSON.parse(JSON.stringify(DefaultNhiN.detail_orang.entitas))
-					}
-					if (response.detail.data.pelabuhan_asal == null) {
-						response.detail.data.pelabuhan_asal = JSON.parse(JSON.stringify(DefaultNhiN.detail_orang.pelabuhan_asal))
-					}
-					if (response.detail.data.pelabuhan_tujuan == null) {
-						response.detail.data.pelabuhan_tujuan = JSON.parse(JSON.stringify(DefaultNhiN.detail_orang.pelabuhan_tujuan))
-					}
-					break;
-			
-				default:
-					break;
-			}
-			return response
-		},
-		updateTab() {
-			if (this.data.detail.type == 'nhin-exim') {
-				this.$emit('update:is_exim', true)	
-			} else {
-				this.$emit('update:is_exim', false)
-			}
-			this.$emit('show-data')
-		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
+			this.$emit('save-data', data)
 		},
 		resetDetailNhiN() {
 			switch (this.data.detail.type) {
@@ -655,14 +600,9 @@ export default {
 					break;
 			}
 		},
-		toggleJenisKegiatan(val) {
+		toggleJenisKegiatan() {
 			this.resetDetailNhiN()
 		},
-	},
-	async beforeMount() {
-		if (this.state == 'edit') {
-			await this.getData()
-		}
 	},
 }
 </script>

@@ -28,7 +28,7 @@
 						<p 
 							v-if="disp_nama != null"
 							class="a nav-link p-0 m-0"
-							@click="showEntitas(data_doc.penindakan.objek.badan.entitas.id)"
+							@click="showEntitas(document.penindakan.objek.badan.entitas.id)"
 						>{{ disp_nama }}</p>
 					</CCol>
 				</CRow>
@@ -56,7 +56,7 @@
 						<p 
 							v-if="disp_pendamping != null"
 							class="a nav-link p-0 m-0"
-							@click="showEntitas(data_doc.penindakan.objek.badan.pendamping.id)"
+							@click="showEntitas(document.penindakan.objek.badan.pendamping.id)"
 						>{{ disp_pendamping }}</p>
 					</CCol>
 				</CRow>
@@ -108,7 +108,7 @@
 						<p 
 							v-if="disp_pengemudi != null"
 							class="a nav-link p-0 m-0"
-							@click="showEntitas(data_doc.penindakan.objek.badan.pengemudi.id)"
+							@click="showEntitas(document.penindakan.objek.badan.pengemudi.id)"
 						>{{ disp_pengemudi }}</p>
 					</CCol>
 				</CRow>
@@ -143,17 +143,17 @@
 					<CCol md="9">
 						<p 
 							class="a nav-link p-0"
-							@click="showEntitas(data_doc.penindakan.saksi.id)"
+							@click="showEntitas(document.penindakan.saksi.id)"
 						>{{ disp_saksi }}</p>
 					</CCol>
 				</CRow>
 				<MyDisplayPegawai
 					title="Pejabat 1"
-					:data.sync="data_doc.penindakan.petugas.petugas1"
+					:data.sync="document.penindakan.petugas.petugas1"
 				/>
 				<MyDisplayPegawai
 					title="Pejabat 2"
-					:data.sync="data_doc.penindakan.petugas.petugas2"
+					:data.sync="document.penindakan.petugas.petugas2"
 				/>
 			</CCol>
 		</CRow>
@@ -166,41 +166,8 @@
 </template>
 
 <script>
-import api from '../../../router/api2.js'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	penindakan: {
-		tanggal_penindakan: null,
-		lokasi_penindakan: null,
-		sprint: {
-			nomor_sprint: null,
-			tanggal_sprint: null
-		},
-		objek: {
-			badan:{
-				entitas: {nama: null},
-				asal: null,
-				pendamping: {nama: null},
-				nama_sarkut: null,
-				jenis_sarkut: null,
-				nomor_sarkut: null,
-				bendera_sarkut: null,
-				registrasi_sarkut: null,
-				pengemudi: {nama: null},
-				jenis_dokumen: null,
-				nomor_dokumen: null,
-				tanggal_dokumen: null,
-				uraian_pemeriksaan: null,
-				hasil_pemeriksaan: null,
-			}
-		},
-		saksi: {nama: null},
-		petugas: {}
-	},
-}
 
 export default {
 	name: 'DisplayRiksaBadan',
@@ -210,31 +177,30 @@ export default {
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number
+		document: Object,
 	},
 	data() {
 		return {
-			data_doc: JSON.parse(JSON.stringify(default_data)),
 			show_modal_saksi: false,
 		}
 	},
 	computed: {
-		disp_no_ba_riksa_badan() { return this.data_doc.no_dok_lengkap || '-' },
-		disp_tgl_ba_riksa_badan() { return this.data_doc.tanggal_dokumen || '-' },
+		disp_no_ba_riksa_badan() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_ba_riksa_badan() { return this.document.tanggal_dokumen || '-' },
 		disp_sprint() { 
 			let txt = '-'
 
-			if (this.data_doc.penindakan.sprint) {
+			if (this.document.penindakan.sprint) {
 				txt = (
-					(this.data_doc.penindakan.sprint.nomor_sprint || '') 
+					(this.document.penindakan.sprint.nomor_sprint || '') 
 					+ ' tanggal ' 
-					+ (this.data_doc.penindakan.sprint.tanggal_sprint || '')
+					+ (this.document.penindakan.sprint.tanggal_sprint || '')
 				)
 			}
 			return txt 
 		},
 
-		objek() { return this.data_doc.penindakan.objek.badan },
+		objek() { return this.document.penindakan.objek.badan },
 		disp_nama() { return this.objek.entitas.nama || '-'},
 		disp_asal() { return this.objek.asal || '-'},
 		disp_tujuan() { return this.objek.tujuan || '-' },
@@ -290,23 +256,11 @@ export default {
 			return hasil
 		},
 		disp_saksi() { 
-			let txt = this.data_doc.penindakan.saksi
-				? this.data_doc.penindakan.saksi.nama : '-'
+			let txt = this.document.penindakan.saksi
+				? this.document.penindakan.saksi.nama : '-'
 			return txt
 		}
 	},
-	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data_doc = response.data
-		},
-		showEntitas(saksi_id) {
-			this.$refs.modal_saksi.showModal('show', saksi_id)
-		},
-	},
-	async mounted() {
-		await this.getData()
-	}
 }
 </script>
 

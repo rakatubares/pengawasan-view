@@ -2,29 +2,26 @@
 	<div class="wrapper">
 		<MyModalPenindakan
 			ref="ModalPenindakan"
-			:title="`Data ${tipe_surat}`"
+			:title="`Data ${doc_name}`"
 			:state.sync="local_state"
-			:default_data="default_document"
 			:doc_type="doc_type"
 			:document.sync="document"
 			:available_objects="['sarkut', 'barang', 'bangunan']"
 			@close-modal="closeModal"
 		>
+			<!-- :default_data="default_document" -->
 			<template #uraian>
-				<MyDisplayBukaSegel 
-					ref="DisplayBukaSegel"
-					v-if="local_state == 'show'"
-					:doc_type="doc_type"
-					:document.sync="document"
-				/>
 				<MyFormBukaSegel 
-					ref="FormBukaSegel"
-					v-else-if="['insert','edit'].includes(local_state)"
+					v-if="['insert','edit'].includes(local_state)"
 					:state.sync="local_state"
 					:doc_type="doc_type"
-					:tipe_surat="tipe_surat"
 					:document.sync="document"
-					@update-data="setDocument"
+					@save-data="setDocument"
+				/>
+				<MyDisplayBukaSegel 
+					v-else-if="local_state == 'show'"
+					:doc_type="doc_type"
+					:document.sync="document"
 				/>
 			</template>
 		</MyModalPenindakan>
@@ -55,14 +52,13 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		tipe_surat: String,
+		doc_name: String,
 		id: Number,
 	},
 	data() {
 		return {
 			doc_id: this.id,
 			local_state: this.state,
-			default_document: JSON.parse(JSON.stringify(DefaultBukaSegel.data)),
 			document: JSON.parse(JSON.stringify(DefaultBukaSegel.data)),
 		}
 	},
@@ -114,9 +110,6 @@ export default {
 		},
 		closeModal() {
 			this.$emit('close-modal')
-		},
-		updatePenindakan(data) {
-			this.$refs.ModalPenindakan.setPenindakan(data.penindakan)
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)

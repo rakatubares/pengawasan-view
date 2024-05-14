@@ -16,6 +16,7 @@
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
+					:doc_name="doc_name"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>
@@ -39,7 +40,7 @@ export default {
 			type: String,
 			default: 'lap'
 		},
-		label_lap: {
+		doc_name: {
 			type: String,
 			default: 'LAP'
 		},
@@ -50,10 +51,10 @@ export default {
 	},
 	data() {
 		return {
-			table_title: `Daftar ${this.label_lap}`,
+			table_title: `Daftar ${this.doc_name}`,
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: `No ${this.label_lap}` },
-				{ key: 'tanggal_dokumen', label: `Tgl ${this.label_lap}` },
+				{ key: 'no_dok_lengkap', label: `No ${this.doc_name}` },
+				{ key: 'tanggal_dokumen', label: `Tgl ${this.doc_name}` },
 				{ key: 'dokumen_sumber', label: 'Sumber Informasi' },
 			],
 			custom_fields: ['dokumen_sumber'],
@@ -80,7 +81,7 @@ export default {
 			this.modal_data_props.show = false
 		},
 		constructDeleteText(item) {
-			let text = `Apakah Anda yakin untuk menghapus data ${this.label_lap} atas ` 
+			let text = `Apakah Anda yakin untuk menghapus data ${this.doc_name} atas ` 
 				+ item.nomor_sumber.bold() 
 				+ ' tanggal ' + item.tanggal_sumber.bold()  
 				+ "?"

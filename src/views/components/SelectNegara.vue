@@ -72,7 +72,6 @@ export default {
 			}
 		},
 		disabled(val) {
-			console.log('SELECT NEGARA - WATCH DISABLED', val)
 			this.local_disabled = val
 		},
 		local_disabled(val) {

@@ -55,7 +55,7 @@
 
 				<MyDisplayPejabat
 					title="Penerbit"
-					:data.sync="data_doc.petugas.penerbit"
+					:data.sync="document.petugas.penerbit"
 				/>
 
 				<div class="sep mt-4">
@@ -82,8 +82,6 @@
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import DefaultNi from './DefaultNi'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
 
 export default {
@@ -93,24 +91,19 @@ export default {
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number,
+		document: Object,
 		label_lkai: String,
 	},
-	data() {
-		return {
-			data_doc: JSON.parse(JSON.stringify(DefaultNi.data))
-		}
-	},
 	computed: {
-		disp_no_ni() { return this.data_doc.no_dok_lengkap || '-' },
-		disp_tgl_ni() { return this.data_doc.tanggal_dokumen || '-' },
+		disp_no_ni() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_ni() { return this.document.tanggal_dokumen || '-' },
 		disp_lkai() { 
 			if (
-				(this.data_doc.nomor_lkai != null) &&
-				(this.data_doc.tanggal_lkai != null)
+				(this.document.nomor_lkai != null) &&
+				(this.document.tanggal_lkai != null)
 			) {
-				let no_lkai = this.data_doc.nomor_lkai || '-'
-				let tgl_lkai = this.data_doc.tanggal_lkai || '-'
+				let no_lkai = this.document.nomor_lkai || '-'
+				let tgl_lkai = this.document.tanggal_lkai || '-'
 				var lkai = `${no_lkai} tanggal ${tgl_lkai}`
 			} else {
 				var lkai = '-'
@@ -118,29 +111,12 @@ export default {
 
 			return lkai
 		},
-		disp_sifat() { return this.data_doc.sifat || '-' },
-		disp_klasifikasi() { return this.data_doc.klasifikasi || '-' },
-		disp_tujuan() { return this.data_doc.tujuan || '-' },
-		disp_uraian() { return this.data_doc.uraian || '-' },
-		data_tembusan() { return  this.data_doc.tembusan || null }
+		disp_sifat() { return this.document.sifat || '-' },
+		disp_klasifikasi() { return this.document.klasifikasi || '-' },
+		disp_tujuan() { return this.document.tujuan || '-' },
+		disp_uraian() { return this.document.uraian || '-' },
+		data_tembusan() { return  this.document.tembusan || null }
 	},
-	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			if (this.doc_type == 'ni') {
-				this.data_doc = response.data	
-			} else {
-				let data = response.data
-				this.$emit('get-data', data)
-			}	
-		},
-		updateData(data) {
-			this.data_doc = data
-		}
-	},
-	async mounted() {
-		await this.getData()
-	}
 }
 </script>
 

@@ -1,28 +1,26 @@
 <template>
 	<div class="wrapper">
-		<MyTableBarang
+		<MyTableItemBarang
 			:state.sync="state"
 			:doc_type.sync="doc_type"
-			:doc_id.sync="doc_id"
-			:data_objek.sync="data_objek"
+			:document.sync="document"
 			:with_photo="false"
 		/>
 	</div>
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import MyTableBarang from '../../components/barang/TableItemBarang.vue'
+import MyTableItemBarang from '../../components/barang/TableItemBarang.vue'
 
 export default {
 	name: 'FormBarangNhi',
 	components: {
-		MyTableBarang,
+		MyTableItemBarang,
 	},
 	props: {
 		state: String,
 		doc_type: String,
-		doc_id: Number
+		document: Object,
 	},
 	data() {
 		return {

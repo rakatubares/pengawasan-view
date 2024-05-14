@@ -76,9 +76,6 @@
 				</CCol>
 			</CRow>
 		</CForm>
-
-		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
@@ -87,30 +84,15 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
-import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
-import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
-
-const default_data = {
-	penindakan: {
-		tanggal_selesai_penindakan: null,
-		sprint: {id: null},
-		saksi: {id: null},
-		petugas: {
-			petugas1: {nip: null},
-			petugas2: {nip: null},
-		},
-	},
-}
 
 export default {
 	name: 'FormTegah',
 	components: {
 		DatePicker,
-		MyAlert,
 		MySelectEntitasOrang,
 		MySelectPetugas,
 		MySelectSprint
@@ -118,71 +100,34 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		tipe_surat: String,
-		doc_id: Number
+		document: Object,
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(default_data)),
+			data: JSON.parse(JSON.stringify(this.document)),
 			selected_sprint: null,
 		}
 	},
 	watch: {
+		document(val) {
+			this.data = val
+		},
 		selected_sprint(val) {
 			this.data.penindakan.sprint.id = val
-		}
+		},
 	},
 	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data = response.data
-			this.selected_sprint = this.data.penindakan.sprint
-				? this.data.penindakan.sprint.id : null
-			this.fillNull()
-		},
-		fillNull() {
-			if (this.data.penindakan.sprint == null) {
-				this.data.penindakan.sprint = JSON.parse(JSON.stringify(default_data.penindakan.sprint))
-			}
-
-			if (this.data.penindakan.saksi == null) {
-				this.data.penindakan.saksi = JSON.parse(JSON.stringify(default_data.penindakan.saksi))
-			}
-
-			if (
-				(this.data.penindakan.petugas.petugas2 == null) ||
-				(this.data.penindakan.petugas.petugas2 == undefined)
-			) {
-				this.data.penindakan.petugas.petugas2 = JSON.parse(JSON.stringify(default_data.penindakan.petugas.petugas2))
-			}
-		},
 		async saveData() {
 			if (this.state == 'insert') {
-				this.data = await api.storeDoc(this.doc_type, this.data)
-				this.fillNull()
-
-				this.$emit('update:doc_id', this.data.id)
+				var data = await api.storeDoc(this.doc_type, this.data)
 				this.$emit('update:state', 'edit')
-				this.alert(`Data ${this.tipe_surat} berhasil disimpan`)
 			} else if (this.state == 'edit') {
-				await api.updateDoc(this.doc_type, this.doc_id, this.data)
-				this.alert(`Data ${this.tipe_surat} berhasil diubah`)
+				var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 			}
-
-			this.$emit('save-data', this.data)
-		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
+			this.$emit('save-data', data)
 		},
 		validatorRequired(val) { return validators.required(val) },
 	},
-	async mounted() {
-		if (this.state == 'edit') {
-			await this.getData()
-		} else {
-			this.data.penindakan.tanggal_selesai_penindakan = converters.currentDate()
-		}
-	}
 }
 </script>
 

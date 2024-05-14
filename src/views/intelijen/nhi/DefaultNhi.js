@@ -37,13 +37,13 @@ export default {
 	detail_exim: {
 		tipe: 'IMPOR',
 		entitas: {
-			type: null,
+			type: 'entitas-badan-hukum',
 			data: { id: null },
 		}
 	},
 	detail_tertentu: {
 		entitas: {
-			type: null,
+			type: 'entitas-badan-hukum',
 			data: { id: null },
 		}
 	},

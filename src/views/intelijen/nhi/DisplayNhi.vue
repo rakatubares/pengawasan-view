@@ -70,7 +70,7 @@
 				</CRow>
 
 				<!-- Barang Exim -->
-				<div class="sep" v-if="data_doc.detail.type == 'nhi-exim'">
+				<div class="sep" v-if="document.detail.type == 'nhi-exim'">
 					<CRow class="mt-2">
 						<CCol>
 							<h4><b>Kegiatan atas Barang Impor/Ekspor</b></h4>
@@ -135,7 +135,7 @@
 				</div>
 
 				<!-- BKC -->
-				<div class="sep" v-if="data_doc.detail.type == 'nhi-bkc'">
+				<div class="sep" v-if="document.detail.type == 'nhi-bkc'">
 					<CRow class="mt-2">
 						<CCol>
 							<h4><b>Kegiatan atas Barang Kena Cukai</b></h4>
@@ -192,7 +192,7 @@
 				</div>
 
 				<!-- Barang Tertentu -->
-				<div class="sep" v-if="data_doc.detail.type == 'nhi-tertentu'">
+				<div class="sep" v-if="document.detail.type == 'nhi-tertentu'">
 					<CRow class="mt-2">
 						<CCol>
 							<h4><b>Kegiatan atas Barang Tertentu</b></h4>
@@ -260,7 +260,7 @@
 
 				<MyDisplayPejabat
 					title="Penerbit"
-					:data.sync="data_doc.petugas.penerbit"
+					:data.sync="document.petugas.penerbit"
 				/>
 				
 				<div class="sep mt-4">
@@ -287,8 +287,6 @@
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import DefaultNhi from './DefaultNhi'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
 
@@ -300,23 +298,18 @@ export default {
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number
-	},
-	data() {
-		return {
-			data_doc: JSON.parse(JSON.stringify(DefaultNhi.data)),
-		}
+		document: Object,
 	},
 	computed: {
-		disp_no_nhi() { return this.data_doc.no_dok_lengkap || '-' },
-		disp_tgl_nhi() { return this.data_doc.tanggal_dokumen || '-' },
+		disp_no_nhi() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_nhi() { return this.document.tanggal_dokumen || '-' },
 		disp_lkai() { 
 			if (
-				(this.data_doc.nomor_lkai != null) &&
-				(this.data_doc.tanggal_lkai != null)
+				(this.document.nomor_lkai != null) &&
+				(this.document.tanggal_lkai != null)
 			) {
-				let no_lkai = this.data_doc.nomor_lkai || '-'
-				let tgl_lkai = this.data_doc.tanggal_lkai || '-'
+				let no_lkai = this.document.nomor_lkai || '-'
+				let tgl_lkai = this.document.tanggal_lkai || '-'
 				var lkai = `${no_lkai} tanggal ${tgl_lkai}`
 			} else {
 				var lkai = '-'
@@ -324,27 +317,27 @@ export default {
 
 			return lkai
 		},
-		disp_sifat() { return this.data_doc.sifat || '-' },
-		disp_klasifikasi() { return this.data_doc.klasifikasi || '-' },
-		disp_tujuan() { return this.data_doc.tujuan || '-' },
-		disp_tempat() { return this.data_doc.tempat_indikasi || '-' },
+		disp_sifat() { return this.document.sifat || '-' },
+		disp_klasifikasi() { return this.document.klasifikasi || '-' },
+		disp_tujuan() { return this.document.tujuan || '-' },
+		disp_tempat() { return this.document.tempat_indikasi || '-' },
 		disp_waktu() { 
 			var waktu = null
-			if (this.data_doc.waktu_indikasi != null) {
-				waktu = `${this.data_doc.waktu_indikasi} ${this.data_doc.zona_waktu}`
+			if (this.document.waktu_indikasi != null) {
+				waktu = `${this.document.waktu_indikasi} ${this.document.zona_waktu}`
 			}
 
-			var tanggal_waktu = this.data_doc.tanggal_indikasi
+			var tanggal_waktu = this.document.tanggal_indikasi
 			if (waktu != null) {
 				tanggal_waktu = `${tanggal_waktu} ${waktu}`
 			}
 
 			return tanggal_waktu
 		},
-		disp_kantor() { return this.data_doc.kantor.nama_kantor || '-' },
+		disp_kantor() { return this.document.kantor.nama_kantor || '-' },
 
-		detail_type() { return this.data_doc.detail.type },
-		detail_data() { return this.data_doc.detail.data },
+		detail_type() { return this.document.detail.type },
+		detail_data() { return this.document.detail.data },
 
 		// Detail exim
 		disp_dok_exim() { return (this.detail_type == 'nhi-exim') ? `${this.detail_data.jenis_dok || ''} ${this.detail_data.nomor_dok || '-'} tanggal ${this.detail_data.tanggal_dok || '-'}` : '-' },
@@ -406,18 +399,9 @@ export default {
 		},
 		disp_data_lain_tertentu() { return (this.detail_type == 'nhi-tertentu') ? this.detail_data.data_lain : '-' },
 
-		disp_indikasi() { return this.data_doc.indikasi || '-' },
-		data_tembusan() { return  this.data_doc.tembusan || null }
+		disp_indikasi() { return this.document.indikasi || '-' },
+		data_tembusan() { return  this.document.tembusan || null }
 	},
-	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data_doc = response.data
-		}
-	},
-	async mounted() {
-		await this.getData()
-	}
 }
 </script>
 

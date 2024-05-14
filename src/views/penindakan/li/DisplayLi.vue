@@ -46,11 +46,11 @@
 				</CRow>
 				<MyDisplayPejabat
 					title="Penerbit"
-					:data.sync="data_doc.petugas.penerbit"
+					:data.sync="document.petugas.penerbit"
 				/>
 				<MyDisplayPejabat
 					title="Atasan"
-					:data.sync="data_doc.petugas.atasan"
+					:data.sync="document.petugas.atasan"
 				/>
 			</CCol>
 		</CRow>
@@ -58,8 +58,6 @@
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import DefaultLi from './DefaultLi'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
 
 export default {
@@ -69,30 +67,16 @@ export default {
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number
-	},
-	data() {
-		return {
-			data_doc: JSON.parse(JSON.stringify(DefaultLi.data))
-		}
+		document: Object,
 	},
 	computed: {
-		disp_no_li() { return this.data_doc.no_dok_lengkap || '-' },
-		disp_tgl_li() { return this.data_doc.tanggal_dokumen || '-' },
-		disp_sumber() { return (this.data_doc.sumber || '-') },
-		disp_informasi() { return (this.data_doc.informasi || '-') },
-		disp_tindak_lanjut() { return this.data_doc.tindak_lanjut || '-' },
-		disp_catatan() { return this.data_doc.catatan || '-' },
+		disp_no_li() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_li() { return this.document.tanggal_dokumen || '-' },
+		disp_sumber() { return (this.document.sumber || '-') },
+		disp_informasi() { return (this.document.informasi || '-') },
+		disp_tindak_lanjut() { return this.document.tindak_lanjut || '-' },
+		disp_catatan() { return this.document.catatan || '-' },
 	},
-	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data_doc = response.data
-		}
-	},
-	async mounted() {
-		await this.getData()
-	}
 }
 </script>
 

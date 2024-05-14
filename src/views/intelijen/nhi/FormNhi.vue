@@ -4,6 +4,7 @@
 			<CRow>
 				<CCol md="12">
 					<MySearchDocument
+						ref="SearchLkai"
 						doc_type="lkai"
 						label="LKAI"
 						description="Nomor LKAI sebagai sumber penerbitan NHI"
@@ -460,9 +461,6 @@
 					</CButton>
 				</CCol>
 			</CRow>
-
-			<!-- Alert -->
-			<MyAlert ref="alert"></MyAlert>
 		</CForm>
 	</div>
 </template>
@@ -471,11 +469,10 @@
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
-import store from '../../../store'
 import api from '../../../router/api2.js'
+import store from '../../../store'
 import validators from '../../../helpers/validator'
 import DefaultNhi from './DefaultNhi'
-import MyAlert from '../../components/AlertSubmit.vue'
 import MyComboboxJabatan from '../../components/ComboboxJabatan.vue'
 import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
 import MyInputTembusan from '../../components/InputTembusan.vue'
@@ -495,7 +492,6 @@ export default {
 	name: 'FormNhi',
 	components: {
 		DatePicker,
-		MyAlert,
 		MyComboboxJabatan,
 		MyComboboxLokasi,
 		MyInputTembusan,
@@ -507,12 +503,11 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		doc_id: Number
+		document: Object,
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(DefaultNhi.data)),
-			saved_lkai: null,
+			data: JSON.parse(JSON.stringify(this.document)),
 			jenis_kegiatan: JSON.parse(JSON.stringify(store.getters.jenisKegiatan)),
 			sifat_nhi_options: JSON.parse(JSON.stringify(store.getters.sifatSurat)),
 			klasifikasi_nhi_options: JSON.parse(JSON.stringify(store.getters.klasifikasiSurat)),
@@ -527,48 +522,29 @@ export default {
 			}
 		}
 	},
+	computed: {
+		saved_lkai: {
+			get() { return this.data.lkai_id },
+			set(val) { this.data.lkai_id = val },
+		}
+	},
+	watch: {
+		document(val) { this.data = val },
+	},
 	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.data = this.fillNull(response.data)
-			this.saved_lkai = this.data.lkai_id
+		async mountData() {
+			if (this.data.lkai_id) {
+				await this.$refs.SearchLkai.getDocument(this.data.lkai_id)	
+			}
 		},
 		async saveData() {
 			if (this.state == 'insert') {
-				var response = await api.storeDoc('nhi', this.data)
+				var data = await api.storeDoc(this.doc_type, this.data)
 				this.$emit('update:state', 'edit')
-				var msg = `Data NHI berhasil disimpan`
 			} else if (this.state == 'edit') {
-				var response = await api.updateDoc('nhi', this.data.id, this.data)
-				var msg = `Data NHI berhasil diubah`
+				var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 			}
-			this.data = this.fillNull(response)
-			this.saved_lkai = this.data.lkai_id
-			this.$emit('update:doc_id', this.data.id)
-			this.alert(msg)			
-		},
-		fillNull(response) {
-			let detail_type = response.detail.type
-			switch (detail_type) {
-				case 'nhi-exim':
-					if (response.detail.data.entitas == null) {
-						response.detail.data.entitas = JSON.parse(JSON.stringify(DefaultNhi.detail_exim.entitas))
-					}
-					break;
-
-				case 'nhi-tertentu':
-					if (response.detail.data.entitas == null) {
-						response.detail.data.entitas = JSON.parse(JSON.stringify(DefaultNhi.detail_tertentu.entitas))
-					}
-					break;
-			
-				default:
-					break;
-			}
-			return response
-		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
+			this.$emit('save-data', data)		
 		},
 		resetDetailNhi(detail_type) {
 			switch (detail_type) {
@@ -598,11 +574,6 @@ export default {
 			return validation
 		},
 	},
-	async beforeMount() {
-		if (this.state == 'edit') {
-			await this.getData()
-		}
-	}
 }
 </script>
 

@@ -2,32 +2,38 @@
 	<div class="wrapper">
 		<MyModalPenindakan
 			ref="ModalPenindakan"
-			:title="`Data SBP`"
+			:title="`Data ${doc_name}`"
 			:state.sync="local_state"
 			:doc_type="doc_type"
-			:doc_id.sync="id"
+			:document.sync="document"
 			@close-modal="closeModal"
 		>
 			<template #uraian>
-				<MyDisplaySbp 
-					v-if="local_state == 'show'"
-					:doc_type="doc_type"
-					:doc_id.sync="id"
-				/>
 				<MyFormSbp 
-					v-else-if="['insert','edit'].includes(local_state)"
+					v-if="['insert','edit'].includes(local_state)"
 					:state.sync="local_state"
 					:doc_type="doc_type"
-					:tipe_surat="tipe_surat"
-					:doc_id.sync="doc_id"
-					@save-data="emitUpdateData"
+					:document.sync="document"
+					@save-data="setDocument"
+				/>
+				<MyDisplaySbp 
+					v-else-if="local_state == 'show'"
+					:doc_type="doc_type"
+					:document.sync="document"
 				/>
 			</template>
 		</MyModalPenindakan>
+
+		<!-- Alert -->
+		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
 <script>
+import api from '../../../router/api2.js'
+import converters from '../../../helpers/converter.js'
+import DefaultSbp from './DefaultSbp'
+import MyAlert from '../../components/AlertSubmit.vue'
 import MyDisplaySbp from './DisplaySbp.vue'
 import MyFormSbp from './FormSbp.vue'
 import MyModalPenindakan from '../../components/ModalPenindakan.vue'
@@ -35,6 +41,8 @@ import MyModalPenindakan from '../../components/ModalPenindakan.vue'
 export default {
 	name: 'ModalSbp',
 	components: {
+		DefaultSbp,
+		MyAlert,
 		MyDisplaySbp,
 		MyFormSbp,
 		MyModalPenindakan,
@@ -42,13 +50,14 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		tipe_surat: String,
+		doc_name: String,
 		id: Number,
 	},
 	data() {
 		return {
-			local_state: this.state,
 			doc_id: this.id,
+			local_state: this.state,
+			document: JSON.parse(JSON.stringify(DefaultSbp.data)),
 		}
 	},
 	watch: {
@@ -66,11 +75,49 @@ export default {
 		}
 	},
 	methods: {
+		async getData() {
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.document = response.data
+			this.fillNull()
+		},
+		setDocument(val) {
+			this.document = JSON.parse(JSON.stringify(val))
+			this.fillNull()
+
+			this.alert('DATA BERHASIL DISIMPAN')
+		},
+		fillNull() {
+			if (this.document.penindakan.sprint == null) {
+				this.document.penindakan.sprint = JSON.parse(JSON.stringify(DefaultSbp.data.penindakan.sprint))
+			}
+
+			if (this.document.penindakan.kategori_penindakan == null) {
+				this.document.penindakan.kategori_penindakan = JSON.parse(JSON.stringify(DefaultSbp.data.penindakan.kategori_penindakan))
+			}
+
+			if (this.document.penindakan.saksi == null) {
+				this.document.penindakan.saksi = JSON.parse(JSON.stringify(DefaultSbp.data.penindakan.saksi))
+			}
+
+			if (
+				(this.document.penindakan.petugas.petugas2 == null) ||
+				(this.document.penindakan.petugas.petugas2 == undefined)
+			) {
+				this.document.penindakan.petugas.petugas2 = JSON.parse(JSON.stringify(DefaultSbp.data.penindakan.petugas.petugas2))
+			}
+		},
 		closeModal() {
 			this.$emit('close-modal')
 		},
-		emitUpdateData(penindakan) {
-			this.$refs.ModalPenindakan.setPenindakan(penindakan)
+		alert(text, color, time) {
+			this.$refs.alert.show_alert(text, color, time)
+		},
+	},
+	async beforeMount() {
+		if (['show', 'edit'].includes(this.state)) {
+			await this.getData()
+		} else {
+			this.document.penindakan.tanggal_selesai_penindakan = converters.currentDate()
 		}
 	},
 }

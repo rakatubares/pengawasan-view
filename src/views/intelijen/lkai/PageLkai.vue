@@ -22,7 +22,7 @@
 					:label_npi="label_npi"
 					:label_nhi="label_nhi"
 					:label_ni="label_ni"
-					:default_pejabat="default_pejabat"
+					:default_pejabat="default_pejabat"	
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -81,7 +81,6 @@ export default {
 			type: String,
 			default: 'create-lkai'
 		},
-		
 	},
 	data() {
 		return {

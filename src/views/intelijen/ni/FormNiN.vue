@@ -4,11 +4,10 @@
 			ref="FormNi"
 			:state.sync="form_state"
 			:doc_type="doc_type"
-			:doc_id.sync="id"
+			:document.sync="document"
 			:kode_lkai="kode_lkai"
 			:label_ni="label_ni"
 			:label_lkai="label_lkai"
-			@get-data="getData"
 			@insert-data="insertData"
 			@update-data="updateData"
 		/>
@@ -28,7 +27,7 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		doc_id: Number,
+		document: Object,
 		kode_lkai: String,
 		label_ni: String,
 		label_lkai: String,
@@ -36,8 +35,7 @@ export default {
 	data() {
 		return {
 			form_state: this.state,
-			id: this.doc_id,
-			nin_keys: JSON.parse(JSON.stringify(NiNKeys))
+			nin_keys: JSON.parse(JSON.stringify(NiNKeys)),
 		}
 	},
 	watch: {
@@ -47,29 +45,19 @@ export default {
 		state(val) {
 			this.form_state = val
 		},
-		id(val) {
-			this.$emit('update:doc_id', val)
-		},
-		doc_id(val) {
-			this.id = val
-		},
 	},
 	methods: {
-		getData(data) {
-			data = this.convertFromNiNData(data)
-			this.$refs.FormNi.updateData(data)
-		},
 		async insertData(data) {
 			data = this.convertToNiNData(data)
 			data = await api.storeDoc(this.doc_type, data)
 			data = this.convertFromNiNData(data)
-			this.$refs.FormNi.updateData(data)
+			this.$emit('save-data', data)
 		},
 		async updateData(data) {
 			data = this.convertToNiNData(data)
 			data = await api.updateDoc(this.doc_type, data.id, data)
 			data = this.convertFromNiNData(data)
-			this.$refs.FormNi.updateData(data)
+			this.$emit('save-data', data)
 		},
 		convertToNiNData(data) {
 			for (const [old_key, new_key] of Object.entries(this.nin_keys)) {
@@ -89,6 +77,9 @@ export default {
 			}
 			return data
 		},
+		async mountData() {
+			await this.$refs.FormNi.mountData()
+		}
 	}
 }
 </script>

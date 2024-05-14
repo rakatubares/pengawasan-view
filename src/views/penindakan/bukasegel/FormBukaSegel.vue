@@ -46,7 +46,7 @@
 						:doc_date.sync="data.tanggal_segel"
 						:saved_doc_id.sync="saved_source_id"
 						@update:doc_type="updateSegelType"
-						@update:doc_id="updateSegel"	
+						@update:doc_id="updateSegel"
 					/>
 				</CCol>
 			</CRow>
@@ -144,7 +144,6 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
-import DefaultBukaSegel from './DefaultBukaSegel'
 import validators from '../../../helpers/validator.js'
 import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
@@ -155,7 +154,6 @@ export default {
 	name: 'FormBukaSegel',
 	components: {
 		DatePicker,
-		DefaultBukaSegel,
 		MySelectEntitasOrang,
 		MySelectPetugas,
 		MySelectSprint,
@@ -164,20 +162,18 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		tipe_surat: String,
 		document: Object,
 	},
 	data() {
 		return {
 			data: JSON.parse(JSON.stringify(this.document)),
-			source_options: [
-				{'type': 'segel', 'label': 'Load Segel', 'state': 'search'},
-				{'type': 'input', 'label': 'Input Segel', 'state': 'manual'},
-			],
+			source_options: {
+				'segel': {'label': 'Load Segel', 'state': 'search'},
+				'input': {'label': 'Input Segel', 'state': 'manual'},
+			},
 		}
 	},
 	computed: {
-		doc_id() { return this.data.id },
 		sprint_id: {
 			get() { return this.data.sprint.id },
 			set(val) { this.data.sprint.id = val },
@@ -187,15 +183,18 @@ export default {
 			set(val) { this.data.segel_id = val }
 		}
 	},
+	watch: {
+		document(val) { this.data = val },
+	},
 	methods: {
 		async saveData() {
 			if (this.state == 'insert') {
 				var data = await api.storeDoc(this.doc_type, this.data)
 				this.$emit('update:state', 'edit')
 			} else if (this.state == 'edit') {
-				var data = await api.updateDoc(this.doc_type, this.doc_id, this.data)
+				var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 			}
-			this.$emit('update-data', data)
+			this.$emit('save-data', data)
 		},
 		updateSegelType(type) {
 			if (type == 'input') {
