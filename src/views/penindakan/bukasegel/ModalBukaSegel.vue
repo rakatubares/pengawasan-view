@@ -9,7 +9,6 @@
 			:available_objects="['sarkut', 'barang', 'bangunan']"
 			@close-modal="closeModal"
 		>
-			<!-- :default_data="default_document" -->
 			<template #uraian>
 				<MyFormBukaSegel 
 					v-if="['insert','edit'].includes(local_state)"

@@ -212,6 +212,8 @@ export default {
 			if ((this.state != 'insert')) {
 				if ((this.doc_type == 'buka_segel') & (this.document.segel_id != null)) {
 					state = 'show'
+				} else if (this.doc_type == 'lphp') {
+					state = 'show'
 				}
 			}
 			return state
