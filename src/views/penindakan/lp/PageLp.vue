@@ -14,8 +14,7 @@
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
-					:tipe_surat="tipe_surat"
-					:sbp_type="sbp_type"
+					:doc_name="doc_name"
 					:id.sync="modal_data_props.doc_id"
 					@close-modal="closeModal"
 				/>
@@ -39,23 +38,19 @@ export default {
 			type: String,
 			default: 'lp'
 		},
-		tipe_surat: {
+		doc_name: {
 			type: String,
 			default: 'LP'
-		},
-		sbp_type: {
-			type: String,
-			dedfault: 'sbp'
 		},
 	},
 	data() {
 		return {
-			table_title: `Daftar ${this.tipe_surat}`,
+			table_title: `Daftar ${this.doc_name}`,
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
-				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
-				{ key: 'no_sbp', label: `No SBP` },
-				{ key: 'tanggal_sbp', label: `Tgl SBP` },
+				{ key: 'no_dok_lengkap', label: `No ${this.doc_name}` },
+				{ key: 'tanggal_dokumen', label: `Tgl ${this.doc_name}` },
+				{ key: 'no_lphp', label: `No LPHP` },
+				{ key: 'tanggal_lphp', label: `Tgl LPHP` },
 			],
 			modal_data_props: {
 				show: false,
@@ -74,7 +69,7 @@ export default {
 		},
 		constructDeleteText(item) {
 			let text = "Apakah Anda yakin untuk menghapus draft LP atas "
-				+ item.no_sbp.bold() 
+				+ item.no_lphp.bold() 
 				+ "?"
 			
 			return text

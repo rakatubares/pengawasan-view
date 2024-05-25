@@ -14,14 +14,6 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
-						<b>No SBP</b>
-					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_sbp }}
-					</CCol>
-				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
 						<b>No LPHP</b>
 					</CCol>
 					<CCol md="9" class="py-1">
@@ -76,101 +68,79 @@
 						{{ disp_tempus }}
 					</CCol>
 				</CRow>
-				<MyDisplayEntitas
-					title="Pemilik/Saksi"
-					:data.sync="data_lp.saksi"
-				/>
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>Pemilik/Saksi</b></h5>
+					</CCol>
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(document.penindakan.saksi.id)"
+						>{{ disp_saksi }}</p>
+					</CCol>
+				</CRow>
 				<MyDisplayPejabat
-					:data.sync="data_lp.pejabat"
+					:data.sync="document.petugas.pejabat"
 				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_saksi"
+			:show.sync="show_modal_saksi"
+		/>
 	</div>
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	tanggal_dokumen: null,
-	no_sbp: null,
-	tanggal_sbp: null,
-	no_lphp: null,
-	tanggal_lphp: null,
-	uraian_penindakan: null,
-	jenis_pelanggaran: null,
-	pasal: null,
-	modus: null,
-	locus: null,
-	tempus: null,
-}
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 export default {
 	name: 'DisplayLp',
 	components: {
-		MyDisplayEntitas,
 		MyDisplayPejabat,
+		MyModalEntitasOrang,
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number
+		document: Object,
 	},
 	data() {
 		return {
-			data_lp: JSON.parse(JSON.stringify(default_data))
+			show_modal_saksi: false,
 		}
 	},
 	computed: {
-		disp_no_lp() { return this.data_lp.no_dok_lengkap || '-' },
-		disp_tgl_lp() { return this.data_lp.tanggal_dokumen || '-' },
-		disp_sbp() {
-			let txt_no_sbp = this.data_lp.no_sbp || '-'
-			let txt_tgl_sbp = ''
-
-			if (this.data_lp.tanggal_sbp != null) {
-				txt_tgl_sbp = ' tanggal ' + this.data_lp.tanggal_sbp
-			} else {
-				txt_tgl_sbp = ''
-			}
-
-			return txt_no_sbp + txt_tgl_sbp
-		},
+		disp_no_lp() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_lp() { return this.document.tanggal_dokumen || '-' },
 		disp_lphp() {
-			let txt_no_lphp = this.data_lp.no_lphp || '-'
+			let txt_no_lphp = this.document.nomor_lphp || '-'
 			let txt_tgl_lphp = ''
 
-			if (this.data_lp.tanggal_lphp != null) {
-				txt_tgl_lphp = ' tanggal ' + this.data_lp.tanggal_lphp
+			if (this.document.tanggal_lphp != null) {
+				txt_tgl_lphp = ' tanggal ' + this.document.tanggal_lphp
 			} else {
 				txt_tgl_lphp = ''
 			}
 
 			return txt_no_lphp + txt_tgl_lphp
 		},
-		disp_uraian() { return this.data_lp.uraian_penindakan || '-' },
-		disp_jenis() { return this.data_lp.jenis_pelanggaran || '-' },
-		disp_pasal() { return this.data_lp.pasal || '-' },
-		disp_modus() { return this.data_lp.modus || '-' },
-		disp_locus() { return this.data_lp.locus || '-' },
-		disp_tempus() { return this.data_lp.tempus || '-' },
+		disp_uraian() { return this.document.penindakan.uraian_penindakan || '-' },
+		disp_jenis() { return this.document.penindakan.jenis_pelanggaran || '-' },
+		disp_pasal() { return this.document.pasal || '-' },
+		disp_modus() { return this.document.modus || '-' },
+		disp_locus() { return this.document.penindakan.lokasi_penindakan || '-' },
+		disp_tempus() { return this.document.penindakan.tanggal_selesai_penindakan || '-' },
+		disp_saksi() { 
+			let txt = this.document.penindakan.saksi
+				? this.document.penindakan.saksi.nama : '-'
+			return txt
+		},
 	},
-	methods: {
-		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_lp = response.data.data
-		}
-	},
-	async mounted() {
-		await this.getData()
-	}
 }
 </script>
 
 <style>
-.display-lp .row+.row {
-	margin-top:0;
-}
+
 </style>

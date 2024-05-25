@@ -52,6 +52,7 @@ import PdfLap from './penindakan/PdfLap'
 import PdfLi from './penindakan/PdfLi'
 import PdfLkai from './intelijen/PdfLkai'
 import PdfLkaiN from './intelijen/PdfLkaiN'
+import PdfLp from './penindakan/PdfLp'
 import PdfLphp from './penindakan/PdfLphp'
 import PdfLppi from './intelijen/PdfLppi'
 import PdfLppiN from './intelijen/PdfLppiN'
@@ -212,6 +213,10 @@ export default {
 
 				case 'lphp':
 					pdf = new PdfLphp(data_pdf)
+					break;
+
+				case 'lp':
+					pdf = new PdfLp(data_pdf)
 					break;
 			
 				default:

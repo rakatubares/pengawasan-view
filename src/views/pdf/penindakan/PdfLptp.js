@@ -76,7 +76,7 @@ class PdfLptp extends PdfPenindakan {
 		this.write('Nomor', inds.lbl)
 		this.break()
 
-		// Locusdan tempus
+		// Locus dan tempus
 		let ln_locus_tempus = this.ln
 		this.write('2.')
 		this.write('Locus', inds.lbl)
