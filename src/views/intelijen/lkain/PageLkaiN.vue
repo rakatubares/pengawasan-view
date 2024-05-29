@@ -8,6 +8,8 @@
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
 			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
 		>
 			<template #modal-data>
 				<MyModalLkaiN
@@ -80,6 +82,14 @@ export default {
 		permission_to_create: {
 			type: String,
 			default: 'create-lkain'
+		},
+		permission_to_update: {
+			type: String,
+			default: 'create-lkain'
+		},
+		permission_to_delete: {
+			type: String,
+			default: 'delete-lkain'
 		},
 	},
 	data() {

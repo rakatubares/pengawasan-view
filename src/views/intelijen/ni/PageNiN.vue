@@ -5,6 +5,8 @@
 		:label_ni="label_ni"
 		:label_lkai="label_lkai"
 		:permission_to_create="permission_to_create"
+		:permission_to_update="permission_to_update"
+		:permission_to_delete="permission_to_delete"
 	/>
 </template>
 
@@ -23,6 +25,8 @@ export default {
 			label_ni: "NI-N",
 			label_lkai: "LKAI-N",
 			permission_to_create: "create-nin",
+			permission_to_update: "create-nin",
+			permission_to_delete: "delete-nin",
 		}
 	}
 }

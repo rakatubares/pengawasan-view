@@ -10,6 +10,8 @@
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
 			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
 		>
 			<template #modal-data>
 				<MyModalBukaSegel 
@@ -52,7 +54,9 @@ export default {
 				state: null,
 				doc_id: null
 			},
-			permission_to_create: 'create-buka-segel',
+			permission_to_create: 'create-buka_segel',
+			permission_to_update: 'create-buka_segel',
+			permission_to_delete: 'delete-buka_segel',
 		}
 	},
 	methods: {

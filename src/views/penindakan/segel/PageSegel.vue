@@ -10,6 +10,8 @@
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"			
 			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
 		>
 			<template #modal-data>
 				<MyModalSegel 
@@ -52,6 +54,8 @@ export default {
 				doc_id: null
 			},
 			permission_to_create: 'create-segel',
+			permission_to_update: 'create-segel',
+			permission_to_delete: 'delete-segel',
 		}
 	},
 	methods: {

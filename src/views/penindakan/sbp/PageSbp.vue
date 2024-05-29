@@ -11,6 +11,8 @@
 			:construct_delete_text="constructDeleteText"
 			:status_filter_options="status_filter_options"
 			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
 		>
 			<template #modal-data>
 				<MyModalSbp 
@@ -48,6 +50,14 @@ export default {
 		permission_to_create: {
 			type: String,
 			default: 'create-sbp'
+		},
+		permission_to_update: {
+			type: String,
+			default: 'create-sbp'
+		},
+		permission_to_delete: {
+			type: String,
+			default: 'delete-sbp'
 		},
 		custom_filters: [
 			{'status-filter': '<input type="date">'}

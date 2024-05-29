@@ -158,7 +158,7 @@ function configRoutes () {
 					name: 'BA Pembukaan Tanda Pengaman',
 					component: PageBukaPengaman,
 					beforeEnter: (to, from, next) => {
-						checkRoutePermission('view-buka-pengaman', next)
+						checkRoutePermission('view-buka_pengaman', next)
 					},
 				},
 				{
@@ -166,7 +166,7 @@ function configRoutes () {
 					name: 'BA Buka Segel',
 					component: PageBukaSegel,
 					beforeEnter: (to, from, next) => {
-						checkRoutePermission('view-buka-segel', next)
+						checkRoutePermission('view-buka_segel', next)
 					},
 				},
 				{
@@ -262,7 +262,7 @@ function configRoutes () {
 					name: 'BA Pemeriksaan Badan',
 					component: PageRiksaBadan,
 					beforeEnter: (to, from, next) => {
-						checkRoutePermission('view-riksa-badan', next)
+						checkRoutePermission('view-riksa_badan', next)
 					},
 				},
 				{
@@ -348,9 +348,6 @@ router.beforeEach(async (to, from, next) => {
 		await Store.getters.sso.attach()
 		cookies = Cookie.parse(document.cookie)
 		token = cookies[token_name]
-
-		// Store token
-		Store.commit('set', ['token', token])
 	}
 
 	// Get user info
@@ -369,6 +366,8 @@ router.beforeEach(async (to, from, next) => {
 					let login_url = process.env.VUE_APP_LOGIN_URL + '?appid=' + process.env.VUE_APP_ID
 					window.location.replace(login_url);
 				} else {
+					// Store token and user info
+					Store.commit('set', ['token', token])
 					Store.commit('set', ['userInfo', JSON.parse(JSON.stringify(e.data))])
 				}
 			})

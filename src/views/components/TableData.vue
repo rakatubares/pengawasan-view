@@ -26,6 +26,10 @@
 					</slot>
 				</template>
 
+				<template #conceptor="{item}">
+					<td>{{item.creator_name}}</td>
+				</template>
+
 				<template #status="{item}">
 					<td>
 						<CBadge :color="item.status_color">{{item.status}}</CBadge>
@@ -71,6 +75,9 @@
 </template>
 
 <script>
+import Store from '../../store'
+import permission from '../../helpers/permission'
+
 export default {
 	name: 'Table',
 	props: {
@@ -95,6 +102,8 @@ export default {
 		editData: Function,
 		deleteData: Function,
 		showData: Function,
+		permission_to_update: String,
+		permission_to_delete: String,
 	},
 	computed: {
 		filteredItems() {
@@ -118,6 +127,9 @@ export default {
 		constructFields() {
 			let field_keys = this.fields.map(function(field) {return field.key})
 			
+			if (!field_keys.includes('conceptor')) {
+				this.fields.push({ key: 'conceptor', label: 'Konseptor' })
+			}
 			if (!field_keys.includes('status')) {
 				this.fields.push({ key: 'status', label: 'Status' })
 			}
@@ -149,6 +161,7 @@ export default {
 		},
 		getButton(type, item) {
 			let btn = false
+			let user = Store.getters.userInfo
 
 			if (this.state == 'edit') {
 				if ((type == 'edit') || (type == 'delete')) {
@@ -157,15 +170,32 @@ export default {
 					btn = false
 				}
 			} else if (this.state == 'list') {
-				if ((type == 'edit') || (type == 'delete')) {
-					btn = ['draft'].includes(item.status_dokumen)
+				let editable = ['draft'].includes(item.status_dokumen)
+				let match_user = user.nip == item.creator_id
+
+				if (type == 'edit') {
+					if (editable) {
+						let permited = permission.checkPermission(this.permission_to_update)
+						if (permited && match_user) {
+							btn = true
+						}
+					}
+				} else if (type == 'delete') {
+					if (editable) {
+						let permited = permission.checkPermission(this.permission_to_delete)
+						if (permited && match_user) {
+							btn = true
+						}
+					}
 				} else if (type == 'show') {
-					btn = !['draft'].includes(item.status_dokumen)
-				} else {
-					btn = false
+					if (editable) {
+						if (!match_user) {
+							btn = true
+						}
+					} else {
+						btn = true
+					}
 				}
-			} else {
-				btn = false
 			}
 
 			return btn

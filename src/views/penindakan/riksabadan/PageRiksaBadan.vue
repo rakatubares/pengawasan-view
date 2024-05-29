@@ -10,6 +10,8 @@
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
 			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
 		>
 			<template #modal-data>
 				<MyModalRiksaBadan 
@@ -51,7 +53,9 @@ export default {
 				state: null,
 				doc_id: null
 			},
-			permission_to_create: 'create-riksa-badan',
+			permission_to_create: 'create-riksa_badan',
+			permission_to_update: 'create-riksa_badan',
+			permission_to_delete: 'delete-riksa_badan',
 		}
 	},
 	methods: {

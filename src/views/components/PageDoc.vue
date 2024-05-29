@@ -12,6 +12,8 @@
 					:editData="editDoc"
 					:deleteData="deleteDoc"
 					:showData="showDoc"
+					:permission_to_update="permission_to_update"
+					:permission_to_delete="permission_to_delete"
 				>
 					<template #header>
 						<CIcon name="cil-grid"/>{{ table_title }}
@@ -90,6 +92,8 @@ export default {
 		modal_data_props: Object,
 		construct_delete_text: Function,
 		permission_to_create: String,
+		permission_to_update: String,
+		permission_to_delete: String,
 	},
 	data() {
 		return {

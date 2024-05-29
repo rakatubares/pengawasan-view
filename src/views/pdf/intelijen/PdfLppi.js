@@ -281,9 +281,11 @@ class PdfLppi extends Pdf
 		this.pdf.setFont('Helvetica', 'normal')
 
 		this.pdf.addImage(this.checkbox.analisis, 'png', inds.txt, this.ln-3.5, 4, 4)
+		this.write('Analisis', inds.txt+5)
 		this.break(.25)
 
 		this.pdf.addImage(this.checkbox.arsip, 'png', inds.txt, this.ln-3.5, 4, 4)
+		this.write('Arsip', inds.txt+5)
 		this.break(1)
 
 		// Catatan

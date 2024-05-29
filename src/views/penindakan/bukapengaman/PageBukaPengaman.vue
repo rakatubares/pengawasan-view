@@ -49,7 +49,7 @@ export default {
 				state: null,
 				doc_id: null
 			},
-			permission_to_create: 'create-buka-pengaman',
+			permission_to_create: 'create-buka_pengaman',
 		}
 	},
 	methods: {

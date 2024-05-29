@@ -31,7 +31,7 @@
 						<MyTableItemBarang
 							:state.sync="local_state"
 							:doc_type.sync="doc_type"
-							:doc_id.sync="doc_id"
+							:doc_id.sync="document.id"
 							:with_photo="false"
 						/>
 					</div>

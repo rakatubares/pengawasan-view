@@ -69,6 +69,8 @@ import PdfBukaSegel from './penindakan/PdfBukaSegel'
 import PdfTegah from './penindakan/PdfTegah'
 import PdfTolak1 from './penindakan/PdfTolak1'
 import PdfTolak2 from './penindakan/PdfTolak2'
+import permission from '../../helpers/permission'
+import store from '../../store'
 
 export default {
 	name: "DisplayPdf",
@@ -103,10 +105,16 @@ export default {
 		doc_id() { return this.document ? this.document.id : null },
 		show_publish_button() {
 			let show = false
-			if (this.is_publishable) {
-				if (this.status_pdf == 'draft') {
-					show = true
-				}	
+			let user = store.getters.userInfo
+			let permited = permission.checkPermission('create-'+this.doc_type)
+
+			if (
+				(this.is_publishable) &&
+				(this.status_pdf == 'draft') &&
+				(user.nip == this.document['created_by']['nip']) &&
+				(permited)
+			) {
+				show = true
 			}
 
 			return show

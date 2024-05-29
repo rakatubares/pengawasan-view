@@ -10,6 +10,8 @@
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
 			permission_to_create="create-nhin"
+			permission_to_update="create-nhin"
+			permission_to_delete="delete-nhin"
 		>
 			<template #modal-data>
 				<MyModalNhiN 
