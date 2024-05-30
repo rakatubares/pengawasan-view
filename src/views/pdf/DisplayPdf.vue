@@ -26,16 +26,26 @@
 				></object>
 			</CCol>
 		</CRow>
-		<CRow
-			v-if="show_publish_button"
-		>
+		<CRow>
 			<CCol col="12">
 				<CButton
+					v-if="show_publish_button"
+					class="mx-1"
 					color="success"
 					shape="pill"
 					@click="publishDoc"
 				>
 					Terbitkan
+				</CButton>
+
+				<CButton
+					v-if="show_book_button"
+					class="mx-1"
+					color="primary"
+					shape="pill"
+					@click="bookNumber"
+				>
+					Booking nomor
 				</CButton>
 			</CCol>
 		</CRow>
@@ -106,11 +116,19 @@ export default {
 		show_publish_button() {
 			let show = false
 			let user = store.getters.userInfo
+			let match_user = user.nip == this.document['created_by']['nip']
+			let permited = permission.checkPermission('create-'+this.doc_type)
+			if (this.is_publishable && match_user && permited) { show = true }
+			return show
+		},
+		show_book_button() { 
+			let show = false
+			let user = store.getters.userInfo
 			let permited = permission.checkPermission('create-'+this.doc_type)
 
 			if (
 				(this.is_publishable) &&
-				(['draft', 'rollback'].includes(this.status_pdf)) &&
+				(['draft'].includes(this.status_pdf)) &&
 				(user.nip == this.document['created_by']['nip']) &&
 				(permited)
 			) {
@@ -118,7 +136,7 @@ export default {
 			}
 
 			return show
-		}
+		},
 	},
 	methods: {
 		async listPdf() {
@@ -235,7 +253,7 @@ export default {
 			this.show_pdf = true
 			this.status_pdf = data_pdf.kode_status
 			if (doc_type == this.doc_type) {
-				if (['draft', 'rollback'].includes(this.status_pdf)) {
+				if (['draft', 'booking-nomor', 'rollback'].includes(this.status_pdf)) {
 					this.is_publishable = true
 				} else {
 					this.is_publishable = false
@@ -253,7 +271,12 @@ export default {
 			await this.getPdf(this.doc_type, this.doc_id)
 			this.active_pdf = this.doc_type
 			this.$emit('update:state', 'show')
-		}
+		},
+		async bookNumber() {
+			await api.bookDoc(this.doc_type, this.doc_id)
+			await this.getPdf(this.doc_type, this.doc_id)
+			this.active_pdf = this.doc_type
+		},
 	},
 	mounted() {
 		if (this.show_button == true) {

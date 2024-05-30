@@ -274,7 +274,7 @@ class MyPdf {
 
 	paintWatermark()
 	{
-		if (['draft', 'rollback'].includes(this.data.kode_status)) {
+		if (['draft', 'booking-nomor', 'rollback'].includes(this.data.kode_status)) {
 			this.watermark()
 		}
 	}

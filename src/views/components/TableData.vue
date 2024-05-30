@@ -170,7 +170,7 @@ export default {
 					btn = false
 				}
 			} else if (this.state == 'list') {
-				let editable = ['draft', 'rollback'].includes(item.status_dokumen)
+				let editable = ['draft', 'booking-nomor', 'rollback'].includes(item.status_dokumen)
 				let deleteable = ['draft'].includes(item.status_dokumen)
 				let match_user = user.nip == item.creator_id
 

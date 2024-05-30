@@ -132,7 +132,7 @@ export default {
 		show_rollback() {
 			let show = false
 			if (this.state != 'insert') {
-				let rollbackable = !['draft', 'rollback'].includes(this.document['kode_status'])
+				let rollbackable = !['draft', 'booking-nomor', 'rollback'].includes(this.document['kode_status'])
 				let permited = permission.checkPermission(this.permission_to_rollback)
 				if (rollbackable && permited) {
 					show = true

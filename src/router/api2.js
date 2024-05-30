@@ -103,6 +103,10 @@ class API {
 		return response.data.data
 	}
 
+	async bookDoc(doc_type, doc_id) {
+		await this.putApi(`/doc/${doc_type}/${doc_id}/book`)
+	}
+
 	async publishDoc(doc_type, doc_id) {
 		await this.putApi(`/doc/${doc_type}/${doc_id}/publish`)
 	}

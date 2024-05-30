@@ -70,7 +70,9 @@ export default {
 		description: String,
 		filters: {
 			type: Object,
-			default: {'status_tindak_lanjut': false},
+			default() {
+				return {'status_tindak_lanjut': false}
+			},
 		},
 		exceptions: {
 			type: Number,
