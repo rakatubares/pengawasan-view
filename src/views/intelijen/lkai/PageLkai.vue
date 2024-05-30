@@ -24,7 +24,8 @@
 					:label_npi="label_npi"
 					:label_nhi="label_nhi"
 					:label_ni="label_ni"
-					:default_pejabat="default_pejabat"	
+					:default_pejabat="default_pejabat"
+					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -90,6 +91,10 @@ export default {
 		permission_to_delete: {
 			type: String,
 			default: 'delete-lkai'
+		},
+		permission_to_rollback: {
+			type: String,
+			default: 'rollback-lkai'
 		},
 	},
 	data() {

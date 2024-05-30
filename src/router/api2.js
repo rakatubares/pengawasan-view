@@ -11,10 +11,22 @@ class API {
 		this.base_url = process.env.VUE_APP_BASEAPI
 	}
 
-	async getApi(url) 		 { return await axios.get(`${this.base_url}${url}`, this.config) }
-	async postApi(url, data) { return await axios.post(`${this.base_url}${url}`, data, this.config) }
-	async putApi(url, data)  { return await axios.put(`${this.base_url}${url}`, data, this.config) }
-	async delApi(url) 		 { return await axios.delete(`${this.base_url}${url}`, this.config) }
+	async getApi(url) { 
+		return await axios.get(`${this.base_url}${url}`, this.config)
+			.catch(function (error) { if (error.response.status == 401) { redirectToLogin() } })
+	}
+	async postApi(url, data) { 
+		return await axios.post(`${this.base_url}${url}`, data, this.config) 
+			.catch(function (error) { if (error.response.status == 401) { redirectToLogin() } })
+	}
+	async putApi(url, data) { 
+		return await axios.put(`${this.base_url}${url}`, data, this.config)
+			.catch(function (error) { if (error.response.status == 401) { redirectToLogin() } })
+	}
+	async delApi(url) { 
+		return await axios.delete(`${this.base_url}${url}`, this.config)
+			.catch(function (error) { if (error.response.status == 401) { redirectToLogin() } })
+	}
 
 	/*
     |--------------------------------------------------------------------------
@@ -101,6 +113,10 @@ class API {
 
 	async deleteDoc(doc_type, doc_id) {
 		return await this.delApi(`/doc/${doc_type}/${doc_id}`)
+	}
+
+	async rollbackDoc(doc_type, doc_id, data) {
+		await this.putApi(`/doc/${doc_type}/${doc_id}/rollback`, data)
 	}
 
 	async getDocumentsChain(doc_type, doc_id) {
@@ -358,6 +374,11 @@ class API {
 	async getListJabatan() {
 		return await this.getApi('/jabatan')
 	}
+}
+
+function redirectToLogin() {
+	let login_url = process.env.VUE_APP_LOGIN_URL + '?appid=' + process.env.VUE_APP_ID
+	window.location.replace(login_url);
 }
 
 export default new API

@@ -3,8 +3,12 @@
 		<MyModalTabs
 			ref="modal_tabs"
 			:title="`Data ${doc_name}`"
+			:state.sync="state"
+			:doc_type.sync="doc_type"
+			:document.sync="document"
 			:tabs_list.sync="tabs_list"
 			:current_tab.sync="current_tab"
+			:permission_to_rollback="permission_to_rollback"
 			@close-modal="closeModal"
 		>
 			<template #tabs>
@@ -83,6 +87,7 @@ export default {
 		doc_type: String,
 		doc_name: String,
 		id: Number,
+		permission_to_rollback: String,
 	},
 	data() {
 		return {

@@ -21,6 +21,7 @@
 					:doc_type="doc_type"
 					:doc_name="doc_name"
 					:id.sync="modal_data_props.doc_id"
+					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -58,6 +59,10 @@ export default {
 		permission_to_delete: {
 			type: String,
 			default: 'delete-sbp'
+		},
+		permission_to_rollback: {
+			type: String,
+			default: 'rollback-sbp'
 		},
 		custom_filters: [
 			{'status-filter': '<input type="date">'}

@@ -45,6 +45,7 @@
 						:doc_number.sync="data.nomor_segel"
 						:doc_date.sync="data.tanggal_segel"
 						:saved_doc_id.sync="saved_source_id"
+						:filters="{'status_buka_segel': false}"
 						@update:doc_type="updateSegelType"
 						@update:doc_id="updateSegel"
 					/>

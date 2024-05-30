@@ -20,6 +20,7 @@
 					:doc_type="doc_type"
 					:doc_name="doc_name"
 					:id.sync="modal_data_props.doc_id"
+					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -56,6 +57,7 @@ export default {
 			permission_to_create: 'create-riksa',
 			permission_to_update: 'create-riksa',
 			permission_to_delete: 'delete-riksa',
+			permission_to_rollback: 'rollback-riksa_badan',
 		}
 	},
 	methods: {

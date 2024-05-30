@@ -6,6 +6,7 @@
 			:state.sync="local_state"
 			:doc_type="doc_type"
 			:document.sync="document"
+			:permission_to_rollback="permission_to_rollback"
 			@close-modal="closeModal"
 		>
 			<template #uraian>
@@ -57,7 +58,8 @@ export default {
 		doc_type: String,
 		doc_name: String,
 		sbp_type: String,
-		id: Number
+		id: Number,
+		permission_to_rollback: String,
 	},
 	data() {
 		return {

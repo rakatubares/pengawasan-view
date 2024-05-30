@@ -170,7 +170,8 @@ export default {
 					btn = false
 				}
 			} else if (this.state == 'list') {
-				let editable = ['draft'].includes(item.status_dokumen)
+				let editable = ['draft', 'rollback'].includes(item.status_dokumen)
+				let deleteable = ['draft'].includes(item.status_dokumen)
 				let match_user = user.nip == item.creator_id
 
 				if (type == 'edit') {
@@ -181,7 +182,7 @@ export default {
 						}
 					}
 				} else if (type == 'delete') {
-					if (editable) {
+					if (deleteable) {
 						let permited = permission.checkPermission(this.permission_to_delete)
 						if (permited && match_user) {
 							btn = true

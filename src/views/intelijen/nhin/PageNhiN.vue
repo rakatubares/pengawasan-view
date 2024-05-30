@@ -20,6 +20,7 @@
 					:doc_type="doc_type"
 					:doc_name="doc_name"
 					:id.sync="modal_data_props.doc_id"
+					permission_to_rollback="rollback-nhin"
 					@close-modal="closeModal"
 				/>
 			</template>

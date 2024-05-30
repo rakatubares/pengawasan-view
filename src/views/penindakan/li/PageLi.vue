@@ -17,6 +17,7 @@
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
 					:id.sync="modal_data_props.doc_id"
+					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -50,6 +51,7 @@ export default {
 			permission_to_create: 'create-li',
 			permission_to_update: 'create-li',
 			permission_to_delete: 'delete-li',
+			permission_to_rollback: 'rollback-li',
 		}
 	},
 	methods: {

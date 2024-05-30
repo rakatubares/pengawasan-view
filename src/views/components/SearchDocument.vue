@@ -68,6 +68,10 @@ export default {
 			default: '',
 		},
 		description: String,
+		filters: {
+			type: Object,
+			default: {'status_tindak_lanjut': false},
+		},
 		exceptions: {
 			type: Number,
 			default: null,
@@ -96,7 +100,7 @@ export default {
 		async searchDocument() {
 			let data = {
 				'src': this.search_input, 
-				'flt': {'kode_status': ['terbit']},
+				'flt': this.filters,
 				'exc': this.exceptions,
 			}
 			let responses = await api.searchDoc(this.doc_type, data)

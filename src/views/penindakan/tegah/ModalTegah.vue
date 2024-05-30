@@ -7,6 +7,7 @@
 			:doc_type="doc_type"
 			:document.sync="document"
 			:available_objects="['sarkut', 'barang']"
+			:permission_to_rollback="permission_to_rollback"
 			@close-modal="closeModal"
 		>
 			<template #uraian>
@@ -54,6 +55,7 @@ export default {
 		doc_type: String,
 		doc_name: String,
 		id: Number,
+		permission_to_rollback: String,
 	},
 	data() {
 		return {

@@ -110,7 +110,7 @@ export default {
 
 			if (
 				(this.is_publishable) &&
-				(this.status_pdf == 'draft') &&
+				(['draft', 'rollback'].includes(this.status_pdf)) &&
 				(user.nip == this.document['created_by']['nip']) &&
 				(permited)
 			) {
@@ -235,7 +235,7 @@ export default {
 			this.show_pdf = true
 			this.status_pdf = data_pdf.kode_status
 			if (doc_type == this.doc_type) {
-				if (this.status_pdf == 'draft') {
+				if (['draft', 'rollback'].includes(this.status_pdf)) {
 					this.is_publishable = true
 				} else {
 					this.is_publishable = false

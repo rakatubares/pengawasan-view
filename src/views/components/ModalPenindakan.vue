@@ -3,8 +3,12 @@
 		<MyModalTabs
 			ref="modal_tabs"
 			:title="title"
+			:state.sync="state"
+			:doc_type.sync="doc_type"
+			:document.sync="document"
 			:tabs_list.sync="tabs_list"
 			:current_tab.sync="current_tab"
+			:permission_to_rollback="permission_to_rollback"
 			@close-modal="closeModal"
 		>
 			<template #tabs>
@@ -194,6 +198,7 @@ export default {
 			type: Array,
 			default() { return JSON.parse(JSON.stringify(default_objects)) }
 		},
+		permission_to_rollback: String,
 	},
 	data() {
 		return {

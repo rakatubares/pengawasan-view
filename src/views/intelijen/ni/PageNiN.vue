@@ -7,6 +7,7 @@
 		:permission_to_create="permission_to_create"
 		:permission_to_update="permission_to_update"
 		:permission_to_delete="permission_to_delete"
+		:permission_to_rollback="permission_to_rollback"
 	/>
 </template>
 
@@ -27,6 +28,7 @@ export default {
 			permission_to_create: "create-nin",
 			permission_to_update: "create-nin",
 			permission_to_delete: "delete-nin",
+			permission_to_rollback: "rollback-nin",
 		}
 	}
 }

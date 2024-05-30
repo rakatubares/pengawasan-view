@@ -3,8 +3,12 @@
 		<MyModalTabs
 			ref="modal_tabs"
 			:title="`Data ${label_ni}`"
+			:state.sync="state"
+			:doc_type.sync="doc_type"
+			:document.sync="document"
 			:tabs_list.sync="tabs_list"
 			:current_tab.sync="current_tab"
+			:permission_to_rollback="permission_to_rollback"
 			@close-modal="closeModal"
 		>
 			<template #tabs>
@@ -80,6 +84,7 @@ export default {
 		kode_lkai: String,
 		label_ni: String,
 		label_lkai: String,
+		permission_to_rollback: String,
 	},
 	data() {
 		return {

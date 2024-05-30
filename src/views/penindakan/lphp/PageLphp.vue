@@ -19,6 +19,7 @@
 					:doc_name="doc_name"
 					:sbp_type="sbp_type"
 					:id.sync="modal_data_props.doc_id"
+					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -64,6 +65,10 @@ export default {
 		permission_to_delete: {
 			type: String,
 			default: 'delete-lphp'
+		},
+		permission_to_rollback: {
+			type: String,
+			default: 'rollback-lphp'
 		},
 	},
 	data() {

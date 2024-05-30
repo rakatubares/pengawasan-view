@@ -22,6 +22,7 @@
 					:kode_lkai="kode_lkai"
 					:label_ni="label_ni"
 					:label_lkai="label_lkai"
+					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -67,6 +68,10 @@ export default {
 		permission_to_delete: {
 			type: String,
 			default: 'delete-ni'
+		},
+		permission_to_rollback: {
+			type: String,
+			default: 'rollback-ni'
 		},
 	},
 	data() {

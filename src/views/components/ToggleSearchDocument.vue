@@ -26,6 +26,7 @@
 						ref="SearchDocument"
 						:doc_type.sync="selected_doc_type"
 						:value.sync="selected_doc_id"
+						:filters="filters"
 						:exceptions.sync="exceptions"
 					/>
 				</CCol>
@@ -92,6 +93,7 @@ export default {
 		doc_number: String,
 		doc_date: String,
 		saved_doc_id: Number,
+		filters: Object,
 	},
 	computed: {
 		dropdown_items() {
