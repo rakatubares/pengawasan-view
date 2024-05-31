@@ -74,10 +74,11 @@ export default {
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: `No ${this.doc_name}` },
 				{ key: 'tanggal_dokumen', label: `Tgl ${this.doc_name}` },
+				{ key: 'nhi', label: 'NHI' },
 				{ key: 'nama_saksi', label: 'Saksi/Pemilik/Orang' },
 				{ key: 'petugas', label: 'Petugas' },
 			],
-			custom_fields: ['petugas'],
+			custom_fields: ['nhi', 'petugas'],
 			modal_data_props: {
 				show: false,
 				state: null,
@@ -96,6 +97,7 @@ export default {
 			return list.map(item => {
 				return {
 					...item,
+					nhi: item.nomor_nhi + '</br>' + item.tanggal_nhi,
 					petugas: item.petugas1 + '</br>' + item.petugas2,
 				}
 			})

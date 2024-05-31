@@ -26,7 +26,7 @@
 						ref="SearchDocument"
 						:doc_type.sync="selected_doc_type"
 						:value.sync="selected_doc_id"
-						:filters="filters"
+						:filters="selected_filters"
 						:exceptions.sync="exceptions"
 					/>
 				</CCol>
@@ -93,7 +93,6 @@ export default {
 		doc_number: String,
 		doc_date: String,
 		saved_doc_id: Number,
-		filters: Object,
 	},
 	computed: {
 		dropdown_items() {
@@ -103,7 +102,7 @@ export default {
 					let item = {
 						'type': key, 
 						'label': this.doc_options[key]['label'], 
-						'state': this.doc_options[key]['state']
+						'state': this.doc_options[key]['state'],
 					}
 					items.push(item)
 				}
@@ -133,6 +132,9 @@ export default {
 		selected_doc_date: {
 			get() { return this.doc_date },
 			set(val) { this.$emit('update:doc_date', val) },
+		},
+		selected_filters() {
+			return this.doc_options[this.selected_doc_type]['filters']
 		},
 		exceptions: {
 			get() { return this.saved_doc_id },

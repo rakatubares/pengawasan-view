@@ -1,6 +1,9 @@
 export default {
 	data: {
-		lap_id: null,
+		jenis_sumber: 'nhi',
+		sumber_id: null,
+		nomor_sumber: null,
+		tanggal_sumber: null,
 		penindakan: {
 			sprint: {id: null},
 			lokasi_penindakan: null,

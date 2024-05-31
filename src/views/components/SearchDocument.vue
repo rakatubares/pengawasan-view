@@ -118,11 +118,13 @@ export default {
 			this.$emit('update:value', id)
 		},
 		async getDocument(id) {
-			let response = await api.getDocumentById(this.doc_type, id)
-			let data_dokumen = response.data
-			this.tanggal_dokumen = data_dokumen.tanggal_dokumen
-			this.items = [data_dokumen]
-			this.selected_document = data_dokumen
+			if (id) {
+				let response = await api.getDocumentById(this.doc_type, id)
+				let data_dokumen = response.data
+				this.tanggal_dokumen = data_dokumen.tanggal_dokumen
+				this.items = [data_dokumen]
+				this.selected_document = data_dokumen	
+			}
 		},
 		getDataDocument() {
 			let data = this.selected_document

@@ -5,11 +5,14 @@
 		<CForm class="pt-3">
 			<CRow>
 				<CCol md="12">
-					<MySearchDocument
-						doc_type="lap"
-						label="LAP Sumber"
-						:value.sync="data.lap_id"
-						:exceptions.sync="saved_lap"
+					<MyToggleSearchDocument
+						ref="ToggleSearchDocument"
+						:doc_options="source_options"
+						:doc_type.sync="data.jenis_sumber"
+						:doc_id.sync="data.sumber_id"
+						:doc_number.sync="data.nomor_sumber"
+						:doc_date.sync="data.tanggal_sumber"
+						:saved_doc_id.sync="saved_source_id"
 					/>
 				</CCol>
 			</CRow>
@@ -253,6 +256,7 @@ import MySelectLokasi from '../../components/SelectLokasi.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
+import MyToggleSearchDocument from '../../components/ToggleSearchDocument.vue'
 
 const custom_validations_default = {
 	tgl_sprint: {
@@ -284,11 +288,21 @@ export default {
 		MySelectPejabat,
 		MySelectPetugas,
 		MySelectSprint,
+		MyToggleSearchDocument,
 	},
 	props: {
 		state: String,
 		doc_type: String,
 		document: Object,
+		source_options: {
+			type: Object,
+			default() {
+				return {
+					'nhi': {'label': 'NHI', 'state': 'search', 'filters': {'status_sbp': false}}, 
+					'lap': {'label': 'LAP', 'state': 'search'},
+				}
+			}
+		}
 	},
 	data() {
 		return {
@@ -299,9 +313,9 @@ export default {
 		}
 	},
 	computed: {
-		saved_lap: {
-			get() { return this.data.lap_id },
-			set(val) { this.data.lap_id = val },
+		saved_source_id: {
+			get() { return this.data.sumber_id },
+			set(val) { this.data.sumber_id = val }
 		},
 		selected_sprint: {
 			get() { return this.data.penindakan.sprint.id },

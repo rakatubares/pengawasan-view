@@ -88,7 +88,11 @@ export default {
 
 			this.alert('DATA BERHASIL DISIMPAN')
 		},
-		fillNull() {
+		async fillNull() {
+			if (this.document.jenis_sumber == null) {
+				this.document.jenis_sumber = DefaultSbp.data.jenis_sumber
+			}
+
 			if (this.document.penindakan.sprint == null) {
 				this.document.penindakan.sprint = JSON.parse(JSON.stringify(DefaultSbp.data.penindakan.sprint))
 			}
