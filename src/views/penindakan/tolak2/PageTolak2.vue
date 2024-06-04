@@ -10,6 +10,8 @@
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
 			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
 		>
 			<template #modal-data>
 				<MyModalTolak2
@@ -17,6 +19,7 @@
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
 					:id.sync="modal_data_props.doc_id"
+					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -38,11 +41,11 @@ export default {
 		return {
 			doc_type: 'tolak2',
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: 'No BA Penolakan SBP' },
+				{ key: 'no_dok_lengkap', label: 'No BA Tolak 2' },
 				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
-				{ key: 'tolak1', label: 'BA Penolakan SBP' },
+				{ key: 'tolak1', label: 'BA Tolak 1' },
 				{ key: 'sbp', label: 'SBP' },
-				{ key: 'pemilik', label: 'Pemilik/Kuasa' },
+				{ key: 'nama_saksi', label: 'Pemilik/Kuasa' },
 				{ key: 'petugas', label: 'Petugas' },
 			],
 			custom_fields: ['tolak1', 'sbp', 'petugas'],
@@ -52,6 +55,9 @@ export default {
 				doc_id: null
 			},
 			permission_to_create: 'create-tolak2',
+			permission_to_update: 'create-tolak2',
+			permission_to_delete: 'delete-tolak2',
+			permission_to_rollback: 'rollback-tolak2',
 		}
 	},
 	methods: {
@@ -75,7 +81,7 @@ export default {
 			let text = "Apakah Anda yakin untuk menghapus data BA Penolakan atas BA Penolakan SBP nomor " 
 				+ item.nomor_tolak1.bold() 
 				+ ' tanggal ' + item.tanggal_tolak1.bold() 
-				+ " a.n. " + item.pemilik.bold() 
+				+ " a.n. " + item.nama_saksi.bold() 
 				+ "?"
 
 			return text

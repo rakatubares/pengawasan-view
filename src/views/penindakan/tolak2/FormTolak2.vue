@@ -2,22 +2,19 @@
 	<div class="wrapper form-tolak2">
 		<CForm class="pt-3">
 			<CRow>
-				<CCol sm="12">
-					<MySelectSprint
-						ref="selectSprint"
-						:id.sync="data.sprint.id"
-					/>
-				</CCol>
-			</CRow>
-			<CRow>
 				<CCol md="12">
-					<MySelectTolak1
-						ref="selectTolak1"
-						:id.sync="data.id_tolak1"
-						:filter="filter_tolak1"
+					<MySearchDocument
+						ref="SearchTolak1"
+						doc_type="tolak1"
+						label="BA Penolakan ttd SBP"
+						:value.sync="data.tolak1.id"
+						:filters="{'status_tolak': false, 'kode_status': 'terbit'}"
+						:exceptions.sync="saved_tolak1_id"
+						@update:value="updateSource"
 					/>
 				</CCol>
 			</CRow>
+
 			<CRow>
 				<CCol sm="12">
 					<CTextarea
@@ -30,33 +27,38 @@
 				</CCol>
 			</CRow>
 			<CRow>
+				<CCol sm="12">
+					<CInput
+						label="Entitas"
+						:value.sync="data.penindakan.saksi.nama"
+						disabled
+					/>
+				</CCol>
+			</CRow>
+			<CRow>
 				<CCol md="12">
-					<MySelectEntitas
-						ref="selectSaksi"
+					<MySelectPetugas
+						label="Nama Petugas 1"
+						:nip.sync="data.penindakan.petugas.petugas1.nip"
+						disabled
+					/>
+				</CCol>
+			</CRow>
+			<CRow>
+				<CCol md="12">
+					<MySelectPetugas
+						label="Nama Petugas 2"
+						:nip.sync="data.penindakan.petugas.petugas2.nip"
+						disabled
+					/>
+				</CCol>
+			</CRow>
+			<CRow>
+				<CCol md="12">
+					<MySelectEntitasOrang
 						label="Saksi"
 						description="Nama saksi yang menyaksikan penolakan tanda tangan"
-						:id.sync="data.saksi.id"
-					/>
-				</CCol>
-			</CRow>
-			<CRow>
-				<CCol md="12">
-					<MySelectPetugas
-						ref="selectPetugas1"
-						label="Nama Petugas 1"
-						:id.sync="data.petugas1.user_id"
-						role="p2vue.penindakan"
-						:currentUser="true"
-					/>
-				</CCol>
-			</CRow>
-			<CRow>
-				<CCol md="12">
-					<MySelectPetugas
-						ref="selectPetugas2"
-						label="Nama Petugas 2"
-						:id.sync="data.petugas2.user_id"
-						role="p2vue.penindakan"
+						:entity_id.sync="data.saksi.id"
 					/>
 				</CCol>
 			</CRow>
@@ -81,98 +83,70 @@
 
 <script>
 import api from '../../../router/api2.js'
+import DefaultTolak2 from './DefaultTolak2'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySearchDocument from '../../components/SearchDocument.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
-import MySelectTolak1 from '../tolak1/SelectTolak1.vue'
-import MySelectSprint from '../../components/SelectSprint.vue'
-
-const default_data = {
-	sprint: {id: null},
-	id_tolak1: null,
-	alasan: null,
-	saksi: {id: null},
-	petugas1: {user_id: null},
-	petugas2: {user_id: null}
-}
 
 export default {
 	name: 'FormTolak2',
 	components: {
 		MyAlert,
-		MySelectEntitas,
+		MySearchDocument,
+		MySelectEntitasOrang,
 		MySelectPetugas,
-		MySelectTolak1,
-		MySelectSprint,
 	},
 	props: {
 		state: String,
-		doc_id: Number,
+		doc_type: String,
+		document: Object,
 	},
 	data() {
 		return {
-			doc_type: 'tolak2',
-			data: JSON.parse(JSON.stringify(default_data)),
-			filter_tolak1: {
-				kode_status: 200,
-				status_tolak: null
-			}
+			data: JSON.parse(JSON.stringify(this.document)),
 		}
+	},
+	computed: {
+		saved_tolak1_id: {
+			get() { return this.data.tolak1.id },
+			set(val) { this.data.tolak1.id = val }
+		},
+	},
+	watch: {
+		document(val) { 
+			this.data = val
+			if (this.data.tolak1.id) {
+				console.log('FORM TOLAK 2 - WATCH DOCUMETN - GET SEARCH TOLAK1')
+				this.$refs.SearchTolak1.getDocument(this.data.tolak1.id)
+			} 
+		},
 	},
 	methods: {
-		async getData() {
-			let response = await api.getFormDataById(this.doc_type, this.doc_id)
-			this.data = response.data.data
-			
-			if (this.data.petugas2 == null) {
-				this.data.petugas2 = {user_id: null}
-			}
-			this.$nextTick(function () {
-				this.renderData()
-			})
-		},
-		renderData() {
-			this.$refs.selectSprint.getSprint(this.data.sprint.id, true)
-			this.$refs.selectTolak1.getData(this.data.id_tolak1, true)
-			this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
-			this.$refs.selectPetugas1.getPetugas(this.data.petugas1.user_id, true)
-			this.$refs.selectPetugas2.getPetugas(this.data.petugas2.user_id, true)
-		},
 		async saveData() {
 			if (this.state == 'insert') {
-				try {
-					this.data = await api.storeDoc(this.doc_type, this.data)
-
-					if (this.data.petugas2 == null) {
-						this.data.petugas2 = {user_id: null}
-					}
-
-					this.$emit('update:doc_id', this.data.id)
-					this.$emit('update:state', 'edit')
-					this.alert('Data BA Penolakan terhadap BA Penolakan TTD SBP berhasil disimpan')
-				} catch (error) {
-					console.log('form tolak2 - save data - error', error)
-				}
+				var data = await api.storeDoc(this.doc_type, this.data)
+				this.$emit('update:state', 'edit')
 			} else if (this.state == 'edit') {
-				try {
-					await api.updateDoc(this.doc_type, this.data.id, this.data)
-					this.alert('Data BA Penolakan terhadap BA Penolakan TTD SBP berhasil diubah')
-				} catch (error) {
-					console.log('form tolak2 - update data - error', error)
-				}
+				var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 			}
-		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
+			this.$emit('save-data', data)
 		},
 		validatorRequired(val) { return validators.required(val) },
-	},
-	async mounted() {
-		if (this.state == 'edit') {
-			await this.getData()
+		async updateSource() {
+			if (this.data.tolak1.id) {
+				let response = await api.getDocumentById('tolak1', this.data.tolak1.id)
+				let tolak1 = response.data
+				this.data.penindakan = JSON.parse(JSON.stringify(tolak1.penindakan))
+				if (tolak1.penindakan.petugas.petugas2 == undefined) {
+					this.data.penindakan.petugas.petugas2 = JSON.parse(JSON.stringify(DefaultTolak2.data.penindakan.petugas.petugas2))
+				}
+			} else {
+				this.data.penindakan = JSON.parse(JSON.stringify(DefaultTolak2.data.penindakan))
+			}
 		}
-	}
+	},
 }
 </script>
 

@@ -41,7 +41,7 @@
 					<MySelectPetugas
 						label="Nama Petugas 1"
 						:nip.sync="data.penindakan.petugas.petugas1.nip"
-						:disabled="true"
+						disabled
 					/>
 				</CCol>
 			</CRow>
@@ -50,7 +50,7 @@
 					<MySelectPetugas
 						label="Nama Petugas 2"
 						:nip.sync="data.penindakan.petugas.petugas2.nip"
-						:disabled="true"
+						disabled
 					/>
 				</CCol>
 			</CRow>
@@ -74,17 +74,13 @@
 import api from '../../../router/api2.js'
 import DefaultTolak1 from './DefaultTolak1'
 import validators from '../../../helpers/validator.js'
-import MyAlert from '../../components/AlertSubmit.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
-import MySelectSbp from '../sbp/SelectSbp.vue'
 import MyToggleSearchDocument from '../../components/ToggleSearchDocument.vue'
 
 export default {
 	name: 'FormTolak1',
 	components: {
-		MyAlert,
 		MySelectPetugas,
-		MySelectSbp,
 		MyToggleSearchDocument,
 	},
 	props: {
@@ -96,8 +92,16 @@ export default {
 		return {
 			data: JSON.parse(JSON.stringify(this.document)),
 			source_options: {
-				'sbp': {'label': 'SBP Biasa', 'state': 'search', 'filters': {'status_tolak': false}}, 
-				'sbpn': {'label': 'SBP-N', 'state': 'search', 'filters': {'status_tolak': false}},
+				'sbp': {
+					'label': 'SBP Biasa', 
+					'state': 'search', 
+					'filters': {'status_tolak': false, 'kode_status': 'terbit'
+				}}, 
+				'sbpn': {
+					'label': 'SBP-N', 
+					'state': 'search', 
+					'filters': {'status_tolak': false, 'kode_status': 'terbit'}
+				},
 			},
 		}
 	},

@@ -51,7 +51,6 @@
 import api from '../../../router/api2.js'
 import DefaultTolak1 from './DefaultTolak1'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MyDisplayDetail from '../../details/displays/DisplayDetail.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
 import MyDisplayTolak1 from './DisplayTolak1.vue'
 import MyFormTolak1 from './FormTolak1.vue'
@@ -61,7 +60,6 @@ export default {
 	name: 'ModalTolak1',
 	components: {
 		MyAlert,
-		MyDisplayDetail,
 		MyDisplayPdf,
 		MyDisplayTolak1,
 		MyFormTolak1,
@@ -135,6 +133,7 @@ export default {
 				case 'show':
 					this.tabs_list[1].visibility = true
 					break;
+
 				case 'edit':
 					this.tabs_list[1].visibility = true
 					break;

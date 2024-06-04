@@ -3,21 +3,27 @@
 		<MyModalTabs
 			ref="modal_tabs"
 			title="Data BA Penolakan Tanda Tangan terhadap BA Penolakan Tanda Tangan SBP"
+			:state.sync="state"
+			:doc_type.sync="doc_type"
+			:document.sync="document"
 			:tabs_list.sync="tabs_list"
 			:current_tab.sync="current_tab"
+			:permission_to_rollback="permission_to_rollback"
 			@close-modal="closeModal"
 		>
 			<template #tabs>
 				<CTab :title="tabs_list[0]['title']">
 					<MyFormTolak2
-						v-if="['insert','edit'].includes(modal_state)"
-						:state.sync="modal_state"
-						:doc_id.sync="doc_id"
+						v-if="['insert','edit'].includes(local_state)"
+						:state.sync="local_state"
+						:doc_type="doc_type"
+						:document.sync="document"
+						@save-data="setDocument"
 					/>
 					<MyDisplayTolak2
-						v-else-if="modal_state == 'show'"
+						v-else-if="local_state == 'show'"
 						:doc_type="doc_type"
-						:doc_id.sync="doc_id"
+						:document.sync="document"
 					/>
 				</CTab>
 				<CTab 
@@ -26,20 +32,25 @@
 				>
 					<div v-if="current_tab == 1">
 						<MyDisplayPdf 
-							v-if="['show','edit'].includes(modal_state)"
-							:state.sync="modal_state"
+							v-if="['show','edit'].includes(local_state)"
+							:state.sync="local_state"
 							:doc_type="doc_type" 
-							:doc_id.sync="doc_id"
+							:document.sync="document"
 						/>
 					</div>
 				</CTab>
 			</template>
 		</MyModalTabs>
+
+		<!-- Alert -->
+		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
 <script>
-import MyDisplayDetail from '../../details/displays/DisplayDetail.vue'
+import api from '../../../router/api2.js'
+import DefaultTolak2 from './DefaultTolak2'
+import MyAlert from '../../components/AlertSubmit.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
 import MyDisplayTolak2 from './DisplayTolak2.vue'
 import MyFormTolak2 from './FormTolak2.vue'
@@ -48,7 +59,7 @@ import MyModalTabs from '../../components/ModalTabs.vue'
 export default {
 	name: 'ModalTolak2',
 	components: {
-		MyDisplayDetail,
+		MyAlert,
 		MyDisplayPdf,
 		MyDisplayTolak2,
 		MyFormTolak2,
@@ -57,12 +68,14 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		id: Number
+		id: Number,
+		permission_to_rollback: String,
 	},
 	data() {
 		return {
 			doc_id: this.id,
-			modal_state: null,
+			document: JSON.parse(JSON.stringify(DefaultTolak2.data)),
+			local_state: this.state,
 			tabs_list: [
 				{
 					title: 'Uraian',
@@ -76,16 +89,51 @@ export default {
 			current_tab: 0
 		}
 	},
-	methods: {
-		closeModal() {
-			this.$emit('close-modal')
+	watch: {
+		state(val) {
+			this.local_state = val
+		},
+		local_state: function(val) {
+			this.$emit('update:state', val)
+			this.changeTabsList(val)
+		},
+		id(val) {
+			this.doc_id = val
+		},
+		doc_id(val) {
+			this.$emit('update:id', val)
 		},
 	},
-	watch: {
-		modal_state: function(val) {
-			this.$emit('update:state', val)
+	methods: {
+		async getData() {
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.document = response.data
+			this.fillNull()
+		},
+		setDocument(val) {
+			this.document = JSON.parse(JSON.stringify(val))
+			this.fillNull()
 			
-			switch (val) {
+			this.alert('DATA BERHASIL DISIMPAN')
+		},
+		fillNull() {
+			if (this.document.saksi == null) {
+				this.document.saksi = JSON.parse(JSON.stringify(DefaultTolak2.data.saksi))
+			}
+
+			if (this.document.penindakan.saksi == null) {
+				this.document.penindakan.saksi = JSON.parse(JSON.stringify(DefaultTolak2.data.penindakan.saksi))
+			}
+
+			if (
+				(this.document.penindakan.petugas.petugas2 == null) ||
+				(this.document.penindakan.petugas.petugas2 == undefined)
+			) {
+				this.document.penindakan.petugas.petugas2 = JSON.parse(JSON.stringify(DefaultTolak2.data.penindakan.petugas.petugas2))
+			}
+		},
+		changeTabsList(state) {
+			switch (state) {
 				case 'show':
 					this.tabs_list[1].visibility = true
 					break;
@@ -100,9 +148,20 @@ export default {
 			}
 			this.$refs.modal_tabs.getNavs(this.current_tab)
 		},
+		closeModal() {
+			this.$emit('close-modal')
+		},
+		alert(text, color, time) {
+			this.$refs.alert.show_alert(text, color, time)
+		},
+	},
+	async beforeMount() {
+		if (['show', 'edit'].includes(this.state)) {
+			await this.getData()
+		}
 	},
 	mounted() {
-		this.modal_state = this.state
+		this.changeTabsList(this.local_state)
 	}
 }
 </script>
