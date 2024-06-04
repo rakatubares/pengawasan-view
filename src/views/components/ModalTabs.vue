@@ -131,12 +131,12 @@ export default {
 	computed: {
 		show_rollback() {
 			let show = false
-			if (this.state != 'insert') {
+			if (!['insert', 'edit'].includes(this.state)) {
 				let rollbackable = !['draft', 'booking-nomor', 'rollback'].includes(this.document['kode_status'])
 				let permited = permission.checkPermission(this.permission_to_rollback)
 				if (rollbackable && permited) {
 					show = true
-				}	
+				}
 			}
 			
 			return show
@@ -198,6 +198,7 @@ export default {
 		},
 	},
 	mounted() {
+		console.log('MODAL TABS - MOUNTED - STATE', this.state)
 		this.showModal()
 		this.getNavs(0)
 	}

@@ -118,7 +118,10 @@ export default {
 			let user = store.getters.userInfo
 			let match_user = user.nip == this.document['created_by']['nip']
 			let permited = permission.checkPermission('create-'+this.doc_type)
-			if (this.is_publishable && match_user && permited) { show = true }
+			if (
+				this.is_publishable && match_user && permited &&
+				['draft', 'booking-nomor', 'rollback'].includes(this.status_pdf)
+			) { show = true }
 			return show
 		},
 		show_book_button() { 

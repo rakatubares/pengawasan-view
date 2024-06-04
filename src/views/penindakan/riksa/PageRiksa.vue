@@ -57,7 +57,7 @@ export default {
 			permission_to_create: 'create-riksa',
 			permission_to_update: 'create-riksa',
 			permission_to_delete: 'delete-riksa',
-			permission_to_rollback: 'rollback-riksa_badan',
+			permission_to_rollback: 'rollback-riksa',
 		}
 	},
 	methods: {

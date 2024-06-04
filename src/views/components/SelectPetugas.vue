@@ -9,6 +9,7 @@
 						v-model="value"
 						outlined
 						dense
+						:disabled="disabled"
 						:items.sync="items"
 						:search-input.sync="search"
 						item-text="name"
@@ -72,6 +73,10 @@ export default {
 			type: String,
 			default: null
 		},
+		disabled: {
+			type: Boolean,
+			default: false
+		},
 	},
 	computed: {
 		...mapState(['userInfo'])
@@ -109,6 +114,9 @@ export default {
 				this.saveCache()
 			} else {
 				this.petugas = JSON.parse(JSON.stringify(default_petugas))
+
+				this.items = [this.petugas]
+				this.value = this.items[0]
 			}
 		},
 		saveCache() {

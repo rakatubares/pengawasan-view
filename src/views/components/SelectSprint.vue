@@ -5,10 +5,11 @@
 				<div class="form-group">
 					<label>No SPRINT</label>
 					<v-autocomplete
-						class="no-rounded rounded-left no-message"
+						v-bind:class="{'no-rounded rounded-left no-message': !disabled}"
 						v-model="value"
 						outlined
 						dense
+						:disabled="disabled"
 						:items.sync="items"
 						:search-input.sync="search"
 						item-text="nomor_sprint"
@@ -19,6 +20,7 @@
 					>
 						<template v-slot:append-outer>
 							<CButton 
+								v-if="!disabled"
 								class="button-input no-rounded rounded-right"
 								color="success"
 								v-c-tooltip.hover="{content: 'Tambah SPRINT'}"
@@ -177,7 +179,11 @@ export default {
 		MyAlert
 	},
 	props: {
-		id: Number
+		id: Number,
+		disabled: {
+			type: Boolean,
+			default: false
+		},
 	},
 	data() {
 		return {
@@ -221,6 +227,9 @@ export default {
 					)
 			} else {
 				this.sprint = JSON.parse(JSON.stringify(default_sprint))
+
+				this.items = [this.sprint]
+				this.value = this.items[0]
 			}
 		},
 		showModalSprint() {

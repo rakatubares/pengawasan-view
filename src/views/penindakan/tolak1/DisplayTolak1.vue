@@ -36,71 +36,80 @@
 						{{ disp_alasan }}
 					</CCol>
 				</CRow>
-				<MyDisplayEntitas
-					title="Pemilik/Saksi"
-					:data.sync="data_doc.saksi"
-				/>
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>Saksi</b></h5>
+					</CCol>
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(document.penindakan.saksi.id)"
+						>{{ disp_saksi }}</p>
+					</CCol>
+				</CRow>
 				<MyDisplayPegawai
 					title="Petugas 1"
-					:data.sync="data_doc.petugas1"
+					:data.sync="document.penindakan.petugas.petugas1"
 				/>
 				<MyDisplayPegawai
 					title="Petugas 2"
-					:data.sync="data_doc.petugas2"
+					:data.sync="document.penindakan.petugas.petugas2"
 				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_saksi"
+			:show.sync="show_modal_saksi"
+		/>
 	</div>
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	tanggal_dokumen: null,
-	nomor_sbp: null,
-	tanggal_sbp: null,
-	alasan: null,
-	sprint: {
-		nomor_sprint: null,
-		tanggal_sprint: null
-	}
-}
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 export default {
 	name: 'DisplayTolak1',
 	components: {
-		MyDisplayEntitas,
 		MyDisplayPegawai,
+		MyModalEntitasOrang,
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number
+		document: Object,
 	},
+
 	data() {
 		return {
-			data_doc: JSON.parse(JSON.stringify(default_data))
+			show_modal_saksi: false,
 		}
 	},
 	computed: {
-		disp_no_ba_tolak1() { return this.data_doc.no_dok_lengkap || '-' },
-		disp_tgl_ba_tolak1() { return this.data_doc.tanggal_dokumen || '-' },
-		disp_sprint() { return ((this.data_doc.sprint.nomor_sprint || '') + ' tanggal ' + (this.data_doc.sprint.tanggal_sprint || '')) },
-		disp_sbp() { return ((this.data_doc.nomor_sbp || '') + ' tanggal ' + (this.data_doc.tanggal_sbp || '')) },
-		disp_alasan() { return this.data_doc.alasan || '-' },
+		disp_no_ba_tolak1() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_ba_tolak1() { return this.document.tanggal_dokumen || '-' },
+		disp_sprint() { 
+			let txt = '-'
+
+			if (this.document.penindakan.sprint) {
+				txt = (
+					(this.document.penindakan.sprint.nomor_sprint || '') 
+					+ ' tanggal ' 
+					+ (this.document.penindakan.sprint.tanggal_sprint || '')
+				)
+			}
+			return txt 
+		},
+		disp_sbp() { return ((this.document.sbp.no_dok_lengkap || '') 
+			+ ' tanggal ' 
+			+ (this.document.sbp.tanggal_dokumen || '')) },
+		disp_alasan() { return this.document.alasan || '-' },
+		disp_saksi() { 
+			let txt = this.document.penindakan.saksi
+				? this.document.penindakan.saksi.nama : '-'
+			return txt
+		},
 	},
-	methods: {
-		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_doc = response.data.data
-		}
-	},
-	async mounted() {
-		await this.getData()
-	}
 }
 </script>
 

@@ -62,6 +62,7 @@ export default {
 			permission_to_create: 'create-lp',
 			permission_to_update: 'create-lp',
 			permission_to_delete: 'delete-lp',
+			permission_to_rollback: 'rollback-lp',
 		}
 	},
 	methods: {

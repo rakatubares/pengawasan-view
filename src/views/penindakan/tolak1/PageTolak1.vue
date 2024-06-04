@@ -10,6 +10,8 @@
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
 			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
 		>
 			<template #modal-data>
 				<MyModalTolak1 
@@ -17,6 +19,7 @@
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
 					:id.sync="modal_data_props.doc_id"
+					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -51,6 +54,9 @@ export default {
 				doc_id: null
 			},
 			permission_to_create: 'create-tolak1',
+			permission_to_update: 'create-tolak1',
+			permission_to_delete: 'delete-tolak1',
+			permission_to_rollback: 'rollback-tolak1',
 		}
 	},
 	methods: {
@@ -78,7 +84,7 @@ export default {
 
 			return text
 		}
-	}
+	},
 }
 </script>
 

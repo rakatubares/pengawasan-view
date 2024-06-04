@@ -58,7 +58,7 @@ export default {
 			permission_to_create: 'create-buka_segel',
 			permission_to_update: 'create-buka_segel',
 			permission_to_delete: 'delete-buka_segel',
-			permission_to_rollback: 'rollback-riksa_badan',
+			permission_to_rollback: 'rollback-buka_segel',
 		}
 	},
 	methods: {
