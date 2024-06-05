@@ -3,6 +3,31 @@
 		<!-- Form BA Tanda Pengaman header -->
 		<CForm class="pt-3">
 			<CRow>
+				<label class="w-100 pl-3 pt-2 mb-0">Tanggal Pengamanan</label>
+				<CCol md="3" sm="12">
+					<div class="form-group">
+						<date-picker 
+							v-model="data.penindakan.tanggal_selesai_penindakan"
+							format="DD-MM-YYYY" 
+							value-type="format"
+							type="date"
+							class="w-100"
+						>
+							<template v-slot:input="slotProps">
+								<input
+									class="form-control" 
+									type="text" 
+									v-bind="slotProps.props" 
+									v-on="slotProps.events"
+								/>
+							</template>
+							<i slot="icon-calendar"></i>
+							<i slot="icon-clear"></i>
+						</date-picker>
+					</div>
+				</CCol>
+			</CRow>
+			<CRow>
 				<CCol md="12">
 					<MySelectSprint
 						ref="selectSprint"
@@ -46,13 +71,10 @@
 			</CRow>
 			<CRow>
 				<CCol sm="12">
-					<MySelectLokasi
-						:state.sync="state"
-						:grup_lokasi_id.sync="data.penindakan.grup_lokasi.id"
-						:lokasi.sync="data.penindakan.lokasi_penindakan"
+					<MyComboboxLokasi
 						label="Lokasi Pengamanan"
 						description="Tempat / lokasi dilakukan pengamanan"
-						feedback="Lokasi pengamanan wajib diisi"
+						:value.sync="data.penindakan.lokasi_penindakan"
 					/>
 				</CCol>
 			</CRow>
@@ -75,23 +97,20 @@
 			</CRow>
 			<CRow>
 				<CCol md="12">
-					<MySelectEntitas
+					<MySelectEntitasOrang
 						ref="selectSaksi"
 						label="Nama Saksi"
 						description="Nama lengkap pengangkut / kuasa barang / sarana pengangkut atau pemilik / yang menguasai bangunan atau tempat lain yang menyaksikan pelekatan"
-						:showAlamat="true"
-						:id.sync="data.penindakan.saksi.id"
+						:entity_id.sync="data.penindakan.saksi.id"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="12">
 					<MySelectPetugas
-						ref="selectPetugas1"
 						label="Nama Petugas 1"
-						description="Nama Pejabat Bea dan Cukai yang melakukan pelekatan tanda pengaman"
-						:id.sync="data.penindakan.petugas1.user_id"
-						role="p2vue.penindakan"
+						description="Nama Petugas Bea dan Cukai yang melakukan pelekatan tanda pengaman"
+						:nip.sync="data.penindakan.petugas.petugas1.nip"
 						:currentUser="true"
 					/>
 				</CCol>
@@ -99,11 +118,9 @@
 			<CRow>
 				<CCol md="12">
 					<MySelectPetugas
-						ref="selectPetugas2"
 						label="Nama Petugas 2"
-						description="Nama Pejabat Bea dan Cukai yang melakukan pelekatan tanda pengaman"
-						:id.sync="data.penindakan.petugas2.user_id"
-						role="p2vue.penindakan"
+						description="Nama Petugas Bea dan Cukai yang melakukan pelekatan tanda pengaman"
+						:nip.sync="data.penindakan.petugas.petugas2.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -120,109 +137,61 @@
 				</CCol>
 			</CRow>
 		</CForm>
-
-		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
 <script>
+import DatePicker from 'vue2-datepicker'
+import 'vue2-datepicker/index.css'
+
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
-import MyAlert from '../../components/AlertSubmit.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
-import MySelectLokasi from '../../components/SelectLokasi.vue'
+import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
-
-const default_data = {
-	jenis_pengaman: 'Kertas',
-	jumlah_pengaman: null,
-	satuan_pengaman: null,
-	tempat_pengaman: null,
-	alasan_pengamanan: null,
-	keterangan: null,
-	penindakan: {
-		grup_lokasi: {id: null},
-		lokasi_penindakan: null,
-		sprint: {id: null},
-		saksi: {id: null},
-		petugas1: {user_id: null},
-		petugas2: {user_id: null}
-	},
-}
 
 export default {
 	name: 'FormPengaman',
 	components: {
-		MyAlert,
-		MySelectEntitas,
-		MySelectLokasi,
+		DatePicker,
+		MyComboboxLokasi,
+		MySelectEntitasOrang,
 		MySelectPetugas,
 		MySelectSprint
 	},
 	props: {
 		state: String,
-		doc_id: Number
+		doc_type: String,
+		document: Object,
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(default_data)),
+			data: JSON.parse(JSON.stringify(this.document)),
+			selected_sprint: null,
 		}
 	},
+	watch: {
+		document(val) {
+			this.data = val
+		},
+		selected_sprint(val) {
+			this.data.penindakan.sprint.id = val
+		},
+	},
 	methods: {
-		async getData() {
-			let response = await api.getFormDataById('pengaman', this.doc_id)
-			this.data = response.data.data
-			
-			if (this.data.penindakan.petugas2 == null) {
-				this.data.penindakan.petugas2 = {user_id: null}
-			}
-			this.$nextTick(function () {
-				this.renderData()
-			})
-		},
-		renderData() {
-			this.$refs.selectSprint.getSprint(this.data.penindakan.sprint.id, true)
-			this.$refs.selectSaksi.getEntitas(this.data.penindakan.saksi.id, true)
-			this.$refs.selectPetugas1.getPetugas(this.data.penindakan.petugas1.user_id, true)
-			this.$refs.selectPetugas2.getPetugas(this.data.penindakan.petugas2.user_id, true)
-		},
 		async saveData() {
 			if (this.state == 'insert') {
-				try {
-					this.data = await api.storeDoc('pengaman', this.data)
-
-					if (this.data.penindakan.petugas2 == null) {
-						this.data.penindakan.petugas2 = {user_id: null}
-					}
-					
-					this.$emit('update:doc_id', this.data.id)
-					this.$emit('update:state', 'edit')
-					this.alert('Data BA Pelekatan Tanda Pengaman berhasil disimpan')
-				} catch (error) {
-					console.log('form pengaman - save data - error', error)
-				}
+				var data = await api.storeDoc(this.doc_type, this.data)
+				this.$emit('update:state', 'edit')
 			} else if (this.state == 'edit') {
-				try {
-					await api.updateDoc('pengaman', this.doc_id, this.data)
-					this.alert('Data BA Pelekatan Tanda Pengaman berhasil diubah')
-				} catch (error) {
-					console.log('form pengaman - update data - error', error)
-				}
+				var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 			}
-		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
+			this.$emit('save-data', data)
 		},
 		validatorRequired(val) { return validators.required(val) },
 		validatorNumber(val) { return validators.number(val) },
 	},
-	async mounted() {
-		if (this.state == 'edit') {
-			await this.getData()
-		}
-	}
 }
 </script>
 

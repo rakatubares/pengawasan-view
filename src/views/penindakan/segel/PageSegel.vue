@@ -8,7 +8,7 @@
 			:custom_fields="custom_fields"
 			:compute_list="computeList"
 			:modal_data_props.sync="modal_data_props"
-			:construct_delete_text="constructDeleteText"			
+			:construct_delete_text="constructDeleteText"
 			:permission_to_create="permission_to_create"
 			:permission_to_update="permission_to_update"
 			:permission_to_delete="permission_to_delete"

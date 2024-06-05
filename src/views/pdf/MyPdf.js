@@ -73,7 +73,7 @@ class MyPdf {
 	setBreak(txt, options)
 	{
 		let dim = this.pdf.getTextDimensions(txt, options)
-		let break_height = this.roundUp(dim.h, 1)
+		let break_height = this.roundUp(dim.h, 1) + 0.5
 		if (this.break_height < break_height) {
 			this.break_height = break_height
 		}

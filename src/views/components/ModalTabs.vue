@@ -198,7 +198,6 @@ export default {
 		},
 	},
 	mounted() {
-		console.log('MODAL TABS - MOUNTED - STATE', this.state)
 		this.showModal()
 		this.getNavs(0)
 	}

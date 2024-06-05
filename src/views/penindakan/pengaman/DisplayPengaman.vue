@@ -76,83 +76,82 @@
 						{{ disp_keterangan }}
 					</CCol>
 				</CRow>
-				<MyDisplayEntitas
-					title="Pemilik/Saksi"
-					:data.sync="data_pengaman.penindakan.saksi"
-				/>
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>Saksi</b></h5>
+					</CCol>
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(document.penindakan.saksi.id)"
+						>{{ disp_saksi }}</p>
+					</CCol>
+				</CRow>
 				<MyDisplayPegawai
 					title="Petugas 1"
-					:data.sync="data_pengaman.penindakan.petugas1"
+					:data.sync="document.penindakan.petugas.petugas1"
 				/>
 				<MyDisplayPegawai
 					title="Petugas 2"
-					:data.sync="data_pengaman.penindakan.petugas2"
+					:data.sync="document.penindakan.petugas.petugas2"
 				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_saksi"
+			:show.sync="show_modal_saksi"
+		/>
 	</div>
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	jenis_pengaman: null,
-	jumlah_pengaman: null,
-	nomor_pengaman: null,
-	tempat_pengaman: null,
-	penindakan: {
-		tanggal_penindakan: null,
-		lokasi_penindakan: null,
-		sprint: {
-			nomor_sprint: null,
-			tanggal_sprint: null
-		}
-	},
-}
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 export default {
 	name: 'DisplayPengaman',
 	components: {
-		MyDisplayEntitas,
-		MyDisplayPegawai
+		MyDisplayPegawai,
+		MyModalEntitasOrang,
 	},
 	props: {
-		doc_id: Number
+		doc_type: String,
+		document: Object,
 	},
 	data() {
 		return {
-			data_pengaman: JSON.parse(JSON.stringify(default_data))
+			show_modal_saksi: false,
 		}
 	},
 	computed: {
-		disp_no_ba_pengaman() { return this.data_pengaman.no_dok_lengkap || '-' },
-		disp_tgl_ba_pengaman() { return this.data_pengaman.penindakan.tanggal_penindakan || '-' },
-		disp_sprint() { return ((this.data_pengaman.penindakan.sprint.nomor_sprint || '') + ' tanggal ' + (this.data_pengaman.penindakan.sprint.tanggal_sprint || '')) },
-		disp_jenis_pengaman() { return this.data_pengaman.jenis_pengaman || '-' },
-		disp_jumlah_pengaman() { return ((this.data_pengaman.jumlah_pengaman || '-') + ' ' + (this.data_pengaman.satuan_pengaman || '')) },
-		disp_nomor_pengaman() { return this.data_pengaman.nomor_pengaman || '-'},
-		disp_tempat_pengaman() { return this.data_pengaman.tempat_pengaman || '-' },
-		disp_alasan_pengamanan() { return this.data_pengaman.alasan_pengamanan || '-' },
-		disp_lokasi_pengamanan() { 
-			var grup_lokasi = this.data_pengaman.penindakan.grup_lokasi ? `(${this.data_pengaman.penindakan.grup_lokasi.lokasi}) ` : ''
-			var lokasi = this.data_pengaman.penindakan.lokasi_penindakan ? this.data_pengaman.penindakan.lokasi_penindakan : '-'
-			return grup_lokasi+lokasi
+		disp_no_ba_pengaman() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_ba_pengaman() { return this.document.tanggal_dokumen || '-' },
+		disp_sprint() { 
+			let txt = '-'
+
+			if (this.document.penindakan.sprint) {
+				txt = (
+					(this.document.penindakan.sprint.nomor_sprint || '') 
+					+ ' tanggal ' 
+					+ (this.document.penindakan.sprint.tanggal_sprint || '')
+				)
+			}
+			return txt 
 		},
-		disp_keterangan() { return this.data_pengaman.keterangan || '-' },
-	},
-	methods: {
-		async getData() {
-			let response = await api.getDisplayDataById('pengaman', this.doc_id)
-			this.data_pengaman = response.data.data
+		disp_jenis_pengaman() { return this.document.jenis_pengaman || '-' },
+		disp_jumlah_pengaman() { return ((this.document.jumlah_pengaman || '-') + ' ' + (this.document.satuan_pengaman || '')) },
+		disp_nomor_pengaman() { return this.document.nomor_pengaman || '-'},
+		disp_tempat_pengaman() { return this.document.tempat_pengaman || '-' },
+		disp_alasan_pengamanan() { return this.document.alasan_pengamanan || '-' },
+		disp_lokasi_pengamanan() { return this.document.penindakan.lokasi_penindakan || '-' },
+		disp_keterangan() { return this.document.keterangan || '-' },
+		disp_saksi() { 
+			let txt = this.document.penindakan.saksi
+				? this.document.penindakan.saksi.nama : '-'
+			return txt
 		}
 	},
-	async mounted() {
-		await this.getData()
-	}
 }
 </script>
 

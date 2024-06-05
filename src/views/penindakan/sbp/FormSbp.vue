@@ -249,10 +249,8 @@ import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
 import MySearchDocument from '../../components/SearchDocument.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectKategoriPelanggaran from '../../components/SelectKategoriPelanggaran.vue'
-import MySelectLokasi from '../../components/SelectLokasi.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MySelectSprint from '../../components/SelectSprint.vue'
@@ -281,10 +279,8 @@ export default {
 		DatePicker,
 		MyComboboxLokasi,
 		MySearchDocument,
-		MySelectEntitas,
 		MySelectEntitasOrang,
 		MySelectKategoriPelanggaran,
-		MySelectLokasi,
 		MySelectPejabat,
 		MySelectPetugas,
 		MySelectSprint,

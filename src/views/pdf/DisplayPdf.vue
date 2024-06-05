@@ -76,6 +76,7 @@ import PdfRiksaBadan from './penindakan/PdfRiksaBadan'
 import PdfSbp from './penindakan/PdfSbp'
 import PdfSegel from './penindakan/PdfSegel'
 import PdfBukaSegel from './penindakan/PdfBukaSegel'
+import PdfPengaman from './penindakan/PdfPengaman'
 import PdfTegah from './penindakan/PdfTegah'
 import PdfTolak1 from './penindakan/PdfTolak1'
 import PdfTolak2 from './penindakan/PdfTolak2'
@@ -246,6 +247,10 @@ export default {
 
 				case 'lp':
 					pdf = new PdfLp(data_pdf)
+					break;
+
+				case 'pengaman':
+					pdf = new PdfPengaman(data_pdf)
 					break;
 			
 				default:
