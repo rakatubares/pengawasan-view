@@ -27,9 +27,11 @@ const inds = {
 class PdfLap extends Pdf {
 	constructor(
 		data,
-		title = 'LEMBAR ANALISIS PRA PENINDAKAN'
+		title = 'LEMBAR ANALISIS PRA PENINDAKAN',
+		sumber = 'NHI/LI-1/Info lain*',
 	) {
 		super(data, title)
+		this.sumber = sumber
 	}
 
 	generateText()
@@ -39,7 +41,7 @@ class PdfLap extends Pdf {
 		this.txt = {}
 		
 		// No & Tanggal
-		this.txt.pilihan_sumber_informasi = 'Sumber Informasi : NHI/LI-1/Info lain*'
+		this.txt.pilihan_sumber_informasi = `Sumber Informasi : ${this.sumber}`
 		this.txt.nomor_sumber = this.data.nomor_sumber != null 
 			? this.data.nomor_sumber
 			: '-'

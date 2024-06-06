@@ -61,6 +61,7 @@ import MyAlert from '../components/AlertSubmit.vue'
 import PdfBukaPengaman from './penindakan/PdfBukaPengaman'
 import PdfBukaSegel from './penindakan/PdfBukaSegel'
 import PdfLap from './penindakan/PdfLap'
+import PdfLapN from './penindakan/PdfLapN'
 import PdfLi from './penindakan/PdfLi'
 import PdfLkai from './intelijen/PdfLkai'
 import PdfLkaiN from './intelijen/PdfLkaiN'
@@ -204,6 +205,10 @@ export default {
 
 				case 'lap':
 					pdf = new PdfLap(data_pdf)
+					break;
+
+				case 'lapn':
+					pdf = new PdfLapN(data_pdf)
 					break;
 
 				case 'riksa_badan':

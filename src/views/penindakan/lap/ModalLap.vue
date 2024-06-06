@@ -19,6 +19,7 @@
 						:doc_type="doc_type"
 						:doc_name="doc_name"
 						:document.sync="document"
+						:source_options="source_options"
 						@save-data="setDocument"
 					/>
 					<MyDisplayLap
@@ -74,11 +75,12 @@ export default {
 		doc_name: String,
 		id: Number,
 		permission_to_rollback: String,
+		source_options: Object,
 	},
 	data() {
 		return {
 			doc_id: this.id,
-			document: JSON.parse(JSON.stringify(DefaultLap.data)),
+			document: JSON.parse(JSON.stringify(DefaultLap.data[this.doc_type])),
 			local_state: this.state,
 			tabs_list: [
 				{

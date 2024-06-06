@@ -21,6 +21,8 @@
 					:doc_name="doc_name"
 					:id.sync="modal_data_props.doc_id"
 					:permission_to_rollback="permission_to_rollback"
+					:source_options="source_options"
+					:default_source="default_source"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -63,6 +65,20 @@ export default {
 			type: String,
 			default: 'rollback-lap'
 		},
+		source_options: {
+			type: Object,
+			default() {
+				return {
+					'nhi': {'label': 'NHI', 'state': 'search'}, 
+					'li': {'label': 'LI-1', 'state': 'search'},
+					'lainnya': {'label': 'Lainnya', 'state': 'manual'},
+				}
+			}
+		},
+		default_source: {
+			type: String,
+			default: 'nhi',
+		}
 	},
 	data() {
 		return {

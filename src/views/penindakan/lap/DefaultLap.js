@@ -1,47 +1,58 @@
+var default_data = {
+	no_dok_lengkap: null,
+	tanggal_dokumen: null,
+	jenis_sumber: null,
+	sumber_id: null,
+	nomor_sumber: null,
+	tanggal_sumber: null,
+	dugaan_pelanggaran: {id: 1, kategori: null},
+	flag_pelaku: 1,
+	keterangan_pelaku: null,
+	flag_pelanggaran: 1,
+	keterangan_pelanggaran: null,
+	flag_locus: 1,
+	keterangan_locus: null,
+	flag_tempus: 1,
+	keterangan_tempus: null,
+	flag_kewenangan: 1,
+	keterangan_kewenangan: null,
+	flag_sdm: 1,
+	keterangan_sdm: null,
+	flag_sarpras: 1,
+	keterangan_sarpras: null,
+	flag_anggaran: 1,
+	keterangan_anggaran: null,
+	flag_layak_penindakan: true,
+	skema_penindakan: {id: 1, skema: null},
+	keterangan_skema_penindakan: null,
+	flag_layak_patroli: 1,
+	keterangan_patroli: null,
+	kesimpulan: null,
+	petugas: { 
+		penerbit: {
+			kode_jabatan: null,
+			tipe_ttd: null,
+			nip: null,
+			flag_pejabat: true,
+		},
+		atasan: {
+			kode_jabatan: null,
+			tipe_ttd: null,
+			nip: null,
+			flag_pejabat: true,
+		} 
+	},
+}
+
+var default_lap = JSON.parse(JSON.stringify(default_data))
+default_lap.jenis_sumber = 'nhi'
+
+var default_lapn = JSON.parse(JSON.stringify(default_data))
+default_lapn.jenis_sumber = 'nhin'
+
 export default {
 	data: {
-		no_dok_lengkap: null,
-		tanggal_dokumen: null,
-		jenis_sumber: 'nhi',
-		sumber_id: null,
-		nomor_sumber: null,
-		tanggal_sumber: null,
-		dugaan_pelanggaran: {id: 1, kategori: null},
-		flag_pelaku: 1,
-		keterangan_pelaku: null,
-		flag_pelanggaran: 1,
-		keterangan_pelanggaran: null,
-		flag_locus: 1,
-		keterangan_locus: null,
-		flag_tempus: 1,
-		keterangan_tempus: null,
-		flag_kewenangan: 1,
-		keterangan_kewenangan: null,
-		flag_sdm: 1,
-		keterangan_sdm: null,
-		flag_sarpras: 1,
-		keterangan_sarpras: null,
-		flag_anggaran: 1,
-		keterangan_anggaran: null,
-		flag_layak_penindakan: true,
-		skema_penindakan: {id: 1, skema: null},
-		keterangan_skema_penindakan: null,
-		flag_layak_patroli: 1,
-		keterangan_patroli: null,
-		kesimpulan: null,
-		petugas: { 
-			penerbit: {
-				kode_jabatan: null,
-				tipe_ttd: null,
-				nip: null,
-				flag_pejabat: true,
-			},
-			atasan: {
-				kode_jabatan: null,
-				tipe_ttd: null,
-				nip: null,
-				flag_pejabat: true,
-			} 
-		},
+		lap: default_lap,
+		lapn: default_lapn,
 	}
 }

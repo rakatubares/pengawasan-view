@@ -320,16 +320,7 @@ export default {
 		doc_type: String,
 		document: Object,
 		doc_name: String,
-		source_options: {
-			type: Object,
-			default() {
-				return {
-					'nhi': {'label': 'NHI', 'state': 'search'}, 
-					'li': {'label': 'LI-1', 'state': 'search'},
-					'lainnya': {'label': 'Lainnya', 'state': 'manual'},
-				}
-			}
-		}
+		source_options: Object,
 	},
 	data() {
 		return {
