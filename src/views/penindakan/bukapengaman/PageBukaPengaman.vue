@@ -3,19 +3,24 @@
 		<MyPageDoc 
 			ref="page_doc"
 			:doc_type="doc_type"
-			table_title="Daftar BA Pembukaan Tanda Pengaman"
+			:table_title="`Daftar ${doc_name}`"
 			:table_fields="table_fields"
 			:custom_fields="custom_fields"
 			:compute_list="computeList"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
 			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
 		>
 			<template #modal-data>
 				<MyModalBukaPengaman
 					v-if="modal_data_props.show"
 					:state="modal_data_props.state"
+					:doc_type="doc_type"
+					:doc_name="doc_name"
 					:id.sync="modal_data_props.doc_id"
+					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -35,7 +40,8 @@ export default {
 	},
 	data() {
 		return {
-			doc_type: 'bukapengaman',
+			doc_type: 'buka_pengaman',
+			doc_name: 'BA Pembukaan Tanda Pengaman',
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Buka Tanda Pengaman' },
 				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
@@ -50,6 +56,9 @@ export default {
 				doc_id: null
 			},
 			permission_to_create: 'create-buka_pengaman',
+			permission_to_update: 'create-buka_pengaman',
+			permission_to_delete: 'delete-buka_pengaman',
+			permission_to_rollback: 'rollback-buka_pengaman',
 		}
 	},
 	methods: {
@@ -69,11 +78,13 @@ export default {
 			this.modal_data_props.show = false
 		},
 		constructDeleteText(item) {
-			let text = "Apakah Anda yakin untuk menghapus BA Pembukaan Tanda Pengaman atas " 
-				+ item.nomor_pengaman.bold() 
-				+ " tanggal " 
-				+ item.tanggal_pengaman.bold() 
-				+ "?"
+			let text = "Apakah Anda yakin untuk menghapus data " 
+				+ item.no_dok_lengkap.bold() 
+			if (item.nomor_pengaman != null) {
+				text += " atas tanda pengaman nomor "
+				text += item.nomor_pengaman.bold()
+			}
+			text += "?"
 			
 			return text
 		},

@@ -68,77 +68,75 @@
 						{{ disp_dasar_pengamanan }}
 					</CCol>
 				</CRow>
-				<MyDisplayEntitas
-					title="Pemilik/Saksi"
-					:data.sync="data_buka_pengaman.saksi"
-				/>
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>Saksi</b></h5>
+					</CCol>
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(document.saksi.id)"
+						>{{ disp_saksi }}</p>
+					</CCol>
+				</CRow>
 				<MyDisplayPegawai
 					title="Petugas 1"
-					:data.sync="data_buka_pengaman.petugas1"
+					:data.sync="document.petugas.petugas1"
 				/>
 				<MyDisplayPegawai
 					title="Petugas 2"
-					:data.sync="data_buka_pengaman.petugas2"
+					:data.sync="document.petugas.petugas2"
 				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_saksi"
+			:show.sync="show_modal_saksi"
+		/>
 	</div>
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	tanggal_dokumen: null,
-	nomor_pengaman: null,
-	tanggal_pengaman: null,
-	jenis_pengaman: null,
-	jumlah_pengaman: null,
-	tempat_pengaman: null,
-	dasar_pengamanan: null,
-	sprint: {
-		nomor_sprint: null,
-		tanggal_sprint: null
-	}
-}
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 export default {
 	name: 'DisplayBukaPengaman',
 	components: {
-		MyDisplayEntitas,
-		MyDisplayPegawai
+		MyDisplayPegawai,
+		MyModalEntitasOrang,
 	},
 	props: {
-		doc_id: Number
+		doc_type: String,
+		document: Object,
 	},
 	data() {
 		return {
-			data_buka_pengaman: JSON.parse(JSON.stringify(default_data))
+			show_modal_saksi: false,
 		}
 	},
 	computed: {
-		disp_no_dok_lengkap() { return this.data_buka_pengaman.no_dok_lengkap || '-' },
-		disp_tgl_dok() { return this.data_buka_pengaman.tanggal_dokumen || '-' },
-		disp_sprint() { return ((this.data_buka_pengaman.sprint.nomor_sprint || '') + ' tanggal ' + (this.data_buka_pengaman.sprint.tanggal_sprint || '')) },
-		disp_jenis_pengaman() { return this.data_buka_pengaman.jenis_pengaman || '-' },
-		disp_jumlah_pengaman() { return ((this.data_buka_pengaman.jumlah_pengaman || '-') + ' ' + (this.data_buka_pengaman.satuan_pengaman || '')) },
-		disp_nomor_pengaman() { return this.data_buka_pengaman.nomor_pengaman || '-' },
-		disp_tanggal_pengaman() { return this.data_buka_pengaman.tanggal_pengaman || '-' },
-		disp_tempat_pengaman() { return this.data_buka_pengaman.tempat_pengaman || '-' },
-		disp_dasar_pengamanan() { return this.data_buka_pengaman.dasar_pengamanan || '-' },
-	},
-	methods: {
-		async getData() {
-			let response = await api.getDisplayDataById('bukapengaman', this.doc_id)
-			this.data_buka_pengaman = response.data.data
+		disp_no_dok_lengkap() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_dok() { return this.document.tanggal_dokumen || '-' },
+		disp_sprint() { return ((this.document.sprint.nomor_sprint || '') + ' tanggal ' + (this.document.sprint.tanggal_sprint || '')) },
+		disp_jenis_pengaman() { return this.document.jenis_pengaman || '-' },
+		disp_jumlah_pengaman() { return ((this.document.jumlah_pengaman || '-') + ' ' + (this.document.satuan_pengaman || '')) },
+		disp_nomor_pengaman() { return this.document.nomor_pengaman || '-' },
+		disp_tanggal_pengaman() { return this.document.tanggal_pengaman || '-' },
+		disp_tempat_pengaman() { return this.document.tempat_pengaman || '-' },
+		disp_dasar_pengamanan() { return this.document.dasar_pengamanan || '-' },
+		disp_saksi() { 
+			let txt = this.document.saksi
+				? this.document.saksi.nama : '-'
+			return txt
 		}
 	},
-	async mounted() {
-		await this.getData()
-	}
+	methods: {
+		showEntitas(saksi_id) {
+			this.$refs.modal_saksi.showModal('show', saksi_id)
+		},
+	},
 }
 </script>
 

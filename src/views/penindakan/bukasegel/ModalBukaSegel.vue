@@ -36,18 +36,18 @@ import api from '../../../router/api2.js'
 import converters from '../../../helpers/converter.js'
 import DefaultBukaSegel from './DefaultBukaSegel'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MyModalPenindakan from '../../components/ModalPenindakan.vue'
 import MyDisplayBukaSegel from './DisplayBukaSegel.vue'
 import MyFormBukaSegel from './FormBukaSegel.vue'
+import MyModalPenindakan from '../../components/ModalPenindakan.vue'
 
 export default {
 	name: 'ModalBukaSegel',
 	components: {
 		DefaultBukaSegel,
 		MyAlert,
-		MyModalPenindakan,
 		MyDisplayBukaSegel,
 		MyFormBukaSegel,
+		MyModalPenindakan,
 	},
 	props: {
 		state: String,

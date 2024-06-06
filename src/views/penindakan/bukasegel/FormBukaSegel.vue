@@ -45,7 +45,6 @@
 						:doc_number.sync="data.nomor_segel"
 						:doc_date.sync="data.tanggal_segel"
 						:saved_doc_id.sync="saved_source_id"
-						:filters="{'status_buka_segel': false}"
 						@update:doc_type="updateSegelType"
 						@update:doc_id="updateSegel"
 					/>
@@ -77,7 +76,7 @@
 				</CCol>
 			</CRow>
 			<CRow>
-				<CCol md="6" sm="12">
+				<CCol md="8" sm="12">
 					<CInput
 						label="Penempatan Segel"
 						description="Bagian / lokasi tempat segel ditempatkan / dilekatkan"
@@ -169,7 +168,7 @@ export default {
 		return {
 			data: JSON.parse(JSON.stringify(this.document)),
 			source_options: {
-				'segel': {'label': 'Load Segel', 'state': 'search'},
+				'segel': {'label': 'Load Segel', 'state': 'search', 'filters': {'status_buka': false}},
 				'input': {'label': 'Input Segel', 'state': 'manual'},
 			},
 		}

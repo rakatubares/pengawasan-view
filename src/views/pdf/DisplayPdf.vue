@@ -58,6 +58,8 @@
 <script>
 import api from '../../router/api2.js'
 import MyAlert from '../components/AlertSubmit.vue'
+import PdfBukaPengaman from './penindakan/PdfBukaPengaman'
+import PdfBukaSegel from './penindakan/PdfBukaSegel'
 import PdfLap from './penindakan/PdfLap'
 import PdfLi from './penindakan/PdfLi'
 import PdfLkai from './intelijen/PdfLkai'
@@ -75,7 +77,6 @@ import PdfRiksa from './penindakan/PdfRiksa'
 import PdfRiksaBadan from './penindakan/PdfRiksaBadan'
 import PdfSbp from './penindakan/PdfSbp'
 import PdfSegel from './penindakan/PdfSegel'
-import PdfBukaSegel from './penindakan/PdfBukaSegel'
 import PdfPengaman from './penindakan/PdfPengaman'
 import PdfTegah from './penindakan/PdfTegah'
 import PdfTolak1 from './penindakan/PdfTolak1'
@@ -252,6 +253,10 @@ export default {
 				case 'pengaman':
 					pdf = new PdfPengaman(data_pdf)
 					break;
+
+				case 'buka_pengaman':
+					pdf = new PdfBukaPengaman(data_pdf)
+					break
 			
 				default:
 					break;
