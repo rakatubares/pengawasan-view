@@ -56,24 +56,6 @@ import api2 from '../../router/api2.js'
 import MyModalDelete from './ModalDelete.vue'
 import MyTableData from './TableData.vue'
 
-const tabs_default = {
-	current: 0,
-	list: [
-		{
-			title: 'Uraian',
-			visibility: true
-		}, 
-		{
-			title: 'Objek',
-			visibility: false
-		}, 
-		{
-			title: 'Print',
-			visibility: false
-		}
-	]
-}
-
 export default {
 	name: 'PageDoc',
 	components: {

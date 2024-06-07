@@ -176,7 +176,7 @@
 			<CRow>
 				<CCol sm="12">
 					<CTextarea
-						label="Catatan LPTP"
+						:label="`Catatan ${lptp_name}`"
 						description="Catatan atasan Pejabat Bea dan Cukai yang melaksanakan penindakan"
 						:value.sync="data.lptp.catatan"
 					/>
@@ -289,16 +289,9 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
+		lptp_name: String,
 		document: Object,
-		source_options: {
-			type: Object,
-			default() {
-				return {
-					'nhi': {'label': 'NHI', 'state': 'search', 'filters': {'status_sbp': false}}, 
-					'lap': {'label': 'LAP', 'state': 'search'},
-				}
-			}
-		}
+		source_options: Object,
 	},
 	data() {
 		return {

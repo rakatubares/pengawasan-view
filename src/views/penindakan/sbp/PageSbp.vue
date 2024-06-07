@@ -9,7 +9,6 @@
 			:compute_list="computeList"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
-			:status_filter_options="status_filter_options"
 			:permission_to_create="permission_to_create"
 			:permission_to_update="permission_to_update"
 			:permission_to_delete="permission_to_delete"
@@ -20,8 +19,10 @@
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
 					:doc_name="doc_name"
+					:lptp_name="lptp_name"
 					:id.sync="modal_data_props.doc_id"
 					:permission_to_rollback="permission_to_rollback"
+					:source_options="source_options"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import MyModalSbp from './ModalSbp2.vue'
+import MyModalSbp from './ModalSbp.vue'
 import MyPageDoc from '../../components/PageDoc.vue'
 
 export default {
@@ -48,6 +49,10 @@ export default {
 			type: String,
 			default: 'SBP'
 		},
+		lptp_name: {
+			type: String,
+			default: 'LPTP'
+		},
 		permission_to_create: {
 			type: String,
 			default: 'create-sbp'
@@ -64,9 +69,15 @@ export default {
 			type: String,
 			default: 'rollback-sbp'
 		},
-		custom_filters: [
-			{'status-filter': '<input type="date">'}
-		],
+		source_options: {
+			type: Object,
+			default() {
+				return {
+					'nhi': {'label': 'NHI', 'state': 'search', 'filters': {'status_sbp': false}}, 
+					'lap': {'label': 'LAP', 'state': 'search'},
+				}
+			}
+		},
 	},
 	data() {
 		return {
@@ -84,12 +95,6 @@ export default {
 				state: null,
 				doc_id: null
 			},
-			status_filter_options: [
-				{ value: 'draft lphp', label: 'Draft LPHP' }, 
-				{ value: 'lphp', label: 'LPHP' }, 
-				{ value: 'draft lp', label: 'Draft LP' }, 
-				{ value: 'lp', label: 'LP' }, 
-			],
 		}
 	},
 	methods: {

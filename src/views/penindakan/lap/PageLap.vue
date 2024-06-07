@@ -22,7 +22,6 @@
 					:id.sync="modal_data_props.doc_id"
 					:permission_to_rollback="permission_to_rollback"
 					:source_options="source_options"
-					:default_source="default_source"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -75,10 +74,6 @@ export default {
 				}
 			}
 		},
-		default_source: {
-			type: String,
-			default: 'nhi',
-		}
 	},
 	data() {
 		return {

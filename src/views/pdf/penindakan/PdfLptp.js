@@ -225,13 +225,15 @@ class PdfLptp extends PdfPenindakan {
 		let ln_ttd = this.ln
 
 		// Atasan
-		this.ttd(
-			inds.ttd1,
-			this.data.petugas.atasan.jabatan,
-			this.data.petugas.atasan.txt_tipe_ttd,
-			this.data.petugas.atasan.name,
-			this.data.petugas.atasan.nip,
-		)
+		if (this.jenis_dok == 'LAPORAN PELAKSANAAN TUGAS PENINDAKAN') {
+			this.ttd(
+				inds.ttd1,
+				this.data.petugas.atasan.jabatan,
+				this.data.petugas.atasan.txt_tipe_ttd,
+				this.data.petugas.atasan.name,
+				this.data.petugas.atasan.nip,
+			)
+		}
 
 		// Pejabat
 		this.ln = ln_ttd

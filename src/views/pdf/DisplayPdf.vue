@@ -70,6 +70,7 @@ import PdfLphp from './penindakan/PdfLphp'
 import PdfLppi from './intelijen/PdfLppi'
 import PdfLppiN from './intelijen/PdfLppiN'
 import PdfLptp from './penindakan/PdfLptp'
+import PdfLptpN from './penindakan/PdfLptpN'
 import PdfNhi from './intelijen/PdfNhi'
 import PdfNhiN from './intelijen/PdfNhiN'
 import PdfNi from './intelijen/PdfNi'
@@ -77,6 +78,7 @@ import PdfNiN from './intelijen/PdfNiN'
 import PdfRiksa from './penindakan/PdfRiksa'
 import PdfRiksaBadan from './penindakan/PdfRiksaBadan'
 import PdfSbp from './penindakan/PdfSbp'
+import PdfSbpN from './penindakan/PdfSbpN'
 import PdfSegel from './penindakan/PdfSegel'
 import PdfPengaman from './penindakan/PdfPengaman'
 import PdfTegah from './penindakan/PdfTegah'
@@ -235,6 +237,10 @@ export default {
 					pdf = new PdfSbp(data_pdf)
 					break;
 
+				case 'sbpn':
+					pdf = new PdfSbpN(data_pdf)
+					break;
+
 				case 'tolak1':
 					pdf = new PdfTolak1(data_pdf)
 					break;
@@ -245,6 +251,10 @@ export default {
 
 				case 'lptp':
 					pdf = new PdfLptp(data_pdf)
+					break;
+
+				case 'lptpn':
+					pdf = new PdfLptpN(data_pdf)
 					break;
 
 				case 'lphp':

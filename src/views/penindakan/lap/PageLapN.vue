@@ -7,7 +7,6 @@
 		:permission_to_delete="permission_to_delete"
 		:permission_to_rollback="permission_to_rollback"
 		:source_options="source_options"
-		:default_source="default_source"
 	/>
 </template>
 
@@ -31,7 +30,6 @@ export default {
 				'nhin': {'label': 'NHI-N', 'state': 'search'}, 
 				'lainnya': {'label': 'Lainnya', 'state': 'manual'},
 			},
-			default_source: 'nhin',
 		}
 	}
 }

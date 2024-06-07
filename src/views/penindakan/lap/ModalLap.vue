@@ -124,7 +124,7 @@ export default {
 		},
 		fillNull() {
 			if (this.document.jenis_sumber == null) {
-				this.document.jenis_sumber = DefaultLap.data.jenis_sumber
+				this.document.jenis_sumber = DefaultLap.data[this.doc_type].jenis_sumber
 			}
 			this.document.flag_layak_penindakan = this.document.flag_layak_penindakan == 1 ? true : false
 		},
