@@ -1,10 +1,14 @@
 <template>
 	<MyPageLphp
 		:doc_type="doc_type"
-		:tipe_surat="tipe_surat"
+		:doc_name="doc_name"
 		:sbp_type="sbp_type"
-		:tipe_surat_sbp="tipe_surat_sbp"
+		:kode_lptp="kode_lptp"
+		:tipe_surat_lptp="tipe_surat_lptp"
 		:permission_to_create="permission_to_create"
+		:permission_to_update="permission_to_update"
+		:permission_to_delete="permission_to_delete"
+		:permission_to_rollback="permission_to_rollback"
 	/>
 </template>
 
@@ -19,10 +23,14 @@ export default {
 	data() {
 		return {
 			doc_type: 'lphpn',
-			tipe_surat: 'LPHP-N',
+			doc_name: 'LPHP-N',
 			sbp_type: 'sbpn',
-			tipe_surat_sbp: 'SBP-N',
-			permission_to_create: 'create-lphpn'
+			kode_lptp: 'lptpn',
+			tipe_surat_lptp: 'LPTP-N',
+			permission_to_create: 'create-lphpn',
+			permission_to_update: 'create-lphpn',
+			permission_to_delete: 'delete-lphpn',
+			permission_to_rollback: 'rollback-lphpn',
 		}
 	},
 }

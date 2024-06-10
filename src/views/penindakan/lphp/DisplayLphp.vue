@@ -14,7 +14,7 @@
 				</CRow>
 				<CRow class="mb-1">
 					<CCol md="3" class="py-1">
-						<b>No LPTP</b>
+						<b>No {{ tipe_surat_lptp }}</b>
 					</CCol>
 					<CCol md="9" class="py-1">
 						{{ disp_lptp }}
@@ -67,6 +67,7 @@ export default {
 	},
 	props: {
 		doc_type: String,
+		tipe_surat_lptp: String,
 		document: Object,
 	},
 	computed: {

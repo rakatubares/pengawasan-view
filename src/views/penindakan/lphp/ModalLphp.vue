@@ -16,11 +16,14 @@
 					:doc_type="doc_type"
 					:doc_name="doc_name"
 					:document.sync="document"
+					:kode_lptp="kode_lptp"
+					:tipe_surat_lptp="tipe_surat_lptp"
 					@save-data="setDocument"
 				/>
 				<MyDisplayLphp 
 					v-else-if="local_state == 'show'"
 					:doc_type="doc_type"
+					:tipe_surat_lptp="tipe_surat_lptp"
 					:document.sync="document"
 				/>
 			</template>
@@ -58,6 +61,8 @@ export default {
 		doc_type: String,
 		doc_name: String,
 		sbp_type: String,
+		kode_lptp: String,
+		tipe_surat_lptp: String,
 		id: Number,
 		permission_to_rollback: String,
 	},

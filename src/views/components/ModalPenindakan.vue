@@ -219,7 +219,7 @@ export default {
 					state = 'show'
 				} else if ((this.doc_type == 'buka_pengaman') & (this.document.pengaman_id != null)) {
 					state = 'show'
-				} else if (['lphp', 'lp'].includes(this.doc_type)) {
+				} else if (['lphp', 'lp', 'lphpn', 'lpn'].includes(this.doc_type)) {
 					state = 'show'
 				}
 			}

@@ -5,8 +5,8 @@
 			<CRow>
 				<CCol md="12">
 					<MySearchDocument
-						doc_type="lptp"
-						label="No LPTP"
+						:doc_type="kode_lptp"
+						:label="`No ${tipe_surat_lptp}`"
 						:value.sync="data.lptp_id"
 						:exceptions.sync="saved_lptp"
 					/>
@@ -128,6 +128,8 @@ export default {
 		doc_type: String,
 		document: Object,
 		doc_name: String,
+		kode_lptp: String,
+		tipe_surat_lptp: String,
 	},
 	data() {
 		return {

@@ -1,6 +1,6 @@
 import PdfLptp from "./PdfLptp";
 
-class PdfSbpN extends PdfLptp
+class PdfLptpN extends PdfLptp
 {
 	constructor(data)
 	{
@@ -11,4 +11,4 @@ class PdfSbpN extends PdfLptp
 	}
 }
 
-export default PdfSbpN
+export default PdfLptpN

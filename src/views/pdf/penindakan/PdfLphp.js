@@ -19,8 +19,10 @@ class PdfLphp extends PdfPenindakan {
 	constructor(
 		data, 
 		title='LAPORAN PENENTUAN HASIL PENINDAKAN', 
+		lptp_name='LPTP',
 	) {
 		super(data, title)
+		this.lptp_name = lptp_name
 	}
 
 	generateText()
@@ -57,7 +59,7 @@ class PdfLphp extends PdfPenindakan {
 		///// Uraian Top /////
 		// LPTP
 		this.write('1.')
-		this.write('Nomor LPTP', inds.lbl)
+		this.write(`Nomor ${this.lptp_name}`, inds.lbl)
 		this.write(':', inds.cln)
 		this.write(this.txt.no_lptp, inds.txt)
 		this.write('Tanggal', inds.lbl2)

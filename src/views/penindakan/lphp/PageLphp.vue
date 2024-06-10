@@ -18,6 +18,8 @@
 					:doc_type="doc_type"
 					:doc_name="doc_name"
 					:sbp_type="sbp_type"
+					:kode_lptp="kode_lptp"
+					:tipe_surat_lptp="tipe_surat_lptp"
 					:id.sync="modal_data_props.doc_id"
 					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
@@ -49,6 +51,10 @@ export default {
 		sbp_type: {
 			type: String,
 			dedfault: 'sbp'
+		},
+		kode_lptp: {
+			type: String,
+			default: 'lptp'
 		},
 		tipe_surat_lptp: {
 			type: String,
