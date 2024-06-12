@@ -144,6 +144,13 @@ class PdfLphp extends PdfPenindakan {
 		this.write(':', inds.cln2)
 		this.write(data_orang.identitas, inds.txt2)
 		this.break()
+		this.write('Alamat', inds.lbl3)
+		this.write(':', inds.cln)
+		this.write(data_orang.alamat, inds.txt, undefined, undefined, this.page_width-inds.lbl2)
+		this.write('Kewarganegaraan', inds.lbl2)
+		this.write(':', inds.cln2)
+		this.write(data_orang.warga_negara, inds.txt2)
+		this.break()
 
 		///// Uraian Bottom /////
 		// SBP

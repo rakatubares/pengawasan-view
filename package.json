@@ -47,6 +47,7 @@
     "jspdf": "^2.4.0",
     "jspdf-autotable": "^3.5.20",
     "lodash": "^4.17.21",
+    "moment": "^2.30.1",
     "regenerator-runtime": "^0.13.9",
     "tinymce": "^6.1.0",
     "tinymce-vue-2": "^0.0.5",

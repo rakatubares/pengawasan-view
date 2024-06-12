@@ -3,18 +3,22 @@
 		<MyPageDoc 
 			ref="page_doc"
 			:doc_type="doc_type"
-			:table_title="table_title"
+			:table_title="`Daftar ${this.doc_name}`"
 			:table_fields="table_fields"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
 			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
 		>
 			<template #modal-data>
 				<MyModalLpN 
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
+					:doc_name="doc_name"
 					:id.sync="modal_data_props.doc_id"
+					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -35,12 +39,12 @@ export default {
 	data() {
 		return {
 			doc_type: 'lpn',
-			table_title: `Daftar ${this.tipe_surat}`,
+			doc_name: 'LP-N',
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: `No LP-N` },
 				{ key: 'tanggal_dokumen', label: `Tgl LP-N` },
-				{ key: 'no_sbp', label: `No SBP-N` },
-				{ key: 'tanggal_sbp', label: `Tgl SBP-N` },
+				{ key: 'no_lphp', label: `No LPHP-N` },
+				{ key: 'tanggal_lphp', label: `Tgl LPHP-N` },
 			],
 			modal_data_props: {
 				show: false,
@@ -48,6 +52,9 @@ export default {
 				doc_id: null
 			},
 			permission_to_create: 'create-lpn',
+			permission_to_update: 'create-lpn',
+			permission_to_delete: 'delete-lpn',
+			permission_to_rollback: 'rollback-lpn',
 		}
 	},
 	methods: {
@@ -59,7 +66,7 @@ export default {
 		},
 		constructDeleteText(item) {
 			let text = "Apakah Anda yakin untuk menghapus draft LP-N atas "
-				+ item.no_sbp.bold() 
+				+ item.no_lphp.bold() 
 				+ "?"
 			
 			return text

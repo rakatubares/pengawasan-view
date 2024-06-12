@@ -31,7 +31,6 @@ class PdfSbp extends PdfPenindakan {
 			this.tgl_sprint = ''
 			this.full_tgl_sprint = ''
 		}
-		
 
 		this.txt = {}
 		

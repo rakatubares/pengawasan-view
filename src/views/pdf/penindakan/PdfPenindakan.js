@@ -1,4 +1,5 @@
 import MyPdf from "../MyPdf";
+import moment from "moment/moment";
 
 class PdfPenindakan extends MyPdf {
 	opening(
@@ -146,7 +147,7 @@ class PdfPenindakan extends MyPdf {
 		return txt
 	}
 
-	convertBadan(data)
+	convertBadan(data, tanggal_penindakan)
 	{
 		let txt = {}
 
@@ -170,6 +171,15 @@ class PdfPenindakan extends MyPdf {
 				? data.entitas.tanggal_lahir
 				: ''
 			: ''
+		txt.umur = '-'
+		if ((txt.tanggal_lahir != '') && tanggal_penindakan) {
+			var dt_lahir = moment(txt.tanggal_lahir, 'DD-MM-YYYY')
+			var dt_penindakan = moment(tanggal_penindakan, 'DD-MM-YYYY')
+			var ageDifMs = dt_penindakan - dt_lahir
+			var ageDate = new Date(ageDifMs)
+			var age = Math.abs(ageDate.getUTCFullYear() - 1970)
+			txt.umur = `${age} tahun`
+		}
 		txt.ttl = txt.tempat_lahir != ''
 			? txt.tanggal_lahir != ''
 				? `${txt.tempat_lahir} / ${txt.tanggal_lahir}`

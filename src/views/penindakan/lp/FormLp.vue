@@ -80,9 +80,6 @@
 				</CCol>
 			</CRow>
 		</CForm>
-
-		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
@@ -93,7 +90,6 @@ import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
-import MyAlert from '../../components/AlertSubmit.vue'
 import MySearchDocument from '../../components/SearchDocument.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 
@@ -108,7 +104,6 @@ export default {
 	name: 'FormLp',
 	components: {
 		DatePicker,
-		MyAlert,
 		MySearchDocument,
 		MySelectPejabat,
 	},
