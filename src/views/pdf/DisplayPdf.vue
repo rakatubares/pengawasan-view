@@ -71,6 +71,7 @@ import PdfLphp from './penindakan/PdfLphp'
 import PdfLphpN from './penindakan/PdfLphpN'
 import PdfLppi from './intelijen/PdfLppi'
 import PdfLppiN from './intelijen/PdfLppiN'
+import PdfLpt from './penindakan/PdfLpt'
 import PdfLptp from './penindakan/PdfLptp'
 import PdfLptpN from './penindakan/PdfLptpN'
 import PdfNhi from './intelijen/PdfNhi'
@@ -249,6 +250,10 @@ export default {
 
 				case 'tolak2':
 					pdf = new PdfTolak2(data_pdf)
+					break;
+
+				case 'lpt':
+					pdf = new PdfLpt(data_pdf)
 					break;
 
 				case 'lptp':

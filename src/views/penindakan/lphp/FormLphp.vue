@@ -57,7 +57,6 @@
 			<CRow>
 				<CCol md="12">
 					<MySelectPejabat
-						ref="selectPenyusun"
 						:state.sync="state"
 						:label="{'jabatan': 'Jabatan Penyusun', 'nama': 'Nama Penyusun'}"
 						:default_jabatan.sync="default_penyusun"
@@ -70,7 +69,6 @@
 			<CRow>
 				<CCol md="12">
 					<MySelectPejabat
-						ref="selectAtasan"
 						:state.sync="state"
 						:label="{'jabatan': 'Jabatan Atasan', 'nama': 'Nama Atasan'}"
 						:default_jabatan.sync="default_atasan"
@@ -102,9 +100,7 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
-// import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
-import MyAlert from '../../components/AlertSubmit.vue'
 import MySearchDocument from '../../components/SearchDocument.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 
@@ -119,7 +115,6 @@ export default {
 	name: 'FormLphp',
 	components: {
 		DatePicker,
-		MyAlert,
 		MySearchDocument,
 		MySelectPejabat,
 	},

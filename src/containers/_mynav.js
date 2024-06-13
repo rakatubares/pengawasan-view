@@ -14,7 +14,7 @@ export default [
 					'view-pengaman', 'view-buka_pengaman',
 					'view-contoh', 'view-reekspor', 'view-bast',
 					'view-sbp', 'view-tolak1', 'view-tolak2',
-					'view-lphp', 'view-lp',
+					'view-lpt', 'view-lphp', 'view-lp',
 					'view-sbpn', 'view-tolak1n', 'view-tolak2n',
 					'view-lphpn', 'view-lpn',
 					
@@ -185,6 +185,13 @@ export default [
 								permissions: 'view-tolak2',
 							}
 						]
+					},
+					{
+						_name: 'CSidebarNavItem',
+						name: 'LPT',
+						to: '/lpt',
+						icon: 'cil-file',
+						permissions: 'view-lpt',
 					},
 					{
 						_name: 'CSidebarNavItem',

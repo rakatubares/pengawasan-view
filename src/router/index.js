@@ -34,6 +34,7 @@ const PageLp = () => import('@/views/penindakan/lp/PageLp')
 const PageLpN = () => import('@/views/penindakan/lpn/PageLpN')
 const PageLphp = () => import('@/views/penindakan/lphp/PageLphp')
 const PageLphpN = () => import('@/views/penindakan/lphp/PageLphpN')
+const PageLpt = () => import('@/views/penindakan/lpt/PageLpt')
 const PagePengaman = () => import('@/views/penindakan/pengaman/PagePengaman')
 const PageReekspor = () => import('@/views/penindakan/reekspor/PageReekspor')
 const PageRiksa = () => import('@/views/penindakan/riksa/PageRiksa')
@@ -231,6 +232,14 @@ function configRoutes () {
 					component: PageLphpN,
 					beforeEnter: (to, from, next) => {
 						checkRoutePermission('view-lphpn', next)
+					},
+				},
+				{
+					path: 'lpt',
+					name: 'LPT',
+					component: PageLpt,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-lpt', next)
 					},
 				},
 				{
