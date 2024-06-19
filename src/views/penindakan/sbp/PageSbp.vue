@@ -9,16 +9,20 @@
 			:compute_list="computeList"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
-			:status_filter_options="status_filter_options"
 			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
 		>
 			<template #modal-data>
 				<MyModalSbp 
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
 					:doc_type="doc_type"
-					:tipe_surat="tipe_surat"
+					:doc_name="doc_name"
+					:lptp_name="lptp_name"
 					:id.sync="modal_data_props.doc_id"
+					:permission_to_rollback="permission_to_rollback"
+					:source_options="source_options"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -41,39 +45,56 @@ export default {
 			type: String,
 			default: 'sbp'
 		},
-		tipe_surat: {
+		doc_name: {
 			type: String,
 			default: 'SBP'
+		},
+		lptp_name: {
+			type: String,
+			default: 'LPTP'
 		},
 		permission_to_create: {
 			type: String,
 			default: 'create-sbp'
 		},
-		custom_filters: [
-			{'status-filter': '<input type="date">'}
-		],
+		permission_to_update: {
+			type: String,
+			default: 'create-sbp'
+		},
+		permission_to_delete: {
+			type: String,
+			default: 'delete-sbp'
+		},
+		permission_to_rollback: {
+			type: String,
+			default: 'rollback-sbp'
+		},
+		source_options: {
+			type: Object,
+			default() {
+				return {
+					'nhi': {'label': 'NHI', 'state': 'search', 'filters': {'status_sbp': false}}, 
+					'lap': {'label': 'LAP', 'state': 'search'},
+				}
+			}
+		},
 	},
 	data() {
 		return {
-			table_title: `Daftar ${this.tipe_surat}`,
+			table_title: `Daftar ${this.doc_name}`,
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: `No ${this.tipe_surat}` },
-				{ key: 'tanggal_dokumen', label: `Tgl ${this.tipe_surat}` },
+				{ key: 'no_dok_lengkap', label: `No ${this.doc_name}` },
+				{ key: 'tanggal_dokumen', label: `Tgl ${this.doc_name}` },
+				{ key: 'nhi', label: 'NHI' },
 				{ key: 'nama_saksi', label: 'Saksi/Pemilik/Orang' },
 				{ key: 'petugas', label: 'Petugas' },
 			],
-			custom_fields: ['petugas'],
+			custom_fields: ['nhi', 'petugas'],
 			modal_data_props: {
 				show: false,
 				state: null,
 				doc_id: null
 			},
-			status_filter_options: [
-				{ value: 'draft lphp', label: 'Draft LPHP' }, 
-				{ value: 'lphp', label: 'LPHP' }, 
-				{ value: 'draft lp', label: 'Draft LP' }, 
-				{ value: 'lp', label: 'LP' }, 
-			],
 		}
 	},
 	methods: {
@@ -81,6 +102,7 @@ export default {
 			return list.map(item => {
 				return {
 					...item,
+					nhi: item.nomor_nhi + '</br>' + item.tanggal_nhi,
 					petugas: item.petugas1 + '</br>' + item.petugas2,
 				}
 			})
@@ -93,10 +115,12 @@ export default {
 		},
 		constructDeleteText(item) {
 			let text = "Apakah Anda yakin untuk menghapus data " 
-				+ item.no_dok_lengkap.bold() 
-				+ " a.n. " 
-				+ item.nama_saksi.bold() 
-				+ "?"
+				+ item.no_dok_lengkap.bold()	
+			if (item.nama_saksi) {
+				text += " a.n. "
+				text += item.nama_saksi.bold() 
+			}
+			text += "?"
 
 			return text
 		}

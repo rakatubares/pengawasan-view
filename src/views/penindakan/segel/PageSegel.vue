@@ -3,20 +3,24 @@
 		<MyPageDoc 
 			ref="page_doc"
 			:doc_type="doc_type"
-			table_title="Daftar BA Penyegelan"
+			:table_title="`Daftar ${doc_name}`"
 			:table_fields="table_fields"
 			:custom_fields="custom_fields"
 			:compute_list="computeList"
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
-			:status_filter_options="status_filter_options"
 			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
 		>
 			<template #modal-data>
 				<MyModalSegel 
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
+					:doc_type="doc_type"
+					:doc_name="doc_name"
 					:id.sync="modal_data_props.doc_id"
+					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -37,6 +41,7 @@ export default {
 	data() {
 		return {
 			doc_type: 'segel',
+			doc_name: 'BA Penyegelan',
 			table_fields: [
 				{ key: 'no_dok_lengkap', label: 'No BA Segel' },
 				{ key: 'tanggal_dokumen', label: 'Tgl BA' },
@@ -49,11 +54,10 @@ export default {
 				state: null,
 				doc_id: null
 			},
-			status_filter_options: [
-				{ value: 'draft buka segel', label: 'Draft Buka Segel' }, 
-				{ value: 'buka segel', label: 'Buka Segel' },
-			],
 			permission_to_create: 'create-segel',
+			permission_to_update: 'create-segel',
+			permission_to_delete: 'delete-segel',
+			permission_to_rollback: 'rollback-segel',
 		}
 	},
 	methods: {
@@ -72,11 +76,12 @@ export default {
 			this.modal_data_props.show = false
 		},
 		constructDeleteText(item) {
+			let saksi = '-'
+			if (item.nama_saksi) { saksi = item.nama_saksi.bold() }
+
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
-				+ " a.n. " 
-				+ item.nama_saksi.bold() 
-				+ "?"
+				+ ` a.n. ${saksi} ?`
 			
 			return text
 		},

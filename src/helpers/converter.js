@@ -1,7 +1,7 @@
 let converters = {}
 
 converters.string = (val, def='') => {
-	return (val != null) ? val : def
+	return (val != null) ? val.replace('\n', ' ') : def
 }
 
 converters.string_format = (str, format) => {
@@ -46,8 +46,18 @@ converters.monthName = (val) => {
 }
 
 converters.fullDate = (val) => {
-	let date = val.toLocaleString('id-ID', {'day': '2-digit', 'month': 'long', 'year': 'numeric',})
+	let date = ''
+	if (val != null) {
+		date = val.toLocaleString('id-ID', {'day': '2-digit', 'month': 'long', 'year': 'numeric',})
+	}
 	return date
+}
+
+converters.currentDate = () => {
+	let now = new Date()
+	let options = {timeZone: "Asia/Jakarta", year: 'numeric', month: '2-digit', day: '2-digit'}
+	let d = now.toLocaleDateString("id-ID", options).split('/').join('-')
+	return d
 }
 
 converters.array_text = (txt, max_length) => {
@@ -272,7 +282,7 @@ converters.item_barang = (data, withDetails) => {
 		let entry = {
 			no: (index+1).toString(),
 			uraian: uraian,
-			jumlah: data[index]['jumlah_barang'] + ' ' + data[index]['satuan']['kode_satuan']
+			jumlah: data[index]['jumlah_barang'] + ' ' + data[index]['satuan']['satuan']
 		}
 
 		preparedData.push(entry)

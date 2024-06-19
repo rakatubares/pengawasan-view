@@ -5,18 +5,22 @@
 				<div class="form-group">
 					<label>No SPRINT</label>
 					<v-autocomplete
-						class="no-rounded rounded-left no-message"
+						v-bind:class="{'no-rounded rounded-left no-message': !disabled}"
 						v-model="value"
 						outlined
 						dense
+						:disabled="disabled"
 						:items.sync="items"
 						:search-input.sync="search"
 						item-text="nomor_sprint"
 						item-value="id"
 						@change="changeValue"
+						@click="searchDocument"
+						@keyup="searchDocument"
 					>
 						<template v-slot:append-outer>
 							<CButton 
+								v-if="!disabled"
 								class="button-input no-rounded rounded-right"
 								color="success"
 								v-c-tooltip.hover="{content: 'Tambah SPRINT'}"
@@ -34,8 +38,8 @@
 						</template>
 						<template v-slot:item="{ item }">
 							<v-list-item-content>
-								<h3><v-list-item-title v-text="item.nomor_sprint"></v-list-item-title></h3>
-								<v-list-item-subtitle v-text="item.tanggal_sprint"></v-list-item-subtitle>
+								<h3><v-list-item-title>{{ item.nomor_sprint }}</v-list-item-title></h3>
+								<v-list-item-subtitle>{{ item.tanggal_sprint }}</v-list-item-subtitle>
 							</v-list-item-content>
 						</template>
 					</v-autocomplete>
@@ -175,13 +179,17 @@ export default {
 		MyAlert
 	},
 	props: {
-		id: Number
+		id: Number,
+		disabled: {
+			type: Boolean,
+			default: false
+		},
 	},
 	data() {
 		return {
 			items: [],
 			value: null,
-			search: null,
+			search: '',
 			sprint: JSON.parse(JSON.stringify(default_sprint)),
 			show_modal: false,
 			new_sprint: JSON.parse(JSON.stringify(default_sprint)),
@@ -190,13 +198,16 @@ export default {
 		}
 	},
 	watch: {
-		async search (val) {
-			let data = {'s': val}
-			let response = await axios.post(api.searchSprint(), data)
-			this.items = response.data.data
+		id(val) {
+			this.getSprint(val, true)
 		}
 	},
 	methods: {
+		async searchDocument () {
+			let data = {'src': this.search}
+			let response = await axios.post(api.searchSprint(), data)
+			this.items = response.data.data
+		},
 		changeValue(id) {
 			this.getSprint(id)
 			this.$emit('update:id', id)
@@ -216,6 +227,9 @@ export default {
 					)
 			} else {
 				this.sprint = JSON.parse(JSON.stringify(default_sprint))
+
+				this.items = [this.sprint]
+				this.value = this.items[0]
 			}
 		},
 		showModalSprint() {
@@ -270,6 +284,9 @@ export default {
 	},
 	mounted() {
 		this.getJabatan()
+		if (this.id != null) {
+			this.getSprint(this.id, true)
+		}
 	}
 }
 </script>

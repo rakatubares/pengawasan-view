@@ -1,86 +1,123 @@
 <template>
 	<div class="wrapper">
-		<MyModalDoc
-			ref="modal_doc"
-			title="Data BA Segel"
-			:state.sync="modal_state"
+		<MyModalPenindakan
+			ref="ModalPenindakan"
+			:title="`Data ${doc_name}`"
+			:state.sync="local_state"
+			:doc_type="doc_type"
+			:document.sync="document"
+			:available_objects="['sarkut', 'barang', 'bangunan']"
+			:permission_to_rollback="permission_to_rollback"
 			@close-modal="closeModal"
 		>
-			<template #tab-uraian>
-				<MyDisplaySegel
-					v-if="modal_state == 'show'"
-					:doc_id.sync="doc_id"
-				/>
-				<MyFormSegel
-					ref="form_sbp"
-					v-if="['insert','edit'].includes(modal_state)"
-					:state.sync="modal_state"
-					:doc_id.sync="doc_id"
-				/>
-			</template>
-			<template #tab-object>
-				<MyDisplayDetail 
-					v-if="modal_state == 'show'"
+			<template #uraian>
+				<MyFormSegel 
+					v-if="['insert','edit'].includes(local_state)"
+					:state.sync="local_state"
 					:doc_type="doc_type"
-					:doc_id.sync="doc_id"
+					:doc_name="doc_name"
+					:document.sync="document"
+					@save-data="setDocument"
 				/>
-				<MyFormDetail 
-					v-if="modal_state == 'edit'"
-					:available_details="['sarkut', 'barang', 'bangunan']"
+				<MyDisplaySegel 
+					v-else-if="local_state == 'show'"
 					:doc_type="doc_type"
-					:doc_id.sync="doc_id"
+					:document.sync="document"
 				/>
 			</template>
-			<template #tab-pdf>
-				<MyDisplayPdf 
-					v-if="['show','edit'].includes(modal_state)"
-					:state.sync="modal_state"
-					:doc_type="doc_type" 
-					:doc_id.sync="doc_id"
-				/>
-			</template>
-		</MyModalDoc>
-  </div>
+		</MyModalPenindakan>
+
+		<!-- Alert -->
+		<MyAlert ref="alert"></MyAlert>
+	</div>
 </template>
 
 <script>
-import MyDisplayDetail from '../../details/displays/DisplayDetail.vue'
-import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
+import api from '../../../router/api2.js'
+import converters from '../../../helpers/converter.js'
+import DefaultSegel from './DefaultSegel'
+import MyAlert from '../../components/AlertSubmit.vue'
 import MyDisplaySegel from './DisplaySegel.vue'
-import MyFormDetail from '../../details/Options/FormDetail.vue'
 import MyFormSegel from './FormSegel.vue'
-import MyModalDoc from '../../components/ModalDoc2.vue'
+import MyModalPenindakan from '../../components/ModalPenindakan.vue'
 
 export default {
 	name: 'ModalSegel',
 	components: {
-		MyDisplayDetail,
-		MyDisplayPdf,
+		DefaultSegel,
+		MyAlert,
 		MyDisplaySegel,
-		MyFormDetail,
 		MyFormSegel,
-		MyModalDoc,
+		MyModalPenindakan,
 	},
 	props: {
 		state: String,
-		id: Number
+		doc_type: String,
+		doc_name: String,
+		id: Number,
+		permission_to_rollback: String,
 	},
 	data() {
 		return {
-			doc_type: 'segel',
 			doc_id: this.id,
-			modal_state: this.state
+			local_state: this.state,
+			document: JSON.parse(JSON.stringify(DefaultSegel.data)),
 		}
 	},
+	watch: {
+		state(val) {
+			this.local_state = val
+		},
+		local_state: function(val) {
+			this.$emit('update:state', val)
+		},
+		id(val) {
+			this.doc_id = val
+		},
+		doc_id(val) {
+			this.$emit('update:id', val)
+		},
+	},
 	methods: {
+		async getData() {
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.document = response.data
+			this.fillNull()
+		},
+		setDocument(val) {
+			this.document = JSON.parse(JSON.stringify(val))
+			this.fillNull()
+
+			this.alert('DATA BERHASIL DISIMPAN')
+		},
+		fillNull() {
+			if (this.document.penindakan.sprint == null) {
+				this.document.penindakan.sprint = JSON.parse(JSON.stringify(DefaultSegel.data.penindakan.sprint))
+			}
+
+			if (this.document.penindakan.saksi == null) {
+				this.document.penindakan.saksi = JSON.parse(JSON.stringify(DefaultSegel.data.penindakan.saksi))
+			}
+
+			if (
+				(this.document.penindakan.petugas.petugas2 == null) ||
+				(this.document.penindakan.petugas.petugas2 == undefined)
+			) {
+				this.document.penindakan.petugas.petugas2 = JSON.parse(JSON.stringify(DefaultSegel.data.penindakan.petugas.petugas2))
+			}
+		},
 		closeModal() {
 			this.$emit('close-modal')
 		},
+		alert(text, color, time) {
+			this.$refs.alert.show_alert(text, color, time)
+		},
 	},
-	watch: {
-		modal_state: function(val) {
-			this.$refs.modal_doc.changeState(val)
-			this.$emit('update:state', val)
+	async beforeMount() {
+		if (['show', 'edit'].includes(this.state)) {
+			await this.getData()
+		} else {
+			this.document.penindakan.tanggal_selesai_penindakan = converters.currentDate()
 		}
 	},
 }

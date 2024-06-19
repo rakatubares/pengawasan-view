@@ -7,11 +7,10 @@
 				no-filter
 				outlined
 				dense
-				:items.sync="items"
-				:search-input.sync="search"
-				:error="error_state"
-				item-text="kode_kemasan"
+				:items="options"
+				item-text="kemasan"
 				item-value="id"
+				:disabled.sync="disabled"
 			>
 				<template v-slot:no-data>
 					<v-list-item>
@@ -22,64 +21,54 @@
 				</template>
 				<template v-slot:item="{ item }">
 					<v-list-item-content>
-						<v-list-item-title v-text="item.kode_kemasan"></v-list-item-title>
-						<v-list-item-subtitle v-text="item.uraian_kemasan"></v-list-item-subtitle>
+						<v-list-item-title>{{ item.kemasan }}</v-list-item-title>
 					</v-list-item-content>
 				</template>
 			</v-autocomplete>
-			<div 
-				v-bind:style="{ display: display_feedback }" 
-				class="invalid-feedback"
-			>
-				Kemasan wajib diisi
-			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import store from '../../store'
 import api from '../../router/api2.js'
 
 export default {
 	name: 'SelectKemasan',
 	props: {
-		id: Number
+		id: Number,
+		disabled: {
+			type: Boolean,
+			default: false
+		},
 	},
 	data() {
 		return {
-			items: [],
-			search: null,
-			value: null,
-			error_state: true,
-			display_feedback: 'block'
+			options: [],
+			value: this.id,
 		}
 	},
 	watch: {
-		async search (val) {
-			let data = {s: val}
-			let response = await api.searchKemasan(data)
-			this.items = response.data.data
+		id(val) {
+			this.value = val
 		},
 		value(val) {
-			if (val == null) {
-				this.error_state = true
-				this.display_feedback = 'block'
-			} else {
-				this.error_state = false
-				this.display_feedback = 'none'
-			}
-
 			this.$emit('update:id', val)
-		}
+		},
 	},
 	methods: {
-		async getData(id) {
-			let response = await api.getKemasanById(id)
-			let satuan = response.data.data
-			this.items = [satuan]
-			this.value = this.items[0]['id']
+		async generateOptions() {
+			if (store.getters.kemasan == null) {
+				let response = await api.getKemasan()
+				let kemasan = response.data
+				store.commit('set', ['kemasan', kemasan])
+			}
+			this.options = store.getters.kemasan
 		}
 	},
+	mounted() {
+		this.generateOptions()
+	}
 }
 </script>
 

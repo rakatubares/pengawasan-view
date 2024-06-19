@@ -4,26 +4,23 @@
 		<CForm class="pt-3">
 			<CRow>
 				<CCol md="12">
-					<MySelectSbp
-						ref="selectSbp"
-						:sbp_type="sbp_type"
-						:id.sync="data.id_sbp"
-						:filter="filter_sbp"
+					<MySearchDocument
+						doc_type="lphp"
+						label="No LPHP"
+						:value.sync="data.lphp_id"
+						:exceptions.sync="saved_lphp"
 					/>
 				</CCol>
 			</CRow>
 			<CRow>
 				<CCol md="12">
 					<div class="form-group">
-						<label class="w-100">{{`Tanggal ${tipe_surat}`}}</label>
+						<label class="w-100">{{`Tanggal ${doc_name}`}}</label>
 						<date-picker 
 							v-model="data.tanggal_dokumen" 
 							format="DD-MM-YYYY"
 							value-type="format"
 							type="date"
-							@change="
-								validatorDatetime($event, 'DD-MM-YYYY', 'validasi.tanggal_lp', 'Tanggal LP wajib diisi')
-							"
 						>
 							<template v-slot:input="slotProps">
 								<input
@@ -31,12 +28,7 @@
 									type="text" 
 									v-bind="slotProps.props" 
 									v-on="slotProps.events"
-									v-bind:class="{
-										'is-valid': validasi.tanggal_lp.state,
-										'is-invalid': !validasi.tanggal_lp.state
-									}"
 								/>
-								<div class="invalid-feedback pb-1">{{validasi.tanggal_lp.text}}</div>
 							</template>
 							<i slot="icon-calendar"></i>
 							<i slot="icon-clear"></i>
@@ -67,12 +59,11 @@
 					<MySelectPejabat
 						ref="selectPenerbit"
 						:state.sync="state"
-						:label="{jabatan: 'Jabatan Penerbit', nama: 'Nama Pejabat'}"
-						:selectable_jabatan="['bd.0503', 'bd.0504']"
-						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.pejabat.user.user_id"
-						:jabatan.sync="data.pejabat.jabatan.kode"
-						:plh.sync="data.pejabat.plh"
+						:label="{'jabatan': 'Jabatan Penerbit', 'nama': 'Nama Pejabat'}"
+						:default_jabatan.sync="default_pejabat"
+						:jabatan.sync="data.petugas.pejabat.kode_jabatan"
+						:tipe_ttd.sync="data.petugas.pejabat.tipe_ttd"
+						:nip.sync="data.petugas.pejabat.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -89,9 +80,6 @@
 				</CCol>
 			</CRow>
 		</CForm>
-
-		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
@@ -101,22 +89,9 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
-import converters from '../../../helpers/converter.js'
 import validators from '../../../helpers/validator.js'
-import MyAlert from '../../components/AlertSubmit.vue'
+import MySearchDocument from '../../components/SearchDocument.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
-import MySelectSbp from '../sbp/SelectSbp.vue'
-
-const default_data = {
-	tanggal_dokumen: null,
-	pasal: null,
-	modus: null,
-	pejabat: {
-		jabatan: {kode: 'bd.0503'},
-		plh: false,
-		user: {user_id: null}
-	},
-}
 
 const custom_validations_default = {
 	tanggal_lp: {
@@ -129,76 +104,44 @@ export default {
 	name: 'FormLp',
 	components: {
 		DatePicker,
-		MyAlert,
+		MySearchDocument,
 		MySelectPejabat,
-		MySelectSbp,
 	},
 	props: {
 		state: String,
 		doc_type: String,
-		tipe_surat: String,
+		document: Object,
+		doc_name: String,
 		sbp_type: String,
-		doc_id: Number
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(default_data)),
+			data: JSON.parse(JSON.stringify(this.document)),
 			validasi: JSON.parse(JSON.stringify(custom_validations_default)),
-			filter_sbp: {
-				kode_status: 202
-			}
+			default_pejabat: 'bd.0503',
 		}
+	},
+	computed: {
+		saved_lphp: {
+			get() { return this.data.lphp_id },
+			set(val) { this.data.lphp_id = val }
+		}
+	},
+	watch: {
+		document(val) { this.data = val },
 	},
 	methods: {
-		async getData() {
-			let response = await api.getFormDataById(this.doc_type, this.doc_id)
-			this.data = response.data.data
-			this.$nextTick(function () {
-				this.renderData()
-			})
-		},
-		renderData() {
-			this.validatorDatetime(this.data.tanggal_dokumen, 'DD-MM-YYYY HH:mm', 'validasi.tanggal_lp', 'Tanggal LP wajib diisi')
-			this.$refs.selectSbp.getData(this.data.id_sbp, true)
-			this.$refs.selectPenerbit.selected_jabatan = this.data.pejabat.jabatan.kode
-			this.$refs.selectPenerbit.togglePlh(this.data.pejabat.plh)
-			this.$refs.selectPenerbit.getPetugas(this.data.pejabat.user.user_id, true)
-		},
 		async saveData() {
 			if (this.state == 'insert') {
-				try {
-					this.data = await api.storeDoc(this.doc_type, this.data)
-					this.$emit('update:doc_id', this.data.id)
-					this.$emit('update:state', 'edit')
-					this.alert('Data LP berhasil disimpan')
-				} catch (error) {
-					console.log('form lp - save data - error', error)
-				}
+				var data = await api.storeDoc(this.doc_type, this.data)
+				this.$emit('update:state', 'edit')
 			} else if (this.state == 'edit') {
-				try {
-					await api.updateDoc(this.doc_type, this.data.id, this.data)
-					this.alert('Data LP berhasil diubah')
-				} catch (error) {
-					console.log('form lp - update data - error', error)
-				}
+				var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 			}
-		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
+			this.$emit('save-data', data)
 		},
 		validatorRequired(val) { return validators.required(val) },
-		validatorDatetime(val, format, validasiName, text) { 
-			let dt = converters.date(val, format)
-			let valid = validators.date(dt)
-			_.set(this, validasiName+'.state', valid)
-			_.set(this, validasiName+'.text', text)
-		},
 	},
-	async mounted() {
-		if (this.state == 'edit') {
-			await this.getData()
-		}
-	}
 }
 </script>
 

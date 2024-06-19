@@ -12,6 +12,8 @@
 					:editData="editDoc"
 					:deleteData="deleteDoc"
 					:showData="showDoc"
+					:permission_to_update="permission_to_update"
+					:permission_to_delete="permission_to_delete"
 				>
 					<template #header>
 						<CIcon name="cil-grid"/>{{ table_title }}
@@ -54,24 +56,6 @@ import api2 from '../../router/api2.js'
 import MyModalDelete from './ModalDelete.vue'
 import MyTableData from './TableData.vue'
 
-const tabs_default = {
-	current: 0,
-	list: [
-		{
-			title: 'Uraian',
-			visibility: true
-		}, 
-		{
-			title: 'Objek',
-			visibility: false
-		}, 
-		{
-			title: 'Print',
-			visibility: false
-		}
-	]
-}
-
 export default {
 	name: 'PageDoc',
 	components: {
@@ -90,6 +74,8 @@ export default {
 		modal_data_props: Object,
 		construct_delete_text: Function,
 		permission_to_create: String,
+		permission_to_update: String,
+		permission_to_delete: String,
 	},
 	data() {
 		return {

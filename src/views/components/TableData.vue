@@ -26,9 +26,13 @@
 					</slot>
 				</template>
 
+				<template #conceptor="{item}">
+					<td>{{item.creator_name}}</td>
+				</template>
+
 				<template #status="{item}">
 					<td>
-						<CBadge :color="item.status.color">{{item.status.short_status}}</CBadge>
+						<CBadge :color="item.status_color">{{item.status}}</CBadge>
 					</td>
 				</template>
 				
@@ -42,7 +46,6 @@
 								color="success"
 								@click="editData(item.id)"
 							>
-							<!-- v-if="[100, 101].includes(item.status.kode_status)" -->
 								Edit
 							</CButton>
 							<CButton 
@@ -66,21 +69,15 @@
 						</td>
 					</slot>
 				</template>
-
-				<template #status-filter>
-					<CSelect
-						class="mb-0"
-						:options="mutable_status_options"
-						:value.sync="filtered_status"
-					/>
-				</template>
-				
 			</CDataTable>
 		</CCardBody>
 	</CCard>
 </template>
 
 <script>
+import Store from '../../store'
+import permission from '../../helpers/permission'
+
 export default {
 	name: 'Table',
 	props: {
@@ -105,6 +102,8 @@ export default {
 		editData: Function,
 		deleteData: Function,
 		showData: Function,
+		permission_to_update: String,
+		permission_to_delete: String,
 	},
 	computed: {
 		filteredItems() {
@@ -128,6 +127,9 @@ export default {
 		constructFields() {
 			let field_keys = this.fields.map(function(field) {return field.key})
 			
+			if (!field_keys.includes('conceptor')) {
+				this.fields.push({ key: 'conceptor', label: 'Konseptor' })
+			}
 			if (!field_keys.includes('status')) {
 				this.fields.push({ key: 'status', label: 'Status' })
 			}
@@ -159,6 +161,7 @@ export default {
 		},
 		getButton(type, item) {
 			let btn = false
+			let user = Store.getters.userInfo
 
 			if (this.state == 'edit') {
 				if ((type == 'edit') || (type == 'delete')) {
@@ -167,15 +170,33 @@ export default {
 					btn = false
 				}
 			} else if (this.state == 'list') {
-				if ((type == 'edit') || (type == 'delete')) {
-					btn = [100].includes(item.status.kode_status)
+				let editable = ['draft', 'booking-nomor', 'rollback'].includes(item.status_dokumen)
+				let deleteable = ['draft'].includes(item.status_dokumen)
+				let match_user = user.nip == item.creator_id
+
+				if (type == 'edit') {
+					if (editable) {
+						let permited = permission.checkPermission(this.permission_to_update)
+						if (permited && match_user) {
+							btn = true
+						}
+					}
+				} else if (type == 'delete') {
+					if (deleteable) {
+						let permited = permission.checkPermission(this.permission_to_delete)
+						if (permited && match_user) {
+							btn = true
+						}
+					}
 				} else if (type == 'show') {
-					btn = [101, 102, 103, 131, 132, 133, 134, 135, 200, 201, 202, 203, 231, 232, 233, 234, 235].includes(item.status.kode_status)
-				} else {
-					btn = false
+					if (editable) {
+						if (!match_user) {
+							btn = true
+						}
+					} else {
+						btn = true
+					}
 				}
-			} else {
-				btn = false
 			}
 
 			return btn

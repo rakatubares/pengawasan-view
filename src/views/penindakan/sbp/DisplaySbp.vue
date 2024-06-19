@@ -92,102 +92,105 @@
 						{{ disp_catatan }}
 					</CCol>
 				</CRow>
-				<MyDisplayEntitas
-					title="Pemilik/Saksi"
-					:data.sync="data_sbp.penindakan.saksi"
-				/>
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>Saksi</b></h5>
+					</CCol>
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(document.penindakan.saksi.id)"
+						>{{ disp_saksi }}</p>
+					</CCol>
+				</CRow>
 				<MyDisplayPegawai
 					title="Pejabat 1"
-					:data.sync="data_sbp.penindakan.petugas1"
+					:data.sync="document.penindakan.petugas.petugas1"
 				/>
 				<MyDisplayPegawai
 					title="Pejabat 2"
-					:data.sync="data_sbp.penindakan.petugas2"
+					:data.sync="document.penindakan.petugas.petugas2"
 				/>
 				<MyDisplayPejabat
 					v-if="doc_type == 'sbp'"
 					title="Atasan"
-					:data.sync="data_sbp.lptp.atasan"
+					:data.sync="document.lptp.petugas.atasan"
 				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_saksi"
+			:show.sync="show_modal_saksi"
+		/>
 	</div>
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	uraian_penindakan: null,
-	alasan_penindakan: null,
-	jenis_pelanggaran: null,
-	wkt_mulai_penindakan: null,
-	wkt_selesai_penindakan: null,
-	hal_terjadi: null,
-	penindakan: {
-		tanggal_penindakan: null,
-		lokasi_penindakan: null,
-		sprint: {
-			nomor_sprint: null,
-			tanggal_sprint: null
-		}
-	},
-	lptp: {
-		no_dok_lengkap: null,
-		catatan: null,
-	}
-}
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 export default {
 	name: 'DisplaySbp',
 	components: {
-		MyDisplayEntitas,
 		MyDisplayPegawai,
 		MyDisplayPejabat,
+		MyModalEntitasOrang,
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number
+		document: Object,
 	},
 	data() {
 		return {
-			data_sbp: JSON.parse(JSON.stringify(default_data))
+			show_modal_saksi: false,
 		}
 	},
 	computed: {
-		disp_no_sbp() { return this.data_sbp.no_dok_lengkap || '-' },
-		disp_tgl_sbp() { return this.data_sbp.penindakan.tanggal_penindakan || '-' },
-		disp_sprint() { return ((this.data_sbp.penindakan.sprint.nomor_sprint || '') + ' tanggal ' + (this.data_sbp.penindakan.sprint.tanggal_sprint || '')) },
-		disp_lptp() { return this.data_sbp.lptp.no_dok_lengkap || '-' },
+		disp_no_sbp() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_sbp() { return this.document.tanggal_dokumen || '-' },
+		disp_sprint() { 
+			let txt = this.document.penindakan.sprint
+				? this.document.penindakan.sprint.nomor_sprint
+					? this.document.penindakan.sprint.tanggal_sprint
+						? `${this.document.penindakan.sprint.nomor_sprint} tanggal ${this.document.penindakan.sprint.tanggal_sprint}`
+						: this.document.penindakan.sprint.nomor_sprint
+					: this.document.penindakan.sprint.tanggal_sprint
+						? `tanggal ${this.document.penindakan.sprint.tanggal_sprint}`
+						: '-'
+				: '-'
+			return txt
+		},
+		disp_lptp() { return this.document.lptp.no_dok_lengkap || '-' },
 		disp_lokasi() {
-			var grup_lokasi = this.data_sbp.penindakan.grup_lokasi ? `(${this.data_sbp.penindakan.grup_lokasi.lokasi}) ` : ''
-			var lokasi = this.data_sbp.penindakan.lokasi_penindakan ? this.data_sbp.penindakan.lokasi_penindakan : '-'
+			var grup_lokasi = this.document.penindakan.grup_lokasi ? `(${this.document.penindakan.grup_lokasi.lokasi}) ` : ''
+			var lokasi = this.document.penindakan.lokasi_penindakan ? this.document.penindakan.lokasi_penindakan : '-'
 			return grup_lokasi+lokasi
 		},
-		disp_uraian() { return this.data_sbp.uraian_penindakan || '-' },
-		disp_alasan() { return this.data_sbp.alasan_penindakan || '-' },
-		disp_pelanggaran() { return this.data_sbp.jenis_pelanggaran || '-' },
-		disp_waktu_mulai() { return this.data_sbp.wkt_mulai_penindakan || '-' },
-		disp_waktu_selesai() { return this.data_sbp.wkt_selesai_penindakan || '-' },
-		disp_hal_terjadi() { return this.data_sbp.hal_terjadi || '-' },
-		disp_catatan() { return this.data_sbp.lptp.catatan || '-' }
-	},
-	methods: {
-		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_sbp = response.data.data
+		disp_uraian() { return this.document.penindakan.uraian_penindakan || '-' },
+		disp_alasan() { return this.document.penindakan.alasan_penindakan || '-' },
+		disp_pelanggaran() { return this.document.penindakan.jenis_pelanggaran || '-' },
+		disp_waktu_mulai() { return ((this.document.penindakan.tanggal_mulai_penindakan || '-') + ' ' + (this.document.penindakan.waktu_mulai_penindakan || '')) },
+		disp_waktu_selesai() { return ((this.document.penindakan.tanggal_selesai_penindakan || '-') + ' ' + (this.document.penindakan.waktu_selesai_penindakan || '')) },
+		disp_hal_terjadi() { return this.document.penindakan.hal_terjadi || '-' },
+		disp_catatan() { return this.document.lptp.catatan || '-' },
+		disp_saksi() { 
+			let txt = this.document.penindakan.saksi
+				? this.document.penindakan.saksi.nama : '-'
+			return txt
 		}
 	},
-	async mounted() {
-		await this.getData()
-	}
 }
 </script>
 
 <style>
-
+.a {
+	text-decoration: none;
+	background-color: transparent;
+	color: #321fdb;
+}
+.a:hover {
+	cursor: pointer;
+}
 </style>

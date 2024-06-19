@@ -4,7 +4,7 @@
 			<label>{{ label }}</label>
 			<v-autocomplete
 				class="no-message"
-				v-model="value"
+				v-model="kode"
 				no-filter
 				outlined
 				dense
@@ -12,6 +12,7 @@
 				:search-input.sync="search"
 				item-text="nama_negara"
 				item-value="kode_2"
+				:disabled.sync="local_disabled"
 			>
 				<template v-slot:no-data>
 					<v-list-item>
@@ -22,8 +23,8 @@
 				</template>
 				<template v-slot:item="{ item }">
 					<v-list-item-content>
-						<v-list-item-title v-text="item.nama_negara"></v-list-item-title>
-						<v-list-item-subtitle v-text="`${item.kode_2} / ${item.kode_3}`"></v-list-item-subtitle>
+						<v-list-item-title>{{ item.nama_negara }}</v-list-item-title>
+						<v-list-item-subtitle>{{ `${item.kode_2} / ${item.kode_3}` }}</v-list-item-subtitle>
 					</v-list-item-content>
 				</template>
 			</v-autocomplete>
@@ -37,17 +38,23 @@ import api from '../../router/api2.js'
 export default {
 	name: 'SelectNegara',
 	props: {
+		state: null,
 		label: {
 			type: String,
 			default: 'Negara'
 		},
-		kode: String,
+		value: String,
+		disabled: {
+			type: Boolean,
+			default: false
+		},
 	},
 	data() {
 		return {
 			items: [],
 			search: null,
-			value: null,
+			kode: null,
+			local_disabled: this.disabled,
 		}
 	},
 	watch: {
@@ -56,9 +63,20 @@ export default {
 			let response = await api.searchNegara(data)
 			this.items = response.data.data
 		},
-		value(val) {
-			this.$emit('update:kode', val)
-		}
+		kode(val) {
+			this.$emit('update:value', val)
+		},
+		state(val) {
+			if (val == 'show') {
+				this.local_disabled = true
+			}
+		},
+		disabled(val) {
+			this.local_disabled = val
+		},
+		local_disabled(val) {
+			this.$emit('update:disabled', val)
+		},
 	},
 	methods: {
 		async getData(code) {
@@ -66,11 +84,16 @@ export default {
 				let response = await api.getNegaraByCode(code)
 				let negara = response.data.data
 				this.items = [negara]
-				this.value = this.items[0]['kode_2']	
+				this.kode = this.items[0]['kode_2']	
 			} else {
 				this.items = []
-				this.value = null
+				this.kode = null
 			}
+		}
+	},
+	mounted() {
+		if (this.value != null) {
+			this.getData(this.value)
 		}
 	}
 }

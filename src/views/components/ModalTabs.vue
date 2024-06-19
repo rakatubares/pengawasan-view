@@ -1,15 +1,31 @@
 <template>
 	<CModal
-		:title="title"
 		:size="size"
 		:show.sync="show"
 		@update:show="show == false && closeModal()"
 	>
-		<div class="action-buttons">
-			<slot name="action-buttons"></slot>
-		</div>
+		<template #header>
+			<h5 class="modal-title">{{ title }}</h5>
+			<div class="action-buttons">
+				<CButton 
+					v-if="show_rollback"
+					color="success"
+					@click="rollbackDocument"
+				>
+					Rollback
+				</CButton>
+
+				<button 
+					type="button" 
+					aria-label="Close" 
+					class="close" 
+					@click="closeModal"
+				>×</button>
+			</div>
+		</template>
 
 		<CTabs 
+			v-if="show_tabs"
 			:activeTab="current_tab"
 			@update:activeTab="changeTab($event)"
 		>
@@ -47,10 +63,22 @@
 				<CIcon name="cil-chevron-circle-right-alt"/>
 			</CButton>
 		</template>
+
+		<!-- Modal konfirmasi rollback -->
+		<MyModalRollback
+			v-if="show_rollback_modal"
+			:doc_type="doc_type"
+			:document.sync="document"
+			@close-modal="closeModalRollback"
+			@rollback-data="rolledBack"
+		/>
 	</CModal>
 </template>
 
 <script>
+import MyModalRollback from './ModalRollback.vue'
+import permission from '../../helpers/permission'
+
 const navs_default = {
 	prev: {
 		text: "",
@@ -63,8 +91,14 @@ const navs_default = {
 }
 export default {
 	name: 'ModalTabs',
+	components: {
+		MyModalRollback,
+	},
 	props: {
 		title: String,
+		state: String,
+		doc_type: String,
+		document: Object,
 		size: {
 			type: String,
 			default: "xl"
@@ -83,13 +117,29 @@ export default {
 					}
 				]
 			}
-		}
+		},
+		permission_to_rollback: String,
 	},
 	data() {
 		return {
-			console,
 			show: false,
 			navs: JSON.parse(JSON.stringify(navs_default)),
+			show_tabs: true,
+			show_rollback_modal: false,
+		}
+	},
+	computed: {
+		show_rollback() {
+			let show = false
+			if (!['insert', 'edit'].includes(this.state)) {
+				let rollbackable = !['draft', 'booking-nomor', 'rollback'].includes(this.document['kode_status'])
+				let permited = permission.checkPermission(this.permission_to_rollback)
+				if (rollbackable && permited) {
+					show = true
+				}
+			}
+			
+			return show
 		}
 	},
 	methods: {
@@ -129,7 +179,23 @@ export default {
 		nextTab() {
 			this.$emit('update:current_tab', this.current_tab + 1)
 			this.getNavs(this.current_tab + 1)
-		}
+		},
+		resetTabs() {
+			this.show_tabs = false
+			this.$nextTick(() => {
+				this.show_tabs = true
+			})
+		},
+		rollbackDocument() {
+			this.show_rollback_modal = true
+		},
+		closeModalRollback() {
+			this.show_rollback_modal = false
+		},
+		rolledBack() {
+			this.closeModalRollback()
+			this.closeModal()
+		},
 	},
 	mounted() {
 		this.showModal()
@@ -144,7 +210,6 @@ div.action-buttons {
 }
 
 div.action-buttons button {
-	float: right;
 	margin: 0 5px;
 }
 </style>

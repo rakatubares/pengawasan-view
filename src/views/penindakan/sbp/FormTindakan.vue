@@ -61,19 +61,19 @@
 							<CSelect
 								label="Jenis Segel"
 								:options="['Kertas', 'Kunci', 'Timah', 'Lakban', 'Segel Elektronik', 'Lainnya']"
-								:value.sync="data_tindakan.data.data_segel.jenis"
+								:value.sync="data_tindakan.data.data_segel.jenis_segel"
 							/>	
 						</CCol>
 						<CCol class="col-12" md="2">
 							<CInput
 								label="Jumlah Segel"
-								:value.sync="data_tindakan.data.data_segel.jumlah"
+								:value.sync="data_tindakan.data.data_segel.jumlah_segel"
 							/>	
 						</CCol>
 						<CCol class="col-12" md="3">
 							<CInput
 								label="Satuan"
-								:value.sync="data_tindakan.data.data_segel.satuan"
+								:value.sync="data_tindakan.data.data_segel.satuan_segel"
 							/>	
 						</CCol>
 					</CRow>
@@ -81,7 +81,7 @@
 						<CCol class="col-12">
 							<CInput
 								label="Tempat Segel"
-								:value.sync="data_tindakan.data.data_segel.tempat"
+								:value.sync="data_tindakan.data.data_segel.tempat_segel"
 							/>	
 						</CCol>
 					</CRow>
@@ -291,10 +291,10 @@ const default_data = {
 		tegah: false,
 		segel: false,
 		data_segel: {
-			jenis: 'kertas',
-			jumlah: null,
-			satuan: null,
-			tempat: null
+			jenis_segel: 'kertas',
+			jumlah_segel: null,
+			satuan_segel: null,
+			tempat_segel: null
 		},
 		riksa_badan: false,
 		data_riksa_badan: {
@@ -393,20 +393,20 @@ export default {
 	},
 	methods: {
 		async getData() {
-			let docs = await api.getLinkedDoc(this.doc_type, this.doc_id)
-			this.renderData(docs)
+			let response = await api.getLinkedDoc(this.doc_type, this.doc_id)
+			let linked_docs = response.data
+			this.renderData(linked_docs)
 		},
 		async saveLinkedDoc() {
-			let docs = await api.storeLinkedDoc(this.doc_type, this.doc_id, this.data_tindakan.data)
-			this.renderData(docs)
+			let response = await api.storeLinkedDoc(this.doc_type, this.doc_id, this.data_tindakan.data)
+			let linked_docs = response.data
+			this.renderData(linked_docs)
 			this.alert('Data tindakan berhasil disimpan')
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
 		},
-		renderData(docs) {
-			let linked_docs = docs.data.data
-
+		renderData(linked_docs) {
 			if ('riksa' in linked_docs) {
 				this.data_tindakan.data.riksa = true
 			} else {
@@ -421,10 +421,10 @@ export default {
 
 			if ('segel' in linked_docs) {
 				this.data_tindakan.data.segel = true
-				this.data_tindakan.data.data_segel = JSON.parse(JSON.stringify(linked_docs.data_segel))
+				this.data_tindakan.data.data_segel = JSON.parse(JSON.stringify(linked_docs.segel))
 			} else {
 				this.data_tindakan.data.segel = false
-				this.data_tindakan.data.data_segel = JSON.parse(JSON.stringify(default_data.data.data_segel))
+				this.data_tindakan.data.data_segel = default_data.data.data_segel
 			}
 
 			if ('riksabadan' in linked_docs) {

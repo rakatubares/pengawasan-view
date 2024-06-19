@@ -26,16 +26,26 @@
 				></object>
 			</CCol>
 		</CRow>
-		<CRow
-			v-if="show_publish_button"
-		>
+		<CRow>
 			<CCol col="12">
 				<CButton
+					v-if="show_publish_button"
+					class="mx-1"
 					color="success"
 					shape="pill"
 					@click="publishDoc"
 				>
 					Terbitkan
+				</CButton>
+
+				<CButton
+					v-if="show_book_button"
+					class="mx-1"
+					color="primary"
+					shape="pill"
+					@click="bookNumber"
+				>
+					Booking nomor
 				</CButton>
 			</CCol>
 		</CRow>
@@ -58,6 +68,37 @@ import PdfLrp from './PdfLrp.js'
 import PdfSbp from './PdfSbp.js'
 import PdfSplit from './PdfSplit.js'
 import MyAlert from '../components/AlertSubmit.vue'
+import PdfBukaPengaman from './penindakan/PdfBukaPengaman'
+import PdfBukaSegel from './penindakan/PdfBukaSegel'
+import PdfLap from './penindakan/PdfLap'
+import PdfLapN from './penindakan/PdfLapN'
+import PdfLi from './penindakan/PdfLi'
+import PdfLkai from './intelijen/PdfLkai'
+import PdfLkaiN from './intelijen/PdfLkaiN'
+import PdfLp from './penindakan/PdfLp'
+import PdfLpN from './penindakan/PdfLpN'
+import PdfLphp from './penindakan/PdfLphp'
+import PdfLphpN from './penindakan/PdfLphpN'
+import PdfLppi from './intelijen/PdfLppi'
+import PdfLppiN from './intelijen/PdfLppiN'
+import PdfLpt from './penindakan/PdfLpt'
+import PdfLptp from './penindakan/PdfLptp'
+import PdfLptpN from './penindakan/PdfLptpN'
+import PdfNhi from './intelijen/PdfNhi'
+import PdfNhiN from './intelijen/PdfNhiN'
+import PdfNi from './intelijen/PdfNi'
+import PdfNiN from './intelijen/PdfNiN'
+import PdfRiksa from './penindakan/PdfRiksa'
+import PdfRiksaBadan from './penindakan/PdfRiksaBadan'
+import PdfSbp from './penindakan/PdfSbp'
+import PdfSbpN from './penindakan/PdfSbpN'
+import PdfSegel from './penindakan/PdfSegel'
+import PdfPengaman from './penindakan/PdfPengaman'
+import PdfTegah from './penindakan/PdfTegah'
+import PdfTolak1 from './penindakan/PdfTolak1'
+import PdfTolak2 from './penindakan/PdfTolak2'
+import permission from '../../helpers/permission'
+import store from '../../store'
 
 export default {
 	name: "DisplayPdf",
@@ -67,7 +108,8 @@ export default {
 	props: {
 		state: String,
 		doc_type: String,
-		doc_id: Number,
+		document: Object,
+		chain_id: Number,
 		show_button: {
 			type: Boolean,
 			default: true
@@ -88,97 +130,173 @@ export default {
 		}
 	},
 	computed: {
+		doc_id() { return this.document ? this.document.id : null },
 		show_publish_button() {
 			let show = false
-			if (this.is_publishable) {
-				if (this.status_pdf == 100) {
-					show = true
-				}	
+			let user = store.getters.userInfo
+			let match_user = user.nip == this.document['created_by']['nip']
+			let permited = permission.checkPermission('create-'+this.doc_type)
+			if (
+				this.is_publishable && match_user && permited &&
+				['draft', 'booking-nomor', 'rollback'].includes(this.status_pdf)
+			) { show = true }
+			return show
+		},
+		show_book_button() { 
+			let show = false
+			let user = store.getters.userInfo
+			let permited = permission.checkPermission('create-'+this.doc_type)
+
+			if (
+				(this.is_publishable) &&
+				(['draft'].includes(this.status_pdf)) &&
+				(user.nip == this.document['created_by']['nip']) &&
+				(permited)
+			) {
+				show = true
 			}
 
 			return show
-		}
+		},
 	},
 	methods: {
 		async listPdf() {
-			let response = await api.getRelatedDocuments(this.doc_type, this.doc_id)
+			let response = await api.getDocumentsChain(this.doc_type, this.doc_id)
 			this.list_pdf = response.data
+		},
+		async getBarang(doc_type, doc_id) {
+			return await api.getBarang(doc_type, doc_id)
 		},
 		async getPdf(doc_type, doc_id) {
 			let pdf = null
-			let response = await api.getPdfDataById(doc_type, doc_id)
-			let pdfData = response.data.data
+			let response = await api.getDocumentById(doc_type, doc_id)
+			let data_pdf = response.data
 
 			switch (doc_type) {
-				case 'lhp':
-					pdf = new PdfLhp(pdfData)
+				// Intelijen
+				case 'lkai':
+					pdf = new PdfLkai(data_pdf)
 					break;
 
-				case 'lp':
-					pdf = new PdfLp(pdfData)
+				case 'lkain':
+					pdf = new PdfLkaiN(data_pdf)
 					break;
 
-				case 'lpn':
-					pdf = new PdfLpN(pdfData)
+				case 'lppi':
+					pdf = new PdfLppi(data_pdf)
 					break;
 
-				case 'lpf':
-					pdf = new PdfLpf(pdfData)
+				case 'lppin':
+					pdf = new PdfLppiN(data_pdf)
 					break;
 
-				case 'lphp':
-					pdf = new PdfLphp(pdfData)
+				case 'nhi':
+					let response = await api.getBarang(doc_type, doc_id)
+					var data_barang = response.data
+					pdf = new PdfNhi(data_pdf, data_barang)
 					break;
 
-				case 'lphpn':
-					pdf = new PdfLphp(
-						pdfData, 
-						this.active_pdf, 
-						'lptpn', 
-						'sbpn', 
-						'LEMBAR PENENTUAN HASIL PENINDAKAN NPP', 
-						{start: 63, end: 147}
-					)
+				case 'nhin':
+					var data_barang = null
+					if (data_pdf.detail.type == 'nhin-exim') {
+						let response = await api.getBarang(doc_type, doc_id)
+						data_barang = response.data
+					}
+					pdf = new PdfNhiN(data_pdf, data_barang)
 					break;
 
-				case 'lpp':
-					pdf = new PdfLpp(pdfData)
+				case 'ni':
+					pdf = new PdfNi(data_pdf)
+					break;
+				
+				case 'nin':
+					pdf = new PdfNiN(data_pdf)
 					break;
 
-				case 'lptp':
-					pdf = new PdfLptp(pdfData)
+				// Penindakan
+				case 'li':
+					pdf = new PdfLi(data_pdf)
 					break;
 
-				case 'lptpn':
-					pdf = new PdfLptp(
-						pdfData, 
-						this.active_pdf, 
-						'sbpn', 
-						'LAPORAN PELAKSANAAN TUGAS PENINDAKAN NPP', 
-						{start: 58, end: 152}
-					)
+				case 'lap':
+					pdf = new PdfLap(data_pdf)
 					break;
 
-				case 'lrp':
-					pdf = new PdfLrp(pdfData)
+				case 'lapn':
+					pdf = new PdfLapN(data_pdf)
 					break;
 
-				case'sbp':
-					pdf = new PdfSbp(pdfData)
+				case 'riksa_badan':
+					pdf = new PdfRiksaBadan(data_pdf)
+					break;
+
+				case 'riksa':
+					pdf = new PdfRiksa(data_pdf)
+					break;
+
+				case 'tegah':
+					pdf = new PdfTegah(data_pdf)
+					break;
+
+				case 'segel':
+					pdf = new PdfSegel(data_pdf)
+					break;
+
+				case 'buka_segel':
+					pdf = new PdfBukaSegel(data_pdf)
+					break;
+
+				case 'sbp':
+					pdf = new PdfSbp(data_pdf)
 					break;
 
 				case 'sbpn':
-					pdf = new PdfSbp(
-						pdfData, 
-						this.active_pdf, 
-						'SURAT BUKTI PENINDAKAN NPP', 
-						{start: 76, end: 134}
-					)
+					pdf = new PdfSbpN(data_pdf)
 					break;
 
-				case 'split':
-					pdf = new PdfSplit(pdfData)
+				case 'tolak1':
+					pdf = new PdfTolak1(data_pdf)
 					break;
+
+				case 'tolak2':
+					pdf = new PdfTolak2(data_pdf)
+					break;
+
+				case 'lpt':
+					pdf = new PdfLpt(data_pdf)
+					break;
+
+				case 'lptp':
+					pdf = new PdfLptp(data_pdf)
+					break;
+
+				case 'lptpn':
+					pdf = new PdfLptpN(data_pdf)
+					break;
+
+				case 'lphp':
+					pdf = new PdfLphp(data_pdf)
+					break;
+
+				case 'lphpn':
+					pdf = new PdfLphpN(data_pdf)
+					break;
+
+				case 'lp':
+					pdf = new PdfLp(data_pdf)
+					break;
+
+				case 'lpn':
+					pdf = new PdfLpN(data_pdf)
+					break;
+
+				case 'pengaman':
+					pdf = new PdfPengaman(data_pdf)
+					break;
+
+				case 'buka_pengaman':
+					pdf = new PdfBukaPengaman(data_pdf)
+					break
 			
 				default:
 					break;
@@ -186,9 +304,9 @@ export default {
 
 			this.src_pdf = pdf.generatePdf()
 			this.show_pdf = true
-			this.status_pdf = pdfData.kode_status
+			this.status_pdf = data_pdf.kode_status
 			if (doc_type == this.doc_type) {
-				if (this.status_pdf == 100) {
+				if (['draft', 'booking-nomor', 'rollback'].includes(this.status_pdf)) {
 					this.is_publishable = true
 				} else {
 					this.is_publishable = false
@@ -206,7 +324,12 @@ export default {
 			await this.getPdf(this.doc_type, this.doc_id)
 			this.active_pdf = this.doc_type
 			this.$emit('update:state', 'show')
-		}
+		},
+		async bookNumber() {
+			await api.bookDoc(this.doc_type, this.doc_id)
+			await this.getPdf(this.doc_type, this.doc_id)
+			this.active_pdf = this.doc_type
+		},
 	},
 	mounted() {
 		if (this.show_button == true) {

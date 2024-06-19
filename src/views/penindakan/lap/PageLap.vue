@@ -1,0 +1,121 @@
+<template>
+	<div class="wrapper" data-app>
+		<MyPageDoc 
+			ref="page_doc"
+			:doc_type="doc_type"
+			:table_title="table_title"
+			:table_fields="table_fields"
+			:custom_fields="custom_fields"
+			:compute_list="computeList"
+			:modal_data_props.sync="modal_data_props"
+			:construct_delete_text="constructDeleteText"
+			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
+		>
+			<template #modal-data>
+				<MyModalLap 
+					v-if="modal_data_props.show"
+					:state.sync="modal_data_props.state"
+					:doc_type="doc_type"
+					:doc_name="doc_name"
+					:id.sync="modal_data_props.doc_id"
+					:permission_to_rollback="permission_to_rollback"
+					:source_options="source_options"
+					@close-modal="closeModal"
+				/>
+			</template>
+		</MyPageDoc>
+	</div>
+</template>
+
+<script>
+import MyModalLap from './ModalLap.vue'
+import MyPageDoc from '../../components/PageDoc.vue'
+
+export default {
+	name: 'PageLap',
+	components: {
+		MyModalLap,
+		MyPageDoc,
+	},
+	props: {
+		doc_type: {
+			type: String,
+			default: 'lap'
+		},
+		doc_name: {
+			type: String,
+			default: 'LAP'
+		},
+		permission_to_create: {
+			type: String,
+			default: 'create-lap'
+		},
+		permission_to_update: {
+			type: String,
+			default: 'create-lap'
+		},
+		permission_to_delete: {
+			type: String,
+			default: 'delete-lap'
+		},
+		permission_to_rollback: {
+			type: String,
+			default: 'rollback-lap'
+		},
+		source_options: {
+			type: Object,
+			default() {
+				return {
+					'nhi': {'label': 'NHI', 'state': 'search'}, 
+					'li': {'label': 'LI-1', 'state': 'search'},
+					'lainnya': {'label': 'Lainnya', 'state': 'manual'},
+				}
+			}
+		},
+	},
+	data() {
+		return {
+			table_title: `Daftar ${this.doc_name}`,
+			table_fields: [
+				{ key: 'no_dok_lengkap', label: `No ${this.doc_name}` },
+				{ key: 'tanggal_dokumen', label: `Tgl ${this.doc_name}` },
+				{ key: 'dokumen_sumber', label: 'Sumber Informasi' },
+			],
+			custom_fields: ['dokumen_sumber'],
+			modal_data_props: {
+				show: false,
+				state: null,
+				doc_id: null
+			},
+		}
+	},
+	methods: {
+		computeList(list) {
+			return list.map(item => {
+				return {
+					...item,
+					dokumen_sumber: item.nomor_sumber + '</br>' + item.tanggal_sumber,
+				}
+			})
+		},
+		closeModal() {
+			this.$refs.page_doc.getDataTable()
+			this.modal_data_props.state = null
+			this.modal_data_props.doc_id = null
+			this.modal_data_props.show = false
+		},
+		constructDeleteText(item) {
+			let text = `Apakah Anda yakin untuk menghapus data ${this.doc_name} atas ` 
+				+ item.nomor_sumber.bold() 
+				+ ' tanggal ' + item.tanggal_sumber.bold()  
+				+ "?"
+			return text
+		}
+	}
+}
+</script>
+
+<style>
+</style>
