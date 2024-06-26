@@ -1,14 +1,14 @@
 <template>
 	<div class="wrapper my-form">
 		<!-- Form input BHP -->
-		<CRow class="mt-2">
+		<CRow class="mx-2 mt-2">
 			<CCol col="12">
 				<CForm>
 					<CRow>
 						<CCol md="4">
 							<CInput
 								label="Jumlah kemasan"
-								:value.sync="data_objek.jumlah_kemasan"
+								:value.sync="bhp.jumlah_kemasan"
 								:is-valid="validatorInteger"
 								invalid-feedback="Jumlah kemasan wajib diisi"
 							/>
@@ -16,7 +16,7 @@
 						<CCol md="2">
 							<MySelectKemasan
 								ref="selectKemasan"
-								:id.sync="data_objek.kemasan.id"
+								:id.sync="bhp.kemasan.id"
 							/>
 						</CCol>
 					</CRow>
@@ -25,21 +25,21 @@
 							<CInput
 								label="Jenis dokumen"
 								description="Jenis dokumen yang menyertai barang"
-								:value.sync="data_objek.dokumen.jns_dok"
+								:value.sync="bhp.jenis_dokumen"
 							/>
 						</CCol>
 						<CCol md="4">
 							<CInput
 								label="Nomor dokumen"
 								description="Nomor dokumen yang menyertai barang"
-								:value.sync="data_objek.dokumen.no_dok"
+								:value.sync="bhp.nomor_dokumen"
 							/>
 						</CCol>
 						<CCol md="2">
 							<div class="form-group">
 								<label class="w-100">Tanggal dokumen</label>
 								<date-picker 
-									v-model="data_objek.dokumen.tgl_dok" 
+									v-model="bhp.tanggal_dokumen" 
 									format="DD-MM-YYYY" 
 									value-type="format"
 									type="date"
@@ -48,11 +48,44 @@
 						</CCol>
 					</CRow>
 					<CRow>
-						<CCol md="12">
-							<MySelectEntitas
-								ref="selectPemilik"
-								label="Nama pemilik/importir/eksportir/kuasa"
-								:id.sync="data_objek.pemilik.id"
+						<CCol md="8" sm="12">
+							<CInput
+								label="Nama sarana pengangkut"
+								:value.sync="bhp.nama_sarkut"
+							/>
+						</CCol>
+						<CCol md="4" sm="12">
+							<CInput
+								label="Jenis sarana pengangkut"
+								:value.sync="bhp.jenis_sarkut"
+							/>
+						</CCol>
+					</CRow>
+					<CRow>
+						<CCol md="6" sm="12">
+							<CInput
+								label="Nomor voyage/penerbangan/trayek"
+								:value.sync="bhp.nomor_sarkut"
+							/>
+						</CCol>
+						<CCol md="6" sm="12">
+							<CInput
+								label="Nomor registrasi/polisi"
+								:value.sync="bhp.registrasi_sarkut"
+							/>
+						</CCol>
+					</CRow>
+					<CRow>
+						<CCol md="6" sm="12">
+							<CInput
+								label="No. kontainer"
+								:value.sync="bhp.nomor_kontainer"
+							/>
+						</CCol>
+						<CCol md="6" sm="12">
+							<CInput
+								label="Ukuran kontainer"
+								:value.sync="bhp.ukuran_kontainer"
 							/>
 						</CCol>
 					</CRow>
@@ -73,11 +106,8 @@
 		</CRow>
 
 		<MyTableItemBarang
-			v-if="state == 'edit'"
-			:doc_type="doc_type"
-			:doc_id="doc_id"
-			:data_objek.sync="data_objek"
-			:bhp="true"
+			doc_type="penyidikan-bhp"
+			:doc_id="bhp.id"
 			state="insert"
 			@submit-data="$emit('submit-data')"
 		/>
@@ -94,19 +124,23 @@ import 'vue2-datepicker/index.css'
 import api from '../../../router/api2.js'
 import validators from '../../../helpers/validator.js'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectKemasan from '../../components/SelectKemasan.vue'
-import MyTableItemBarang from './TableItemBarang.vue'
+import MyTableItemBarang from '../../components/barang/TableItemBarang.vue'
 
 const data_default = {
 	jumlah_kemasan: null,
 	kemasan: {id: null},
-	dokumen: {
-		jns_dok: null,
-		no_dok: null,
-		tgl_dok: null
-	},
-	pemilik: {id: null},
+	nomor_kemasan: null,
+	jenis_dokumen: null,
+	nomor_dokumen: null,
+	tanggal_dokumen: null,
+	nama_sarkut: null,
+	jenis_sarkut: null,
+	nomor_sarkut: null,
+	registrasi_sarkut: null,
+	nomor_kontainer: null,
+	ukuran_kontainer: null,
 }
 
 export default {
@@ -114,79 +148,32 @@ export default {
 	components: {
 		DatePicker,
 		MyAlert,
-		MySelectEntitas,
+		MySelectEntitasOrang,
 		MySelectKemasan,
 		MyTableItemBarang,
 	},
 	props: {
-		doc_type: String,
-		doc_id: Number,
-		data: Object,
+		bhp: {
+			type: Object,
+			default() { return JSON.parse(JSON.stringify(data_default)) },
+		}
 	},
 	data() {
 		return {
 			state: 'insert',
-			data_objek: JSON.parse(JSON.stringify(data_default))
-		}
-	},
-	watch: {
-		data: {
-			handler: function(val) {
-				this.parseData(val.data)
-			}
 		}
 	},
 	methods: {
 		async saveData() {
-			if (this.state == 'insert') {
-				try {
-					let response = await api.insertBhp(this.doc_type, this.doc_id, this.data_objek)
-					this.state = 'edit'
-					this.$emit('update:data', response.data)
-					this.alert('Data barang berhasil disimpan')
-				} catch (error) {
-					console.log(error)
-				}
-			} else {
-				let response = await api.updateBhp(this.doc_type, this.doc_id, this.data_objek.id, this.data_objek)
-				this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
-				this.$emit('update:data', response.data)
-				this.alert('Data barang berhasil diubah')
-			}
-		},
-		parseData(objek) {
-			if (objek.kemasan == null) {
-				objek.kemasan = {id: null}
-			}
-			if (objek.dokumen == null) {
-				objek.dokumen = {
-					jns_dok: null,
-					no_dok: null,
-					tgl_dok: null
-				}
-			}
-			if (objek.pemilik == null) {
-				objek.pemilik = {id: null}
-			}
-			
-			this.data_objek = objek
-			this.$refs.selectPemilik.getEntitas(this.data_objek.pemilik.id, true)
-			this.$refs.selectKemasan.getData(this.data_objek.kemasan.id)
+			let response = await api.updateBhp(this.bhp, this.bhp.id)
+			this.$emit('update:bhp', response.data)
+			this.alert('Data BHP berhasil diubah')
 		},
 		alert(text, color, time) {
 			this.$refs.alert.show_alert(text, color, time)
 		},
 		validatorRequired(val) { return validators.required(val) },
 		validatorInteger(val) { return validators.integer(val) },
-	},
-	async mounted() {
-		if (this.data != null) {
-			this.parseData(this.data)
-			this.state = 'edit'
-		} else {
-			this.data_objek = JSON.parse(JSON.stringify(data_default))
-			this.state = 'insert'
-		}
 	},
 }
 </script>

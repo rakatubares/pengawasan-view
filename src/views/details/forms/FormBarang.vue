@@ -166,7 +166,6 @@ export default {
 				labelOn: '\u2713',
 				labelOff: '\u2715'
 			},
-			tanggal_dokumen: null,
 		}
 	},
 	computed: {

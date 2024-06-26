@@ -100,103 +100,101 @@
 						{{ disp_catatan }}
 					</CCol>
 				</CRow>
-				<MyDisplayEntitas
-					title="Pelaku"
-					:data.sync="data_lpp.penyidikan.pelaku"
-				/>
-				<div
-					v-if="data_lpp.penyidikan.sarkut != null"
-				>
-					<MyDisplaySarkut 
-						:data_objek="{data: data_lpp.penyidikan.sarkut}"
-					/>
-				</div>
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>Pelaku</b></h5>
+					</CCol>
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(document.penyidikan.pelaku.id)"
+						>{{ disp_pelaku }}</p>
+					</CCol>
+				</CRow>
 				<MyDisplayPegawai
-					title="Petugas"
-					:data.sync="data_lpp.petugas"
+					title="Penyusun"
+					:data.sync="document.petugas.penyusun"
 				/>
 				<MyDisplayPejabat
 					title="Atasan 1"
-					:data.sync="data_lpp.atasan1"
+					:data.sync="document.petugas.atasan1"
 				/>
 				<MyDisplayPejabat
 					title="Atasan 2"
-					:data.sync="data_lpp.atasan2"
+					:data.sync="document.petugas.atasan2"
 				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_pelaku"
+			:show.sync="show_modal_pelaku"
+		/>
 	</div>
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
-import MyDisplaySarkut from '../../details/displays/DisplaySarkut.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	tanggal_dokumen: null,
-	dokumen: {
-		lp: {
-			no_dok_lengkap: null,
-			tanggal_dokumen: null,
-		},
-		sbp: {
-			no_dok_lengkap: null,
-			tanggal_dokumen: null,
-		},
-	},
-	penyidikan: {
-		jenis_penindakan: null,
-		modus: null,
-		tempat_pelanggaran: null,
-		waktu_pelanggaran: null,
-		pelaku: { jenis_kelamin: { uraian: null }},
-	},
-}
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 export default {
 	name: 'DisplayLpp',
 	components: {
-		MyDisplayEntitas,
 		MyDisplayPegawai,
 		MyDisplayPejabat,
-		MyDisplaySarkut,
+		MyModalEntitasOrang,
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number
+		document: Object,
 	},
 	data() {
 		return {
-			data_lpp: JSON.parse(JSON.stringify(default_data))
+			show_modal_pelaku: false,
 		}
 	},
 	computed: {
-		disp_no_lpp() { return this.data_lpp.no_dok_lengkap || '-' },
-		disp_tgl_lpp() { return this.data_lpp.tanggal_dokumen || '-' },
-		disp_lp() { return `${this.data_lpp.dokumen.lp.no_dok_lengkap} tanggal ${this.data_lpp.dokumen.lp.tanggal_dokumen}`},
-		disp_sbp() { return `${this.data_lpp.dokumen.sbp.no_dok_lengkap} tanggal ${this.data_lpp.dokumen.sbp.tanggal_dokumen}`},
-		disp_asal_perkara() { return this.data_lpp.asal_perkara || '-' },
-		disp_jenis_penindakan() { return this.data_lpp.jenis_penindakan || '-' },
-		disp_jenis_perkara() { return this.data_lpp.jenis_perkara || '-' },
-		disp_status_pelanggaran() { return this.data_lpp.penyidikan.status_penangkapan || '-' },
-		disp_jenis_pelanggaran() { return this.data_lpp.penyidikan.jenis_pelanggaran || '-' },
-		disp_modus_operandi() { return this.data_lpp.penyidikan.modus || '-' },
-		disp_tempat() { return this.data_lpp.penyidikan.tempat_pelanggaran || '-' },
-		disp_tanggal_waktu() { return this.data_lpp.penyidikan.waktu_pelanggaran || '-' },
-		disp_catatan() { return this.data_lpp.catatan || '-' },
-	},
-	methods: {
-		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_lpp = response.data.data
+		disp_no_lpp() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_lpp() { return this.document.tanggal_dokumen || '-' },
+		disp_lp() { return `${this.document.lp.no_dok_lengkap} tanggal ${this.document.lp.tanggal_dokumen}`},
+		disp_sbp() { return `${this.document.sbp.no_dok_lengkap} tanggal ${this.document.sbp.tanggal_dokumen}`},
+		disp_asal_perkara() { return this.document.asal_perkara || '-' },
+		disp_jenis_penindakan() { return this.document.jenis_penindakan || '-' },
+		disp_jenis_perkara() { return this.document.jenis_perkara.kategori || '-' },
+		disp_status_pelanggaran() { 
+			let txt = this.document.penyidikan.tertangkap_tangan
+				? 'Tertangkap tangan'
+				: 'Tidak tertangkap tangan'
+			return txt
+		},
+		disp_jenis_pelanggaran() { return this.document.penyidikan.jenis_pelanggaran || '-' },
+		disp_modus_operandi() { return this.document.penyidikan.modus || '-' },
+		disp_tempat() { return this.document.penyidikan.tempat_pelanggaran || '-' },
+		disp_tanggal_waktu() { 
+			let tanggal = this.document.penyidikan.tanggal_pelanggaran
+			let waktu = this.document.penyidikan.waktu_pelanggaran
+
+			let txt = tanggal 
+				? waktu 
+					? `${tanggal} ${waktu}`
+					: tanggal
+				: waktu 
+					? waktu
+					: '-'
+			return txt
+		},
+		disp_catatan() { return this.document.catatan || '-' },
+		disp_pelaku() { 
+			let txt = this.document.penyidikan.pelaku
+				? this.document.penyidikan.pelaku.nama : '-'
+			return txt
 		}
 	},
-	async mounted() {
-		await this.getData()
+	methods: {
+		showEntitas(pelaku_id) {
+			this.$refs.modal_pelaku.showModal('show', pelaku_id)
+		},
 	},
 }
 </script>

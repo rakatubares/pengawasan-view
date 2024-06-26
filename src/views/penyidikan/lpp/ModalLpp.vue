@@ -1,131 +1,183 @@
 <template>
 	<div class="wrapper">
-		<MyModalDoc
-			:title="`Data ${tipe_surat}`"
-			:state.sync="modal_state"
-			:tabs="tabs"
-			:tabs_visibility="tabs_visibility"
+		<MyModalTabs
+			ref="modal_tabs"
+			:title="`Data ${this.doc_name}`"
+			:state.sync="state"
+			:doc_type.sync="doc_type"
+			:document.sync="document"
+			:tabs_list.sync="tabs_list"
+			:current_tab.sync="current_tab"
+			:permission_to_rollback="permission_to_rollback"
 			@close-modal="closeModal"
 		>
-			<template #tab-uraian>
-				<MyDisplayLpp 
-					v-if="modal_state == 'show'"
-					:doc_type="doc_type"
-					:doc_id.sync="doc_id"
-				/>
-				<MyFormLpp
-					ref="form_lpp"
-					v-if="['insert','edit'].includes(modal_state)"
-					:state.sync="modal_state"
-					:doc_type.sync="doc_type"
-					:doc_id.sync="doc_id"
-				/>
+			<template #tabs>
+				<CTab :title="tabs_list[0]['title']">
+					<MyFormLpp
+						v-if="['insert','edit'].includes(local_state)"
+						:state.sync="local_state"
+						:doc_type="doc_type"
+						:doc_name="doc_name"
+						:document.sync="document"
+						@save-data="setDocument"
+					/>
+					<MyDisplayLpp
+						v-else-if="local_state == 'show'"
+						:doc_type="doc_type"
+						:document.sync="document"
+					/>
+				</CTab>
+				<CTab
+					v-if="tabs_list[1]['visibility']"
+					:title="tabs_list[1]['title']"
+				>
+					<div v-if="current_tab == 1">
+						<MyDisplayBhp
+							v-if="local_state=='show'"
+							:bhp.sync="document.penyidikan.bhp"
+						/>
+						<MyFormBhp
+							v-else-if="local_state=='edit'"
+							:bhp.sync="document.penyidikan.bhp"
+						/>
+					</div>
+				</CTab>
+				<CTab 
+					v-if="tabs_list[2]['visibility']"
+					:title="tabs_list[2]['title']"
+				>
+					<div v-if="current_tab == 2">
+						<MyDisplayPdf 
+							v-if="['show','edit'].includes(local_state)"
+							:state.sync="local_state"
+							:doc_type="doc_type" 
+							:document.sync="document"
+						/>
+					</div>
+				</CTab>
 			</template>
-			<template #tab-bhp>
-				<MyDisplayBhp
-					v-if="modal_state == 'show'"
-					:doc_type="doc_type"
-					:doc_id.sync="doc_id"
-				/>
-				<MyFormBhp
-					v-if="modal_state == 'edit'"
-					:doc_type="doc_type"
-					:doc_id.sync="doc_id"
-					:data="data_bhp"
-				/>
-			</template>
-			<template #tab-pdf>
-				<MyDisplayPdf 
-					v-if="['show','edit'].includes(modal_state)"
-					:state.sync="modal_state"
-					:doc_type="doc_type" 
-					:doc_id.sync="doc_id"
-				/>
-			</template>
-		</MyModalDoc>
+		</MyModalTabs>
+
+		<!-- Alert -->
+		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
 <script>
 import api from '../../../router/api2.js'
+import DefaultLpp from './DefaultLpp'
+import MyAlert from '../../components/AlertSubmit.vue'
 import MyDisplayBhp from '../../details/displays/DisplayBhp.vue' 
 import MyDisplayLpp from './DisplayLpp.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
-import MyFormBhp from '../../details/Options/FormBhp.vue'
-import MyFormDetailBarang from '../../details/Options/FormDetailBarang.vue'
+import MyFormBhp from '../../details/forms/FormBhp.vue'
 import MyFormLpp from './FormLpp.vue'
-import MyModalDoc from '../../components/ModalDoc2.vue'
+import MyModalTabs from '../../components/ModalTabs.vue'
 
 export default {
 	name: 'ModalLpp',
 	components: {
 		MyDisplayBhp,
+		MyAlert,
 		MyDisplayLpp,
 		MyDisplayPdf,
 		MyFormBhp,
-		MyFormDetailBarang,
 		MyFormLpp,
-		MyModalDoc,
+		MyModalTabs,
 	},
 	props: {
-		tipe_surat: String,
 		state: String,
+		doc_type: String,
+		doc_name: String,
 		id: Number,
+		permission_to_rollback: String,
 	},
 	data() {
 		return {
-			doc_type: 'lpp',
 			doc_id: this.id,
-			modal_state: this.state,
-			tabs: [
+			document: JSON.parse(JSON.stringify(DefaultLpp.data)),
+			local_state: this.state,
+			tabs_list: [
 				{
 					title: 'Uraian',
 					visibility: true,
-					name: 'tab-uraian',
 				}, 
 				{
 					title: 'BHP',
 					visibility: false,
-					name: 'tab-bhp',
 				}, 
 				{
 					title: 'Print',
 					visibility: false,
-					name: 'tab-pdf',
 				}
 			],
-			tabs_visibility: {
-				show: ['tab-bhp', 'tab-pdf'],
-				insert: [],
-				edit: ['tab-bhp', 'tab-pdf'],
-			},
-			data_bhp: null,
+			current_tab: 0
 		}
 	},
 	watch: {
-		modal_state(oldState, newState) {
-			if (newState == 'edit') {
-				this.getBhp()
-			}
-		}
+		state(val) {
+			this.local_state = val
+		},
+		local_state: function(val) {
+			this.$emit('update:state', val)
+			this.changeTabsList(val)
+		},
+		id(val) {
+			this.doc_id = val
+		},
+		doc_id(val) {
+			this.$emit('update:id', val)
+		},
 	},
 	methods: {
+		async getData() {
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.document = response.data
+			this.fillNull()
+		},
+		setDocument(val) {
+			this.document = JSON.parse(JSON.stringify(val))
+			this.fillNull()
+
+			this.alert('DATA BERHASIL DISIMPAN')
+		},
+		fillNull() {
+			this.document.penyidikan.tertangkap_tangan = this.document.penyidikan.tertangkap_tangan == 1 
+				? true : false
+		},
+		changeTabsList(state) {
+			switch (state) {
+				case 'show':
+					this.tabs_list[1].visibility = true
+					this.tabs_list[2].visibility = true
+					break;
+
+				case 'edit':
+					this.tabs_list[1].visibility = true
+					this.tabs_list[2].visibility = true
+					break;
+			
+				default:
+					this.tabs_list[1].visibility = false
+					this.tabs_list[2].visibility = false
+					break;
+			}
+			this.$refs.modal_tabs.getNavs(this.current_tab)
+		},
 		closeModal() {
 			this.$emit('close-modal')
 		},
-		async getBhp() {
-			let response = await api.getBhpByDocId(this.doc_type, this.doc_id)
-			if (response != null) {
-				this.data_bhp = response.data.data	
-			} else {
-				this.data_bhp = null
-			}
+		alert(text, color, time) {
+			this.$refs.alert.show_alert(text, color, time)
+		},
+	},
+	async beforeMount() {
+		if (['show', 'edit'].includes(this.state)) {
+			await this.getData()
 		}
 	},
-	async mounted() {
-		if (this.modal_state == 'edit') {
-			await this.getBhp()
-		}
+	mounted() {
+		this.changeTabsList(this.local_state)
 	}
 }
 </script>

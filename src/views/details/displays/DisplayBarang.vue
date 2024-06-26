@@ -44,7 +44,6 @@
 							doc_type="penindakan-barang"
 							:doc_id.sync="objek.id"
 							:data_objek="objek"
-							:bhp="bhp"
 						/>
 					</CCol>
 				</CRow>
@@ -71,10 +70,6 @@ export default {
 		doc_type: String,
 		doc_id: Number,
 		penindakan: Object,
-		bhp: {
-			type: Boolean,
-			default: false,
-		},
 	},
 	computed: {
 		objek() {

@@ -57,16 +57,6 @@
 
 <script>
 import api from '../../router/api2.js'
-import PdfLhp from './PdfLhp.js'
-import PdfLp from './PdfLp.js'
-import PdfLpf from './PdfLpf.js'
-import PdfLpN from './PdfLpN.js'
-import PdfLphp from './PdfLphp.js'
-import PdfLpp from './PdfLpp.js'
-import PdfLptp from './PdfLptp.js'
-import PdfLrp from './PdfLrp.js'
-import PdfSbp from './PdfSbp.js'
-import PdfSplit from './PdfSplit.js'
 import MyAlert from '../components/AlertSubmit.vue'
 import PdfBukaPengaman from './penindakan/PdfBukaPengaman'
 import PdfBukaSegel from './penindakan/PdfBukaSegel'
@@ -79,6 +69,7 @@ import PdfLp from './penindakan/PdfLp'
 import PdfLpN from './penindakan/PdfLpN'
 import PdfLphp from './penindakan/PdfLphp'
 import PdfLphpN from './penindakan/PdfLphpN'
+import PdfLpp from './penyidikan/PdfLpp'
 import PdfLppi from './intelijen/PdfLppi'
 import PdfLppiN from './intelijen/PdfLppiN'
 import PdfLpt from './penindakan/PdfLpt'
@@ -99,6 +90,7 @@ import PdfTolak1 from './penindakan/PdfTolak1'
 import PdfTolak2 from './penindakan/PdfTolak2'
 import permission from '../../helpers/permission'
 import store from '../../store'
+// import PdfLpp from './PdfLpp.js'
 
 export default {
 	name: "DisplayPdf",
@@ -296,6 +288,11 @@ export default {
 
 				case 'buka_pengaman':
 					pdf = new PdfBukaPengaman(data_pdf)
+					break
+
+				// Penyidikan
+				case 'lpp':
+					pdf = new PdfLpp(data_pdf)
 					break
 			
 				default:

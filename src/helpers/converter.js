@@ -1,3 +1,5 @@
+import moment from "moment/moment"
+
 let converters = {}
 
 converters.string = (val, def='') => {
@@ -58,6 +60,15 @@ converters.currentDate = () => {
 	let options = {timeZone: "Asia/Jakarta", year: 'numeric', month: '2-digit', day: '2-digit'}
 	let d = now.toLocaleDateString("id-ID", options).split('/').join('-')
 	return d
+}
+
+converters.age = (date1, date2) => {
+	var date1 = moment(date1, 'DD-MM-YYYY')
+	var date2 = moment(date2, 'DD-MM-YYYY')
+	var ageDifMs = date2 - date1
+	var ageDate = new Date(ageDifMs)
+	var age = Math.abs(ageDate.getUTCFullYear() - 1970)
+	return `${age} tahun`
 }
 
 converters.array_text = (txt, max_length) => {

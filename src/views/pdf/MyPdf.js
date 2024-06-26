@@ -9,7 +9,6 @@ class MyPdf {
 	constructor(
 		data,
 		jenis_dok,
-		inds={},
 		ln=50, 
 		font_height=4, 
 		font_size=10, 
@@ -33,7 +32,6 @@ class MyPdf {
 		}
 		this.ln = ln
 		this.break_height = this.font_height
-		this.inds = inds
 		this.converters = converters
 	}
 
@@ -117,6 +115,15 @@ class MyPdf {
 
 		// Underline
 		this.pdf.line(10,41,200,41)
+	}
+
+	createHeaderSimple() {
+		this.pdf.setFont('Helvetica', 'bold')
+		this.pdf.setFontSize('10')
+		this.pdf.text('Kementerian Keuangan Republik Indonesia', 15, 10)
+		this.pdf.text('Direktorat Jenderal Bea dan Cukai', 15, 15)
+		this.pdf.text('Kantor Pelayanan Utama Bea dan Cukai Tipe C Soekarno Hatta', 15, 20)
+		this.pdf.line(15,21,122,21)
 	}
 
 	/**

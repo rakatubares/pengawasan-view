@@ -2,6 +2,11 @@ import MyPdf from "../MyPdf";
 import moment from "moment/moment";
 
 class PdfPenindakan extends MyPdf {
+	constructor(data, title, inds) {
+		super(data, title)
+		this.inds = inds
+	}
+
 	opening(
 		tanggal=this.data.penindakan.tanggal_selesai_penindakan,
 		sprint=this.data.penindakan.sprint,

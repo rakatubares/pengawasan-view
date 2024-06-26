@@ -10,13 +10,17 @@
 			:modal_data_props.sync="modal_data_props"
 			:construct_delete_text="constructDeleteText"
 			:permission_to_create="permission_to_create"
+			:permission_to_update="permission_to_update"
+			:permission_to_delete="permission_to_delete"
 		>
 			<template #modal-data>
 				<MyModalLpp 
 					v-if="modal_data_props.show"
 					:state.sync="modal_data_props.state"
-					:tipe_surat="tipe_surat"
+					:doc_type="doc_type"
+					:doc_name="doc_name"
 					:id.sync="modal_data_props.doc_id"
+					:permission_to_rollback="permission_to_rollback"
 					@close-modal="closeModal"
 				/>
 			</template>
@@ -28,7 +32,7 @@
 import MyModalLpp from './ModalLpp.vue'
 import MyPageDoc from '../../components/PageDoc.vue'
 
-const tipe_surat = 'LPP'
+const doc_name = 'LPP'
 
 export default {
 	name: 'PageLpp',
@@ -38,14 +42,14 @@ export default {
 	},
 	data() {
 		return {
-			tipe_surat: tipe_surat,
-			table_title: `Daftar ${tipe_surat}`,
+			doc_type: 'lpp',
+			doc_name: doc_name,
+			table_title: `Daftar ${doc_name}`,
 			table_fields: [
-				{ key: 'no_dok_lengkap', label: `No ${tipe_surat}` },
-				{ key: 'tanggal_dokumen', label: `Tgl ${tipe_surat}` },
+				{ key: 'no_dok_lengkap', label: `No ${doc_name}` },
+				{ key: 'tanggal_dokumen', label: `Tgl ${doc_name}` },
 				{ key: 'sbp', label: 'SBP' },
 				{ key: 'lp', label: 'LP' },
-				{ key: 'petugas', label: 'Petugas' },
 			],
 			custom_fields: ['sbp', 'lp'],
 			modal_data_props: {
@@ -54,6 +58,9 @@ export default {
 				doc_id: null
 			},
 			permission_to_create: 'create-lpp',
+			permission_to_update: 'create-lpp',
+			permission_to_delete: 'delete-lpp',
+			permission_to_rollback: 'rollback-lpp',
 		}
 	},
 	methods: {
@@ -61,8 +68,8 @@ export default {
 			return list.map(item => {
 				return {
 					...item,
-					sbp: item.no_sbp + '</br>' + item.tanggal_sbp,
-					lp: item.no_lp + '</br>' + item.tanggal_lp
+					sbp: item.nomor_sbp + '</br>' + item.tanggal_sbp,
+					lp: item.nomor_lp + '</br>' + item.tanggal_lp
 				}
 			})
 		},
@@ -76,7 +83,7 @@ export default {
 			let text = "Apakah Anda yakin untuk menghapus data " 
 				+ item.no_dok_lengkap.bold() 
 				+ " atas LP nomor " 
-				+ item.no_lp.bold() 
+				+ item.nomor_lp.bold() 
 				+ "?"
 
 			return text
