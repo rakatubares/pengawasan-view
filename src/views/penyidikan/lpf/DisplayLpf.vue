@@ -52,16 +52,23 @@
 						{{ disp_status_penangkapan }}
 					</CCol>
 				</CRow>
-				<MyDisplayEntitas
-					title="Pelaku"
-					:data.sync="data_lpf.penyidikan.pelaku"
-				/>
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>Pelaku</b></h5>
+					</CCol>
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(document.penyidikan.pelaku.id)"
+						>{{ disp_pelaku }}</p>
+					</CCol>
+				</CRow>
 				<CRow class="mt-2 mb-1 sep">
 					<CCol md="3" class="py-1">
 						<b>Surat Perintah</b>
 					</CCol>
 					<CCol md="9" class="py-1">
-						{{ disp_nomor_sprint + ' / ' + disp_tanggal_sprint }}
+						{{ disp_sprint }}
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
@@ -69,7 +76,7 @@
 						<b>SBP</b>
 					</CCol>
 					<CCol md="9" class="py-1">
-						{{ disp_nomor_sbp + ' / ' + disp_tanggal_sbp }}
+						{{ disp_sbp }}
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
@@ -77,23 +84,29 @@
 						<b>LP</b>
 					</CCol>
 					<CCol md="9" class="py-1">
-						{{ disp_nomor_lp + ' / ' + disp_tanggal_lp }}
+						{{ disp_lp }}
 					</CCol>
 				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>BAP Saksi</b>
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>BAP Saksi</b></h5>
 					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_saksi + ' / ' + disp_tanggal_bap_saksi }}
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(document.saksi.id)"
+						>{{ disp_saksi }}</p>
 					</CCol>
 				</CRow>
-				<CRow class="mb-1">
-					<CCol md="3" class="py-1">
-						<b>BAP Tersangka</b>
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>BAP Tersangka</b></h5>
 					</CCol>
-					<CCol md="9" class="py-1">
-						{{ disp_tersangka + ' / ' + disp_tanggal_bap_tersangka }}
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(document.tersangka.id)"
+						>{{ disp_tersangka }}</p>
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
@@ -101,7 +114,7 @@
 						<b>Resume Perkara</b>
 					</CCol>
 					<CCol md="9" class="py-1">
-						{{ disp_resume_perkara + ' / ' + disp_tanggal_resume_perkara }}
+						{{ disp_resume_perkara }}
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
@@ -109,7 +122,7 @@
 						<b>Dokumen Lain</b>
 					</CCol>
 					<CCol md="9" class="py-1">
-						{{ disp_dokumen_lain + ' / ' + disp_tanggal_dokumen_lain }}
+						{{ disp_dokumen_lain }}
 					</CCol>
 				</CRow>
 				<CRow class="mb-1">
@@ -138,110 +151,116 @@
 				</CRow>
 				<MyDisplayPegawai
 					title="Peneliti"
-					:data.sync="data_lpf.peneliti"
+					:data.sync="document.petugas.peneliti"
 				/>
 				<MyDisplayPejabat
 					title="Atasan 1"
-					:data.sync="data_lpf.atasan1"
+					:data.sync="document.petugas.atasan1"
 				/>
 				<MyDisplayPejabat
 					title="Atasan 2"
-					:data.sync="data_lpf.atasan2"
+					:data.sync="document.petugas.atasan2"
 				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_entitas"
+			:show.sync="show_modal_entitas"
+		/>
 	</div>
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	tanggal_dokumen: null,
-	penyidikan: {
-		jenis_pelanggaran: null,
-		pasal: null,
-		tempat_pelanggaran: null,
-		waktu_pelanggaran: null,
-		status_penangkapan: null,
-	},
-	penindakan: {
-		sprint: {
-			nomor_sprint: null,
-			tanggal_sprint: null,
-		},
-	},
-	dokumen: {
-		sbp: {
-			no_dok_lengkap: null,
-			tanggal_dokumen: null,
-		},
-		lp: {
-			no_dok_lengkap: null,
-			tanggal_dokumen: null,
-		},
-	},
-	saksi: {nama: null},
-	tersangka: {nama: null},
-}
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 export default {
 	name: 'DisplayLpf',
 	components: {
-		MyDisplayEntitas,
 		MyDisplayPegawai,
 		MyDisplayPejabat,
+		MyModalEntitasOrang,
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number
+		document: Object,
 	},
 	data() {
 		return {
-			data_lpf: JSON.parse(JSON.stringify(default_data))
+			show_modal_entitas: false,
 		}
 	},
 	computed: {
-		disp_no_lpf() { return this.data_lpf.no_dok_lengkap || '-' },
-		disp_tgl_lpf() { return this.data_lpf.tanggal_dokumen || '-' },
-		disp_pelanggaran() { return this.data_lpf.penyidikan.jenis_pelanggaran || '-' },
-		disp_pasal() { return this.data_lpf.penyidikan.pasal || '-' },
-		disp_tempat() { return this.data_lpf.penyidikan.tempat_pelanggaran || '-' },
-		disp_tanggal_waktu() { return this.data_lpf.penyidikan.waktu_pelanggaran || '-' },
-		disp_status_penangkapan() { return this.data_lpf.penyidikan.status_penangkapan || '-' },
-		disp_nomor_sprint() { return this.data_lpf.penindakan.sprint.nomor_sprint || '-' },
-		disp_tanggal_sprint() { return this.data_lpf.penindakan.sprint.tanggal_sprint || '-' },
-		disp_nomor_sbp() { return this.data_lpf.dokumen.sbp.no_dok_lengkap || '-' },
-		disp_tanggal_sbp() { return this.data_lpf.dokumen.sbp.tanggal_dokumen || '-' },
-		disp_nomor_lp() { return this.data_lpf.dokumen.lp.no_dok_lengkap || '-' },
-		disp_tanggal_lp() { return this.data_lpf.dokumen.lp.tanggal_dokumen || '-' },
-		disp_saksi() { return this.data_lpf.saksi.nama || '-' },
-		disp_tanggal_bap_saksi() { return this.data_lpf.tanggal_bap_saksi || '-' },
-		disp_tersangka() { return this.data_lpf.tersangka.nama || '-' },
-		disp_tanggal_bap_tersangka() { return this.data_lpf.tanggal_bap_tersangka || '-' },
-		disp_resume_perkara() { return this.data_lpf.resume_perkara || '-' },
-		disp_tanggal_resume_perkara() { return this.data_lpf.tanggal_resume_perkara || '-' },
+		disp_no_lpf() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_lpf() { return this.document.tanggal_dokumen || '-' },
+		disp_pelanggaran() { return this.document.penyidikan.jenis_pelanggaran || '-' },
+		disp_pasal() { return this.document.penyidikan.pasal || '-' },
+		disp_tempat() { return this.document.penyidikan.tempat_pelanggaran || '-' },
+		disp_tanggal_waktu() { 
+			let tanggal = this.document.penyidikan.tanggal_pelanggaran
+			let waktu = this.document.penyidikan.waktu_pelanggaran
+
+			let txt = tanggal 
+				? waktu 
+					? `${tanggal} ${waktu}`
+					: tanggal
+				: waktu 
+					? waktu
+					: '-'
+			return txt
+		},
+		disp_status_penangkapan() { 
+			let txt = this.document.penyidikan.tertangkap_tangan
+				? 'Tertangkap tangan'
+				: 'Tidak tertangkap tangan'
+			return txt
+		},
+		disp_sprint() { 
+			let txt = '-'
+
+			if (this.document.penindakan.sprint) {
+				txt = (
+					(this.document.penindakan.sprint.nomor_sprint || '') 
+					+ ' tanggal ' 
+					+ (this.document.penindakan.sprint.tanggal_sprint || '')
+				)
+			}
+			return txt 
+		},
+		disp_lp() { return `${this.document.lp.no_dok_lengkap} tanggal ${this.document.lp.tanggal_dokumen}`},
+		disp_sbp() { return `${this.document.sbp.no_dok_lengkap} tanggal ${this.document.sbp.tanggal_dokumen}`},
+		disp_pelaku() { return this.document.penyidikan.pelaku.nama || '-' },
+		disp_saksi() { 
+			let txt = this.document.saksi.nama
+				? this.document.tanggal_bap_saksi
+					? `${this.document.saksi.nama} tanggal ${this.document.tanggal_bap_saksi}`
+					: this.document.saksi.nama
+				: this.document.tanggal_bap_saksi
+					? `tanggal ${this.document.tanggal_bap_saksi}`
+					: '-'
+
+			return txt
+		},
+		disp_tanggal_bap_saksi() { return this.document.tanggal_bap_saksi || '-' },
+		disp_tersangka() { return this.document.tersangka.nama || '-' },
+		disp_tanggal_bap_tersangka() { return this.document.tanggal_bap_tersangka || '-' },
+		disp_resume_perkara() { return this.document.resume_perkara || '-' },
+		disp_tanggal_resume_perkara() { return this.document.tanggal_resume_perkara || '-' },
 		disp_dokumen_lain() { 
-			var dokumen_lain = this.data_lpf.jenis_dokumen_lain + this.data_lpf.nomor_dokumen_lain
+			var dokumen_lain = this.document.jenis_dokumen_lain + this.document.nomor_dokumen_lain
 			return dokumen_lain
 		},
-		disp_tanggal_dokumen_lain() { return this.data_lpf.tanggal_dokumen_lain || '-' },
-		disp_kesimpulan() { return this.data_lpf.kesimpulan || '-' },
-		disp_usulan() { return this.data_lpf.usulan || '-' },
-		disp_catatan() { return this.data_lpf.catatan || '-' },
+		disp_tanggal_dokumen_lain() { return this.document.tanggal_dokumen_lain || '-' },
+		disp_kesimpulan() { return this.document.kesimpulan || '-' },
+		disp_usulan() { return this.document.usulan || '-' },
+		disp_catatan() { return this.document.catatan || '-' },
 	},
 	methods: {
-		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_lpf = response.data.data
-		}
-	},
-	async mounted() {
-		await this.getData()
+		showEntitas(entitas_id) {
+			this.$refs.modal_entitas.showModal('show', entitas_id)
+		},
 	},
 }
 </script>

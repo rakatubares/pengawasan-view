@@ -294,6 +294,10 @@ class PdfLap extends Pdf {
 			this.data.petugas.atasan.name,
 			this.data.petugas.atasan.nip
 		)
+
+		let checkLn = this.ln
+
+		return checkLn
 	}
 
 	writeData(num, lbl, flag, ops1, ops2, ket, level=1)

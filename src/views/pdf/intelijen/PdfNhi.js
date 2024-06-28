@@ -281,6 +281,8 @@ class PdfNhi extends Pdf
 		// CC
 		this.cc(this.data.tembusan)
 
+		let checkLn = this.ln
+
 		// LAMPIRAN
 		if (this.data.barang.length > 1) {
 			this.pdf.setFont('Helvetica', 'normal')
@@ -292,6 +294,8 @@ class PdfNhi extends Pdf
 			// Tabel barang
 			this.tabelBarang(this.data.barang)
 		}
+
+		return checkLn
 	}
 
 	writeData(numbering, label, value=null, level=2)

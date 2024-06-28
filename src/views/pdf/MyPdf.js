@@ -18,7 +18,6 @@ class MyPdf {
 		end_line=127,
 	)
 	{
-		this.pdf = new jsPDF('p', 'mm', [page_height, page_width])
 		this.data = data
 		this.jenis_dok = jenis_dok
 		this.font_height = font_height
@@ -30,17 +29,41 @@ class MyPdf {
 			start: start_line,
 			end: end_line
 		}
-		this.ln = ln
-		this.break_height = this.font_height
+		this.default_ln = ln
 		this.converters = converters
+		this.initiatePdf()
+	}
+
+	initiatePdf() 
+	{
+		this.pdf = new jsPDF('p', 'mm', [this.page_height, this.page_width])
+		this.ln = this.default_ln
+		this.break_height = this.font_height
 	}
 
 	generatePdf()
 	{
 		this.generateText()
-		this.writeText()
+		let checkLn = this.writeText()
+		this.checkPage(checkLn)
 		this.paintWatermark()
 		return this.ouputFile()
+	}
+
+	generateText()
+	{
+		this.prepareDocDate(this.data.tanggal_dokumen)
+		this.txt = {}
+	}
+
+	checkPage(checkLn) {
+		if (checkLn) {
+			while (checkLn > (this.page_height-5)) {
+				this.font_size -= .5
+				this.initiatePdf()
+				checkLn = this.writeText()
+			}
+		}
 	}
 
 	write(txt, x=left_margin, y=this.ln, align='justify', right_limit=0)
@@ -60,9 +83,9 @@ class MyPdf {
 	setOptions(align, x, right_limit)
 	{
 		if (align == 'center') {
-			var maxWidth = 200
+			var maxWidth = this.page_width-this.left_margin
 		} else {
-			var maxWidth = 200 - x - right_limit
+			var maxWidth = this.page_width - x - right_limit - this.left_margin
 		}
 		
 		return {align: align, maxWidth: maxWidth}
@@ -120,10 +143,10 @@ class MyPdf {
 	createHeaderSimple() {
 		this.pdf.setFont('Helvetica', 'bold')
 		this.pdf.setFontSize('10')
-		this.pdf.text('Kementerian Keuangan Republik Indonesia', 15, 10)
-		this.pdf.text('Direktorat Jenderal Bea dan Cukai', 15, 15)
-		this.pdf.text('Kantor Pelayanan Utama Bea dan Cukai Tipe C Soekarno Hatta', 15, 20)
-		this.pdf.line(15,21,122,21)
+		this.pdf.text('Kementerian Keuangan Republik Indonesia', this.left_margin, 10)
+		this.pdf.text('Direktorat Jenderal Bea dan Cukai', this.left_margin, 15)
+		this.pdf.text('Kantor Pelayanan Utama Bea dan Cukai Tipe C Soekarno Hatta', this.left_margin, 20)
+		this.pdf.line(this.left_margin-1,21,this.left_margin+107,21)
 	}
 
 	/**

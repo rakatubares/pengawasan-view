@@ -55,7 +55,6 @@
 							state="show"
 							doc_type="penyidikan-bhp"
 							:doc_id.sync="bhp.id"
-							:data_objek="objek"
 						/>
 					</CCol>
 				</CRow>

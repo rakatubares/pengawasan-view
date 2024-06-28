@@ -215,6 +215,8 @@ class PdfSbp extends PdfPenindakan {
 		this.break()
 		this.write(this.txt.keterangan)
 
+		let checkLn = this.ln
+
 		////// LAMPIRAN //////
 		if (this.data.penindakan.objek.barang) {
 			if (this.data.penindakan.objek.barang.item.length > 1) {
@@ -226,6 +228,8 @@ class PdfSbp extends PdfPenindakan {
 				this.tabelBarang(this.data.penindakan.objek.barang.item)
 			}
 		}
+
+		return checkLn
 	}
 }
 

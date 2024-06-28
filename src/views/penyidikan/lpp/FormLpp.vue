@@ -1,6 +1,6 @@
 <template>
 	<div class="wrapper my-form">
-		<!-- Form BA Segel header -->
+		<!-- Form LPP -->
 		<CForm class="pt-3">
 			<CRow>
 				<CCol>
@@ -147,7 +147,6 @@
 			<CRow>
 				<CCol md="12">
 					<MySelectEntitasOrang
-						ref="selectPelaku"
 						label="Nama Pelaku"
 						description="Nama orang yang diduga melakukan pelanggaran"
 						:entity_id.sync="data.penyidikan.pelaku.id"
@@ -268,6 +267,14 @@ export default {
 			saved_source_id: this.document.lp.id,
 			saved_source_type: this.document.lp.type,
 		}
+	},
+	watch: {
+		document(val) { 
+			this.data = val
+			if (this.data.lp.id) {
+				this.$refs.ToggleSearchDocument.getDataDocument()
+			} 
+		},
 	},
 	methods: {
 		async saveData() {

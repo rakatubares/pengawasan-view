@@ -2,10 +2,14 @@
 	<div class="wrapper my-form">
 		<CForm class="pt-3">
 			<CRow>
-				<CCol md="12">
-					<MySelectLpp
-						ref="selectLpp"
-						:id.sync="data.id_lpp"
+				<CCol>
+					<MySearchDocument
+						ref="SearchDocument"
+						doc_type="lpp"
+						label="LPP"
+						:value.sync="data.lpp.id"
+						:exceptions.sync="saved_source_id"
+						@update:value="updateSource"
 					/>
 				</CCol>
 			</CRow>
@@ -13,10 +17,9 @@
 			<!-- Kelengkapan Dokumen Penindakan -->
 			<CRow>
 				<CCol sm="12">
-					<MySelectEntitas
-						ref="selectSaksi"
+					<MySelectEntitasOrang
 						label="Nama Saksi"
-						:id.sync="data.saksi.id"
+						:entity_id.sync="data.saksi.id"
 					/>
 				</CCol>
 			</CRow>
@@ -46,10 +49,9 @@
 			</CRow>
 			<CRow>
 				<CCol sm="12">
-					<MySelectEntitas
-						ref="selectTersangka"
+					<MySelectEntitasOrang
 						label="Nama Tersangka"
-						:id.sync="data.tersangka.id"
+						:entity_id.sync="data.tersangka.id"
 					/>
 				</CCol>
 			</CRow>
@@ -151,8 +153,6 @@
 						label="Kesimpulan"
 						:value.sync="data.kesimpulan"
 						description="diisi kesimpulan berupa status penangkapan, domain perkara, lengkap tidaknya berkas penindakan, cukup tidaknya barang bukti, cukup tidaknya alat bukti, keberadaan pelaku, keterkaitan alat bukti, barang bukti dan pelaku, serta ada tidaknya indikasi pelanggaran"
-						:is-valid="validatorRequired"
-						invalid-feedback="Kesimpulan wajib diisi"
 					/>
 				</CCol>
 			</CRow>
@@ -162,8 +162,6 @@
 						label="Usulan"
 						:value.sync="data.usulan"
 						description="diisi usulan tindak lanjut berupa penelitian, penyelidikan atau tindakan lain serta skema penanganan perkara"
-						:is-valid="validatorRequired"
-						invalid-feedback="Usulan wajib diisi"
 					/>
 				</CCol>
 			</CRow>
@@ -181,10 +179,10 @@
 			<CRow>
 				<CCol md="12">
 					<MySelectPetugas
-						ref="selectPeneliti"
 						label="Nama Peneliti"
-						:id.sync="data.peneliti.user_id"
-						role="p2vue.penindakan"
+						description="Nama yang melakukan penelitian"
+						:nip.sync="data.petugas.peneliti.nip"
+						:currentUser="true"
 					/>
 				</CCol>
 			</CRow>
@@ -193,12 +191,11 @@
 					<MySelectPejabat
 						ref="selectAtasan1"
 						:state.sync="state"
-						:label="{jabatan: 'Jabatan Atasan Langsung Peneliti', nama: 'Nama Pejabat'}"
-						:selectable_jabatan="['bd.0505']"
-						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.atasan1.user.user_id"
-						:jabatan.sync="data.atasan1.jabatan.kode"
-						:plh.sync="data.atasan1.plh"
+						:label="{'jabatan': 'Jabatan Atasan Langsung Peneliti', 'nama': 'Nama Atasan Langsung'}"
+						:default_jabatan.sync="default_atasan1"
+						:jabatan.sync="data.petugas.atasan1.kode_jabatan"
+						:tipe_ttd.sync="data.petugas.atasan1.tipe_ttd"
+						:nip.sync="data.petugas.atasan1.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -207,12 +204,11 @@
 					<MySelectPejabat
 						ref="selectAtasan2"
 						:state.sync="state"
-						:label="{jabatan: 'Jabatan Atasan dari Atasan Langsung Peneliti', nama: 'Nama Pejabat'}"
-						:selectable_jabatan="['bd.0505']"
-						:selectable_plh="['bd.0501', 'bd.0502','bd.0503', 'bd.0504','bd.0505', 'bd.0506']"
-						:id_pejabat.sync="data.atasan2.user.user_id"
-						:jabatan.sync="data.atasan2.jabatan.kode"
-						:plh.sync="data.atasan2.plh"
+						:label="{'jabatan': 'Jabatan Atasan dari Atasan Langsung Peneliti', 'nama': 'Nama Atasan'}"
+						:default_jabatan.sync="default_atasan2"
+						:jabatan.sync="data.petugas.atasan2.kode_jabatan"
+						:tipe_ttd.sync="data.petugas.atasan2.tipe_ttd"
+						:nip.sync="data.petugas.atasan2.nip"
 					/>
 				</CCol>
 			</CRow>
@@ -231,7 +227,7 @@
 		</CForm>
 
 		<!-- Alert -->
-		<MyAlert ref="alert"/>
+		<!-- <MyAlert ref="alert"/> -->
 	</div>
 </template>
 
@@ -240,117 +236,138 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
-import MyAlert from '../../components/AlertSubmit.vue'
-import MySelectEntitas from '../../components/SelectEntitas.vue'
+// import MyAlert from '../../components/AlertSubmit.vue'
+// import MySelectEntitas from '../../components/SelectEntitas.vue'
+import MySearchDocument from '../../components/SearchDocument.vue'
+import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
-import MySelectLpp from '../lpp/SelectLpp.vue'
-import validators from '../../../helpers/validator.js'
+// import MySelectLpp from '../lpp/SelectLpp.vue'
+// import MyToggleSearchDocument from '../../components/ToggleSearchDocument.vue'
+// import validators from '../../../helpers/validator.js'
 
-const default_data = {
-	id_lpp: null,
-	saksi: {id: null},
-	tersangka: {id: null},
-	peneliti: {user_id: null},
-	atasan1: {
-		jabatan: {kode: null},
-		plh: null,
-		user: {user_id: null},
-	},
-	atasan2: {
-		jabatan: {kode: null},
-		plh: null,
-		user: {user_id: null},
-	},
-}
+// const default_data = {
+// 	id_lpp: null,
+// 	saksi: {id: null},
+// 	tersangka: {id: null},
+// 	peneliti: {user_id: null},
+// 	atasan1: {
+// 		jabatan: {kode: null},
+// 		plh: null,
+// 		user: {user_id: null},
+// 	},
+// 	atasan2: {
+// 		jabatan: {kode: null},
+// 		plh: null,
+// 		user: {user_id: null},
+// 	},
+// }
 
 export default {
 	name: 'FormLpf',
 	components: {
 		DatePicker,
-		MyAlert,
-		MySelectEntitas,
+		// MyAlert,
+		// MySelectEntitas,
+		MySearchDocument,
+		MySelectEntitasOrang,
 		MySelectPejabat,
 		MySelectPetugas,
-		MySelectLpp,
+		// MyToggleSearchDocument,
+		// MySelectLpp,
 	},
 	props: {
 		state: String,
 		doc_type: String,
-		doc_id: Number,
+		document: Object,
 	},
 	data() {
 		return {
-			data: JSON.parse(JSON.stringify(default_data)),
+			data: JSON.parse(JSON.stringify(this.document)),
+			default_atasan1: 'bd.0505',
+			default_atasan2: 'bd.05',
+			saved_source_id: this.document.lpp.id,
 		}
+	},
+	watch: {
+		document(val) { 
+			this.data = val
+			if (this.data.lpp.id) {
+				this.$refs.SearchDocument.getDocument(this.data.lpp.id)
+			} 
+		},
 	},
 	methods: {
-		async getData() {
-			let response = await api.getFormDataById(this.doc_type, this.doc_id)
-			this.data = response.data.data
+		// async getData() {
+		// 	let response = await api.getFormDataById(this.doc_type, this.doc_id)
+		// 	this.data = response.data.data
 
-			if (this.data.saksi == null) {
-				this.data.saksi = {id: null}
-			}
+		// 	if (this.data.saksi == null) {
+		// 		this.data.saksi = {id: null}
+		// 	}
 
-			if (this.data.tersangka == null) {
-				this.data.tersangka = {id: null}
-			}
+		// 	if (this.data.tersangka == null) {
+		// 		this.data.tersangka = {id: null}
+		// 	}
 
-			this.$nextTick(function () {
-				this.renderData()
-			})
-		},
-		renderData() {
-			this.$refs.selectLpp.getData(this.data.id_lpp, true)
-			this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
-			this.$refs.selectTersangka.getEntitas(this.data.tersangka.id, true)
-			this.$refs.selectPeneliti.getPetugas(this.data.peneliti.user_id, true)
-			this.$refs.selectAtasan1.selected_jabatan = this.data.atasan1.jabatan.kode
-			this.$refs.selectAtasan1.togglePlh(this.data.atasan1.plh)
-			this.$refs.selectAtasan1.getPetugas(this.data.atasan1.user.user_id, true)
-			this.$refs.selectAtasan2.selected_jabatan = this.data.atasan2.jabatan.kode
-			this.$refs.selectAtasan2.togglePlh(this.data.atasan2.plh)
-			this.$refs.selectAtasan2.getPetugas(this.data.atasan2.user.user_id, true)
-		},
+		// 	this.$nextTick(function () {
+		// 		this.renderData()
+		// 	})
+		// },
+		// renderData() {
+		// 	this.$refs.selectLpp.getData(this.data.id_lpp, true)
+		// 	this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
+		// 	this.$refs.selectTersangka.getEntitas(this.data.tersangka.id, true)
+		// 	this.$refs.selectPeneliti.getPetugas(this.data.peneliti.user_id, true)
+		// 	this.$refs.selectAtasan1.selected_jabatan = this.data.atasan1.jabatan.kode
+		// 	this.$refs.selectAtasan1.togglePlh(this.data.atasan1.plh)
+		// 	this.$refs.selectAtasan1.getPetugas(this.data.atasan1.user.user_id, true)
+		// 	this.$refs.selectAtasan2.selected_jabatan = this.data.atasan2.jabatan.kode
+		// 	this.$refs.selectAtasan2.togglePlh(this.data.atasan2.plh)
+		// 	this.$refs.selectAtasan2.getPetugas(this.data.atasan2.user.user_id, true)
+		// },
 		async saveData() {
 			if (this.state == 'insert') {
-				try {
-					this.data = await api.storeDoc(this.doc_type, this.data)
-
-					if (this.data.saksi == null) {
-						this.data.saksi = {id: null}
-					}
-
-					if (this.data.tersangka == null) {
-						this.data.tersangka = {id: null}
-					}
-
-					this.$emit('update:doc_id', this.data.id)
+				// try {
+					var data = await api.storeDoc(this.doc_type, this.data)
+					this.saved_source_id = data.lpp.id
 					this.$emit('update:state', 'edit')
-					this.alert(`Data LPF berhasil disimpan`)
-				} catch (error) {
-					console.log(`form ${this.doc_type} - save data - error`, error)
-				}
+				// } catch (error) {
+				// 	console.log(`form ${this.doc_type} - save data - error`, error)
+				// }
 			} else if (this.state == 'edit') {
-				try {
-					await api.updateDoc(this.doc_type, this.data.id, this.data)
-					this.alert(`Data LPF berhasil diubah`)
-				} catch (error) {
-					console.log(`form ${this.doc_type} - update data - error`, error)
-				}
+				// try {
+					var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
+				// 	this.alert(`Data LPF berhasil diubah`)
+				// } catch (error) {
+				// 	console.log(`form ${this.doc_type} - update data - error`, error)
+				// }
 			}
+			this.$emit('save-data', data)
 		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
-		},
-		validatorRequired(val) { return validators.required(val) },
-	},
-	async mounted() {
-		if (this.state == 'edit') {
-			await this.getData()
+		async updateSource() {
+			if (this.data.lpp.id) {
+				if (this.data.lpp.id != this.saved_source_id) {
+					let response = await api.getDocumentById('lpp', this.data.lpp.id)
+					let lpp = response.data
+
+					// Fill data
+					this.data.tersangka.id = lpp.penyidikan.pelaku.id
+				}
+			} else {
+				this.data.tersangka.id = null
+			}
 		}
+		// alert(text, color, time) {
+		// 	this.$refs.alert.show_alert(text, color, time)
+		// },
+		// validatorRequired(val) { return validators.required(val) },
 	},
+	// async mounted() {
+	// 	if (this.state == 'edit') {
+	// 		await this.getData()
+	// 	}
+	// },
 }
 </script>
 

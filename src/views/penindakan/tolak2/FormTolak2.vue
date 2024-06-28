@@ -118,7 +118,6 @@ export default {
 		document(val) { 
 			this.data = val
 			if (this.data.tolak1.id) {
-				console.log('FORM TOLAK 2 - WATCH DOCUMETN - GET SEARCH TOLAK1')
 				this.$refs.SearchTolak1.getDocument(this.data.tolak1.id)
 			} 
 		},

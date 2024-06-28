@@ -71,7 +71,10 @@ export default {
 		filters: {
 			type: Object,
 			default() {
-				return {'status_tindak_lanjut': false}
+				return {
+					'kode_status': 'terbit',
+					'status_tindak_lanjut': false,
+				}
 			},
 		},
 		exceptions: {

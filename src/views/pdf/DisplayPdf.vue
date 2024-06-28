@@ -66,6 +66,7 @@ import PdfLi from './penindakan/PdfLi'
 import PdfLkai from './intelijen/PdfLkai'
 import PdfLkaiN from './intelijen/PdfLkaiN'
 import PdfLp from './penindakan/PdfLp'
+import PdfLpf from './penyidikan/PdfLpf'
 import PdfLpN from './penindakan/PdfLpN'
 import PdfLphp from './penindakan/PdfLphp'
 import PdfLphpN from './penindakan/PdfLphpN'
@@ -90,7 +91,6 @@ import PdfTolak1 from './penindakan/PdfTolak1'
 import PdfTolak2 from './penindakan/PdfTolak2'
 import permission from '../../helpers/permission'
 import store from '../../store'
-// import PdfLpp from './PdfLpp.js'
 
 export default {
 	name: "DisplayPdf",
@@ -293,6 +293,10 @@ export default {
 				// Penyidikan
 				case 'lpp':
 					pdf = new PdfLpp(data_pdf)
+					break
+
+				case 'lpf':
+					pdf = new PdfLpf(data_pdf)
 					break
 			
 				default:
