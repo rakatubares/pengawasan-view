@@ -1,85 +1,169 @@
 <template>
 	<div class="wrapper">
-		<MyModalDoc
-			:title="`Data ${tipe_surat}`"
-			:state.sync="modal_state"
-			:tabs="tabs"
-			:tabs_visibility="tabs_visibility"
+		<MyModalTabs
+			ref="modal_tabs"
+			:title="`Data ${this.doc_name}`"
+			:state.sync="state"
+			:doc_type.sync="doc_type"
+			:document.sync="document"
+			:tabs_list.sync="tabs_list"
+			:current_tab.sync="current_tab"
+			:permission_to_rollback="permission_to_rollback"
 			@close-modal="closeModal"
 		>
-			<template #tab-uraian>
-				<MyDisplaySplit 
-					v-if="modal_state == 'show'"
-					:doc_type="doc_type"
-					:doc_id.sync="doc_id"
-				/>
-				<MyFormSplit
-					ref="form_split"
-					v-if="['insert','edit'].includes(modal_state)"
-					:state.sync="modal_state"
-					:doc_type.sync="doc_type"
-					:doc_id.sync="doc_id"
-				/>
+			<template #tabs>
+				<CTab :title="tabs_list[0]['title']">
+					<MyFormSplit
+						v-if="['insert','edit'].includes(local_state)"
+						:state.sync="local_state"
+						:doc_type="doc_type"
+						:doc_name="doc_name"
+						:document.sync="document"
+						@save-data="setDocument"
+					/>
+					<MyDisplaySplit
+						v-else-if="local_state == 'show'"
+						:doc_type="doc_type"
+						:document.sync="document"
+					/>
+				</CTab>
+				<CTab
+					v-if="tabs_list[1]['visibility']"
+					:title="tabs_list[1]['title']"
+				>
+					<div v-if="current_tab == 1">
+						<MyDisplayBhp
+							:bhp.sync="document.penyidikan.bhp"
+						/>
+					</div>
+				</CTab>
+				<CTab 
+					v-if="tabs_list[2]['visibility']"
+					:title="tabs_list[2]['title']"
+				>
+					<div v-if="current_tab == 2">
+						<MyDisplayPdf 
+							v-if="['show','edit'].includes(local_state)"
+							:state.sync="local_state"
+							:doc_type="doc_type" 
+							:document.sync="document"
+						/>
+					</div>
+				</CTab>
 			</template>
-			<template #tab-pdf>
-				<MyDisplayPdf 
-					v-if="['show','edit'].includes(modal_state)"
-					:state.sync="modal_state"
-					:doc_type="doc_type" 
-					:doc_id.sync="doc_id"
-				/>
-			</template>
-		</MyModalDoc>
+		</MyModalTabs>
+
+		<!-- Alert -->
+		<MyAlert ref="alert"></MyAlert>
 	</div>
 </template>
 
 <script>
+import api from '../../../router/api2.js'
+import DefaultSplit from './DefaultSplit'
+import MyAlert from '../../components/AlertSubmit.vue'
+import MyDisplayBhp from '../../details/displays/DisplayBhp.vue' 
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
 import MyDisplaySplit from './DisplaySplit.vue'
 import MyFormSplit from './FormSplit.vue'
-import MyModalDoc from '../../components/ModalDoc2.vue'
+import MyModalTabs from '../../components/ModalTabs.vue'
 
 export default {
 	name: 'ModalSplit',
 	components: {
+		MyAlert,
+		MyDisplayBhp,
 		MyDisplayPdf,
 		MyDisplaySplit,
 		MyFormSplit,
-		MyModalDoc,
+		MyModalTabs,
 	},
 	props: {
-		tipe_surat: String,
 		state: String,
+		doc_type: String,
+		doc_name: String,
 		id: Number,
+		permission_to_rollback: String,
 	},
 	data() {
 		return {
-			doc_type: 'split',
 			doc_id: this.id,
-			modal_state: this.state,
-			tabs: [
+			document: JSON.parse(JSON.stringify(DefaultSplit.data)),
+			local_state: this.state,
+			tabs_list: [
 				{
 					title: 'Uraian',
 					visibility: true,
-					name: 'tab-uraian',
 				},
+				{
+					title: 'BHP',
+					visibility: false,
+				}, 
 				{
 					title: 'Print',
 					visibility: false,
-					name: 'tab-pdf',
 				}
 			],
-			tabs_visibility: {
-				show: ['tab-pdf'],
-				insert: [],
-				edit: ['tab-pdf'],
-			},
+			current_tab: 0,
 		}
 	},
+	watch: {
+		state(val) {
+			this.local_state = val
+		},
+		local_state: function(val) {
+			this.$emit('update:state', val)
+			this.changeTabsList(val)
+		},
+		id(val) {
+			this.doc_id = val
+		},
+		doc_id(val) {
+			this.$emit('update:id', val)
+		},
+	},
 	methods: {
+		async getData() {
+			let response = await api.getDocumentById(this.doc_type, this.doc_id)
+			this.document = response.data
+		},
+		setDocument(val) {
+			this.document = JSON.parse(JSON.stringify(val))
+			this.alert('DATA BERHASIL DISIMPAN')
+		},
+		changeTabsList(state) {
+			switch (state) {
+				case 'show':
+					this.tabs_list[1].visibility = true
+					this.tabs_list[2].visibility = true
+					break;
+
+				case 'edit':
+					this.tabs_list[1].visibility = true
+					this.tabs_list[2].visibility = true
+					break;
+			
+				default:
+					this.tabs_list[1].visibility = false
+					this.tabs_list[2].visibility = false
+					break;
+			}
+			this.$refs.modal_tabs.getNavs(this.current_tab)
+		},
 		closeModal() {
 			this.$emit('close-modal')
 		},
+		alert(text, color, time) {
+			this.$refs.alert.show_alert(text, color, time)
+		},
 	},
+	async beforeMount() {
+		if (['show', 'edit'].includes(this.state)) {
+			await this.getData()
+		}
+	},
+	mounted() {
+		this.changeTabsList(this.local_state)
+	}
 }
 </script>

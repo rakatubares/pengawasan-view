@@ -44,81 +44,76 @@
 						{{ disp_dugaan_pelanggaran }}
 					</CCol>
 				</CRow>
-				<MyDisplayEntitas
-					title="Pelaku"
-					:data.sync="data_split.penyidikan.pelaku"
-				/>
+
+				<CRow class="sep">
+					<CCol md="3">
+						<h5><b>Pelaku</b></h5>
+					</CCol>
+					<CCol md="9">
+						<p 
+							class="a nav-link p-0"
+							@click="showEntitas(document.penyidikan.pelaku.id)"
+						>{{ disp_pelaku }}</p>
+					</CCol>
+				</CRow>
 				<MyDisplayPegawai
-					v-for="(petugas, index) in data_split.petugas"
-					:title="`Petugas ` + (index+1)"
+					v-for="(petugas, index) in document.petugas.pelaksana"
+					title="Petugas"
 					:data="petugas"
 					:key="index"
 				/>
 				<MyDisplayPejabat
 					title="Pemberi Perintah"
-					:data.sync="data_split.pemberi_perintah"
+					:data.sync="document.petugas.pejabat"
 				/>
 			</CCol>
 		</CRow>
+
+		<MyModalEntitasOrang
+			ref="modal_entitas"
+			:show.sync="show_modal_entitas"
+		/>
 	</div>
 </template>
 
 <script>
-import api from '../../../router/api2.js'
-import MyDisplayEntitas from '../../components/DisplayEntitas.vue'
 import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 import MyDisplayPejabat from '../../components/DisplayPejabat.vue'
-
-const default_data = {
-	no_dok_lengkap: null,
-	tanggal_dokumen: null,
-	dokumen: {
-		lp: {
-			no_dok_lengkap: null,
-			tanggal_dokumen: null,
-		},
-		lpf: {
-			no_dok_lengkap: null,
-			tanggal_dokumen: null,
-		},
-	},
-	penyidikan: {
-		jenis_penindakan: null,
-	}
-}
+import MyModalEntitasOrang from '../../components/ModalEntitasOrang.vue'
 
 export default {
 	name: 'DisplaySplit',
 	components: {
-		MyDisplayEntitas,
 		MyDisplayPegawai,
 		MyDisplayPejabat,
+		MyModalEntitasOrang,
 	},
 	props: {
 		doc_type: String,
-		doc_id: Number
+		document: Object,
 	},
 	data() {
 		return {
-			data_split: JSON.parse(JSON.stringify(default_data))
+			show_modal_entitas: false,
 		}
 	},
 	computed: {
-		disp_no_split() { return this.data_split.no_dok_lengkap || '-' },
-		disp_tgl_split() { return this.data_split.tanggal_dokumen || '-' },
-		disp_lp() { return `${this.data_split.dokumen.lp.no_dok_lengkap} tanggal ${this.data_split.dokumen.lp.tanggal_dokumen}` },
-		disp_lpf() { return `${this.data_split.dokumen.lpf.no_dok_lengkap} tanggal ${this.data_split.dokumen.lpf.tanggal_dokumen}` },
-		disp_jenis_pelanggaran() { return this.data_split.penyidikan.jenis_pelanggaran || '-' },
-		disp_dugaan_pelanggaran() { return this.data_split.dugaan_pelanggaran || '-' },
+		disp_no_split() { return this.document.no_dok_lengkap || '-' },
+		disp_tgl_split() { return this.document.tanggal_dokumen || '-' },
+		disp_lp() { return `${this.document.lp.no_dok_lengkap} tanggal ${this.document.lp.tanggal_dokumen}` },
+		disp_lpf() { return `${this.document.lpf.no_dok_lengkap} tanggal ${this.document.lpf.tanggal_dokumen}` },
+		disp_jenis_pelanggaran() { return this.document.penyidikan.jenis_pelanggaran || '-' },
+		disp_dugaan_pelanggaran() { return this.document.dugaan_pelanggaran || '-' },
+		disp_pelaku() { 
+			let txt = this.document.penyidikan.pelaku
+				? this.document.penyidikan.pelaku.nama : '-'
+			return txt
+		},
 	},
 	methods: {
-		async getData() {
-			let response = await api.getDisplayDataById(this.doc_type, this.doc_id)
-			this.data_split = response.data.data
-		}
-	},
-	async mounted() {
-		await this.getData()
+		showEntitas(entitas_id) {
+			this.$refs.modal_entitas.showModal('show', entitas_id)
+		},
 	},
 }
 </script>

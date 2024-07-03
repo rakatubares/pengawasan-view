@@ -165,7 +165,7 @@ class MyPdf {
 		let center = this.page_width/2
 		if (Array.isArray(doc_title)) {
 			doc_title.forEach(txt => {
-				this.write(txt, center, this.ln, 'center')	
+				this.write(txt, center, this.ln, 'center')
 				let dim = this.pdf.getTextDimensions(txt)
 				this.pdf.line(center-(dim.w/2)-1, this.ln+0.5, center+(dim.w/2)+1, this.ln+0.5)
 				this.break()

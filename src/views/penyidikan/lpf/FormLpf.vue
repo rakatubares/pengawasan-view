@@ -189,7 +189,6 @@
 			<CRow>
 				<CCol md="12">
 					<MySelectPejabat
-						ref="selectAtasan1"
 						:state.sync="state"
 						:label="{'jabatan': 'Jabatan Atasan Langsung Peneliti', 'nama': 'Nama Atasan Langsung'}"
 						:default_jabatan.sync="default_atasan1"
@@ -202,7 +201,6 @@
 			<CRow>
 				<CCol md="12">
 					<MySelectPejabat
-						ref="selectAtasan2"
 						:state.sync="state"
 						:label="{'jabatan': 'Jabatan Atasan dari Atasan Langsung Peneliti', 'nama': 'Nama Atasan'}"
 						:default_jabatan.sync="default_atasan2"
@@ -225,9 +223,6 @@
 				</CCol>
 			</CRow>
 		</CForm>
-
-		<!-- Alert -->
-		<!-- <MyAlert ref="alert"/> -->
 	</div>
 </template>
 
@@ -236,45 +231,19 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
-// import MyAlert from '../../components/AlertSubmit.vue'
-// import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MySearchDocument from '../../components/SearchDocument.vue'
 import MySelectEntitasOrang from '../../components/SelectEntitasOrang.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
-// import MySelectLpp from '../lpp/SelectLpp.vue'
-// import MyToggleSearchDocument from '../../components/ToggleSearchDocument.vue'
-// import validators from '../../../helpers/validator.js'
-
-// const default_data = {
-// 	id_lpp: null,
-// 	saksi: {id: null},
-// 	tersangka: {id: null},
-// 	peneliti: {user_id: null},
-// 	atasan1: {
-// 		jabatan: {kode: null},
-// 		plh: null,
-// 		user: {user_id: null},
-// 	},
-// 	atasan2: {
-// 		jabatan: {kode: null},
-// 		plh: null,
-// 		user: {user_id: null},
-// 	},
-// }
 
 export default {
 	name: 'FormLpf',
 	components: {
 		DatePicker,
-		// MyAlert,
-		// MySelectEntitas,
 		MySearchDocument,
 		MySelectEntitasOrang,
 		MySelectPejabat,
 		MySelectPetugas,
-		// MyToggleSearchDocument,
-		// MySelectLpp,
 	},
 	props: {
 		state: String,
@@ -298,50 +267,13 @@ export default {
 		},
 	},
 	methods: {
-		// async getData() {
-		// 	let response = await api.getFormDataById(this.doc_type, this.doc_id)
-		// 	this.data = response.data.data
-
-		// 	if (this.data.saksi == null) {
-		// 		this.data.saksi = {id: null}
-		// 	}
-
-		// 	if (this.data.tersangka == null) {
-		// 		this.data.tersangka = {id: null}
-		// 	}
-
-		// 	this.$nextTick(function () {
-		// 		this.renderData()
-		// 	})
-		// },
-		// renderData() {
-		// 	this.$refs.selectLpp.getData(this.data.id_lpp, true)
-		// 	this.$refs.selectSaksi.getEntitas(this.data.saksi.id, true)
-		// 	this.$refs.selectTersangka.getEntitas(this.data.tersangka.id, true)
-		// 	this.$refs.selectPeneliti.getPetugas(this.data.peneliti.user_id, true)
-		// 	this.$refs.selectAtasan1.selected_jabatan = this.data.atasan1.jabatan.kode
-		// 	this.$refs.selectAtasan1.togglePlh(this.data.atasan1.plh)
-		// 	this.$refs.selectAtasan1.getPetugas(this.data.atasan1.user.user_id, true)
-		// 	this.$refs.selectAtasan2.selected_jabatan = this.data.atasan2.jabatan.kode
-		// 	this.$refs.selectAtasan2.togglePlh(this.data.atasan2.plh)
-		// 	this.$refs.selectAtasan2.getPetugas(this.data.atasan2.user.user_id, true)
-		// },
 		async saveData() {
 			if (this.state == 'insert') {
-				// try {
-					var data = await api.storeDoc(this.doc_type, this.data)
-					this.saved_source_id = data.lpp.id
-					this.$emit('update:state', 'edit')
-				// } catch (error) {
-				// 	console.log(`form ${this.doc_type} - save data - error`, error)
-				// }
+				var data = await api.storeDoc(this.doc_type, this.data)
+				this.saved_source_id = data.lpp.id
+				this.$emit('update:state', 'edit')
 			} else if (this.state == 'edit') {
-				// try {
-					var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
-				// 	this.alert(`Data LPF berhasil diubah`)
-				// } catch (error) {
-				// 	console.log(`form ${this.doc_type} - update data - error`, error)
-				// }
+				var data = await api.updateDoc(this.doc_type, this.data.id, this.data)
 			}
 			this.$emit('save-data', data)
 		},
@@ -358,16 +290,7 @@ export default {
 				this.data.tersangka.id = null
 			}
 		}
-		// alert(text, color, time) {
-		// 	this.$refs.alert.show_alert(text, color, time)
-		// },
-		// validatorRequired(val) { return validators.required(val) },
 	},
-	// async mounted() {
-	// 	if (this.state == 'edit') {
-	// 		await this.getData()
-	// 	}
-	// },
 }
 </script>
 

@@ -85,6 +85,7 @@ import PdfRiksaBadan from './penindakan/PdfRiksaBadan'
 import PdfSbp from './penindakan/PdfSbp'
 import PdfSbpN from './penindakan/PdfSbpN'
 import PdfSegel from './penindakan/PdfSegel'
+import PdfSplit from './penyidikan/PdfSplit'
 import PdfPengaman from './penindakan/PdfPengaman'
 import PdfTegah from './penindakan/PdfTegah'
 import PdfTolak1 from './penindakan/PdfTolak1'
@@ -297,6 +298,10 @@ export default {
 
 				case 'lpf':
 					pdf = new PdfLpf(data_pdf)
+					break
+
+				case 'split':
+					pdf = new PdfSplit(data_pdf)
 					break
 			
 				default:

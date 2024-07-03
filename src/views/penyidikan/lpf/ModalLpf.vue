@@ -60,7 +60,7 @@
 
 <script>
 import api from '../../../router/api2.js'
-import DefaultLpf from './DefaultLpp'
+import DefaultLpf from './DefaultLpf'
 import MyAlert from '../../components/AlertSubmit.vue'
 import MyDisplayBhp from '../../details/displays/DisplayBhp.vue' 
 import MyDisplayLpf from './DisplayLpf.vue'
