@@ -11,6 +11,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Intelijen
+const PageSti = () => import('@/views/intelijen/sti/PageSti.vue')
 const PageLkai = () => import('@/views/intelijen/lkai/PageLkai.vue')
 const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
 const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
@@ -78,6 +79,14 @@ function configRoutes () {
 				},
 
 				// Intelijen
+				{
+					path: 'sti',
+					name: 'STI',
+					component: PageSti,
+					beforeEnter: (to, from, next) => {
+						checkRoutePermission('view-sti', next)
+					},
+				},
 				{
 					path: 'lppi',
 					name: 'LPPI',

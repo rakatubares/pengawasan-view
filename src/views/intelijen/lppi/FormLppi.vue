@@ -30,7 +30,7 @@
 				</CCol>
 				<CCol md="3" sm="12">
 					<div class="form-group">
-						<label class="w-100">Tgl. Terima</label>
+						<label class="w-100" for="DateTerimaInternal">Tgl. Terima</label>
 						<date-picker
 							v-model="data.tgl_terima_info_internal"
 							format="DD-MM-YYYY" 
@@ -61,7 +61,7 @@
 				</CCol>
 				<CCol md="3" sm="12">
 					<div class="form-group">
-						<label class="w-100">Tgl. Dokumen</label>
+						<label class="w-100" for="DateDokumenInternal">Tgl. Dokumen</label>
 						<date-picker
 							v-model="data.tgl_dok_info_internal"
 							format="DD-MM-YYYY" 
@@ -106,7 +106,7 @@
 				</CCol>
 				<CCol md="3" sm="12">
 					<div class="form-group">
-						<label class="w-100">Tgl. Terima</label>
+						<label class="w-100" for="DateTerimaEksternal">Tgl. Terima</label>
 						<date-picker
 							v-model="data.tgl_terima_info_eksternal"
 							format="DD-MM-YYYY" 
@@ -137,7 +137,7 @@
 				</CCol>
 				<CCol md="3" sm="12">
 					<div class="form-group">
-						<label class="w-100">Tgl. Dokumen</label>
+						<label class="w-100" for="DateDokumenEksternal">Tgl. Dokumen</label>
 						<date-picker
 							v-model="data.tgl_dok_info_eksternal"
 							format="DD-MM-YYYY" 
@@ -193,7 +193,7 @@
 			</CRow>
 			<CRow class="mb-2">
 				<CCol sm="12" class="pb-0">
-					<label class="w-100">Tindak Lanjut</label>
+					<label class="w-100" for="CheckTindakLanjut">Tindak Lanjut</label>
 				</CCol>
 				<CCol md="3" sm="12" class="pt-0">
 					<CInputCheckbox
@@ -231,7 +231,7 @@
 			<CRow>
 				<CCol md="3" sm="12">
 					<div class="form-group">
-						<label class="w-100">Tgl. Disposisi</label>
+						<label class="w-100" for="DateDisposisi">Tgl. Disposisi</label>
 						<date-picker
 							v-model="data.tanggal_disposisi"
 							format="DD-MM-YYYY" 
@@ -331,8 +331,9 @@ export default {
 			this.data.informasi = val
 		},
 		async saveData() {
+			let data = null
 			if (this.state == 'insert') {
-				var data = await api.storeDoc(this.doc_type, this.data)
+				data = await api.storeDoc(this.doc_type, this.data)
 				this.$emit('update:state', 'edit')
 			} else if (this.state == 'edit') {
 				let update_data = this.data
@@ -341,7 +342,7 @@ export default {
 					delete update_informasi.index
 					return update_informasi
 				})
-				var data = await api.updateDoc(this.doc_type, update_data.id, update_data)
+				data = await api.updateDoc(this.doc_type, update_data.id, update_data)
 			}
 			this.$emit('save-data', data)
 		},
@@ -362,7 +363,3 @@ export default {
 	},
 }
 </script>
-
-<style>
-
-</style>

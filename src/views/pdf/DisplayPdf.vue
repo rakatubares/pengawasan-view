@@ -86,6 +86,7 @@ import PdfSbp from './penindakan/PdfSbp'
 import PdfSbpN from './penindakan/PdfSbpN'
 import PdfSegel from './penindakan/PdfSegel'
 import PdfSplit from './penyidikan/PdfSplit'
+import PdfSti from './intelijen/PdfSti'
 import PdfPengaman from './penindakan/PdfPengaman'
 import PdfTegah from './penindakan/PdfTegah'
 import PdfTolak1 from './penindakan/PdfTolak1'
@@ -167,12 +168,8 @@ export default {
 
 			switch (doc_type) {
 				// Intelijen
-				case 'lkai':
-					pdf = new PdfLkai(data_pdf)
-					break;
-
-				case 'lkain':
-					pdf = new PdfLkaiN(data_pdf)
+				case 'sti':
+					pdf = new PdfSti(data_pdf)
 					break;
 
 				case 'lppi':
@@ -181,6 +178,14 @@ export default {
 
 				case 'lppin':
 					pdf = new PdfLppiN(data_pdf)
+					break;
+
+				case 'lkai':
+					pdf = new PdfLkai(data_pdf)
+					break;
+
+				case 'lkain':
+					pdf = new PdfLkaiN(data_pdf)
 					break;
 
 				case 'nhi':

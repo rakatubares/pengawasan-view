@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper display-tolak1">
+	<div class="wrapper display-lppi">
 		<CRow>
 			<CCol class="mt-3 mx-2" md="12">
 				<CRow>

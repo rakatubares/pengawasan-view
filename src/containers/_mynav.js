@@ -6,7 +6,7 @@ export default [
 				_name: 'CSidebarNavTitle',
 				_children: ['Form'],
 				permissions: [
-					'view-lppi', 'view-lkai', 'view-nhi', 'view-ni',
+					'view-sti', 'view-lppi', 'view-lkai', 'view-nhi', 'view-ni',
 					'view-lppin', 'view-lkain', 'view-nhin', 'view-nin',
 					'view-li', 'view-lap', 'view-lapn', 
 					'view-riksa', 'view-riksa_badan', 
@@ -26,6 +26,13 @@ export default [
 				name: 'INTELIJEN',
 				icon: 'cil-zoom',
 				_children: [
+					{
+						_name: 'CSidebarNavItem',
+						name: 'STI',
+						to: '/sti',
+						icon: 'cil-file',
+						permissions: 'view-sti',
+					},
 					{
 						_name: 'CSidebarNavItem',
 						name: 'LPPI',

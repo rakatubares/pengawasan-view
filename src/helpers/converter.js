@@ -71,6 +71,41 @@ converters.age = (date1, date2) => {
 	return `${age} tahun`
 }
 
+converters.dateRange = (date1, date2) => {
+	var date1 = moment(date1, 'DD-MM-YYYY')
+	var date2 = moment(date2, 'DD-MM-YYYY')
+
+	date1 = new Date(date1)
+	date2 = new Date(date2)
+
+	var year1 = date1.getUTCFullYear()
+	var year2 = date2.getUTCFullYear()
+
+	var month1 = converters.monthName(date1)
+	var month2 = converters.monthName(date2)
+
+	var day1 = date1.getUTCDate()
+	var day2 = date2.getUTCDate()
+
+	var txt = ''
+
+	if (year1 == year2) {
+		if (month1 == month2) {
+			if (day1 == day2) {
+				txt = `${day2} ${month2} ${year2}`
+			} else {
+				txt = `${day1} s.d. ${day2} ${month2} ${year2}`
+			}
+		} else {
+			txt = `${day1} ${month1} s.d. ${day2} ${month2} ${year2}`
+		}
+	} else {
+		txt = `${day1} ${month1} ${year1} s.d. ${day2} ${month2} ${year2}`
+	}
+
+	return txt
+}
+
 converters.array_text = (txt, max_length) => {
 	let result
 
