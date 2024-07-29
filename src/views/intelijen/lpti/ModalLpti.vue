@@ -2,7 +2,7 @@
     <div class="wrapper">
         <MyModalTabs
             ref="modal_tabs"
-            :title="`Data ${label_lkai}`"
+            :title="`Data ${doc_name}`"
             :state.sync="state"
             :doc_type.sync="doc_type"
             :document.sync="document"
@@ -13,30 +13,18 @@
         >
             <template #tabs>
                 <CTab :title="tabs_list[0]['title']">
-                    <MyFormLkai
-                        ref="FormLkai"
-                        v-if="(['insert','edit'].includes(local_state))"
+                    <MyFormLpti
+                        ref="FormNhi"
+                        v-if="['insert','edit'].includes(local_state)"
                         :state.sync="local_state"
-                        :doc_type="doc_type"
+                        :doc_type.sync="doc_type"
                         :document.sync="document"
-                        :kode_lppi="kode_lppi"
-                        :label_lkai="label_lkai"
-                        :label_lppi="label_lppi"
-                        :label_npi="label_npi"
-                        :label_nhi="label_nhi"
-                        :label_ni="label_ni"
-                        :default_pejabat="default_pejabat"
                         @save-data="setDocument"
                     />
-                    <MyDisplayLkai
-                        v-else-if="(local_state == 'show')"
+                    <MyDisplayLpti
+                        v-else-if="local_state == 'show'"		
                         :doc_type="doc_type"
                         :document.sync="document"
-                        :label_lppi="label_lppi"
-						:label_lpti="label_lpti"
-                        :label_npi="label_npi"
-                        :label_nhi="label_nhi"
-                        :label_ni="label_ni"
                     />
                 </CTab>
                 <CTab 
@@ -62,42 +50,34 @@
 
 <script>
 import api from '../../../router/api2.js'
-import converters from '../../../helpers/converter.js'
-import DefaultLkai from './DefaultLkai'
+import DefaultLpti from './DefaultLpti'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MyDisplayLkai from './DisplayLkai.vue'
+import MyDisplayLpti from './DisplayLpti.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
-import MyFormLkai from './FormLkai.vue'
+import MyFormLpti from './FormLpti.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 
 export default {
-    name: 'ModalLkai',
+    name: 'ModalLpti',
     components: {
-        DefaultLkai,
+        DefaultLpti,
         MyAlert,
-        MyDisplayLkai,
+        MyDisplayLpti,
         MyDisplayPdf,
-        MyFormLkai,
+        MyFormLpti,
         MyModalTabs,
     },
     props: {
         state: String,
         doc_type: String,
+        doc_name: String,
         id: Number,
-        kode_lppi: String,
-        label_lkai: String,
-        label_lppi: String,
-		label_lpti: String,
-        label_npi: String,
-        label_nhi: String,
-        label_ni: String,
-        default_pejabat: String,
         permission_to_rollback: String,
     },
     data() {
         return {
             doc_id: this.id,
-            document: JSON.parse(JSON.stringify(DefaultLkai.data)),
+            document: JSON.parse(JSON.stringify(DefaultLpti.data)),
             local_state: this.state,
             tabs_list: [
                 {
@@ -109,7 +89,7 @@ export default {
                     visibility: false
                 }
             ],
-            current_tab: 0,
+            current_tab: 0
         }
     },
     watch: {
@@ -140,19 +120,17 @@ export default {
             this.alert('DATA BERHASIL DISIMPAN')
         },
         fillNull() {
-            let posisi = Object.keys(this.document.petugas)
-            for (const key in DefaultLkai.data.petugas) {
-                if (!posisi.includes(key)) {
-                    this.document.petugas[key] = JSON.parse(JSON.stringify(DefaultLkai.data.petugas[key]))
-                }
+            if (this.document.sti == null) {
+                this.document.sti = JSON.parse(JSON.stringify(DefaultLpti.data.sti))
+            }
+
+            if (this.document.pelaku == null) {
+                this.document.pelaku = JSON.parse(JSON.stringify(DefaultLpti.data.pelaku))
             }
         },
         changeTabsList(state) {
             switch (state) {
                 case 'show':
-                    this.tabs_list[1].visibility = true
-                    break;
-
                 case 'edit':
                     this.tabs_list[1].visibility = true
                     break;
@@ -173,12 +151,6 @@ export default {
     async beforeMount() {
         if (['show', 'edit'].includes(this.state)) {
             await this.getData()
-            if (this.state == 'edit') {
-                await this.$refs.FormLkai.mountData()
-            }
-        } else {
-            this.document.tanggal_terima_pejabat = converters.currentDate()
-            this.document.tanggal_terima_atasan = converters.currentDate()
         }
     },
     mounted() {

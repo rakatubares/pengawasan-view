@@ -1,51 +1,51 @@
 <template>
-	<div class="wrapper">
-		<MyModalTabs
-			ref="modal_tabs"
-			:title="`Data ${doc_name}`"
-			:state.sync="state"
-			:doc_type.sync="doc_type"
-			:document.sync="document"
-			:tabs_list.sync="tabs_list"
-			:current_tab.sync="current_tab"
-			:permission_to_rollback="permission_to_rollback"
-			@close-modal="closeModal"
-		>
-			<template #tabs>
-				<CTab :title="tabs_list[0]['title']">
-					<MyFormLppi
-						v-if="['insert','edit'].includes(local_state)"
-						:state.sync="local_state"
-						:doc_type="doc_type"
-						:doc_name="doc_name"
-						:document.sync="document"
-						@save-data="setDocument"
-					/>
-					<MyDisplayLppi
-						v-else-if="local_state == 'show'"
-						:doc_type="doc_type"
-						:document.sync="document"
-					/>
-				</CTab>
-				<CTab 
-					v-if="tabs_list[1]['visibility']"
-					:title="tabs_list[1]['title']"
-				>
-					<div v-if="current_tab == 1">
-						<MyDisplayPdf 
-							v-if="['show','edit'].includes(local_state)"
-							:state.sync="local_state"
-							:doc_type="doc_type" 
-							:document.sync="document"
-						/>
-					</div>
-				</CTab>
-			</template>
-		</MyModalTabs>
+    <div class="wrapper">
+        <MyModalTabs
+            ref="modal_tabs"
+            :title="`Data ${doc_name}`"
+            :state.sync="state"
+            :doc_type.sync="doc_type"
+            :document.sync="document"
+            :tabs_list.sync="tabs_list"
+            :current_tab.sync="current_tab"
+            :permission_to_rollback="permission_to_rollback"
+            @close-modal="closeModal"
+        >
+            <template #tabs>
+                <CTab :title="tabs_list[0]['title']">
+                    <MyFormLppi
+                        v-if="['insert','edit'].includes(local_state)"
+                        :state.sync="local_state"
+                        :doc_type="doc_type"
+                        :doc_name="doc_name"
+                        :document.sync="document"
+                        @save-data="setDocument"
+                    />
+                    <MyDisplayLppi
+                        v-else-if="local_state == 'show'"
+                        :doc_type="doc_type"
+                        :document.sync="document"
+                    />
+                </CTab>
+                <CTab 
+                    v-if="tabs_list[1]['visibility']"
+                    :title="tabs_list[1]['title']"
+                >
+                    <div v-if="current_tab == 1">
+                        <MyDisplayPdf 
+                            v-if="['show','edit'].includes(local_state)"
+                            :state.sync="local_state"
+                            :doc_type="doc_type" 
+                            :document.sync="document"
+                        />
+                    </div>
+                </CTab>
+            </template>
+        </MyModalTabs>
 
-		<!-- Alert -->
-		<MyAlert ref="alert"></MyAlert>
-	</div>
+        <!-- Alert -->
+        <MyAlert ref="alert"></MyAlert>
+    </div>
 </template>
 
 <script>
@@ -58,107 +58,108 @@ import MyFormLppi from './FormLppi.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 
 export default {
-	name: 'ModalLppi',
-	components: {
-		DefaultLppi,
-		MyAlert,
-		MyDisplayLppi,
-		MyDisplayPdf,
-		MyFormLppi,
-		MyModalTabs,
-	},
-	props: {
-		state: String,
-		doc_type: String,
-		doc_name: String,
-		id: Number,
-		permission_to_rollback: String,
-	},
-	data() {
-		return {
-			doc_id: this.id,
-			document: JSON.parse(JSON.stringify(DefaultLppi.data)),
-			local_state: this.state,
-			tabs_list: [
-				{
-					title: 'Uraian',
-					visibility: true,
-				}, 
-				{
-					title: 'Print',
-					visibility: false
-				}
-			],
-			current_tab: 0,
-		}
-	},
-	watch: {
-		state(val) {
-			this.local_state = val
-		},
-		local_state: function(val) {
-			this.$emit('update:state', val)
-			this.changeTabsList(val)
-		},
-		id(val) {
-			this.doc_id = val
-		},
-		doc_id(val) {
-			this.$emit('update:id', val)
-		},
-	},
-	methods: {
-		async getData() {
-			let response = await api.getDocumentById(this.doc_type, this.doc_id)
-			this.document = response.data
-			this.fillNull()
-		},
-		setDocument(val) {
-			this.document = JSON.parse(JSON.stringify(val))
-			this.fillNull()
+    name: 'ModalLppi',
+    components: {
+        DefaultLppi,
+        MyAlert,
+        MyDisplayLppi,
+        MyDisplayPdf,
+        MyFormLppi,
+        MyModalTabs,
+    },
+    props: {
+        state: String,
+        doc_type: String,
+        doc_name: String,
+        id: Number,
+        permission_to_rollback: String,
+    },
+    data() {
+        return {
+            doc_id: this.id,
+            document: JSON.parse(JSON.stringify(DefaultLppi.data)),
+            local_state: this.state,
+            tabs_list: [
+                {
+                    title: 'Uraian',
+                    visibility: true,
+                }, 
+                {
+                    title: 'Print',
+                    visibility: false
+                }
+            ],
+            current_tab: 0,
+        }
+    },
+    watch: {
+        state(val) {
+            this.local_state = val
+        },
+        local_state: function(val) {
+            this.$emit('update:state', val)
+            this.changeTabsList(val)
+        },
+        id(val) {
+            this.doc_id = val
+        },
+        doc_id(val) {
+            this.$emit('update:id', val)
+        },
+    },
+    methods: {
+        async getData() {
+            let response = await api.getDocumentById(this.doc_type, this.doc_id)
+            this.document = response.data
+            this.fillNull()
+        },
+        setDocument(val) {
+            this.document = JSON.parse(JSON.stringify(val))
+            this.fillNull()
 
-			this.alert('DATA BERHASIL DISIMPAN')
-		},
-		fillNull() {
-			let posisi = Object.keys(this.document.petugas)
-			for (const key in DefaultLppi.data.petugas) {
-				if (!posisi.includes(key)) {
-					this.document.petugas[key] = JSON.parse(JSON.stringify(DefaultLppi.data.petugas[key]))
-				}
+            this.alert('DATA BERHASIL DISIMPAN')
+        },
+        fillNull() {
+			if (this.document.media_info_internal == null) {
+				this.document.media_info_internal = DefaultLppi.data.media_info_internal
 			}
-		},
-		changeTabsList(state) {
-			switch (state) {
-				case 'show':
-					this.tabs_list[1].visibility = true
-					break;
-				case 'edit':
-					this.tabs_list[1].visibility = true
-					break;
 			
-				default:
-					this.tabs_list[1].visibility = false
-					break;
-			}
-			this.$refs.modal_tabs.getNavs(this.current_tab)
-		},
-		closeModal() {
-			this.$emit('close-modal')
-		},
-		alert(text, color, time) {
-			this.$refs.alert.show_alert(text, color, time)
-		},
-	},
-	async beforeMount() {
-		if (['show', 'edit'].includes(this.state)) {
-			await this.getData()
-		}
-	},
-	mounted() {
-		this.changeTabsList(this.local_state)
-	},
+            let posisi = Object.keys(this.document.petugas)
+            for (const key in DefaultLppi.data.petugas) {
+                if (!posisi.includes(key)) {
+                    this.document.petugas[key] = JSON.parse(JSON.stringify(DefaultLppi.data.petugas[key]))
+                }
+            }
+        },
+        changeTabsList(state) {
+            switch (state) {
+                case 'show':
+                    this.tabs_list[1].visibility = true
+                    break;
+                case 'edit':
+                    this.tabs_list[1].visibility = true
+                    break;
+            
+                default:
+                    this.tabs_list[1].visibility = false
+                    break;
+            }
+            this.$refs.modal_tabs.getNavs(this.current_tab)
+        },
+        closeModal() {
+            this.$emit('close-modal')
+        },
+        alert(text, color, time) {
+            this.$refs.alert.show_alert(text, color, time)
+        },
+    },
+    async beforeMount() {
+        if (['show', 'edit'].includes(this.state)) {
+            await this.getData()
+        }
+    },
+    mounted() {
+        this.changeTabsList(this.local_state)
+    },
 }
 </script>
-
-<style>
-</style>

@@ -5,6 +5,8 @@
             :doc_type="doc_type"
             :table_title="table_title"
             :table_fields="table_fields"
+            :custom_fields="custom_fields"
+            :compute_list="computeList"
             :modal_data_props.sync="modal_data_props"
             :construct_delete_text="constructDeleteText"
             :permission_to_create="permission_to_create"
@@ -12,18 +14,12 @@
             :permission_to_delete="permission_to_delete"
         >
             <template #modal-data>
-                <MyModalLkai 
+                <MyModalLpti
                     v-if="modal_data_props.show"
                     :state.sync="modal_data_props.state"
                     :doc_type="doc_type"
+                    :doc_name="doc_name"
                     :id.sync="modal_data_props.doc_id"
-                    :kode_lppi="kode_lppi"
-                    :label_lkai="label_lkai"
-                    :label_lppi="label_lppi"
-                    :label_npi="label_npi"
-                    :label_nhi="label_nhi"
-                    :label_ni="label_ni"
-                    :default_pejabat="default_pejabat"
                     :permission_to_rollback="permission_to_rollback"
                     @close-modal="closeModal"
                 />
@@ -33,73 +29,51 @@
 </template>
 
 <script>
-import MyModalLkai from './ModalLkai.vue'
+import MyModalLpti from './ModalLpti.vue'
 import MyPageDoc from '../../components/PageDoc.vue'
 
+
 export default {
-    name: 'PageLkai',
+    name: 'PageLpti',
     components: {
-        MyModalLkai,
+        MyModalLpti,
         MyPageDoc,
     },
     props: {
         doc_type: {
             type: String,
-            default: 'lkai'
+            default: 'lpti'
         },
-        kode_lppi: {
+        doc_name: {
             type: String,
-            default: 'lppi'
-        },
-        label_lkai: {
-            type: String,
-            default: 'LKAI'
-        },
-        label_lppi: {
-            type: String,
-            default: 'LPPI'
-        },
-        label_npi: {
-            type: String,
-            default: 'NPI'
-        },
-        label_nhi: {
-            type: String,
-            default: 'NHI'
-        },
-        label_ni: {
-            type: String,
-            default: 'NI'
-        },
-        default_pejabat: {
-            type: String,
-            default: 'bd.0501'
+            default: 'LPT-I'
         },
         permission_to_create: {
             type: String,
-            default: 'create-lkai'
+            default: 'create-lpti'
         },
         permission_to_update: {
             type: String,
-            default: 'create-lkai'
+            default: 'create-lpti'
         },
         permission_to_delete: {
             type: String,
-            default: 'delete-lkai'
+            default: 'delete-lpti'
         },
         permission_to_rollback: {
             type: String,
-            default: 'rollback-lkai'
+            default: 'rollback-lpti'
         },
     },
     data() {
         return {
-            table_title: `Daftar ${this.label_lkai}`,
+            table_title: `Daftar ${this.doc_name}`,
             table_fields: [
-                { key: 'no_dok_lengkap', label: `No ${this.label_lkai}` },
-                { key: 'tanggal_dokumen', label: `Tgl ${this.label_lkai}` },
-                { key: 'analis', label: 'Analis' },
+                { key: 'no_dok_lengkap', label: `No ${this.doc_name}` },
+                { key: 'tanggal_dokumen', label: `Tgl ${this.doc_name}` },
+                { key: 'sti', label: `ST-I` },
             ],
+            custom_fields: ['sti'],
             modal_data_props: {
                 show: false,
                 state: null,
@@ -108,6 +82,14 @@ export default {
         }
     },
     methods: {
+        computeList(list) {
+            return list.map(item => {
+                return {
+                    ...item,
+                    sti: item.no_sti + '</br>' + item.tgl_sti,
+                }
+            })
+        },
         closeModal() {
             this.$refs.page_doc.getDataTable()
             this.modal_data_props.state = null
@@ -117,6 +99,8 @@ export default {
         constructDeleteText(item) {
             let text = "Apakah Anda yakin untuk menghapus data " 
                 + item.no_dok_lengkap.bold() 
+                + " atas ST-I " + item.no_sti.bold()
+                + " tanggal " + item.tgl_sti.bold()
                 + "?"
             return text
         }
