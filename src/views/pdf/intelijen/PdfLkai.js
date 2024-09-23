@@ -123,64 +123,10 @@ class PdfLkai extends Pdf
         this.break(2)
 
         ///// Analisis /////
-        // Ikhtisar informasi
-        let y_rect_ikhtisar = this.ln - 4
-        this.pdf.setFont('Helvetica', 'bold')
-        this.write('IKHTISAR INFORMASI', 105, this.ln, 'center')
-        this.pdf.setFont('Helvetica', 'normal')
-        this.pdf.rect(this.left_margin, y_rect_ikhtisar, 190, 5, 'D');
-        this.break(1)
-
-        let infos = this.txt.informasi.split('\n') 
-        infos.forEach(info => {
-            this.write(info, inds.num, undefined, undefined, 5)
-            this.break(.5)
-        })
-        let h_rect_ikhtisar = this.ln - y_rect_ikhtisar
-        this.pdf.rect(this.left_margin, y_rect_ikhtisar, 190, h_rect_ikhtisar, 'D')
-        this.break(1)
-
-        // Prosedur
-        let y_rect_prosedur = this.ln - 4
-        this.pdf.setFont('Helvetica', 'bold')
-        this.write('PROSEDUR ANALISIS', 105, this.ln, 'center')
-        this.pdf.setFont('Helvetica', 'normal')
-        this.pdf.rect(this.left_margin, y_rect_prosedur, 190, 5, 'D');
-        this.break(1)
-
-        this.write(this.txt.prosedur, inds.num, undefined, undefined, 5)
-        this.break(.25)
-        let h_rect_prosedur = this.ln - y_rect_prosedur
-        this.pdf.rect(this.left_margin, y_rect_prosedur, 190, h_rect_prosedur, 'D')
-        this.break(1)
-
-        // Hasil
-        let y_rect_hasil = this.ln - 4
-        this.pdf.setFont('Helvetica', 'bold')
-        this.write('HASIL ANALISIS', 105, this.ln, 'center')
-        this.pdf.setFont('Helvetica', 'normal')
-        this.pdf.rect(this.left_margin, y_rect_hasil, 190, 5, 'D');
-        this.break(1)
-
-        this.write(this.txt.hasil, inds.num, undefined, undefined, 5)
-        this.break(.25)
-        let h_rect_hasil = this.ln - y_rect_hasil
-        this.pdf.rect(this.left_margin, y_rect_hasil, 190, h_rect_hasil, 'D')
-        this.break(1)
-
-        // Kesimpulan
-        let y_rect_kesimpulan = this.ln - 4
-        this.pdf.setFont('Helvetica', 'bold')
-        this.write('KESIMPULAN', 105, this.ln, 'center')
-        this.pdf.setFont('Helvetica', 'normal')
-        this.pdf.rect(this.left_margin, y_rect_kesimpulan, 190, 5, 'D');
-        this.break(1)
-
-        this.write(this.txt.kesimpulan, inds.num, undefined, undefined, 5)
-        this.break(.25)
-        let h_rect_kesimpulan = this.ln - y_rect_kesimpulan
-        this.pdf.rect(this.left_margin, y_rect_kesimpulan, 190, h_rect_kesimpulan, 'D')
-        this.break(1)
+		this.writeTextBox('IKHTISAR INFORMASI', this.txt.informasi)
+		this.writeTextBox('PROSEDUR ANALISIS', this.txt.prosedur)
+		this.writeTextBox('HASIL ANALISIS', this.txt.hasil)
+		this.writeTextBox('KESIMPULAN', this.txt.kesimpulan)
 
         ///// Rekomendasi /////
         this.pdf.setFont('Helvetica', 'bold')
@@ -252,6 +198,45 @@ class PdfLkai extends Pdf
             this.data.tanggal_terima_atasan,
         )
     }
+
+	writeTextBox(title, txt) {
+		let y_rect = this.ln - 4
+        
+		// Write title
+		this.pdf.setFont('Helvetica', 'bold')
+        this.write(title, 105, this.ln, 'center')
+        this.pdf.setFont('Helvetica', 'normal')
+        
+		// Create title box
+		this.pdf.rect(this.left_margin, y_rect, 190, 5, 'D');
+        this.break(1)
+
+		// Write content
+		let sPage = this.currentPage
+		this.writeParagraphs(txt, inds.num, undefined, undefined, 5, 5)
+		let ePage = this.currentPage
+
+		// Create content box
+		this.generateRect(sPage, ePage, y_rect)
+        this.break(1)
+	}
+
+	generateRect(sPage, ePage, yRect) {
+		if (sPage == ePage) {
+			let hRect = this.ln - yRect
+			this.pdf.rect(this.left_margin, yRect, 190, hRect, 'D')
+		} else {
+			// Create rectangle in current page
+			let hRectCurrent = this.ln - 10
+			this.pdf.rect(this.left_margin, 10, 190, hRectCurrent, 'D')
+
+			// Create rectangle in start page
+			this.goToPage(sPage)
+			let hRectStart = this.page_height - 10 - yRect
+			this.pdf.rect(this.left_margin, yRect, 190, hRectStart, 'D')
+			this.goToPage(ePage)
+		}
+	}
 
     generateTtd(data_pejabat, keputusan, catatan, tanggal_terima) {
         this.pdf.setFont('Helvetica', 'bold')
