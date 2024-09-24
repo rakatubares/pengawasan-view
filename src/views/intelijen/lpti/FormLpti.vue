@@ -2,6 +2,20 @@
     <div class="wrapper my-form">
         <CForm class="pt-4">
             <div>
+                <!-- Seksi -->
+                <CRow>
+                    <CCol v-if="data.no_dok == null" md="4" sm="12">
+                        <CSelect
+                            label="Seksi"
+                            :options="seksi_options"
+                            :value.sync="data.seksi"
+                        />
+                    </CCol>
+                    <CCol v-else sm="12" >
+                        <b>Seksi:</b> {{ data.seksi }}
+                    </CCol>
+                </CRow>
+
                 <!-- No ST -->
                 <CRow class="mt-0">
                     <CCol sm="12" md="8">
@@ -34,7 +48,7 @@
                 </CRow>
 
                 <!-- Tugas -->
-                <CRow class="sep pb-3">
+                <CRow class="pb-3">
                     <CCol md="12">
                         <CRow>
                             <CCol>
@@ -69,7 +83,7 @@
                 </CRow>
 
                 <!-- Wilayah -->
-                <CRow class="sep">
+                <CRow>
                     <CCol md="12">
                         <MyComboboxLokasi
                             label="Wilayah Penugasan"
@@ -398,6 +412,7 @@
 
 <script>
 const jenis_pelanggaran = ['Kepabeanan', 'Cukai']
+const list_seksi = ['Intelijen I', 'Intelijen II']
 
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
@@ -413,7 +428,7 @@ export default {
     name: 'FormLpti',
     components: {
         DatePicker,
-		MyComboboxLokasi,
+        MyComboboxLokasi,
         MyInputTembusan,
         MySearchDocument,
         MySelectEntitas,
@@ -428,6 +443,7 @@ export default {
         return {
             data: JSON.parse(JSON.stringify(this.document)),
             jenis_pelanggaran_options: [ ...jenis_pelanggaran ],
+            seksi_options: [ ...list_seksi ],
         }
     },
     watch: {
