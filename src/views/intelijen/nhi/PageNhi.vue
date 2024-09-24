@@ -54,6 +54,7 @@ export default {
             table_fields: [
                 { key: 'no_dok_lengkap', label: `No ${this.doc_name}` },
                 { key: 'tanggal_dokumen', label: `Tgl ${this.doc_name}` },
+				{ key: 'kegiatan', label: 'Kegiatan' },
                 { key: 'lkai', label: 'LKAI' },
             ],
             custom_fields: ['lkai'],
