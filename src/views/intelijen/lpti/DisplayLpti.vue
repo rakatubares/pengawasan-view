@@ -14,10 +14,34 @@
                 </CRow>
                 <CRow class="mb-1">
                     <CCol md="3" class="py-1">
-                        <b>No ST-I</b>
+                        <b>No ST</b>
                     </CCol>
                     <CCol md="9" class="py-1">
-                        {{ disp_sti }}
+                        {{ disp_st }}
+                    </CCol>
+                </CRow>
+				<CRow class="mb-1">
+                    <CCol md="3" class="py-1">
+                        <b>Wilayah Penugasan</b>
+                    </CCol>
+                    <CCol md="9" class="py-1">
+                        {{ disp_wilayah }}
+                    </CCol>
+                </CRow>
+                <CRow class="mb-1">
+                    <CCol md="3" class="py-1">
+                        <b>Tanggal Mulai</b>
+                    </CCol>
+                    <CCol md="9" class="py-1">
+                        {{ disp_tgl_mulai }}
+                    </CCol>
+                </CRow>
+                <CRow class="mb-1">
+                    <CCol md="3" class="py-1">
+                        <b>Tanggal Akhir</b>
+                    </CCol>
+                    <CCol md="9" class="py-1">
+                        {{ disp_tgl_akhir }}
                     </CCol>
                 </CRow>
 
@@ -206,28 +230,28 @@
                 </div>
 
                 <MyDisplayPegawai
-					title="Ketua Tim"
-					:data.sync="document.petugas.pembuat"
-				/>
+                    title="Ketua Tim"
+                    :data.sync="document.petugas.pembuat"
+                />
 
                 <div class="sep mt-4">
-					<CRow class="mb-1 mt-2">
-						<CCol md="3" class="py-1">
-							<b>Tembusan</b>
-						</CCol>
-						<CCol md="9" class="py-1" v-if="data_tembusan != null">
-							<div v-if="data_tembusan.length > 0">
-								<p class="mb-1" v-for="(txt,id) in data_tembusan" :key="id">- {{txt}}</p>
-							</div>
-							<div v-else>
-								-
-							</div>
-						</CCol>
-						<CCol md="9" class="py-1" v-else>
-							-
-						</CCol>
-					</CRow>
-				</div>
+                    <CRow class="mb-1 mt-2">
+                        <CCol md="3" class="py-1">
+                            <b>Tembusan</b>
+                        </CCol>
+                        <CCol md="9" class="py-1" v-if="data_tembusan != null">
+                            <div v-if="data_tembusan.length > 0">
+                                <p class="mb-1" v-for="(txt,id) in data_tembusan" :key="id">- {{txt}}</p>
+                            </div>
+                            <div v-else>
+                                -
+                            </div>
+                        </CCol>
+                        <CCol md="9" class="py-1" v-else>
+                            -
+                        </CCol>
+                    </CRow>
+                </div>
 
             </CCol>
         </CRow>
@@ -240,8 +264,7 @@ import MyDisplayPegawai from '../../components/DisplayPegawai.vue'
 export default {
     name: 'DisplayLpti',
     components: {
-    	MyDisplayPegawai,
-    // 	MyDisplayPejabat,
+        MyDisplayPegawai,
     },
     props: {
         doc_type: String,
@@ -250,18 +273,21 @@ export default {
     computed: {
         disp_no_lpti() { return this.document.no_dok_lengkap || '-' },
         disp_tgl_lpti() { return this.document.tanggal_dokumen || '-' },
-        disp_sti() { 
-            let sti = '-'
+        disp_st() { 
+            let st = '-'
             if (
-                (this.document.sti.no_dok_lengkap != null) &&
-                (this.document.sti.tanggal_dokumen != null)
+                (this.document.nomor_st != null) &&
+                (this.document.tanggal_st != null)
             ) {
-                let no_sti = this.document.sti.no_dok_lengkap || '-'
-                let tgl_sti = this.document.sti.tanggal_dokumen || '-'
-                sti = `${no_sti} tanggal ${tgl_sti}`
+                let no_st = this.document.nomor_st || '-'
+                let tgl_st = this.document.tanggal_st || '-'
+                st = `${no_st} tanggal ${tgl_st}`
             }
-            return sti
+            return st
         },
+		disp_wilayah() { return this.document.wilayah || '-' },
+		disp_tgl_mulai() { return this.document.tanggal_mulai || '-' },
+		disp_tgl_akhir() { return this.document.tanggal_akhir || '-' },
         disp_tempat_pengumpulan() { return this.document.tempat_pengumpulan || '-'},
         disp_sumber_informasi() { return this.document.sumber_informasi || '-'},
         disp_metode_pengumpulan() { return this.document.metode_pengumpulan || '-'},
@@ -296,7 +322,7 @@ export default {
         disp_informasi_lain() { return this.document.informasi_lain || '-'},
         disp_kesimpulan() { return this.document.kesimpulan || '-'},
         disp_rekomendasi() { return this.document.rekomendasi || '-'},
-		data_tembusan() { return  this.document.tembusan || null },
+        data_tembusan() { return  this.document.tembusan || null },
     },
 }
 </script>

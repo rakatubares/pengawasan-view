@@ -6,21 +6,23 @@ export default [
                 _name: 'CSidebarNavTitle',
                 _children: ['Form'],
                 permissions: [
-                    'view-sti', 'view-lpti', 'view-lppi', 'view-lkai', 'view-nhi', 'view-ni',
+                    'view-lpti', 'view-lppi', 'view-lkai', 'view-nhi', 'view-ni',
                     'view-lppin', 'view-lkain', 'view-nhin', 'view-nin',
                     'view-li', 'view-lap', 'view-lapn', 
                     'view-riksa', 'view-riksa_badan', 
                     'view-segel', 'view-buka_segel', 'view-titip', 
                     'view-pengaman', 'view-buka_pengaman',
                     'view-contoh', 'view-reekspor', 'view-bast',
-                    'view-sbp', 'view-tolak1', 'view-tolak2',
-                    'view-lpt', 'view-lphp', 'view-lp',
-                    'view-sbpn', 'view-tolak1n', 'view-tolak2n',
-                    'view-lphpn', 'view-lpn',
+                    'view-sbp', 'view-lpt', 'view-lphp', 'view-lp',
+                    'view-sbpn',  'view-lphpn', 'view-lpn',
                     'view-lpp', 'view-lpf', 'view-split', 'view-lhp', 'view-lrp',
                     
                 ]
             },
+
+			/**
+			 * INTELIJEN
+			 */
             {
                 _name: 'CSidebarNavDropdown',
                 name: 'INTELIJEN',
@@ -28,14 +30,7 @@ export default [
                 _children: [
                     {
                         _name: 'CSidebarNavItem',
-                        name: 'ST-I',
-                        to: '/sti',
-                        icon: 'cil-file',
-                        permissions: 'view-sti',
-                    },
-                    {
-                        _name: 'CSidebarNavItem',
-                        name: 'LPT-I',
+                        name: 'LPT',
                         to: '/lpti',
                         icon: 'cil-file',
                         permissions: 'view-lpti',
@@ -70,6 +65,10 @@ export default [
                     },
                 ],
             },
+
+			/**
+			 * PENINDAKAN
+			 */
             {
                 _name: 'CSidebarNavDropdown',
                 name: 'PENINDAKAN',
@@ -190,14 +189,14 @@ export default [
                                 name: 'BA Penolakan SBP 1',
                                 to: '/tolak1',
                                 icon: 'cil-file',
-                                permissions: 'view-tolak1',
+                                permissions: 'view-sbp',
                             },
                             {
                                 _name: 'CSidebarNavItem',
                                 name: 'BA Penolakan SBP 2',
                                 to: '/tolak2',
                                 icon: 'cil-file',
-                                permissions: 'view-tolak2',
+                                permissions: 'view-sbp',
                             }
                         ]
                     },
@@ -224,6 +223,10 @@ export default [
                     },
                 ],
             },
+
+			/**
+			 * NPP
+			 */
             {
                 _name: 'CSidebarNavDropdown',
                 name: 'NPP',
@@ -281,14 +284,14 @@ export default [
                                 name: 'BA Penolakan SBP 1',
                                 to: '/tolak1',
                                 icon: 'cil-file',
-                                permissions: 'view-tolak1n',
+                                permissions: 'view-sbpn',
                             },
                             {
                                 _name: 'CSidebarNavItem',
                                 name: 'BA Penolakan SBP 2',
                                 to: '/tolak2',
                                 icon: 'cil-file',
-                                permissions: 'view-tolak2n',
+                                permissions: 'view-sbpn',
                             },
                         ]
                     },
@@ -308,6 +311,10 @@ export default [
                     },
                 ]
             },
+
+			/**
+			 * PENYIDIKAN
+			 */
             {
                 _name: 'CSidebarNavDropdown',
                 name: 'PENYIDIKAN',

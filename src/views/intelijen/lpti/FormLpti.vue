@@ -2,15 +2,132 @@
     <div class="wrapper my-form">
         <CForm class="pt-4">
             <div>
-                <CRow>
-                    <CCol md="12">
-                        <MySearchDocument
-                            ref="SearchSti"
-                            doc_type="sti"
-                            label="ST-I"
-                            :value.sync="data.sti.id"
-                            :exceptions.sync="saved_sti"
+                <!-- No ST -->
+                <CRow class="mt-0">
+                    <CCol sm="12" md="8">
+                        <CInput
+                            :label="`Nomor ST`"
+                            :value.sync="data.nomor_st"
                         />
+                    </CCol>
+                    <CCol sm="12" md="4">
+                        <div class="form-group">
+                            <label class="w-100" for="tanggal_st">Tgl. ST</label>
+                            <date-picker
+                                v-model="data.tanggal_st"
+                                format="DD-MM-YYYY" 
+                                value-type="format"
+                                type="date"
+                            >
+                                <template v-slot:input="slotProps">
+                                    <input
+                                        class="form-control" 
+                                        type="text" 
+                                        v-bind="slotProps.props" 
+                                        v-on="slotProps.events"
+                                    />
+                                </template>
+                                <i slot="icon-calendar"></i>
+                            </date-picker>
+                        </div>
+                    </CCol>
+                </CRow>
+
+                <!-- Tugas -->
+                <CRow class="sep pb-3">
+                    <CCol md="12">
+                        <CRow>
+                            <CCol>
+                                <h4>Tugas:</h4>
+                            </CCol>
+                        </CRow>
+
+                        <CRow v-for="(tugas, index) in data.tugas" :key="index">
+                            <CCol md="11">
+                                <CTextarea
+                                    :value.sync="data.tugas[index]"
+                                />	
+                            </CCol>
+                            <CCol md="1">
+                                <CButton 
+                                    style="height: calc(1.5em + 0.75rem + 2px);"
+                                    class="w-100 d-block" 
+                                    color="danger" 
+                                    @click="delTask(index)" 
+                                >
+                                    <CIcon name="cil-trash"/>
+                                </CButton>
+                            </CCol>
+                        </CRow>
+
+                        <CRow>
+                            <CCol>
+                                <CButton color="primary" @click="addTask">+ Tambah</CButton>
+                            </CCol>
+                        </CRow>
+                    </CCol>
+                </CRow>
+
+                <!-- Wilayah -->
+                <CRow class="sep">
+                    <CCol md="12">
+                        <MyComboboxLokasi
+                            label="Wilayah Penugasan"
+                            :value.sync="data.wilayah"
+                        />
+                    </CCol>
+                </CRow>
+
+                <!-- Periode -->
+                <CRow>
+                    <label class="w-100 pl-3 pt-2 mb-0" for="DatePenugasan">
+                        Periode Penugasan
+                    </label>
+                    <CCol md="4" sm="12">
+                        <div class="form-group">
+                            <date-picker 
+                                v-model="data.tanggal_mulai"
+                                format="DD-MM-YYYY" 
+                                value-type="format"
+                                type="date"
+                                class="w-100"
+                            >
+                                <template v-slot:input="slotProps">
+                                    <input
+                                        class="form-control" 
+                                        type="text" 
+                                        v-bind="slotProps.props" 
+                                        v-on="slotProps.events"
+                                    />
+                                </template>
+                                <i slot="icon-calendar"></i>
+                                <i slot="icon-clear"></i>
+                            </date-picker>
+                            <small class="form-text text-muted w-100">Tanggal Mulai</small>
+                        </div>
+                    </CCol>
+                    <CCol md="4" sm="12">
+                        <div class="form-group">
+                            <date-picker 
+                                v-model="data.tanggal_akhir"
+                                format="DD-MM-YYYY" 
+                                value-type="format"
+                                type="date"
+                                class="w-100"
+                            >
+                                <template v-slot:input="slotProps">
+                                    <input
+                                        class="form-control" 
+                                        type="text" 
+                                        v-bind="slotProps.props" 
+                                        v-on="slotProps.events"
+                                    />
+                                </template>
+                                <i slot="icon-calendar"></i>
+                                <i slot="icon-clear"></i>
+                            </date-picker>
+                            <small class="form-text text-muted w-100">Tanggal Akhir</small>
+                        </div>
                     </CCol>
                 </CRow>
             </div>
@@ -286,6 +403,7 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
+import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
 import MyInputTembusan from '../../components/InputTembusan.vue'
 import MySearchDocument from '../../components/SearchDocument.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
@@ -295,6 +413,7 @@ export default {
     name: 'FormLpti',
     components: {
         DatePicker,
+		MyComboboxLokasi,
         MyInputTembusan,
         MySearchDocument,
         MySelectEntitas,
@@ -311,12 +430,6 @@ export default {
             jenis_pelanggaran_options: [ ...jenis_pelanggaran ],
         }
     },
-    computed: {
-        saved_sti: {
-            get() { return this.data.sti.id },
-            set(val) { this.data.sti.id = val },
-        }
-    },
     watch: {
         document(val) { this.data = val },
     },
@@ -330,6 +443,12 @@ export default {
                 data = await api.updateDoc(this.doc_type, this.data.id, this.data)
             }
             this.$emit('save-data', data)		
+        },
+        addTask() {
+            this.data.tugas.push(null)
+        },
+        delTask(id) {
+            this.data.tugas.splice(id,1)
         },
     }
 }

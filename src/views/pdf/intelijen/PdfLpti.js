@@ -18,7 +18,7 @@ class PdfLpti extends Pdf
 {
     constructor(
         data,
-        title='LAPORAN PELAKSANAAN TUGAS INTELIJEN',
+        title='LAPORAN PELAKSANAAN TUGAS',
     )
     {
         super(data, title)
@@ -31,13 +31,10 @@ class PdfLpti extends Pdf
 
         this.txt = {}
 
-        let sti = this.data.sti ? this.data.sti.no_dok_lengkap : '-'
-        let wilayah_penugasan = this.data.sti ? this.data.sti.wilayah : '-'
-        let tanggal_mulai = this.data.sti ? this.data.sti.tanggal_mulai : null
-        let tanggal_akhir = this.data.sti ? this.data.sti.tanggal_akhir : null
-        this.txt.sti = `Surat Tugas Intelijen Nomor: ${sti}`
-        this.txt.wilayah_penugasan = this.converters.string(wilayah_penugasan)
-        this.txt.periode_penugasan = this.converters.dateRange(tanggal_mulai, tanggal_akhir)
+        let st = this.converters.no_tanggal_dok(this.data.nomor_st, this.data.tanggal_st)
+        this.txt.st = `Surat Tugas Intelijen Nomor: ${st}`
+        this.txt.wilayah_penugasan = this.converters.string(this.data.wilayah)
+        this.txt.periode_penugasan = this.converters.dateRange(this.data.tanggal_mulai, this.data.tanggal_akhir)
         
         this.txt.tempat_pengumpulan = this.data.tempat_pengumpulan
             ? this.converters.string(this.data.tempat_pengumpulan) : '-'
@@ -87,7 +84,7 @@ class PdfLpti extends Pdf
         this.write('Dasar', inds.lbl)
         this.pdf.setFont('Helvetica', 'normal')
         this.write(':', inds.cln)
-        this.write(this.txt.sti, inds.txt)
+        this.write(this.txt.st, inds.txt)
         this.break(.25)
 
         // Tugas
@@ -96,9 +93,9 @@ class PdfLpti extends Pdf
         this.write('Tugas', inds.lbl)
         this.pdf.setFont('Helvetica', 'normal')
         this.write(':', inds.cln)
-        if (this.data.sti != null) {
+        if (this.data.tugas.length > 0) {
             let n_tugas = 1
-            this.data.sti.tugas.forEach(tugas => {
+            this.data.tugas.forEach(tugas => {
                 this.write(`${n_tugas}.`, inds.txt)
                 this.write(tugas, inds.tugas)
                 this.break()
@@ -106,7 +103,7 @@ class PdfLpti extends Pdf
             });
             this.break(-.75)	
         } else {
-            this.break()
+            this.break(.25)
         }
 
         // Wilayah

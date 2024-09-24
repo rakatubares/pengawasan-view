@@ -11,7 +11,6 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Homepage = () => import('@/views/Homepage')
 
 // Views - Intelijen
-const PageSti = () => import('@/views/intelijen/sti/PageSti.vue')
 const PageLpti = () => import('@/views/intelijen/lpti/PageLpti.vue')
 const PageLkai = () => import('@/views/intelijen/lkai/PageLkai.vue')
 const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
@@ -81,19 +80,11 @@ function configRoutes () {
 
                 // Intelijen
                 {
-                    path: 'sti',
-                    name: 'ST-I',
-                    component: PageSti,
-                    beforeEnter: (to, from, next) => {
-                        checkRoutePermission('view-sti', next)
-                    },
-                },
-                {
                     path: 'lpti',
-                    name: 'LPT-I',
+                    name: 'LPT Intelijen',
                     component: PageLpti,
                     beforeEnter: (to, from, next) => {
-                        checkRoutePermission('view-sti', next)
+                        checkRoutePermission('view-lpti', next)
                     },
                 },
                 {
@@ -328,7 +319,7 @@ function configRoutes () {
                     name: 'BA Penolakan SBP',
                     component: PageTolak1,
                     beforeEnter: (to, from, next) => {
-                        checkRoutePermission(['view-tolak1', 'view-tolak1n'], next)
+                        checkRoutePermission(['view-sbp', 'view-sbpn'], next)
                     },
                 },
                 {
@@ -336,7 +327,7 @@ function configRoutes () {
                     name: 'BA Penolakan TTD BA Penolakan SBP',
                     component: PageTolak2,
                     beforeEnter: (to, from, next) => {
-                        checkRoutePermission(['view-tolak2', 'view-tolak2n'], next)
+                        checkRoutePermission(['view-sbp', 'view-sbpn'], next)
                     },
                 },
 

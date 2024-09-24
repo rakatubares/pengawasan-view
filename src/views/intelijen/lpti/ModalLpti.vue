@@ -120,10 +120,6 @@ export default {
             this.alert('DATA BERHASIL DISIMPAN')
         },
         fillNull() {
-            if (this.document.sti == null) {
-                this.document.sti = JSON.parse(JSON.stringify(DefaultLpti.data.sti))
-            }
-
             if (this.document.pelaku == null) {
                 this.document.pelaku = JSON.parse(JSON.stringify(DefaultLpti.data.pelaku))
             }

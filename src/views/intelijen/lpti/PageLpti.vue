@@ -46,7 +46,7 @@ export default {
         },
         doc_name: {
             type: String,
-            default: 'LPT-I'
+            default: 'LPT Intelijen'
         },
         permission_to_create: {
             type: String,
@@ -71,9 +71,9 @@ export default {
             table_fields: [
                 { key: 'no_dok_lengkap', label: `No ${this.doc_name}` },
                 { key: 'tanggal_dokumen', label: `Tgl ${this.doc_name}` },
-                { key: 'sti', label: `ST-I` },
+                { key: 'st', label: `ST` },
             ],
-            custom_fields: ['sti'],
+            custom_fields: ['st'],
             modal_data_props: {
                 show: false,
                 state: null,
@@ -86,7 +86,7 @@ export default {
             return list.map(item => {
                 return {
                     ...item,
-                    sti: item.no_sti + '</br>' + item.tgl_sti,
+                    st: item.nomor_st + '</br>' + item.tanggal_st,
                 }
             })
         },
@@ -99,8 +99,8 @@ export default {
         constructDeleteText(item) {
             let text = "Apakah Anda yakin untuk menghapus data " 
                 + item.no_dok_lengkap.bold() 
-                + " atas ST-I " + item.no_sti.bold()
-                + " tanggal " + item.tgl_sti.bold()
+                + " atas ST " + item.nomor_st.bold()
+                + " tanggal " + item.tanggal_st.bold()
                 + "?"
             return text
         }

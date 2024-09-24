@@ -80,14 +80,14 @@ converters.dateRange = (date1, date2) => {
         date1 = new Date(date1)
         date2 = new Date(date2)
     
-        let year1 = date1.getUTCFullYear()
-        let year2 = date2.getUTCFullYear()
+        let year1 = date1.getFullYear()
+        let year2 = date2.getFullYear()
     
         let month1 = converters.monthName(date1)
         let month2 = converters.monthName(date2)
     
-        let day1 = date1.getUTCDate()
-        let day2 = date2.getUTCDate()
+        let day1 = date1.getDate()
+        let day2 = date2.getDate()
     
         if (year1 == year2) {
             if (month1 == month2) {
