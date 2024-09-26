@@ -18,14 +18,36 @@
                     <template #header>
                         <CIcon name="cil-grid"/>{{ table_title }}
                         <div class="card-header-actions">
-                            <CButton 
-                                color="primary" 
-                                @click="createDoc"
-                                class="mr-1"
-                                v-if="checkCreatePermission"
-                            >
-                                + Buat Baru
-                            </CButton>
+                            <!-- Search -->
+                            <div class="float-left px-2">
+                                <CInput 
+                                    class="mb-0" 
+                                    placeholder="Search..."
+                                    :value.sync="filter_query"
+                                >
+                                    <template #append>
+                                        <CButton 
+                                            class="py-0" 
+                                            color="secondary"
+                                            @click="getDataTable"
+                                        >
+                                        <CIcon name="cil-magnifying-glass" height="24px"/> 
+                                        </CButton>
+                                    </template>
+                                </CInput>
+                            </div>
+
+                            <!-- New -->
+                            <div class="float-left">
+                                <CButton 
+                                    color="primary" 
+                                    @click="createDoc"
+                                    class="mr-1"
+                                    v-if="checkCreatePermission"
+                                >
+                                    + Buat Baru
+                                </CButton>
+                            </div>
                         </div>
                     </template>
                 </MyTableData>
@@ -86,11 +108,13 @@ export default {
                 doc_id: null,
                 text: null
             },
+            filter_query: null,
         }
     },
     methods: {
         async getDataTable() {
-            this.list_table = await api2.getListDocuments(this.doc_type)
+            let data = {'flt': this.filter_query}
+            this.list_table = await api2.getListDocuments(this.doc_type, data)
             if (this.compute_list != null) {
                 this.list_table = this.compute_list(this.list_table)
             }
