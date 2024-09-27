@@ -81,7 +81,7 @@ class API {
     */
 
     async getListDocuments(doc_type, search_query) {
-        let response = await this.postApi(`/doc/${doc_type}/index`, search_query)
+        let response = await this.postApi(`/doc/${doc_type}/list`, search_query)
         let list = response.data.data
         return list
     }
