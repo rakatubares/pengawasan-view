@@ -24,6 +24,7 @@
                                     class="mb-0" 
                                     placeholder="Search..."
                                     :value.sync="filter_query"
+                                    @keyup.enter="getDataTable"
                                 >
                                     <template #append>
                                         <CButton 
