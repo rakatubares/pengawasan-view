@@ -31,7 +31,7 @@
                                             color="secondary"
                                             @click="getDataTable"
                                         >
-                                        <CIcon name="cil-magnifying-glass" height="24px"/> 
+                                            <CIcon name="cil-magnifying-glass" height="24px"/>
                                         </CButton>
                                     </template>
                                 </CInput>
