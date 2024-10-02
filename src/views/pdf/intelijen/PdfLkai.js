@@ -47,7 +47,7 @@ class PdfLkai extends Pdf
         
         this.checkbox = {}
         this.checkbox.lppi = this.data.lppi_id != null ? this.checked_checkbox : this.empty_checkbox
-		this.checkbox.lpti = this.data.lpti_id != null ? this.checked_checkbox : this.empty_checkbox
+        this.checkbox.lpti = this.data.lpti_id != null ? this.checked_checkbox : this.empty_checkbox
         this.checkbox.npi = (
             (
                 this.data.nomor_npi != null &&
@@ -62,9 +62,9 @@ class PdfLkai extends Pdf
 
         this.txt = {}
 
-		this.txt.lppi = this.converters.no_tanggal_dok(this.data.nomor_lppi, this.data.tanggal_lppi)
-		this.txt.lpti = this.converters.no_tanggal_dok(this.data.nomor_lpti, this.data.tanggal_lpti)
-		this.txt.npi = this.converters.no_tanggal_dok(this.data.nomor_npi, this.data.tanggal_npi)
+        this.txt.lppi = this.converters.no_tanggal_dok(this.data.nomor_lppi, this.data.tanggal_lppi)
+        this.txt.lpti = this.converters.no_tanggal_dok(this.data.nomor_lpti, this.data.tanggal_lpti)
+        this.txt.npi = this.converters.no_tanggal_dok(this.data.nomor_npi, this.data.tanggal_npi)
 
         this.txt.informasi = this.data.informasi != null ? this.data.informasi : '-'
         this.txt.prosedur = this.data.prosedur != null ? this.data.prosedur : '-'
@@ -123,12 +123,14 @@ class PdfLkai extends Pdf
         this.break(2)
 
         ///// Analisis /////
-		this.writeTextBox('IKHTISAR INFORMASI', this.txt.informasi)
-		this.writeTextBox('PROSEDUR ANALISIS', this.txt.prosedur)
-		this.writeTextBox('HASIL ANALISIS', this.txt.hasil)
-		this.writeTextBox('KESIMPULAN', this.txt.kesimpulan)
+        this.writeTextBox('IKHTISAR INFORMASI', this.txt.informasi)
+        this.writeTextBox('PROSEDUR ANALISIS', this.txt.prosedur)
+        this.writeTextBox('HASIL ANALISIS', this.txt.hasil)
+        this.writeTextBox('KESIMPULAN', this.txt.kesimpulan)
 
         ///// Rekomendasi /////
+        if (this.ln >= 250) { this.addPage() }
+
         this.pdf.setFont('Helvetica', 'bold')
         this.write('REKOMENDASI:')
         this.pdf.setFont('Helvetica', 'normal')
@@ -181,6 +183,8 @@ class PdfLkai extends Pdf
         this.break(4)
         this.write(this.txt.analis)
 
+        let checkLn = this.ln
+
         ///// TTD /////
         this.pdf.addPage()
         this.ln = 20
@@ -197,46 +201,48 @@ class PdfLkai extends Pdf
             this.data.catatan_atasan,
             this.data.tanggal_terima_atasan,
         )
+
+        return checkLn
     }
 
-	writeTextBox(title, txt) {
-		let y_rect = this.ln - 4
+    writeTextBox(title, txt) {
+        let y_rect = this.ln - 4
         
-		// Write title
-		this.pdf.setFont('Helvetica', 'bold')
+        // Write title
+        this.pdf.setFont('Helvetica', 'bold')
         this.write(title, 105, this.ln, 'center')
         this.pdf.setFont('Helvetica', 'normal')
         
-		// Create title box
-		this.pdf.rect(this.left_margin, y_rect, 190, 5, 'D');
+        // Create title box
+        this.pdf.rect(this.left_margin, y_rect, 190, 5, 'D');
         this.break(1)
 
-		// Write content
-		let sPage = this.currentPage
-		this.writeParagraphs(txt, inds.num, undefined, undefined, 5, 5)
-		let ePage = this.currentPage
+        // Write content
+        let sPage = this.currentPage
+        this.writeParagraphs(txt, inds.num, undefined, undefined, 5, 5)
+        let ePage = this.currentPage
 
-		// Create content box
-		this.generateRect(sPage, ePage, y_rect)
+        // Create content box
+        this.generateRect(sPage, ePage, y_rect)
         this.break(1)
-	}
+    }
 
-	generateRect(sPage, ePage, yRect) {
-		if (sPage == ePage) {
-			let hRect = this.ln - yRect
-			this.pdf.rect(this.left_margin, yRect, 190, hRect, 'D')
-		} else {
-			// Create rectangle in current page
-			let hRectCurrent = this.ln - 10
-			this.pdf.rect(this.left_margin, 10, 190, hRectCurrent, 'D')
+    generateRect(sPage, ePage, yRect) {
+        if (sPage == ePage) {
+            let hRect = this.ln - yRect
+            this.pdf.rect(this.left_margin, yRect, 190, hRect, 'D')
+        } else {
+            // Create rectangle in current page
+            let hRectCurrent = this.ln - 10
+            this.pdf.rect(this.left_margin, 10, 190, hRectCurrent, 'D')
 
-			// Create rectangle in start page
-			this.goToPage(sPage)
-			let hRectStart = this.page_height - 10 - yRect
-			this.pdf.rect(this.left_margin, yRect, 190, hRectStart, 'D')
-			this.goToPage(ePage)
-		}
-	}
+            // Create rectangle in start page
+            this.goToPage(sPage)
+            let hRectStart = this.page_height - 10 - yRect
+            this.pdf.rect(this.left_margin, yRect, 190, hRectStart, 'D')
+            this.goToPage(ePage)
+        }
+    }
 
     generateTtd(data_pejabat, keputusan, catatan, tanggal_terima) {
         this.pdf.setFont('Helvetica', 'bold')

@@ -30,7 +30,7 @@ class MyPdf {
             end: end_line
         }
         this.default_ln = ln
-		this.currentPage = 0
+        this.currentPage = 0
         this.converters = converters
         this.initiatePdf()
     }
@@ -40,7 +40,7 @@ class MyPdf {
         this.pdf = new jsPDF('p', 'mm', [this.page_height, this.page_width])
         this.ln = this.default_ln
         this.break_height = this.font_height
-		this.currentPage = 1
+        this.currentPage = 1
     }
 
     generatePdf()
@@ -75,28 +75,27 @@ class MyPdf {
         this.setBreak(txt, options)
     }
 
-	writeParagraphs(txt, x, y, align, right_limit, offset=0) 
-	{
-		let paragraphs = txt.split('\n') 
+    writeParagraphs(txt, x, y, align, right_limit, offset=0) 
+    {
+        let paragraphs = txt.split('\n') 
         paragraphs.forEach(paragraph => {
-			// Check if text overflowing page
-			let options = this.setOptions(align, x, right_limit)
-			this.checkPageOverflow(paragraph, options, offset)
+            // Check if text overflowing page
+            let options = this.setOptions(align, x, right_limit)
+            this.checkPageOverflow(paragraph, options, offset)
 
-			// Write text
+            // Write text
             this.write(paragraph, x, y, align, right_limit)
             this.break(.5)
         })
-	}
+    }
 
-	checkPageOverflow(txt, options, offset)
-	{
-		let dim = this.pdf.getTextDimensions(txt, options)
-		if ((this.ln + dim.h) > (this.page_height - (5 + offset))) {
-			this.addPage()
-			this.ln = 10 + offset
-		}
-	}
+    checkPageOverflow(txt, options, offset)
+    {
+        let dim = this.pdf.getTextDimensions(txt, options)
+        if ((this.ln + dim.h) > (this.page_height - (5 + offset))) {
+            this.addPage(20 + offset)
+        }
+    }
 
     break(additional=0, reset=false) {
         let break_height = reset ? this.font_height : this.break_height
@@ -328,17 +327,18 @@ class MyPdf {
         return height
     }
 
-	addPage()
-	{
-		this.pdf.addPage()
-		this.currentPage += 1
-	}
+    addPage(ln=20)
+    {
+        this.pdf.addPage()
+        this.currentPage += 1
+        this.ln = ln
+    }
 
-	goToPage(p)
-	{
-		this.pdf.setPage(p)
-		this.currentPage = p
-	}
+    goToPage(p)
+    {
+        this.pdf.setPage(p)
+        this.currentPage = p
+    }
 
     paintWatermark()
     {
