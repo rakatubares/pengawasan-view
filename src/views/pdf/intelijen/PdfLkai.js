@@ -206,6 +206,8 @@ class PdfLkai extends Pdf
     }
 
     writeTextBox(title, txt) {
+		if (this.ln >= 270) { this.addPage() }
+
         let y_rect = this.ln - 4
         
         // Write title
@@ -219,7 +221,7 @@ class PdfLkai extends Pdf
 
         // Write content
         let sPage = this.currentPage
-        this.writeParagraphs(txt, inds.num, undefined, undefined, 5, 5)
+        this.writeParagraphs(txt, inds.num, undefined, undefined, 5)
         let ePage = this.currentPage
 
         // Create content box
