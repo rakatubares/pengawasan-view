@@ -1,6 +1,16 @@
 <template>
     <div class="wrapper my-form">
         <CForm class="pt-3">
+            <!-- Tanggal Dokumen -->
+            <CRow>
+                <CCol md="3" sm="12">
+                    <MySelectDate
+                        :label="`Tanggal ${doc_name}`"
+                        :value.sync="data.tanggal_dokumen"
+                    />
+                </CCol>
+            </CRow>
+            
             <CRow>
                 <CCol md="12">
                     <MySearchDocument
@@ -477,6 +487,7 @@ import MyComboboxJabatan from '../../components/ComboboxJabatan.vue'
 import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
 import MyInputTembusan from '../../components/InputTembusan.vue'
 import MySearchDocument from '../../components/SearchDocument.vue'
+import MySelectDate from '../../components/SelectDate.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MySelectKantorBC from '../../components/SelectKantorBC.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
@@ -496,6 +507,7 @@ export default {
         MyComboboxLokasi,
         MyInputTembusan,
         MySearchDocument,
+        MySelectDate,
         MySelectEntitas,
         MySelectKantorBC,
         MySelectPejabat,
@@ -503,6 +515,7 @@ export default {
     props: {
         state: String,
         doc_type: String,
+        doc_name: String,
         document: Object,
     },
     data() {

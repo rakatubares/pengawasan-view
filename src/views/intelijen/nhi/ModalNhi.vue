@@ -18,6 +18,7 @@
                         v-if="['insert','edit'].includes(local_state)"
                         :state.sync="local_state"
                         :doc_type.sync="doc_type"
+                        :doc_name.sync="doc_name"
                         :document.sync="document"
                         @save-data="setDocument"
                     />

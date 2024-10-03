@@ -1,6 +1,16 @@
 <template>
     <div class="wrapper my-form">
         <CForm class="pt-3">
+            <!-- Tanggal Dokumen -->
+            <CRow>
+                <CCol md="3" sm="12">
+                    <MySelectDate
+                        :label="`Tanggal ${doc_name}`"
+                        :value.sync="data.tanggal_dokumen"
+                    />
+                </CCol>
+            </CRow>
+            
             <CRow>
                 <CCol sm="12">
                     <h5>Sumber Informasi</h5>
@@ -329,6 +339,7 @@ import 'vue2-datepicker/index.css'
 
 import api from '../../../router/api2.js'
 import MySearchDocument from '../../components/SearchDocument.vue'
+import MySelectDate from '../../components/SelectDate.vue'
 import MySelectPejabat from '../../components/SelectPejabat.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 import MyTableIkhtisar from './TableIkhtisar.vue'
@@ -338,6 +349,7 @@ export default {
     components: {
         DatePicker,
         MySearchDocument,
+        MySelectDate,
         MySelectPejabat,
         MySelectPetugas,
         MyTableIkhtisar,
@@ -386,6 +398,14 @@ export default {
                 }
             }
             return flag
+        },
+        minDateSelect() {
+            let date = new Date()
+            date.setDate(date.getDate() - 1)
+            return date
+        },
+        maxDateSelect() {
+            return new Date()
         }
     },
     methods: {
@@ -444,8 +464,7 @@ export default {
                 this.data.no_dok_info_internal = null
                 this.data.tgl_dok_info_internal = null
             }
-            
-        }
+        },
     },
 }
 </script>
