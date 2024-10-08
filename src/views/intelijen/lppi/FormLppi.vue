@@ -33,7 +33,7 @@
                 <CCol md="8" sm="12">
                     <label for="media-internal">Media</label>
                     <CInput
-                        description="Media informasi. Contoh: kajian / sms center / Nota lnformasi / LPTI / surat / nota dinas"
+                        :description="`Media informasi. Contoh: kajian / sms center / Nota lnformasi / ${label_lpti} / surat / nota dinas`"
                         :value.sync="data.media_info_internal"
                         :disabled.sync="disabledMediaInternal"
                     >
@@ -45,7 +45,7 @@
                                 color="primary"
                             >
                                 <CDropdownItem
-                                    v-for="option in ['LPTI', 'NON-LPTI']"
+                                    v-for="option in internal_options"
                                     :key="option"
                                     @click="toggleFlagLpti(option)"
                                 >
@@ -83,8 +83,8 @@
             <CRow v-if="enableSearchLpti">
                 <CCol>
                     <MySearchDocument
-                        doc_type="lpti"
-                        label="LPT-I"
+                        :doc_type="tipe_lpti"
+                        :label="label_lpti"
                         :value.sync="data.lpti_id"
                         :exceptions.sync="saved_lpti"
                         @update:value="updateLpti"
@@ -359,15 +359,15 @@ export default {
         doc_type: String,
         doc_name: String,
         document: Object,
-        default_jabatan: {
-            type: String,
-            default: 'bd.0501',
-        }
+        tipe_lpti: String,
+        label_lpti: String,
+        default_jabatan: String,
     },
     data() {
         return {
             data: JSON.parse(JSON.stringify(this.document)),
-            txtLpti: 'LPTI',
+            internal_options: [this.label_lpti, `NON ${this.label_lpti}`],
+            txtLpti: this.label_lpti
         }
     },
     watch: {
@@ -384,7 +384,7 @@ export default {
         disabledMediaInternal() {
             let flag = true
             if (this.data.flag_info_internal) {
-                if (this.data.media_info_internal != 'LPTI') {
+                if (this.data.media_info_internal != this.label_lpti) {
                     flag = false	
                 }
             }
@@ -393,7 +393,7 @@ export default {
         enableSearchLpti() {
             let flag = false
             if (this.data.flag_info_internal) {
-                if (this.data.media_info_internal == 'LPTI') {
+                if (this.data.media_info_internal == this.label_lpti) {
                     flag = true
                 }
             }
@@ -430,16 +430,16 @@ export default {
         },
         toggleFlagInternal(val) {
             this.data.flag_info_internal = val
-            this.data.media_info_internal = 'LPTI'
+            this.data.media_info_internal = this.label_lpti
             this.data.tgl_terima_info_internal = null
             this.data.no_dok_info_internal = null
             this.data.tgl_dok_info_internal = null
-            this.toggleFlagLpti('LPTI')
+            this.toggleFlagLpti(this.label_lpti)
         },
         toggleFlagLpti(val) {
             this.txtLpti = val
-            if (val == 'LPTI') {
-                this.data.media_info_internal = 'LPTI'
+            if (val == this.label_lpti) {
+                this.data.media_info_internal = this.label_lpti
             } else {
                 this.data.lpti_id = null
                 this.data.media_info_internal = null
@@ -456,7 +456,7 @@ export default {
         },
         async updateLpti(lpti_id) {
             if (lpti_id) {
-                let response = await api.getDocumentById('lpti', lpti_id)
+                let response = await api.getDocumentById(this.tipe_lpti, lpti_id)
                 let lpti = JSON.parse(JSON.stringify(response))
                 this.data.no_dok_info_internal = lpti.data.no_dok_lengkap
                 this.data.tgl_dok_info_internal = lpti.data.tanggal_dokumen

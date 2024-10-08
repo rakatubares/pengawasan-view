@@ -13,15 +13,16 @@
         >
             <template #tabs>
                 <CTab :title="tabs_list[0]['title']">
-                    <MyFormLpti
+                    <MyFormLptiN
                         v-if="['insert','edit'].includes(local_state)"
                         :state.sync="local_state"
                         :doc_type.sync="doc_type"
                         :document.sync="document"
                         @save-data="setDocument"
                     />
-                    <MyDisplayLpti
-                        v-else-if="local_state == 'show'"		
+                    
+                    <MyDisplayLptiN
+                        v-else-if="local_state == 'show'"    
                         :doc_type="doc_type"
                         :document.sync="document"
                     />
@@ -49,21 +50,21 @@
 
 <script>
 import api from '../../../router/api2.js'
-import DefaultLpti from './DefaultLpti'
+import DefaultLptiN from './DefaultLptiN'
 import MyAlert from '../../components/AlertSubmit.vue'
-import MyDisplayLpti from './DisplayLpti.vue'
+import MyDisplayLptiN from './DisplayLptiN.vue'
 import MyDisplayPdf from '../../pdf/DisplayPdf.vue'
-import MyFormLpti from './FormLpti.vue'
+import MyFormLptiN from './FormLptiN.vue'
 import MyModalTabs from '../../components/ModalTabs.vue'
 
 export default {
-    name: 'ModalLpti',
+    name: 'ModalLptiN',
     components: {
-        DefaultLpti,
+        DefaultLptiN,
         MyAlert,
-        MyDisplayLpti,
+        MyDisplayLptiN,
         MyDisplayPdf,
-        MyFormLpti,
+        MyFormLptiN,
         MyModalTabs,
     },
     props: {
@@ -76,7 +77,7 @@ export default {
     data() {
         return {
             doc_id: this.id,
-            document: JSON.parse(JSON.stringify(DefaultLpti.data)),
+            document: JSON.parse(JSON.stringify(DefaultLptiN.data)),
             local_state: this.state,
             tabs_list: [
                 {
@@ -120,7 +121,7 @@ export default {
         },
         fillNull() {
             if (this.document.pelaku == null) {
-                this.document.pelaku = JSON.parse(JSON.stringify(DefaultLpti.data.pelaku))
+                this.document.pelaku = JSON.parse(JSON.stringify(DefaultLptiN.data.pelaku))
             }
         },
         changeTabsList(state) {

@@ -20,7 +20,7 @@
                         {{ disp_st }}
                     </CCol>
                 </CRow>
-				<CRow class="mb-1">
+                <CRow class="mb-1">
                     <CCol md="3" class="py-1">
                         <b>Wilayah Penugasan</b>
                     </CCol>
@@ -285,9 +285,9 @@ export default {
             }
             return st
         },
-		disp_wilayah() { return this.document.wilayah || '-' },
-		disp_tgl_mulai() { return this.document.tanggal_mulai || '-' },
-		disp_tgl_akhir() { return this.document.tanggal_akhir || '-' },
+        disp_wilayah() { return this.document.wilayah || '-' },
+        disp_tgl_mulai() { return this.document.tanggal_mulai || '-' },
+        disp_tgl_akhir() { return this.document.tanggal_akhir || '-' },
         disp_tempat_pengumpulan() { return this.document.tempat_pengumpulan || '-'},
         disp_sumber_informasi() { return this.document.sumber_informasi || '-'},
         disp_metode_pengumpulan() { return this.document.metode_pengumpulan || '-'},

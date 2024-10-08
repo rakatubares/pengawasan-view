@@ -7,7 +7,7 @@ export default [
                 _children: ['Form'],
                 permissions: [
                     'view-lpti', 'view-lppi', 'view-lkai', 'view-nhi', 'view-ni',
-                    'view-lppin', 'view-lkain', 'view-nhin', 'view-nin',
+                    'view-lptin', 'view-lppin', 'view-lkain', 'view-nhin', 'view-nin',
                     'view-li', 'view-lap', 'view-lapn', 
                     'view-riksa', 'view-riksa_badan', 
                     'view-segel', 'view-buka_segel', 'view-titip', 
@@ -20,9 +20,9 @@ export default [
                 ]
             },
 
-			/**
-			 * INTELIJEN
-			 */
+            /**
+             * INTELIJEN
+             */
             {
                 _name: 'CSidebarNavDropdown',
                 name: 'INTELIJEN',
@@ -66,9 +66,9 @@ export default [
                 ],
             },
 
-			/**
-			 * PENINDAKAN
-			 */
+            /**
+             * PENINDAKAN
+             */
             {
                 _name: 'CSidebarNavDropdown',
                 name: 'PENINDAKAN',
@@ -224,14 +224,21 @@ export default [
                 ],
             },
 
-			/**
-			 * NPP
-			 */
+            /**
+             * NPP
+             */
             {
                 _name: 'CSidebarNavDropdown',
                 name: 'NPP',
                 icon: 'cil-blur',
                 _children: [
+                    {
+                        _name: 'CSidebarNavItem',
+                        name: 'LPTI-N',
+                        to: '/lptin',
+                        icon: 'cil-file',
+                        permissions: 'view-lptin',
+                    },
                     {
                         _name: 'CSidebarNavItem',
                         name: 'LPPI-N',
@@ -312,9 +319,9 @@ export default [
                 ]
             },
 
-			/**
-			 * PENYIDIKAN
-			 */
+            /**
+             * PENYIDIKAN
+             */
             {
                 _name: 'CSidebarNavDropdown',
                 name: 'PENYIDIKAN',

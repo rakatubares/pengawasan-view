@@ -75,6 +75,7 @@ import PdfLppi from './intelijen/PdfLppi'
 import PdfLppiN from './intelijen/PdfLppiN'
 import PdfLpt from './penindakan/PdfLpt'
 import PdfLpti from './intelijen/PdfLpti'
+import PdfLptiN from './intelijen/PdfLptiN'
 import PdfLptp from './penindakan/PdfLptp'
 import PdfLptpN from './penindakan/PdfLptpN'
 import PdfNhi from './intelijen/PdfNhi'
@@ -175,6 +176,10 @@ export default {
 
                 case 'lpti':
                     pdf = new PdfLpti(data_pdf)
+                    break;
+
+                case 'lptin':
+                    pdf = new PdfLptiN(data_pdf)
                     break;
 
                 case 'lppi':

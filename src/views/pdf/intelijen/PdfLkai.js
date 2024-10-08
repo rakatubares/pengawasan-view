@@ -21,7 +21,6 @@ class PdfLkai extends Pdf
         title='LEMBAR KERJA ANALISIS INTELIJEN',
         lkai_type='lkai',
         lppi_label='LPPI',
-        lpti_label='LPTI',
         npi_label='NPI',
         nhi_label='NHI',
         ni_label='NI',
@@ -30,7 +29,6 @@ class PdfLkai extends Pdf
         super(data, title)
         this.lkai_type = lkai_type
         this.lppi_label = lppi_label
-        this.lpti_label = lpti_label
         this.npi_label = npi_label
         this.nhi_label = nhi_label
         this.ni_label = ni_label
@@ -47,7 +45,6 @@ class PdfLkai extends Pdf
         
         this.checkbox = {}
         this.checkbox.lppi = this.data.lppi_id != null ? this.checked_checkbox : this.empty_checkbox
-        this.checkbox.lpti = this.data.lpti_id != null ? this.checked_checkbox : this.empty_checkbox
         this.checkbox.npi = (
             (
                 this.data.nomor_npi != null &&
@@ -63,7 +60,6 @@ class PdfLkai extends Pdf
         this.txt = {}
 
         this.txt.lppi = this.converters.no_tanggal_dok(this.data.nomor_lppi, this.data.tanggal_lppi)
-        this.txt.lpti = this.converters.no_tanggal_dok(this.data.nomor_lpti, this.data.tanggal_lpti)
         this.txt.npi = this.converters.no_tanggal_dok(this.data.nomor_npi, this.data.tanggal_npi)
 
         this.txt.informasi = this.data.informasi != null ? this.data.informasi : '-'
@@ -106,13 +102,6 @@ class PdfLkai extends Pdf
         this.write(`${this.lppi_label},`, inds.lbl2)
         this.write('Nomor:', inds.lbl3)
         this.write(this.txt.lppi, inds.val2)
-        this.break()
-
-        // LTPI
-        this.pdf.addImage(this.checkbox.lpti, 'png', inds.chk, this.ln-3.5, 4, 4);
-        this.write(`${this.lpti_label},`, inds.lbl2)
-        this.write('Nomor:', inds.lbl3)
-        this.write(this.txt.lpti, inds.val2)
         this.break()
 
         // NPI

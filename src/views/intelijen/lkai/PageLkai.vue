@@ -5,6 +5,8 @@
             :doc_type="doc_type"
             :table_title="table_title"
             :table_fields="table_fields"
+            :custom_fields="custom_fields"
+            :compute_list="computeList"
             :modal_data_props.sync="modal_data_props"
             :construct_delete_text="constructDeleteText"
             :permission_to_create="permission_to_create"
@@ -98,8 +100,10 @@ export default {
             table_fields: [
                 { key: 'no_dok_lengkap', label: `No ${this.label_lkai}` },
                 { key: 'tanggal_dokumen', label: `Tgl ${this.label_lkai}` },
+                { key: 'lppi', label: this.label_lppi },
                 { key: 'analis', label: 'Analis' },
             ],
+            custom_fields: ['lppi'],
             modal_data_props: {
                 show: false,
                 state: null,
@@ -108,6 +112,14 @@ export default {
         }
     },
     methods: {
+        computeList(list) {
+            return list.map(item => {
+                return {
+                    ...item,
+                    lppi: item.no_lppi + '</br>' + item.tgl_lppi,
+                }
+            })
+        },
         closeModal() {
             this.$refs.page_doc.getDataTable()
             this.modal_data_props.state = null

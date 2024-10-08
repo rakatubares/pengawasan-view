@@ -182,6 +182,7 @@
                         <CTextarea
                             label="Ikhtisar Informasi"
                             :value.sync="data.ikhtisar_informasi"
+                            rows="3"
                         />
                     </CCol>
                 </CRow>
@@ -244,6 +245,7 @@
                         <CTextarea
                             label="Ikhtisar Hasil Analisis Intelijen"
                             :value.sync="data.ikhtisar_analisis"
+                            rows="3"
                         />
                     </CCol>
                 </CRow>
@@ -351,24 +353,27 @@
                 </CRow>
             </div>
 
-            <div class="sep">
+            <div class="sep pt-3">
                 <CRow>
                     <CCol md="12">
                         <CTextarea
                             label="Informasi Lainnya"
                             :value.sync="data.informasi_lain"
+                            rows="5"
                         />
                     </CCol>
                     <CCol md="12">
                         <CTextarea
                             label="Kesimpulan"
                             :value.sync="data.kesimpulan"
+                            rows="5"
                         />
                     </CCol>
                     <CCol md="12">
                         <CTextarea
                             label="Rekomendasi"
                             :value.sync="data.rekomendasi"
+                            rows="5"
                         />
                     </CCol>
                 </CRow>
@@ -420,7 +425,6 @@ import 'vue2-datepicker/index.css'
 import api from '../../../router/api2.js'
 import MyComboboxLokasi from '../../components/ComboboxLokasi.vue'
 import MyInputTembusan from '../../components/InputTembusan.vue'
-import MySearchDocument from '../../components/SearchDocument.vue'
 import MySelectEntitas from '../../components/SelectEntitas.vue'
 import MySelectPetugas from '../../components/SelectPetugas.vue'
 
@@ -430,7 +434,6 @@ export default {
         DatePicker,
         MyComboboxLokasi,
         MyInputTembusan,
-        MySearchDocument,
         MySelectEntitas,
         MySelectPetugas,
     },

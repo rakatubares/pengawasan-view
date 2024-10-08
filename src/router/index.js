@@ -17,6 +17,7 @@ const PageLppi = () => import('@/views/intelijen/lppi/PageLppi.vue')
 const PageNhi = () => import('@/views/intelijen/nhi/PageNhi.vue')
 const PageNi = () => import('@/views/intelijen/ni/PageNi.vue')
 
+const PageLptiN = () => import('@/views/intelijen/lptin/PageLptiN.vue')
 const PageLkaiN = () => import('@/views/intelijen/lkain/PageLkaiN.vue')
 const PageLppiN = () => import('@/views/intelijen/lppi/PageLppiN.vue')
 const PageNhiN = () => import('@/views/intelijen/nhin/PageNhiN.vue')
@@ -117,6 +118,14 @@ function configRoutes () {
                     component: PageNi,
                     beforeEnter: (to, from, next) => {
                         checkRoutePermission('view-ni', next)
+                    },
+                },
+                {
+                    path: 'lptin',
+                    name: 'LPTI-N',
+                    component: PageLptiN,
+                    beforeEnter: (to, from, next) => {
+                        checkRoutePermission('view-lptin', next)
                     },
                 },
                 {

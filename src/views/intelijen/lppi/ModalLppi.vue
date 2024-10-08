@@ -18,6 +18,9 @@
                         :state.sync="local_state"
                         :doc_type="doc_type"
                         :doc_name="doc_name"
+                        :tipe_lpti="tipe_lpti"
+                        :label_lpti="label_lpti"
+                        :default_jabatan="default_jabatan"
                         :document.sync="document"
                         @save-data="setDocument"
                     />
@@ -71,13 +74,16 @@ export default {
         state: String,
         doc_type: String,
         doc_name: String,
+        tipe_lpti: String,
+        label_lpti: String,
+        default_jabatan: String,
         id: Number,
         permission_to_rollback: String,
     },
     data() {
         return {
             doc_id: this.id,
-            document: JSON.parse(JSON.stringify(DefaultLppi.data)),
+            document: JSON.parse(JSON.stringify(DefaultLppi.data[this.doc_type])),
             local_state: this.state,
             tabs_list: [
                 {
@@ -120,14 +126,14 @@ export default {
             this.alert('DATA BERHASIL DISIMPAN')
         },
         fillNull() {
-			if (this.document.media_info_internal == null) {
-				this.document.media_info_internal = DefaultLppi.data.media_info_internal
-			}
-			
+            if (this.document.media_info_internal == null) {
+                this.document.media_info_internal = DefaultLppi.data[this.doc_type].media_info_internal
+            }
+            
             let posisi = Object.keys(this.document.petugas)
-            for (const key in DefaultLppi.data.petugas) {
+            for (const key in DefaultLppi.data[this.doc_type].petugas) {
                 if (!posisi.includes(key)) {
-                    this.document.petugas[key] = JSON.parse(JSON.stringify(DefaultLppi.data.petugas[key]))
+                    this.document.petugas[key] = JSON.parse(JSON.stringify(DefaultLppi.data[this.doc_type].petugas[key]))
                 }
             }
         },

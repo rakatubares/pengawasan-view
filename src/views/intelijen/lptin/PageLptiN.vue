@@ -14,14 +14,11 @@
             :permission_to_delete="permission_to_delete"
         >
             <template #modal-data>
-                <MyModalLppi 
+                <MyModalLptiN
                     v-if="modal_data_props.show"
                     :state.sync="modal_data_props.state"
                     :doc_type="doc_type"
                     :doc_name="doc_name"
-                    :tipe_lpti="tipe_lpti"
-                    :label_lpti="label_lpti"
-                    :default_jabatan="default_jabatan"
                     :id.sync="modal_data_props.doc_id"
                     :permission_to_rollback="permission_to_rollback"
                     @close-modal="closeModal"
@@ -32,51 +29,39 @@
 </template>
 
 <script>
-import MyModalLppi from './ModalLppi.vue'
+import MyModalLptiN from './ModalLptiN.vue'
 import MyPageDoc from '../../components/PageDoc.vue'
 
 export default {
-    name: 'PageLppi',
+    name: 'PageLptiN',
     components: {
-        MyModalLppi,
+		MyModalLptiN,
         MyPageDoc,
     },
     props: {
         doc_type: {
             type: String,
-            default: 'lppi'
+            default: 'lptin'
         },
         doc_name: {
             type: String,
-            default: 'LPPI'
-        },
-        tipe_lpti: {
-            type: String,
-            default: 'lpti',
-        },
-        label_lpti: {
-            type: String,
-            default: 'LPTI',
-        },
-        default_jabatan: {
-            type: String,
-            default: 'bd.0501',
+            default: 'LPT NPP'
         },
         permission_to_create: {
             type: String,
-            default: 'create-lppi'
+            default: 'create-lptin'
         },
         permission_to_update: {
             type: String,
-            default: 'create-lppi'
+            default: 'create-lptin'
         },
         permission_to_delete: {
             type: String,
-            default: 'delete-lppi'
+            default: 'delete-lptin'
         },
         permission_to_rollback: {
             type: String,
-            default: 'rollback-lppi'
+            default: 'rollback-lptin'
         },
     },
     data() {
@@ -85,10 +70,9 @@ export default {
             table_fields: [
                 { key: 'no_dok_lengkap', label: `No ${this.doc_name}` },
                 { key: 'tanggal_dokumen', label: `Tgl ${this.doc_name}` },
-                { key: 'lpti', label: this.label_lpti },
-                { key: 'disposisi', label: 'Disposisi' },
+                { key: 'st', label: `ST` },
             ],
-            custom_fields: ['lpti'],
+            custom_fields: ['st'],
             modal_data_props: {
                 show: false,
                 state: null,
@@ -101,7 +85,7 @@ export default {
             return list.map(item => {
                 return {
                     ...item,
-                    lpti: item.no_lpti + '</br>' + item.tgl_lpti,
+                    st: item.nomor_st + '</br>' + item.tanggal_st,
                 }
             })
         },
@@ -114,6 +98,8 @@ export default {
         constructDeleteText(item) {
             let text = "Apakah Anda yakin untuk menghapus data " 
                 + item.no_dok_lengkap.bold() 
+                + " atas ST " + item.nomor_st.bold()
+                + " tanggal " + item.tanggal_st.bold()
                 + "?"
             return text
         }
