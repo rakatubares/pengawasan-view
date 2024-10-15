@@ -164,7 +164,6 @@
                 <CRow>
                     <CCol md="12">
                         <MySelectPetugas
-                            ref="selectAnalis"
                             label="Analis"
                             description="Pegawai yang melakukan analisis"
                             :currentUser="true"

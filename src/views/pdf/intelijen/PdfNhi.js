@@ -47,7 +47,7 @@ class PdfNhi extends Pdf
         // Barang
         let txt_barang = '-'
         if (this.data.barang.length > 1) {
-            txt_barang = 'LIHAT LAMPIRAN'
+            txt_barang = `${this.data.barang.length} ITEM BARANG, SESUAI LAMPIRAN`
         } else if (this.data.barang.length == 1) {
             txt_barang = `${this.data.barang[0].jumlah_barang} `
                 + `${this.data.barang[0].satuan.satuan} `

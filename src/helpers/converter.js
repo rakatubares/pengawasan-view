@@ -110,16 +110,20 @@ converters.dateRange = (date1, date2) => {
     return txt
 }
 
-converters.no_tanggal_dok = (nomor, tanggal) => {
-	let txt = '-'
-	let txt_nomor = nomor || '-'
-	let txt_tanggal = tanggal || '-'
+converters.no_tanggal_dok = (nomor, tanggal, jenis=null) => {
+    let txt = '-'
+    let txt_nomor = nomor || '-'
+    let txt_tanggal = tanggal || '-'
 
-	if ((nomor != null) || (tanggal != null)) {
-		txt = `${txt_nomor} tanggal ${txt_tanggal}`
-	}
+    if ((nomor != null) || (tanggal != null)) {
+        txt = `${txt_nomor} tanggal ${txt_tanggal}`
+    }
 
-	return txt
+    if (jenis != null) {
+        txt = `${jenis} nomor ${txt}`
+    }
+
+    return txt
 }
 
 converters.array_text = (txt, max_length) => {
